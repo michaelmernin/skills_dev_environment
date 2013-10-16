@@ -10,6 +10,13 @@
             }
         })
     }
+    
+    
+    function submitNewReview(){
+    
+    
+    
+    }
 </script>
     <?php require_once 'header.tpl.php'; ?>
 <div id="pr_mywokingstage_page" class="container">
@@ -52,7 +59,33 @@
                     <?php print render($page['basic_info'])
                     ?>
 
+				
 
+        <a id="modal-912871" href="#modal-container-912871" role="button" class="btn" data-toggle="modal">Start Review</a>
+        
+        
+			<div class="row-fluid">
+		<div class="span12">
+			<div id="modal-container-912871" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-header">
+					 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h3 id="myModalLabel">
+						Confirm to start review
+					</h3>
+				</div>
+				<div class="modal-body">
+					<p>
+            Do you want to start this review? <br>
+            Once the review has been started, you cannot configure the timeslot and participants any more.
+					</p>
+				</div>
+				<div class="modal-footer">
+					 <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-primary" onclick="submitNewReview()">Submit</button>
+				</div>
+			</div>
+    </div>
+      </div>
+      
 <!--                </div>
             </div>-->
         </div>

@@ -8052,7 +8052,7 @@ ul.links.inline li {
 
 /* line 296, ../../../../../../../../../../usr/local/.rvm/gems/ruby-2.0.0-p0/gems/compass_radix-0.0.18/stylesheets/compass_radix/_structure.scss */
 .contextual-links-region {
-  display: table;
+  /*display: table;*/
   margin: 0 auto;
 }
 
