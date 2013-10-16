@@ -1,0 +1,143 @@
+<?php
+/**
+ * @file
+ * 
+ * This is the counsellor module
+ * 
+ * 
+ */
+
+
+function counsellor_menu() {
+    $items['login'] = array(
+        'title' => 'Performance Review Login',
+        'page callback' => 'show_login_page',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+        'file' => 'files/performance_review_dashboard.pages.inc',
+    );
+    $items['newreview'] = array(
+        'title' => 'Create Review',
+        'page callback' => 'show_pr_list',
+        'access arguments' => array('Manage Performance Review List'),
+        'type' => MENU_NORMAL_ITEM,
+        'file' => 'files/performance_review_dashboard.pages.inc',
+        'weight' => 5,
+    );
+    
+    return $items;
+}
+
+function counsellor_block_info() {
+//    $blocks['360performance_review_list'] = array(
+//        // info: The name of the block.
+//        'info' => t('List All Performance Review'),
+//        // Block caching options (per role, per user, etc.) 
+//        'cache' => DRUPAL_NO_CACHE, // no cache
+//    );
+    $blocks['basic_info'] = array(
+        'info' => t('Basic Info View'),
+        'cache' => DRUPAL_NO_CACHE, // no cache
+    );
+//    $blocks['mail_settings'] = array(
+//        'info' => t('Step 3 - Configure mail template'),
+//        'cache' => DRUPAL_NO_CACHE, // no cache
+//    );
+
+    return $blocks;
+}
+
+function counsellor_block_view($delta = '') {
+    //The $delta parameter tells us which block is being requested.
+    switch ($delta) {
+//        case '360performance_review_list':
+//            appendCSSJS();
+//            $block['subject'] = t('Performance Review Agenda');
+//            $block['content'] = pr360_list();
+//            break;
+        case 'basic_info':
+            appendCSSJS();
+//            $block['subject'] = render_subject_use_image('Configure Timeslot');
+            $nTime=unixTimestampToDateArray('0');
+            $block['content'] = theme('basic_info_view',array('nTime' => $nTime));
+            break;
+//        case 'mail_settings':
+////            $block['subject'] = render_subject_use_image('Configure Mail Template');
+//            $block['content'] = drupal_get_form('pr360_email_settings_form');
+//            break;
+    }
+    return $block;
+}
+
+
+function counsellor_permission() {
+    return array(
+        'Manage Performance Review List' => array(
+            'title' => t('Access to counsellor create review list'),
+        ),
+//        'config reviews' => array(
+//            'title' => t('Config reviews'),
+//        ),
+    );
+}
+
+function appendCSSJS() {
+    $counsellor_path = drupal_get_path('module', 'counsellor');
+//    drupal_add_css($counsellor_path . '/css/ui-lightness/jquery-ui-1.8.16.custom.css');
+//    drupal_add_css($counsellor_path . '/css/ui-lightness/colorbox.css');
+//    drupal_add_css($counsellor_path . '/reviewlist.css');
+//    drupal_add_js($counsellor_path . '/js/jquery.colorbox.js');
+    drupal_add_js($counsellor_path . '/js/counsellor.js');
+    drupal_add_library('system','ui.datepicker');
+}
+
+
+function counsellor_theme() {
+  return array(    
+    'basic_info_view' => array(        
+      'variables' => array('nTime' => NULL),
+      'path' => drupal_get_path('module', 'counsellor') . '/templates',        
+      'template' => 'basic_info_view',
+      ),  
+    );
+}
+
+function unixTimestampToDateArray($timestamp, $later = 0, $earlier = 0) {
+    $date_array = array();
+    if ($timestamp == 0) {
+        // configure first time
+        $timestamp = time();
+//        dd('111');
+//        dd($timestamp);
+        $date_array['day'] = date('j', $timestamp);
+        $date_array['month'] = date('n', $timestamp);
+        if ($later) {
+            $date_array['month'] = date('n', mktime(0, 0, 0, date('n', $timestamp) + 1, date('j', $timestamp), date('Y', $timestamp)));
+        }
+        if ($earlier) {
+            $date_array['month'] = date('n', mktime(0, 0, 0, date('n', $timestamp) - 1, date('j', $timestamp), date('Y', $timestamp)));
+        }
+        
+        if($date_array['month'] == 12 && $earlier){
+            $date_array['year'] = date('Y', $timestamp) -1;
+        } else {
+            $date_array['year'] = date('Y', $timestamp);
+        }
+    } else {
+        $date_array['day'] = date('j', $timestamp);
+        $date_array['month'] = date('n', $timestamp);
+        $date_array['year'] = date('Y', $timestamp);
+    }
+    return $date_array;
+}
+
+function dateArrayTounixTimestamp($date_array) {
+    $timestamp = 0;
+    if (!empty($date_array)) {
+        $day = $date_array['day'];
+        $month = $date_array['month'];
+        $year = $date_array['year'];
+        $timestamp = mktime(0, 0, 0, $month, $day, $year);
+    }
+    return $timestamp;
+}

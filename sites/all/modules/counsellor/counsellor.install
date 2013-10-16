@@ -1,0 +1,214 @@
+<?php
+
+function counsellor_schema() {
+    $schema['prs_general'] = array(
+        'fields' => array(
+            'prid' => array(
+                'description' => 'Primary Key: Unique Performance Review Sequence ID.',
+                'type' => 'serial',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+            ),
+            'description' => array(
+                'description' => 'Description of current review',
+                'type' => 'varchar',
+                'length' => '255',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+            'period_start' => array(
+                'description' => 'A unix timestap indicate when the review was started',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'period_end' => array(
+                'description' => 'A unix timestap indicate when the review was ended',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'reminder_employee' => array(
+                'description' => 'A unix timestap indicate when to reminder the employee to select feedback provider',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'reminder_provider' => array(
+                'description' => 'A unix timestap indicate when to reminder the provider give the feedback',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'time_frame_from' => array(
+                'description' => 'A unix timestap indicate when the performance review from',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'time_frame_to' => array(
+                'description' => 'A unix timestap indicate when the performance review to',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'system_instruction' => array(
+                'description' => 'Instruction for the employee when they select their feedback providers',
+                'type' => 'varchar',
+                'not null' => TRUE,
+                'length' => '255',
+                'default' => '',
+            ),
+            'active' => array(
+                'description' => 'A flag to indicate the review\'s status,0:preparation, 1:started, 2:in progress',
+                'type' => 'int',
+                'size' => 'small',
+                'not null' => TRUE,
+                'default' => 2,
+            ),
+            'min_provider_number' => array(
+                'description' => 'The minimum # of feedback providers an employee should pick up.',
+                'type' => 'int',
+                'size' => 'small',
+                'not null' => TRUE,
+                'default' => 1,
+            ),
+            'max_provider_number' => array(
+                'description' => 'The maximum # of feedback providers an employee should pick up.',
+                'type' => 'int',
+                'size' => 'small',
+                'not null' => TRUE,
+                'default' => 1,
+            ),
+          'type' => array(
+                'description' => 'Type of review: 0 for annual review; 1 for project review; 2 for 3-month review',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+          'project_name' => array(
+                'description' => 'If type is 1, project name should be enter a project name  ',
+                'type' => 'varchar',
+                'length' => '255',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+        ),
+        'primary key' => array('prid'),
+    );
+
+    $schema['prs_rel_provider_employee'] = array(
+        'fields' => array(
+            'rpeid' => array(
+                'description' => 'Primary Key: Unique Sequence ID.',
+                'type' => 'serial',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+            ),
+            'employeeName' => array(
+                'description' => 'Foreign key of pr360_user',
+                'type' => 'varchar',
+                'length' => '20',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+            'providerName' => array(
+                'description' => 'Foreign key of pr360_reviewre',
+                'type' => 'varchar',
+                'length' => '128',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+            'prid' => array(
+                'description' => 'Foreign key of pr360_general',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'status' => array(
+                'description' => '0: provider doesn\'t finish the review; 1: provider finish the review',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'nid' => array(
+                'description' => 'node id for feedback form',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'token' => array(
+                'description' => 'token for relationship between emlpoyee and provider.',
+                'type' => 'varchar',
+                'length' => '64',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+        ),
+        'primary key' => array('rpeid'),
+    );
+
+    $schema['prs_rel_review_employee'] = array(
+        'fields' => array(
+            'rreid' => array(
+                'description' => 'Primary Key: Unique Sequence ID.',
+                'type' => 'serial',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+            ),
+            'employeeName' => array(
+                'description' => 'Foreign key of pr360_user',
+                'type' => 'varchar',
+                'length' => '20',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+            'prid' => array(
+                'description' => 'Foreign key of pr360_general',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'accept' => array(
+                'description' => 'Accept status: 0 for haven\'t choose; 1 for accept; 2 for reject',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'generateFile' => array(
+                'description' => 'Accept status: 0 for haven\'t generated; 1 for accept; 2 for have generate',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+           'rstatus' => array(
+                'description' => 'Status of one review:0 for New review start; 1 for review in draft; 2 for review by counsellor; 3 for approved by counsellor; 4 for joint review; 5 for GM review; 6 for GM approved; 7 for delete review',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+        ),
+        'primary key' => array('rreid'),
+    );
+
+
+    return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function counsellor_install() {
+    // TODO The drupal_(un)install_schema functions are called automatically in D7.
+//     drupal_install_schema('counsellor');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function counsellor_uninstall() {
+    //Drop tables
+    // TODO The drupal_(un)install_schema functions are called automatically in D7.
+//    drupal_uninstall_schema('counsellor');
+    drupal_set_message(t("Perficient Review System counsellor module uninstalled successfully."));
+}

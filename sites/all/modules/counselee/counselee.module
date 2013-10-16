@@ -1,0 +1,31 @@
+<?php
+/**
+ * @file
+ * 
+ * This is the counselee module
+ * 
+ * 
+ */
+
+
+function counselee_menu() {
+    $items['mydashboard'] = array(
+        'title' => 'My Dashboard',
+        'page callback' => 'dashboard_display',
+        'page arguments' => array(),
+        'access arguments' => array('access to my dashboard'),
+        'file' => 'files/dashboard.pages.inc',
+    );
+    return $items;
+}
+
+function counselee_permission() {
+    return array(
+        'access to my dashboard' => array(
+            'title' => t('Access to my dashboard'),
+        ),
+//        'config reviews' => array(
+//            'title' => t('Config reviews'),
+//        ),
+    );
+}

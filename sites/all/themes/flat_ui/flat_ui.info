@@ -1,0 +1,36 @@
+name        = Flat UI
+description = Flat UI for Drupal
+screenshot  = screenshot.png
+core        = 7.x
+
+; Base - Radix
+base theme  = radix
+
+; Regions
+regions[content]       = Content
+regions[footer]        = Footer
+regions[sidebar_first] = Left Sidebar
+regions[user_login] = User Login
+regions[basic_info] = Basic Info View
+
+
+; CSS - General
+stylesheets[all][]     = assets/stylesheets/screen.css
+;stylesheets[all][]     = assets/stylesheets/bootstrap-datetimepicker.css
+stylesheets[print][]   = assets/stylesheets/print.css
+
+; CSS - Conditional
+stylesheets-conditional[IE 7][all][] = assets/stylesheets/ie7.css
+stylesheets-conditional[IE 8][all][] = assets/stylesheets/ie8.css
+
+; Javascript
+scripts[] = assets/javascripts/script.js
+;scripts[] = assets/javascripts/bootstrap-datetimepicker.js
+;scripts[] = assets/javascripts/bootstrap-datetimepicker.fr.js
+
+; Information added by drupal.org packaging script on 2013-09-06
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "flat_ui"
+datestamp = "1378430174"
+

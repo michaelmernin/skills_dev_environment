@@ -1,0 +1,24 @@
+// Menu
+// Styles for Menus and Navs
+// --------------------------------------------------
+
+// Navbar
+// --------------------------------------------------
+.navbar {
+  .nav {
+    > li {
+      > a {
+        padding: 16px 15px 17px;
+      }
+    }
+  }
+  .btn-navbar {
+    margin-top: 14px;
+  }
+}
+
+.nav {
+  li {
+    list-style: none outside none;
+  }
+}

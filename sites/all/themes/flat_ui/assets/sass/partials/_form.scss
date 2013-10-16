@@ -1,0 +1,21 @@
+//
+// Layout
+// Styles for Forms
+// --------------------------------------------------
+
+// Navbar search form
+// --------------------------------------------------
+.navbar-inverse {
+  .search-form {
+    margin-top: 6px;
+    margin-right: 10px;
+    input.search-query {
+      padding: 5px 15px;
+      color: #333333;
+      text-shadow: 0 1px 0 white;
+      background-color: white;
+      border: 0;
+      @include box-shadow(0 0 3px rgba(0, 0, 0, 0.15));
+    }
+  }
+}
