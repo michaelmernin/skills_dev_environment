@@ -36,15 +36,25 @@
     }
     var reg = new RegExp("/", "g");
     var rdata = review_type + '-' + review_start_date.replace(reg, ":") + '-' + review_end_date.replace(reg, ":") + '-' + review_from_date.replace(reg, ":") + '-' + review_to_date.replace(reg, ":") + '-' + Project_Name_Text;
-
+    var employees = getSelectEmployees();
     jQuery.ajax({
       type: "POST",
-      url: '<?php echo $base_path ?>newreview/submitreview/' + rdata,
-      success: function(msg) {
-        //$('#send_email_loading_'+key).css("display", 'none');
-        alert(msg);
+      url: '<?php echo $base_path ?>newreview/submitreview/' + rdata + '/' + employees,
+      success: function(text) {
+        if (text != '-1') {
+          window.location.href = "<?php print base_path() . 'mydashboard' ?>";
+        } else {
+          window.location.href = "<?php print base_path() . 'newreview' ?>";
+          return;
+        }
       }
     });
+
+  }
+
+  function getSelectEmployees() {
+    //for Anfernee
+
 
   }
 </script>
@@ -86,6 +96,13 @@
     <div id="pr_mywokingstage_content_right" class="span9">
       <!--            <div class="pr_workingstage_connent">
                       <div id="pr_right_content">-->
+      <?php if ($messages): ?>
+        <div id="messages">
+          <div class="container">
+            <?php print $messages; ?>
+          </div>
+        </div>
+      <?php endif; ?>
       <?php print render($page['basic_info'])
       ?>
 
