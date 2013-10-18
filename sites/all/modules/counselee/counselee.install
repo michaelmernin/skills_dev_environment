@@ -1,0 +1,131 @@
+<?php
+
+function counselee_install() {
+    drupal_set_message('DB table with counselee module create successfully.');
+}
+
+function counselee_uninstall() {
+    drupal_set_message('DB table with counselee module delete successfully.');
+}
+
+function counselee_schema() {
+    $schema['prs_reviewers'] = array(
+        'fields' => array(
+            'rid' => array(
+                'description' => 'Primary Key: Unique id for reviewers.',
+                'type' => 'serial',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+            ),
+            'code' => array(
+                'description' => 'Unique employee code for reviewers.',
+                'type' => 'varchar',
+                'length' => '20',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+            'login_name' => array(
+                'description' => 'Unique name for reviewer to access ldap server, only for company member.',
+                'type' => 'varchar',
+                'length' => '128',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+            'family_name' => array(
+                'description' => 'family name of reviewer.',
+                'type' => 'varchar',
+                'length' => '64',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+            'given_name' => array(
+                'description' => 'given name of reviewer.',
+                'type' => 'varchar',
+                'length' => '64',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+            'mail' => array(
+                'description' => 'email address of reviewer.',
+                'type' => 'varchar',
+                'length' => '128',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+            'title' => array(
+                'description' => 'title of reviewer.',
+                'type' => 'varchar',
+                'length' => '128',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+            'type' => array(
+                'description' => 'to differentiate between reviewer, 0 for Perficient members, 1 for external members, for instance, clients',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+        ),
+        'primary key' => array('rid'),
+    );
+    
+/*     $schema['prs_reviewers'] = array(
+        'fields' => array(
+            'rid' => array(
+                'description' => 'Primary Key: Unique id for reviewers.',
+                'type' => 'serial',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+            ),
+            'code' => array(
+                'description' => 'Unique employee code for reviewers.',
+                'type' => 'varchar',
+                'length' => '20',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+            'login_name' => array(
+                'description' => 'Unique name for reviewer to access ldap server, only for company member.',
+                'type' => 'varchar',
+                'length' => '128',
+                'not null' => TRUE,
+                'default' => '',
+            ),
+          ),
+       );
+*/
+     $schema['prs_rel_employee_counselor_gm'] = array(
+        'fields' => array(
+            'recgid' => array(
+                'description' => 'Primary Key: Unique Sequence ID.',
+                'type'        => 'serial',
+                'unsigned'    => TRUE,
+                'not null'    => TRUE,
+            ),
+            'employeeName' => array(
+                'description' => 'Foreign Key of prs_user',
+                'type'        => 'varchar',
+                'length'      => '20',
+                'not null'    => TRUE,
+                'default'     => '',
+            ),
+            'counselorName' => array(
+                'description' => 'Name of counselor of the employee.',
+                'type'        => 'varchar',
+                'length'      => '20',
+                'not null'    => TRUE,
+                'default'     => '',
+            ),
+            'gmName' => array(
+                'description' => 'Name of general manager of the employee',
+                'type'        => 'varchar',
+                'length'      => '20',
+                'not null'    => TRUE,
+                'default'     => '',
+            ),
+        ),
+        'primary key' => array('recgid'),
+    )   ;
+    return $schema;
+}
+?>
