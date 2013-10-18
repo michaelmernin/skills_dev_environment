@@ -1,7 +1,7 @@
 <?php
 defined('ANNUAL_TEMP') or define('ANNUAL_TEMP', 'Annual Performace Review Tempate');
 defined('PEER_TEMP') or define('PEER_TEMP', 'For Demo Peer Review Form Template');
-defined('PROJECT_TEMP') or define('PROJECT_TEMP', 'For Demo Peer Review Form Template');
+defined('PROJECT_TEMP') or define('PROJECT_TEMP', 'Project Review Form Template');
 
 defined('GOAL_STRING') or define('GOAL_STRING', 'goals_text');
 defined('FIRST_LAST_YEAR_GOAL') or define('FIRST_LAST_YEAR_GOAL', 'last_year_goal');

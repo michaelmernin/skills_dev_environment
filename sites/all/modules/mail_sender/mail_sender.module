@@ -216,7 +216,7 @@ function mail_sender_template_adapter($address, $params, $type) {
     case 9:
       $templateName = 'counselor_gm_disapprove_review.tpl.php';
       break;
-    
+
     default:
       break;
   }
@@ -231,7 +231,7 @@ function mail_sender_template_adapter($address, $params, $type) {
  */
 function mail_sander_task() {
 
-  $max_send = 10;
+  $max_send = intval(variable_get('smtp_number'));
 
   $mail_query = db_select('prs_mail', 'mail');
   $mail_query->addField('mail', 'pmid');
@@ -325,7 +325,7 @@ function provider_feedback_remind($prid) {
  * 
  * @param int $rreid  the prs_rel_review_employee rreid
  */
-function counselee_audit_review_result_remind($rreid, $is_approve, $reason=NULL) {
+function counselee_audit_review_result_remind($rreid, $is_approve, $reason = NULL) {
   $query = db_select('prs_rel_review_employee', 'review');
   $query->join('prs_general', 'general', 'general.prid = review.prid');
   $query->join('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName= review.employeeName');
@@ -382,7 +382,7 @@ function counselor_audit_review_remind($address, $counselee_name, $counselor_nam
 }
 
 function counselor_submit_review_result_remind($rreid) {
-  
+
   dd('counselor_submit_review_result_remind');
   $query = db_select('prs_rel_review_employee', 'review');
   $query->join('prs_general', 'general', 'general.prid = review.prid');
@@ -426,7 +426,7 @@ function gm_approve_review_result_remind($rreid) {
   $query->condition('review.rreid', $rreid);
 
   $dataset = $query->execute()->fetchAll();
-  
+
   if (count($dataset) == 1) {
     $counselee_address = $dataset[0]->counseleeMail;
     $counselor_address = $dataset[0]->counselorMail;

@@ -16,11 +16,11 @@ function phpmailer_settings_form($form, $form_state) {
   //Add by palmer,to check the mail template
   $form['debug_mail'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Save e-mails to database,but do not send'),
+    '#title' => t('Save e-mails to database.'),
     '#default_value' => variable_get('debug_mail', 0),
-    '#description' => t('When enabled, Will save mail to database'),
+    '#description' => t('When enabled, Save e-mail copy to database and copy e-mail will not send'),
   );
-  
+
   $form['smtp_on'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use PHPMailer to send e-mails'),
@@ -37,6 +37,16 @@ function phpmailer_settings_form($form, $form_state) {
   elseif (!variable_get('smtp_on', 0) && empty($form_state['input'])) {
     drupal_set_message(t('PHPMailer is currently disabled.'), 'warning');
   }
+
+  //Add by Palmer,To set the number of e-mails to send every time;
+  $form['server']['smtp_number'] = array(
+    '#type' => 'textfield',
+    '#title' => t('How many e-mails send erery time'),
+    '#default_value' => variable_get('smtp_number', '10'),
+    '#description' => t('The number of e-mails will be sent from database.'),
+    '#required' => TRUE,
+  );
+
 
   $form['server']['smtp_host'] = array(
     '#type' => 'textfield',
@@ -194,6 +204,11 @@ function phpmailer_settings_form_validate($form, &$form_state) {
       form_set_error('smtp_port', t('You must enter a valid SMTP port number.'));
     }
   }
+  if ($form_state['values']['smtp_number']) {
+    $str = $form_state['values']['smtp_number'];
+    if (!is_numeric($str) || strpos($str, ".") !== false || intval($str) <= 0)
+      form_set_error('smtp_number', t('You must enter a valid e-mails send non-negative integer.'));
+  }
 }
 
 /**
@@ -202,9 +217,7 @@ function phpmailer_settings_form_validate($form, &$form_state) {
  * @see phpmailer_settings_form()
  */
 function phpmailer_settings_form_submit($form, &$form_state) {
-  //Modify the debug_mail value
-  variable_set('debug_mail',$form_state['values']['smtp_on']);
-  
+
 // Enable/disable mail sending subsystem.
   if ($form_state['values']['smtp_on']) {
     if (!phpmailer_enabled()) {

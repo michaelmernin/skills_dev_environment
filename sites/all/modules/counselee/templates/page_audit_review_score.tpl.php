@@ -59,15 +59,13 @@
     for (var i = 0; i < category.length; i++)
     {
       selfRate = jQuery('#src_self_' + category[i]).html();
-      
-      if (IsNum(selfRate))
-        jQuery('#rating_' + category[i]).html(selfRate);
+//      if (IsNum(selfRate))
+      jQuery('#rating_' + category[i]).html(selfRate);
 
       counselorRate = jQuery('#src_counselor_' + category[i]).html();
-      if (IsNum(counselorRate))
-        jQuery('#counselor_rating_' + category[i]).html(counselorRate);
+//      if (IsNum(counselorRate))
+      jQuery('#counselor_rating_' + category[i]).html(counselorRate);
     }
-
 
     var selfPre = '#src_self_';
     var self_internal = new Array();
@@ -89,10 +87,8 @@
     counselor_internal[3] = counselorPre + 'internal_contributions';
     counselor_internal[4] = counselorPre + 'perficient_basics';
 
-
     var counselor_internal = calculateAverageScore(counselor_internal);
     jQuery('#counselor_rating_internal_contributions').html(counselor_internal);
-
 
     category[6] = 'internal_contributions';
 
