@@ -13,6 +13,8 @@ regions[sidebar_first] = Left Sidebar
 regions[user_login] = User Login
 regions[basic_info] = Basic Info View
 regions[user_status] = User Status View
+regions[my_working_stage] = My Working Stage
+
 
 
 ; CSS - General

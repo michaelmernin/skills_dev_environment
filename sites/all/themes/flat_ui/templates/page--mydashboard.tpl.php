@@ -2,7 +2,6 @@
 <script type="text/javascript">
 
 </script>
-
 <?php require_once 'header.tpl.php'; ?>
 <div id="pr_mywokingstage_page" class="container">
   <div id="pr_mywokingstage_content" class="row">
@@ -11,6 +10,7 @@
       $navigation_tree = menu_tree(variable_get('menu_main_links_source', 'navigation'));
       print drupal_render($navigation_tree);
       ?>
+
 <!--            <script>
             $(document).ready(function() {
                 jQuery("#tree ul").hide();
@@ -43,7 +43,9 @@
               </div>
             </div>
           <?php endif; ?>
+          <?php print render($page['my_working_stage']); ?>
           <?php print render($page['user_status']) ?>
+
         </div>
       </div>
     </div>
