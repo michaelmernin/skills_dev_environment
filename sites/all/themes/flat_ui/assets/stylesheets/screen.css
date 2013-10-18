@@ -388,6 +388,7 @@ a:focus {
 /* line 577, ../../../../../../../../../../usr/local/.rvm/gems/ruby-2.0.0-p0/gems/compass_twitter_bootstrap-2.3.1/stylesheets/compass_twitter_bootstrap/_mixins.scss */
 .row {
   margin-left: -20px;
+ /* height:800px;*/
   *zoom: 1;
 }
 /* line 15, ../../../../../../../../../../usr/local/.rvm/gems/ruby-2.0.0-p0/gems/compass_twitter_bootstrap-2.3.1/stylesheets/compass_twitter_bootstrap/_mixins.scss */
@@ -10600,8 +10601,9 @@ body {
 
 /* line 6, ../sass/modules/_type.sass */
 a {
-  color: #1abc9c;
-  text-decoration: underline;
+ /* color: #1abc9c;*/
+  color: #CC3300 ;
+ /* text-decoration: underline;*/
   -webkit-transition: 0.25s;
   -moz-transition: 0.25s;
   -o-transition: 0.25s;
@@ -10610,7 +10612,8 @@ a {
 }
 /* line 10, ../sass/modules/_type.sass */
 a:hover {
-  color: #2ecc71;
+  /*color: #2ecc71;*/
+  color: #FF0000 ;
   text-decoration: none;
 }
 
@@ -13936,4 +13939,21 @@ div.error {
 
 .fui-user:before {
   content: "\e01d";
+}
+
+.wrap {
+    height: auto !important;
+    margin: 0 auto -60px;
+    min-height: 100%;
+    padding: 0 0 60px;
+}
+
+#status_review thead th{
+ background-color: #575757;
+    border-right: 2px solid #333333;
+    color: #FFFFFF;
+    font-weight: bold;
+ /*   line-height: 30px; */
+    text-align: center;
+
 }

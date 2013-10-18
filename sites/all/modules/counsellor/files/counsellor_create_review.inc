@@ -7,14 +7,14 @@
  */
 
 /**
- * page callback URL:newreview/submitreview/%/%
- * @param type $data
+ * callback URL:newreview/submitreview/%/%/%
+ * @param type $data 
  * @param type $employees
- * @return type
+ * @param type $radio_val
  */
-function submit_new_review($data, $employees) {
+function submit_new_review($data, $employees,$radio_val) {
   $rval = '1';
-  $general_id = insertToGeneral_DB($data);
+  $general_id = insert_to_general_DB($data);
 //  $general_id = '-1';
   if ($general_id != '-1') {
     if (isset($employees)) {
@@ -38,7 +38,7 @@ function submit_new_review($data, $employees) {
  * @param type $general_info this info is from front site ajax
  * @return type general_id
  */
-function insertToGeneral_DB($general_info) {
+function insert_to_general_DB($general_info) {
   $general_id = null;
   $fields_array = array();
   if (set_fields_array($general_info, $fields_array)) {
@@ -86,30 +86,30 @@ function set_fields_array($general_info, &$fields_array) {
 
   //start time
   if (isset($tmp['1'])) {
-    $stime = explodeTime($tmp['1']);
-    $starttime = explodeTimeStand($stime);
+    $stime = explode_time($tmp['1']);
+    $starttime = explode_time_stand($stime);
     $startTime = dateArrayTounixTimestamp($stime);
     $fields_array['period_start'] = $startTime;
   }
   //end time
   if (isset($tmp['2'])) {
-    $etime = explodeTime($tmp['2']);
-    $endtime = explodeTimeStand($etime);
+    $etime = explode_time($tmp['2']);
+    $endtime = explode_time_stand($etime);
     $endTime = dateArrayTounixTimestamp($etime);
     $fields_array['period_end'] = $endTime;
   }
   //period from
   if (isset($tmp['3'])) {
-    $pftime = explodeTime($tmp['3']);
-    $periodFtime = explodeTimeStand($pftime);
+    $pftime = explode_time($tmp['3']);
+    $periodFtime = explode_time_stand($pftime);
     $periodFrom = dateArrayTounixTimestamp($pftime);
     $fields_array['time_frame_from'] = $periodFrom;
   }
 
   //period to
   if (isset($tmp['4'])) {
-    $pttime = explodeTime($tmp['4']);
-    $periodTTime = explodeTimeStand($pttime);
+    $pttime = explode_time($tmp['4']);
+    $periodTTime = explode_time_stand($pttime);
     $periodTo = dateArrayTounixTimestamp($pttime);
     $fields_array['time_frame_to'] = $periodTo;
   }
@@ -133,8 +133,12 @@ function set_fields_array($general_info, &$fields_array) {
   }
   return $flag;
 }
-
-function explodeTimeStand($date) {
+/**
+ * explode to stand time
+ * @param type $date
+ * @return null
+ */
+function explode_time_stand($date) {
   $ntime = NULL;
   if (isset($date['month']) && isset($date['day']) && isset($date['year'])) {
     $ntime = (int) ($date['year'] . $date['month'] . $date['day']);
@@ -150,7 +154,7 @@ function explodeTimeStand($date) {
  * @param type $date mm:dd:yyyy
  * @return type
  */
-function explodeTime($date) {
+function explode_time($date) {
   if (strpos($date, ':')) {
     $tmp = explode(':', $date);
     $ntime = array();

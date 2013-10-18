@@ -1,15 +1,6 @@
 <?php $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() ?>
 <script type="text/javascript">
-  function sendReminderEmail(providerName, employeeName, token, key, prId) {
-    $('#send_email_loading_' + key).css("display", 'block');
-    $.ajax({
-      type: "POST",
-      url: '<?php echo $base_path ?>myworkstage/sendremindemail/' + providerName + '/' + employeeName + '/' + token + '/' + prId,
-      success: function(msg) {
-        $('#send_email_loading_' + key).css("display", 'none');
-      }
-    })
-  }
+
 </script>
 
 <?php require_once 'header.tpl.php'; ?>
@@ -52,7 +43,7 @@
               </div>
             </div>
           <?php endif; ?>
-          <?php // print render($page['my_woking_stage']) ?>
+          <?php print render($page['user_status']) ?>
         </div>
       </div>
     </div>

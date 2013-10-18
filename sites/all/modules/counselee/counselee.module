@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * 
@@ -6,26 +7,72 @@
  * 
  * 
  */
-
-
 function counselee_menu() {
-    $items['mydashboard'] = array(
-        'title' => 'My Dashboard',
-        'page callback' => 'dashboard_display',
-        'page arguments' => array(),
-        'access arguments' => array('access to my dashboard'),
-        'file' => 'files/dashboard.pages.inc',
-    );
-    return $items;
+  $items['mydashboard'] = array(
+    'title' => 'My Dashboard',
+    'page callback' => 'dashboard_display',
+    'page arguments' => array(),
+    'access arguments' => array('access to my dashboard'),
+    'file' => 'files/dashboard.pages.inc',
+  );
+  return $items;
 }
 
 function counselee_permission() {
-    return array(
-        'access to my dashboard' => array(
-            'title' => t('Access to my dashboard'),
-        ),
+  return array(
+    'access to my dashboard' => array(
+      'title' => t('Access to my dashboard'),
+    ),
 //        'config reviews' => array(
 //            'title' => t('Config reviews'),
 //        ),
-    );
+  );
+}
+
+function counselee_block_info() {
+  $blocks['user_status'] = array(
+    'info' => t('User Status View'),
+    'cache' => DRUPAL_NO_CACHE, // no cache
+  );
+  return $blocks;
+}
+
+function counselee_block_view($delta = '') {
+  //The $delta parameter tells us which block is being requested.
+  switch ($delta) {
+    case 'user_status':
+//      appendCSSJS();
+//            $block['subject'] = render_subject_use_image('Configure Timeslot');
+      select_reviewer_status_from_BD();
+      $block['content'] = theme('user_status_view');
+      break;
+  }
+  return $block;
+}
+
+function counselee_theme() {
+  return array(
+    'user_status_view' => array(
+//      'variables' => array('nTime' => NULL),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'user_status_view',
+    ),
+  );
+}
+
+function select_reviewer_status_from_BD() {
+  $status_info = array();
+  if (module_exists('counsellor') && module_enable(array('counsellor'))) {
+    $result = get_counselees_from_db();
+
+    if (count($result) != '0') {
+      // counsellor login
+      $employee_name_array = generate_selectseed_participant_array($result);
+    }
+    else {
+      // counselee login
+    }
+  }
+
+  return $status_info;
 }

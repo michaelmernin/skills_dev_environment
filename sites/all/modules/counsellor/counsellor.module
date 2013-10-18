@@ -23,11 +23,11 @@ function counsellor_menu() {
     'file' => 'files/performance_review_dashboard.pages.inc',
     'weight' => 5,
   );
-  $items['newreview/submitreview/%/%'] = array(
+  $items['newreview/submitreview/%/%/%'] = array(
     'title' => 'Submit A New Review',
     'type' => MENU_CALLBACK,
     'page callback' => 'submit_new_review',
-    'page arguments' => array(2,3),
+    'page arguments' => array(2, 3, 4),
     'access arguments' => array('Manage Performance Review List'),
     'file' => 'files/counsellor_create_review.inc',
   );
@@ -106,13 +106,18 @@ function counsellor_theme() {
   );
 }
 
+/**
+ * unixTimestampToDateArray
+ * @param type $timestamp
+ * @param type $later
+ * @param type $earlier
+ * @return type
+ */
 function unixTimestampToDateArray($timestamp, $later = 0, $earlier = 0) {
   $date_array = array();
   if ($timestamp == 0) {
     // configure first time
     $timestamp = time();
-//        dd('111');
-//        dd($timestamp);
     $date_array['day'] = date('j', $timestamp);
     $date_array['month'] = date('n', $timestamp);
     if ($later) {
@@ -151,4 +156,49 @@ function dateArrayTounixTimestamp($date_array) {
     $timestamp = mktime(0, 0, 0, $month, $day, $year);
   }
   return $timestamp;
+}
+
+/**
+ * get_counselees_from_db
+ * @return type
+ */
+function get_counselees_from_db() {
+  $cur_user_name = get_current_user_name();
+  $query = db_select('prs_rel_employee_counselor_gm', 'precg');
+  $query->fields('precg', array('employeeName'));
+  $query->condition('precg.counselorName', $cur_user_name, '=');
+  $query->orderBy('precg.employeeName', 'ASC');
+  $result = $query->execute()->fetchAll();
+
+  return $result;
+}
+
+/**
+ * get_current_user_name
+ * @global type $user
+ * @return string
+ */
+function get_current_user_name() {
+  global $user;
+  if ($user->uid != 0) {
+    $cur_name = $user->name;
+  }
+  else {
+    $cur_name = 'anonymous';
+  }
+  return $cur_name;
+}
+
+/**
+ * generate_selectseed_participant_array
+ * @param type $counseleeNames
+ * @return array
+ */
+function generate_selectseed_participant_array($counseleeNames) {
+  $counselee_names_array = array();
+  foreach ($counseleeNames as $key => $selectName) {
+    $employee_name = $selectName->employeeName;
+    array_push($counselee_names_array, $employee_name);
+  }
+  return $counselee_names_array;
 }

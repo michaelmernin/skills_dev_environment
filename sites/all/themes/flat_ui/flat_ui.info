@@ -12,6 +12,7 @@ regions[footer]        = Footer
 regions[sidebar_first] = Left Sidebar
 regions[user_login] = User Login
 regions[basic_info] = Basic Info View
+regions[user_status] = User Status View
 
 
 ; CSS - General

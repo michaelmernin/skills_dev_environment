@@ -37,9 +37,10 @@
     var reg = new RegExp("/", "g");
     var rdata = review_type + '-' + review_start_date.replace(reg, ":") + '-' + review_end_date.replace(reg, ":") + '-' + review_from_date.replace(reg, ":") + '-' + review_to_date.replace(reg, ":") + '-' + Project_Name_Text;
     var employees = getSelectEmployees();
+    var radio_val =get_radio_val();
     jQuery.ajax({
       type: "POST",
-      url: '<?php echo $base_path ?>newreview/submitreview/' + rdata + '/' + employees,
+      url: '<?php echo $base_path ?>newreview/submitreview/' + rdata + '/' + employees + '/'+radio_val,
       success: function(text) {
         if (text != '-1') {
           window.location.href = "<?php print base_path() . 'mydashboard' ?>";
@@ -56,6 +57,12 @@
     //for Anfernee
 
 
+  }
+  
+  
+  function get_radio_val(){
+    //for Anfernee
+    
   }
 </script>
 <?php require_once 'header.tpl.php'; ?>
