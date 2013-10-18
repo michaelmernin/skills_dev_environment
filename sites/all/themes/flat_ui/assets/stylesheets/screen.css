@@ -11774,7 +11774,7 @@ input[readonly],
 textarea[disabled],
 textarea[readonly] {
   background-color: #eaeded;
-  border-color: transparent;
+ /* border-color: transparent;*/
   color: #cad2d3;
   cursor: default;
 }

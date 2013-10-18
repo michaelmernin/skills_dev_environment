@@ -117,13 +117,19 @@ function set_fields_array($general_info, &$fields_array) {
 //    $status = $form_state['values']['review_status'];
 //    $fields_array['active'] = $status;
 //  }
-  if ($starttime >= $endtime) {
+  if (isset($starttime) && isset($endtime) && isset($periodFtime) && isset($periodTTime)) {
+    if ($starttime >= $endtime) {
 
-    $flag = FALSE;
-  }
-  if ($periodFtime >= $periodTTime) {
+      $flag = FALSE;
+    }
+    if ($periodFtime >= $periodTTime) {
 
+      $flag = FALSE;
+    }
+  }else{
+    
     $flag = FALSE;
+    
   }
   return $flag;
 }
@@ -132,6 +138,9 @@ function explodeTimeStand($date) {
   $ntime = NULL;
   if (isset($date['month']) && isset($date['day']) && isset($date['year'])) {
     $ntime = (int) ($date['year'] . $date['month'] . $date['day']);
+  }
+  else {
+    $ntime = NULL;
   }
   return $ntime;
 }
@@ -142,16 +151,32 @@ function explodeTimeStand($date) {
  * @return type
  */
 function explodeTime($date) {
-  $tmp = explode(':', $date);
-  $ntime = array();
-  if (isset($tmp['0'])) {
-    $ntime['month'] = $tmp['0'];
+  if (strpos($date, ':')) {
+    $tmp = explode(':', $date);
+    $ntime = array();
+    if (isset($tmp['0'])) {
+      $ntime['month'] = $tmp['0'];
+    }else{
+      $ntime['month']=NULL;
+      
+    }
+    if (isset($tmp['1'])) {
+      $ntime['day'] = $tmp['1'];
+    }else{
+      $ntime['day']=NULL;
+      
+    }
+    if (isset($tmp['2'])) {
+      $ntime['year'] = $tmp['2'];
+    }else{
+      $ntime['year']=NULL;
+      
+    }
   }
-  if (isset($tmp['1'])) {
-    $ntime['day'] = $tmp['1'];
-  }
-  if (isset($tmp['2'])) {
-    $ntime['year'] = $tmp['2'];
+  else {
+    $ntime['month'] = NULL;
+    $ntime['day'] = NULL;
+    $ntime['year'] = NULL;
   }
   return $ntime;
 }
