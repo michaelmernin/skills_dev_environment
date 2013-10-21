@@ -51,8 +51,9 @@ function counselee_block_view($delta = '') {
       $block['content'] = theme('user_status_view');
       break;
     case 'my_work_stage':
-      $counseleePeers = counselee_counselee_select_peers('Jack', 0);
-      $counselorPeers = counselee_counselor_select_peers('Jack', 0);
+      $counseleePeers = counselee_select_peers('counselee',get_current_user_name(), 0);
+      $counselorPeers = counselee_select_peers('counselor',get_current_user_name(), 0);
+      //$counselorPeers = counselee_counselor_select_peers(get_current_user_name(), 0);
       $block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers, 'counselorPeers' => $counselorPeers));
       break;
   }
@@ -65,7 +66,6 @@ function counselee_theme() {
 //      'variables' => array('nTime' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'user_status_view',),
-    
     'my_working_list_view' => array(
       'variables' => array('counseleePeers' => NULL, 'counselorPeers' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
@@ -99,56 +99,47 @@ function select_reviewer_status_from_BD() {
  * @return result The review to select peers  
  * @author Palmer
  */
-function counselee_counselee_select_peers($userName, $reviewtype) {
+function counselee_select_peers($userType, $userName, $reviewType) {
 
-  $selPeersStatus = array(0, 2);
-  $counselee_query = db_select('prs_rel_review_employee', 'review');
-  $counselee_query->join('prs_general', 'general', 'general.prid=review.prid');
-  $counselee_query->addField('review', 'employeeName');
-  $counselee_query->condition('review.employeeName', $userName);
-  $counselee_query->condition('review.rstatus', 1);
-  $counselee_query->condition('general.type', $reviewtype);
-  $counselee_query->condition('review.spstatus', $selPeersStatus, 'in');
+  if ($userType === 'counselee') {
+    $selPeersStatus = array(0, 2);
+    $counselee_query = db_select('prs_rel_review_employee', 'review');
+    $counselee_query->join('prs_general', 'general', 'general.prid=review.prid');
+    $counselee_query->addField('review', 'employeeName');
+    $counselee_query->addField('review', 'rreid');
+    $counselee_query->addField('general', 'type');
+    $counselee_query->condition('review.employeeName', $userName);
+    $counselee_query->condition('review.rstatus', 1);
+    $counselee_query->condition('general.type', $reviewType);
+    $counselee_query->condition('review.spstatus', $selPeersStatus, 'in');
 
-  $dataset = $counselee_query->execute()->fetchAll();
+    $dataset = $counselee_query->execute()->fetchAll();
+  }
+  else if ($userType === 'counselor') {
+    $selPeersStatus = array(0, 1);
+    $counselor_query = db_select('prs_rel_employee_counselor_gm', 'relation');
+    $counselor_query->join('prs_rel_review_employee', 'review', 'relation.employeeName = review.employeeName');
+    $counselor_query->join('prs_general', 'general', 'general.prid=review.prid');
+    $counselor_query->addField('relation', 'employeeName');
+    $counselor_query->addField('review', 'rreid');
+    $counselor_query->addField('general', 'type');
+    $counselor_query->condition('relation.counselorName', $userName);
+    $counselor_query->condition('review.rstatus', 1);
+    $counselor_query->condition('general.type', $reviewType);
+    $counselor_query->condition('review.spstatus', $selPeersStatus, 'in');
+
+    $dataset = $counselor_query->execute()->fetchAll();
+  }
+
   $result = array();
   $index = 0;
   foreach ($dataset as $node) {
     $employeeName = $node->employeeName;
-    $temp = array('employeeName' => $employeeName);
+    $rreid = $node->rreid;
+    $reviewtype = $node->type;
+    $temp = array('employeeName' => $employeeName, 'rreid' => $rreid, 'reviewType' => $reviewtype);
     $result[$index++] = $temp;
   }
   return $result;
 }
 
-/**
- * This funciton is for counselor to select peers
- * 
- * @param string $user counselor name
- * @param int $reviewtype The review type
- * @return result The review to select peers  
- * @author Palmer
- */
-function counselee_counselor_select_peers($userName, $reviewtype) {
-
-  $selPeersStatus = array(0, 1);
-  $counselor_query = db_select('prs_rel_employee_counselor_gm', 'relation'); //选择表
-  $counselor_query->join('prs_rel_review_employee', 'review', 'relation.employeeName = review.employeeName'); // 联合查询
-  $counselor_query->join('prs_general', 'general', 'general.prid=review.prid');
-  $counselor_query->addField('relation', 'employeeName');
-  $counselor_query->addField('review', 'rreid');
-  $counselor_query->condition('relation.counselorName', $userName);
-  $counselor_query->condition('review.rstatus', 1);
-  $counselor_query->condition('general.type', $reviewtype);
-  $counselor_query->condition('review.spstatus', $selPeersStatus, 'in');
-
-  $dataset = $counselor_query->execute()->fetchAll();
-  $result = array();
-  $index = 0;
-  foreach ($dataset as $node) {
-    $employeeName = $node->employeeName;
-    $temp = array('employeeName' => $employeeName);
-    $result[$index++] = $temp;
-  }
-  return $result;
-}
