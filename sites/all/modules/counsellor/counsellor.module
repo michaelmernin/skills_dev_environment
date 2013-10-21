@@ -31,6 +31,14 @@ function counsellor_menu() {
     'access arguments' => array('Manage Performance Review List'),
     'file' => 'files/counsellor_create_review.inc',
   );
+  $items['newreview/startreview/%'] = array(
+    'title' => 'Start a review',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'start_new_review',
+    'page arguments' => array(2),
+    'access arguments' => array('Manage Performance Review List'),
+    'file' => 'files/counsellor_create_review.inc',
+  );
   return $items;
 }
 
@@ -156,6 +164,16 @@ function dateArrayTounixTimestamp($date_array) {
     $timestamp = mktime(0, 0, 0, $month, $day, $year);
   }
   return $timestamp;
+}
+
+/**
+ * date_to_format
+ * @param type $date
+ * @return type
+ * @author Mars
+ */
+function date_to_format($date) {
+  return $date['month'] . '/' . $date['day'] . '/' . $date['year'];
 }
 
 /**

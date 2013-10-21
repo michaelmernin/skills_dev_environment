@@ -1,5 +1,6 @@
 <div>
-  <h2 style="background: #DFDDDD; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px; text-shadow: white 1px 1px;">&nbsp;&nbsp;My Work List</h2>
+  <h3>My Work List</h3>
+  <hr />
   <ul id="myWorkingList">
   </ul>
   <br>
@@ -54,7 +55,7 @@
   if (counseleePeers.length === 0 && counselorPeers.length === 0)
   {
     var li = " <li> You have no work to do!</li>";
-    jQuery('#lists').append(li);
+    jQuery('#myWorkingList').append(li);
   }
 </script>
 

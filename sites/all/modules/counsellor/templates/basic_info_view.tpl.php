@@ -5,6 +5,12 @@
   <tbody>
     <tr>
       <td>
+        <h6>Description<span class="form-required" title="This field is required.">*</span>:</h6>
+      </td>
+      <td colspan="3"><input type="text" value="" id="review_from_description" style="color:#34495E;background-color:#ffffff"></td>
+      </tr>
+    <tr>
+      <td>
         <h6>Type<span class="form-required" title="This field is required.">*</span>:</h6>
       </td>
       <td><select class="form-select" id="review_type" name="review_type"><option value="0" selected>Annual Review</option><option value="1">Project Review</option><option value="2">Three-Month Review</option></select></td>

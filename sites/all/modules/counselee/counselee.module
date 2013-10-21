@@ -45,15 +45,14 @@ function counselee_block_view($delta = '') {
 //The $delta parameter tells us which block is being requested.
   switch ($delta) {
     case 'user_status':
-//      appendCSSJS();
+      appendCSSJS();
 //            $block['subject'] = render_subject_use_image('Configure Timeslot');
-      select_reviewer_status_from_BD();
-      $block['content'] = theme('user_status_view');
+      $status_info = select_reviewer_status_from_BD();
+      $block['content'] = theme('user_status_view', array('status_info' => $status_info));
       break;
     case 'my_work_stage':
       $counseleePeers = counselee_select_peers('counselee',get_current_user_name(), 0);
       $counselorPeers = counselee_select_peers('counselor',get_current_user_name(), 0);
-      //$counselorPeers = counselee_counselor_select_peers(get_current_user_name(), 0);
       $block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers, 'counselorPeers' => $counselorPeers));
       break;
   }
@@ -63,7 +62,7 @@ function counselee_block_view($delta = '') {
 function counselee_theme() {
   return array(
     'user_status_view' => array(
-//      'variables' => array('nTime' => NULL),
+      'variables' => array('status_info' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'user_status_view',),
     'my_working_list_view' => array(
@@ -73,20 +72,35 @@ function counselee_theme() {
   );
 }
 
+/**
+ * select_reviewer_status_from_BD
+ * @return type
+ * @author Mars
+ */
 function select_reviewer_status_from_BD() {
   $status_info = array();
+  $cur_user_name = get_current_user_name();
   if (module_exists('counsellor') && module_enable(array('counsellor'))) {
     $result = get_counselees_from_db();
-
+    // counselee login
+    $my_name = array($cur_user_name);
+    $my_review_status = get_status_from_db($my_name);
+//    dd('$my_review_status');
+//    dd($my_review_status);
     if (count($result) != '0') {
-// counsellor login
-      $employee_name_array = generate_selectseed_participant_array($result);
-    }
-    else {
-// counselee login
+      // counsellor login
+      $counselee_name_array = generate_selectseed_participant_array($result);
+      $counselee_status = get_status_from_db($counselee_name_array);
+//      dd('$counselee_status');
+//      dd($counselee_status);
+      foreach ($counselee_status as $key => $status) {
+        array_push($my_review_status, $status);
+      }
     }
   }
-
+  $status_info = $my_review_status;
+//  dd('$status_info');
+//  dd($status_info);
   return $status_info;
 }
 
@@ -130,7 +144,7 @@ function counselee_select_peers($userType, $userName, $reviewType) {
 
     $dataset = $counselor_query->execute()->fetchAll();
   }
-
+  
   $result = array();
   $index = 0;
   foreach ($dataset as $node) {
@@ -140,6 +154,28 @@ function counselee_select_peers($userType, $userName, $reviewType) {
     $temp = array('employeeName' => $employeeName, 'rreid' => $rreid, 'reviewType' => $reviewtype);
     $result[$index++] = $temp;
   }
+  return $result;
+}
+
+/**
+ * get_status_from_db
+ * 
+ * @param type $employeeName
+ * @return type
+ * @author Mars
+ */
+function get_status_from_db($employeeName) {
+//   $cur_user_name = get_current_user_name();
+  $query = db_select('prs_rel_review_employee', 're');
+  $query->join('prs_general', 'pg', 'pg.prid=re.prid');
+  $query->fields('re', array('employeeName', 'rreid', 'rstatus'));
+  $query->addField('pg', 'period_start');
+  $query->addField('pg', 'period_end');
+  $query->addField('pg', 'type');
+  $query->addField('pg', 'description');
+  $query->condition('re.employeeName', $employeeName, 'in');
+  $query->orderBy('re.rstatus', 'ASC');
+  $result = $query->execute()->fetchAll();
   return $result;
 }
 

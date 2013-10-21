@@ -11786,7 +11786,7 @@ textarea[readonly] {
 input,
 textarea,
 .uneditable-input {
-  width: 192px;
+  width: 200px;
 }
 
 /* line 2, ../sass/modules/_checkbox-and-radio.sass */
@@ -13955,5 +13955,10 @@ div.error {
     font-weight: bold;
  /*   line-height: 30px; */
     text-align: center;
+
+}
+
+#status_review td a{
+ color: #34495E;
 
 }

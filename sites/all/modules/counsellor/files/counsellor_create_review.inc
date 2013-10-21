@@ -12,7 +12,7 @@
  * @param type $employees
  * @param type $radio_val
  */
-function submit_new_review($data, $employees,$radio_val) {
+function submit_new_review($data, $employees, $radio_val) {
   $rval = '1';
   $general_id = insert_to_general_DB($data);
 //  $general_id = '-1';
@@ -31,6 +31,50 @@ function submit_new_review($data, $employees,$radio_val) {
 //    drupal_goto('newreview');
   }
   echo $rval;
+}
+
+/**
+ * callback URL:newreview/startreview/%
+ * @param type $review_id
+ * @author Mars
+ */
+function start_new_review($review_id) {
+  $rval = '-1';
+  $review = query_review($review_id);
+  if ($review[0]->rstatus == '0') {
+      $update_num = start_review_update_change_status_0_to_1($review_id);
+      // send email
+      // code
+      
+      $rval = '1';
+  }
+  else {
+    $rval = '-1';
+  }
+  echo $rval;
+}
+
+function start_review_update_change_status_0_to_1($review_id) {
+  $query = db_update('prs_rel_review_employee');
+  $query->fields(array(
+        'rstatus' => 1,
+      ))
+      ->condition('rreid', $review_id)
+      ->execute();
+}
+
+/**
+ * query a review by review id
+ * @param type $review_id
+ * @return type
+ * @author Mars
+ */
+function query_review($review_id) {
+  $query = db_select('prs_rel_review_employee', 're');
+  $query->fields('re', array('employeeName', 'rreid', 'rstatus'));
+  $query->condition('re.rreid', $review_id);
+  $result = $query->execute()->fetchAll();
+  return $result;
 }
 
 /**
@@ -61,7 +105,7 @@ function insert_to_general_DB($general_info) {
 
 /**
  * set general infomation
- * @param type $general_info format:review_type-review_start_date-review_end_date-review_from_date-review_to_date-Project_Name_Text;
+ * @param type $general_info format:review_type-review_start_date-review_end_date-review_from_date-review_to_date-Project_Name_Text-submit_new_review;
  * @param type $fields_array
  */
 function set_fields_array($general_info, &$fields_array) {
@@ -70,6 +114,7 @@ function set_fields_array($general_info, &$fields_array) {
   $periodFtime = NULL;
   $periodTTime = NULL;
   $flag = TRUE;
+  dd($general_info);
   if (strpos($general_info, '-')) {
     $tmp = explode('-', $general_info);
   }
@@ -89,21 +134,21 @@ function set_fields_array($general_info, &$fields_array) {
     $stime = explode_time($tmp['1']);
     $starttime = explode_time_stand($stime);
     $startTime = dateArrayTounixTimestamp($stime);
-    $fields_array['period_start'] = $startTime;
+    $fields_array['period_start'] = check_plain($startTime);
   }
   //end time
   if (isset($tmp['2'])) {
     $etime = explode_time($tmp['2']);
     $endtime = explode_time_stand($etime);
     $endTime = dateArrayTounixTimestamp($etime);
-    $fields_array['period_end'] = $endTime;
+    $fields_array['period_end'] = check_plain($endTime);
   }
   //period from
   if (isset($tmp['3'])) {
     $pftime = explode_time($tmp['3']);
     $periodFtime = explode_time_stand($pftime);
     $periodFrom = dateArrayTounixTimestamp($pftime);
-    $fields_array['time_frame_from'] = $periodFrom;
+    $fields_array['time_frame_from'] = check_plain($periodFrom);
   }
 
   //period to
@@ -111,12 +156,18 @@ function set_fields_array($general_info, &$fields_array) {
     $pttime = explode_time($tmp['4']);
     $periodTTime = explode_time_stand($pttime);
     $periodTo = dateArrayTounixTimestamp($pttime);
-    $fields_array['time_frame_to'] = $periodTo;
+    $fields_array['time_frame_to'] = check_plain($periodTo);
   }
 //  if (isset($form_state['values']['review_status'])) {
 //    $status = $form_state['values']['review_status'];
 //    $fields_array['active'] = $status;
 //  }
+  
+  //description
+  if (isset($tmp['6'])) {
+    $description = check_plain($tmp['6']);
+    $fields_array['description'] = $description;
+  }
   if (isset($starttime) && isset($endtime) && isset($periodFtime) && isset($periodTTime)) {
     if ($starttime >= $endtime) {
 
@@ -126,13 +177,14 @@ function set_fields_array($general_info, &$fields_array) {
 
       $flag = FALSE;
     }
-  }else{
-    
+  }
+  else {
+
     $flag = FALSE;
-    
   }
   return $flag;
 }
+
 /**
  * explode to stand time
  * @param type $date
@@ -160,21 +212,21 @@ function explode_time($date) {
     $ntime = array();
     if (isset($tmp['0'])) {
       $ntime['month'] = $tmp['0'];
-    }else{
-      $ntime['month']=NULL;
-      
+    }
+    else {
+      $ntime['month'] = NULL;
     }
     if (isset($tmp['1'])) {
       $ntime['day'] = $tmp['1'];
-    }else{
-      $ntime['day']=NULL;
-      
+    }
+    else {
+      $ntime['day'] = NULL;
     }
     if (isset($tmp['2'])) {
       $ntime['year'] = $tmp['2'];
-    }else{
-      $ntime['year']=NULL;
-      
+    }
+    else {
+      $ntime['year'] = NULL;
     }
   }
   else {
