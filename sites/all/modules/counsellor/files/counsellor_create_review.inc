@@ -114,7 +114,6 @@ function set_fields_array($general_info, &$fields_array) {
   $periodFtime = NULL;
   $periodTTime = NULL;
   $flag = TRUE;
-  dd($general_info);
   if (strpos($general_info, '-')) {
     $tmp = explode('-', $general_info);
   }

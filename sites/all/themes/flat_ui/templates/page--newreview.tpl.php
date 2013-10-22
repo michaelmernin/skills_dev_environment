@@ -19,7 +19,7 @@
     }
     if (review_from_description == '') {
       if (Project_Name_Text == '') {
-        alert('please enter a review description!');
+        alert('please enter a review name!');
         hideConfirmdialog();
         return;
       }

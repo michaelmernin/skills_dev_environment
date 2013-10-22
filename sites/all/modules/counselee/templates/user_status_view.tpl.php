@@ -9,9 +9,9 @@
   </caption>
   <thead>
     <tr>
-      <th>Employee<br></th>
+      <th>Counselee<br></th>
       <th>Type<br></th>
-      <th>Description<br></th>
+      <th>Review Name<br></th>
       <th>Start Date<br></th>
       <th>End Date<br></th>
       <th>Status</th>

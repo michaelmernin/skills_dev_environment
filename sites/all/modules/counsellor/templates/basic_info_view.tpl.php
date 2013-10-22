@@ -5,7 +5,7 @@
   <tbody>
     <tr>
       <td>
-        <h6>Description<span class="form-required" title="This field is required.">*</span>:</h6>
+        <h6>Review Name<span class="form-required" title="This field is required.">*</span>:</h6>
       </td>
       <td colspan="3"><input type="text" value="" id="review_from_description" style="color:#34495E;background-color:#ffffff"></td>
       </tr>
