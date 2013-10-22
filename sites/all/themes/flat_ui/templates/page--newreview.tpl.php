@@ -43,8 +43,10 @@
       return;
     }
     var reg = new RegExp("/", "g");
+
     var rdata = review_type + '-' + review_start_date.replace(reg, ":") + '-' + review_end_date.replace(reg, ":") + '-' + review_from_date.replace(reg, ":") + '-' + review_to_date.replace(reg, ":") + '-' + Project_Name_Text + '-' + review_from_description;
-    var employees = getSelectEmployees();
+    var employees = getSelectedEmployees();
+
     var radio_val = get_radio_val();
     jQuery.ajax({
       type: "POST",
@@ -61,16 +63,37 @@
 
   }
 
-  function getSelectEmployees() {
+  function getSelectedEmployees() {
     //for Anfernee
-
-
+    var val ="";
+    var name ="";
+    var count = 0;
+    var pos = 0;
+    jQuery("#users option:selected").each(function() {
+            val += jQuery(this).val()+ ",";
+            count++;
+        });
+        if(count == 0){
+            alert("You should choose at least 1 people!");
+            jQuery('#loading_data_participant').css("display", 'none');
+            return false;
+        }
+        jQuery("#users option:selected").each(function() {
+            name += jQuery(this).text()+ "-";
+        });
+    pos = name.lastIndexOf("-");
+    name = name.slice(0, pos);
+    return name;
   }
-
-
-  function get_radio_val() {
+  
+  /**
+   
+  */
+  function get_radio_val(){
     //for Anfernee
-
+    var flag = "";
+    flag = jQuery("input:radio:checked").val();
+    return flag;
   }
 </script>
 <?php require_once 'header.tpl.php'; ?>
@@ -120,6 +143,8 @@
       <?php endif; ?>
       <?php print render($page['basic_info'])
       ?>
+      <?php print render($page['select_participates'])
+      ?>
 
 
 
@@ -130,7 +155,7 @@
         <div class="span12">
           <div id="modal-container-912871" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="close_btn">×</button>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="close_btn" value="0">×</button>
               <h3 id="myModalLabel">
                 Confirm to start review
               </h3>
@@ -149,8 +174,7 @@
         </div>
       </div>
 
-      <!--                </div>
-                  </div>-->
+     
     </div>
   </div>
   <!--    <div id="pr_mywokingstage_footer" class="pr_footer">

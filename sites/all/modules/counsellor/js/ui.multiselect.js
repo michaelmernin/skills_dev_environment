@@ -50,7 +50,7 @@
             this.selectedContainer = $('<div class="selected"></div>').appendTo(this.container);
             this.availableContainer = $('<div class="available"></div>').appendTo(this.container);
             this.selectedActions = $('<div class="actions ui-widget-header ui-helper-clearfix"><span class="count">0 '+$.ui.multiselect.locale.itemsCount+'</span><a href="#" class="remove-all">'+$.ui.multiselect.locale.removeAll+'</a></div>').appendTo(this.selectedContainer);
-            this.availableActions = $('<div class="actions ui-widget-header ui-helper-clearfix"><div style="float:left; margin-top: 10px; margin-left: 2px;"><img src="../../sites/all/modules/working_stage/img/magnifying_glass.png"/></div><div style="float:left; margin-top: 4px"><input type="text" class="search empty ui-widget-content ui-corner-all"/></div><a href="#" class="add-all">'+$.ui.multiselect.locale.addAll+'</a></div>').appendTo(this.availableContainer);
+            this.availableActions = $('<div class="actions ui-widget-header ui-helper-clearfix"><div style="float:left; margin-top: 10px; margin-left: 2px;"><img src="../EnterpriseReview/sites/all/modules/counsellor/img/magnifying_glass.png"/></div><div style="float:left; margin-top: 4px"><input type="text" class="search empty ui-widget-content ui-corner-all"/></div><a href="#" class="add-all">'+$.ui.multiselect.locale.addAll+'</a></div>').appendTo(this.availableContainer);
             this.selectedList = $('<ul class="selected connected-list"><li class="ui-helper-hidden-accessible"></li></ul>').bind('selectstart', function(){
                 return false;
             }).appendTo(this.selectedContainer);

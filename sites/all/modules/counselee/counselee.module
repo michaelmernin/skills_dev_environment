@@ -89,14 +89,22 @@ function select_reviewer_status_from_BD() {
 //    dd('$my_review_status');
 //    dd($my_review_status);
     if (count($result) != '0') {
+
       // counsellor login
-      $counselee_name_array = generate_selectseed_participant_array($result);
+      $counselee_name_array = generate_selected_participant_array($result);
       $counselee_status = get_status_from_db($counselee_name_array);
 //      dd('$counselee_status');
 //      dd($counselee_status);
       foreach ($counselee_status as $key => $status) {
         array_push($my_review_status, $status);
       }
+
+// counsellor login
+      $employee_name_array = generate_selected_participant_array($result);
+    }
+    else {
+// counselee login
+
     }
   }
   $status_info = $my_review_status;

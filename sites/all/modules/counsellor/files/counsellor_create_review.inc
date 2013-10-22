@@ -15,12 +15,32 @@
 function submit_new_review($data, $employees, $radio_val) {
   $rval = '1';
   $general_id = insert_to_general_DB($data);
+  $review_ids;
 //  $general_id = '-1';
   if ($general_id != '-1') {
-    if (isset($employees)) {
-
-      // counsellor select
+    if (count($employees)) {
+      if(is_numeric($radio_val)) {
+        $emp_array = array();
+        $emp_array = explode_employee($employees);
+        if ($radio_val == '0') {
+          $review_ids = insert_reviews_to_DB($emp_array, $general_id);
+          set_review_status($review_ids, 0);
+          //notify method will be called here.
+        }
+        else if ($radio_val == '1') {
+          $review_ids = insert_reviews_to_DB($emp_array, $general_id);
+          dd($review_ids);
+          set_review_status($review_ids, 1);
+          // notify method will be called here.
+        }
+        else {
+          $rval = -1;
+        }
+      }
+      else {
+        $rval = -1;
     }
+  }
     else {
 
       //counselee
@@ -234,4 +254,51 @@ function explode_time($date) {
     $ntime['year'] = NULL;
   }
   return $ntime;
+}
+
+function explode_employee($employees) {
+  $employee_array = array();
+  $employee_array = explode('-', $employees);
+  // dd($employee_array);
+  return $employee_array;
+}
+
+function insert_reviews_to_DB($employees, $prid) {
+  $rreid = '';
+  $review_ids = array();
+  foreach($employees as $employee) {
+    $rreid = db_insert('prs_rel_review_employee')
+              ->fields(array(
+                'employeeName' => $employee,
+                'prid' => $prid,
+                ))
+              ->execute();
+    if ($rreid != '-1') {
+      // $msg = 'Reviewee(s) set successfully.';
+      // drupal_set_message($msg, 'status');
+      array_push($review_ids, $rreid);
+    }
+    else {
+      // $msg = 'Reviewee(s) set failed!';
+      // drupal_set_message($meg, 'error');
+    }
+  }
+  return $review_ids;
+}
+
+function set_review_status($rreid_array, $status) {
+    $result = db_update('prs_rel_review_employee');
+    $result->fields(array('rstatus' => $status,))
+           ->condition('rreid', $rreid_array, 'IN')
+           ->execute();
+    // dd($result);
+    // if ($result != '-1') {
+    //   $msg = 'Review status was successfully changed to ' . $status .'.';
+    //   drupal_set_message($msg, 'status');
+    // }
+    // else {
+    //   $msg = 'Review status change attempt failed!';
+    //   drupal_set_message($msg, 'error');
+    // }
+  
 }
