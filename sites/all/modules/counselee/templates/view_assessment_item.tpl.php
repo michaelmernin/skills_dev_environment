@@ -11,20 +11,22 @@
 <div class="webform-submission-info clearfix">
   <!--Self comment-->
   <div class="webform-submission-info clearfix">
-
     <div id="header-<?php print $item_num; ?>" >
       <?php print $item_question; ?> 
     </div>
     <br>
+
     <!--PieChart-->
     <div style="float:right; margin: 4px 0px 0px; height: 200px; width: 50%;">
 
     </div>
+
     <div style="margin: 4px 0px 0px; height: 17px; width: 350px;">
       <div style="font-weight: 600;float: left">· Self Comment | </div>
       <div id="assessment-content-value-<?php print $item_num; ?>" 
            style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">· Self Rating:
-        <font color="red"> <?php print $item_rating; ?> 33333</font>
+        <font color="red"> <?php print $item_rating; ?>
+        </font>
       </div>
 
     </div>
@@ -32,15 +34,14 @@
       <div class="additionalbubbleP">
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
 
-          <textarea id="comment-content-value-<?php print $item_num; ?>" 
-                    cols="20" rows="5" 
-                    disabled="true"
-                    style="margin: 4px 0px 0px; height: 112px; width: 96%;  background-color:white;">  
-                      <?php print $item_comment ?>
-          </textarea>
+          <div id="comment-content-value-<?php print $item_num; ?>" 
+               style="margin: 4px 0px 0px; height: 112px; width: 96%;overflow-y:auto;">
+                 <?php print $item_comment ?>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
   <br>
   <!--Display the counselor comment message-->
@@ -88,3 +89,5 @@
     </div>
   </div>
 </div>
+<hr>
+

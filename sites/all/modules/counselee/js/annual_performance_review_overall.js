@@ -1,24 +1,24 @@
-//edit-submitted-performance-evaluation-core-competencies-client-engagements
-var core_competencies_id_pre = '#edit-submitted-performance-evaluation-core-competencies-';
+//edit-submitted-performance-evaluation-category-core-competencies-category-client-engagements
+var core_competencies_id_pre = '#edit-submitted-performance-evaluation-category-core-competencies-category-';
 var core_competencies_id = new Array();
 core_competencies_id[0] = core_competencies_id_pre + 'client-engagements';
 core_competencies_id[1] = core_competencies_id_pre + 'technical-abilities';
-core_competencies_id[2] = core_competencies_id_pre + 'consulting-skill';
+core_competencies_id[2] = core_competencies_id_pre + 'consulting-skills';
 core_competencies_id[3] = core_competencies_id_pre + 'professionalism';
 core_competencies_id[4] = core_competencies_id_pre + 'leadership';
 core_competencies_id[5] = core_competencies_id_pre + 'teamwork';
 
 
 var core_competencies_comment_id = new Array();
-core_competencies_comment_id[0] = core_competencies_id_pre + 'ce-comments';
-core_competencies_comment_id[1] = core_competencies_id_pre + 'ta-comments';
-core_competencies_comment_id[2] = core_competencies_id_pre + 'cs-comments';
-core_competencies_comment_id[3] = core_competencies_id_pre + 'p-comments';
-core_competencies_comment_id[4] = core_competencies_id_pre + 'l-comments';
-core_competencies_comment_id[5] = core_competencies_id_pre + 't-comments';
+core_competencies_comment_id[0] = core_competencies_id_pre + 'client-engagements-comments';
+core_competencies_comment_id[1] = core_competencies_id_pre + 'technical-abilities-comments';
+core_competencies_comment_id[2] = core_competencies_id_pre + 'consulting-skills-comments';
+core_competencies_comment_id[3] = core_competencies_id_pre + 'professionalism--comments';
+core_competencies_comment_id[4] = core_competencies_id_pre + 'leadership-comments';
+core_competencies_comment_id[5] = core_competencies_id_pre + 'teamwork-comments';
 
-//edit-submitted-performance-evaluation-internal-contributions-business-development
-var internal_contributions_id_pre = '#edit-submitted-performance-evaluation-internal-contributions-';
+//edit-submitted-performance-evaluation-category-internal-contributions-category-business-development
+var internal_contributions_id_pre = '#edit-submitted-performance-evaluation-category-internal-contributions-category-';
 var internal_contributions_id = new Array();
 internal_contributions_id[0] = internal_contributions_id_pre + 'business-development';
 internal_contributions_id[1] = internal_contributions_id_pre + 'career-counseling';
@@ -27,11 +27,11 @@ internal_contributions_id[3] = internal_contributions_id_pre + 'internal-contrib
 internal_contributions_id[4] = internal_contributions_id_pre + 'perficient-basics';
 
 var internal_contributions_comment_id = new Array();
-internal_contributions_comment_id[0] = internal_contributions_id_pre + 'bd-comments';
-internal_contributions_comment_id[1] = internal_contributions_id_pre + 'cc-comments';
-internal_contributions_comment_id[2] = internal_contributions_id_pre + 'ra-comments';
-internal_contributions_comment_id[3] = internal_contributions_id_pre + 'ic-comments';
-internal_contributions_comment_id[4] = internal_contributions_id_pre + 'pb-comments';
+internal_contributions_comment_id[0] = internal_contributions_id_pre + 'business-development-comments';
+internal_contributions_comment_id[1] = internal_contributions_id_pre + 'career-counseling-comments';
+internal_contributions_comment_id[2] = internal_contributions_id_pre + 'recruiting-assistance-comments';
+internal_contributions_comment_id[3] = internal_contributions_id_pre + 'internal-contributions-comments';
+internal_contributions_comment_id[4] = internal_contributions_id_pre + 'perficient-basics-comments';
 
 
 
@@ -181,7 +181,7 @@ function check_comments(category, comments)
         {
             comment = jQuery(comments[i]).val();
             len = comment.length;
-            if (len < 1) {
+            if (len < 2) {
                 alert('The socre is not 3 points.Please enter comment!');
                 jQuery(comments[i]).focus();
                 return false;
@@ -195,8 +195,10 @@ jQuery(document).ready(
         function() {
             jQuery("input[name='op'][value='Submit']").click(
                     function() {
-                        return check_comments(core_competencies_id, core_competencies_comment_id)
+                        var result = check_comments(core_competencies_id, core_competencies_comment_id)
                                 && check_comments(internal_contributions_id, internal_contributions_comment_id);
+                        alert(result);
+                        return result;
                     });
         }
 );

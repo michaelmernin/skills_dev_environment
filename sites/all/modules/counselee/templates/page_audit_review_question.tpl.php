@@ -35,7 +35,7 @@
       Peer Comment:
     </b> <?php print $node['peer_comment']; ?>
   </div>
-
+  <hr>
 
 
 

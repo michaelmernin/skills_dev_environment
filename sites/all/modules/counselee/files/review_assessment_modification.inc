@@ -4,7 +4,7 @@
  * @file 
  * Page callback function for view assessment.
  * */
-function load_self_assessment($rreid=NULL) {
+function load_self_assessment($rreid = NULL) {
   access_authen($rreid);
   $reviewee = get_reviewee_from_db($rreid);
   $provider_info = get_provider_info($rreid, $reviewee);
@@ -31,27 +31,26 @@ function load_self_assessment($rreid=NULL) {
   // dd($adj_list, 'adj_list');
   $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($rreid, $nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
   ////////////////////////////////////////////////////////
- // Just for display
+  // Just for display
   // dd($peer_question_rating_comment_result, 'q_r_c result');
   // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
   $pageContent = '';
   foreach ($self_question_rating_comment_result as $key => $value) {
-     $temp = theme('view_assessment', array(
+    $temp = theme('view_assessment', array(
       'item_num' => $value->item_num,
-      'rreid'     => $value->rreid,
-      'nid'       => $value->nid,
-      'reviewee'  => $value->reviewee,
-      'self_dataset'  => $value->self_dataset,
+      'rreid' => $value->rreid,
+      'nid' => $value->nid,
+      'reviewee' => $value->reviewee,
+      'self_dataset' => $value->self_dataset,
     ));
-     $pageContent .= $temp;
-  
+    $pageContent .= $temp;
   }
   return $pageContent;
 }
 
 /**
-  * Page callback function of submit counselor's rating and comments.
-**/
+ * Page callback function of submit counselor's rating and comments.
+ * */
 function submit_counselor_assessment() {
   $result_val = '1';
   $nid = $_POST['nid'];
@@ -80,7 +79,7 @@ function submit_counselor_assessment() {
  * reject_counselor_assessment
  * @file
  * Page callback function for reject counselee assessment
-**/
+ * */
 function reject_counselee_assessment() {
   $result_val = 1;
   $nid = $_POST['nid'];
@@ -91,40 +90,39 @@ function reject_counselee_assessment() {
   $reject_comments = $_POST['rejectComments'];
 
   $result = _append_counselor_reject_info_to_DB($nid, $reject_comments);
-
 }
 
 function display_questions_ratings_and_comments($peer_question_rating_comment_result) {
   foreach ($peer_question_rating_comment_result as $key => $value) {
     $content = theme('view_assessment_item', array(
-      'item_num' => $key+1,
+      'item_num' => $key + 1,
       'item_question' => $value->question['title'],
       'item_rating' => $item_rating,
       'item_peer_rating' => $value->ratings,
       'item_comment' => $comments,
       'item_peer_comments' => $value->comments
-      ));
+    ));
   }
 }
 
 function _append_content($src, $tail) {
-	return $src . $tail;
+  return $src . $tail;
 }
 
 function display_rating_qa_sheet($qa_sheet) {
-	$content = '';
-	for ($i = 0; $i < count($qa_sheet); $i++) {
-		$temp_content = theme(
-			'view_assessment_item', array(
-				'item_num' => $i,
-				'item_question' => $item[$i]['question'],
-				'item_rating' => $item[$i]['rating'],
-				'item_comment' => $item[$i]['comment'],
-				'item_peer_comments' => $item[$i]['peer_comments'],
-			));
-		$content .= $temp_content;
-	}
-	return $content;
+  $content = '';
+  for ($i = 0; $i < count($qa_sheet); $i++) {
+    $temp_content = theme(
+        'view_assessment_item', array(
+      'item_num' => $i,
+      'item_question' => $item[$i]['question'],
+      'item_rating' => $item[$i]['rating'],
+      'item_comment' => $item[$i]['comment'],
+      'item_peer_comments' => $item[$i]['peer_comments'],
+    ));
+    $content .= $temp_content;
+  }
+  return $content;
 }
 
 /**
@@ -132,21 +130,21 @@ function display_rating_qa_sheet($qa_sheet) {
  * fetch provider nid and sid from the data retrieved from database.
  * @param array $data_src
  * @return array $nid_pName_sid_array
-**/
+ * */
 function _fetch_provider_nodeID_and_submissionID($data_src) {
-	$nid_pName_sid_array = array();
-	foreach ($data_src as $item) {
-		$providerName = $item->providerName;
-		$nid = $item->nid;
-		$sid = get_last_sid_by_nid($nid); 
-		$temp = array(
-			'providerName' => $providerName,
-			'nid' => $nid,
-			'sid' => $sid,
-			);
-		array_push($nid_pName_sid_array, $temp);
-	}
-	return $nid_pName_sid_array;
+  $nid_pName_sid_array = array();
+  foreach ($data_src as $item) {
+    $providerName = $item->providerName;
+    $nid = $item->nid;
+    $sid = get_last_sid_by_nid($nid);
+    $temp = array(
+      'providerName' => $providerName,
+      'nid' => $nid,
+      'sid' => $sid,
+    );
+    array_push($nid_pName_sid_array, $temp);
+  }
+  return $nid_pName_sid_array;
 }
 
 /**
@@ -154,36 +152,36 @@ function _fetch_provider_nodeID_and_submissionID($data_src) {
  * get all the review contents whose provider node id is in $nid_sid_array
  * @param array $nid_sid_array
  * @return array $provider_submission_data_set
-**/
+ * */
 function _get_provider_review_content($nid_sid_array) {
-	$provider_submission_data_set = array();
-	foreach ($nid_sid_array as $nid_sid_pair) {
-		$objInstance = new stdClass();
-		$nid = $nid_sid_pair['nid'];
-		$sid = $nid_sid_pair['sid'];
-		$providerName = $nid_sid_pair['providerName'];
-		$dataset = get_latest_submitted_data_from_db($nid, $sid);
-		$objInstance->nid = $nid;
-		$objInstance->sid = $sid;
-		$objInstance->providerName = $providerName;
-		$objInstance->dataset = $dataset;
-		$provider_submission_data_set[$providerName] = $objInstance;
-	}
-	return $provider_submission_data_set;
+  $provider_submission_data_set = array();
+  foreach ($nid_sid_array as $nid_sid_pair) {
+    $objInstance = new stdClass();
+    $nid = $nid_sid_pair['nid'];
+    $sid = $nid_sid_pair['sid'];
+    $providerName = $nid_sid_pair['providerName'];
+    $dataset = get_latest_submitted_data_from_db($nid, $sid);
+    $objInstance->nid = $nid;
+    $objInstance->sid = $sid;
+    $objInstance->providerName = $providerName;
+    $objInstance->dataset = $dataset;
+    $provider_submission_data_set[$providerName] = $objInstance;
+  }
+  return $provider_submission_data_set;
 }
 
 /**
  * get_counselor_latest_submissionID
  * @param int $nid 
  * @return int $csiid
-**/
+ * */
 function get_counselor_latest_submissionID($nid) {
-	$query = db_select('prs_counselor_submit_info', 'pcsi')
-			->fields('pcsi', array('csiid'))
-			->condition('pcsi.nid', $nid)
-			->orderBy('pcsi.submitTimestamp', 'DESC')
-			->execute()->fetchAll();
-	return $query[0]->csiid;
+  $query = db_select('prs_counselor_submit_info', 'pcsi')
+          ->fields('pcsi', array('csiid'))
+          ->condition('pcsi.nid', $nid)
+          ->orderBy('pcsi.submitTimestamp', 'DESC')
+          ->execute()->fetchAll();
+  return $query[0]->csiid;
 }
 
 /**
@@ -191,25 +189,25 @@ function get_counselor_latest_submissionID($nid) {
  * @param int $nid 
  * @param int $csiid
  * @return array 
-**/
+ * */
 function get_synthesized_provider_comment_from_db($nid, $csiid) {
-	$query = db_select('prs_counselor_submit_data', 'pcsd')
-			->fields('pcsd', array('count', 'title', 'peer_comments'))
-			->condition('pcsd.nid', $nid)
-			->condition('pcsd.csiid', $csiid)
-			->orderBy('pcsd.count')
-			->execute()->fetchAll();
-	return $query;
+  $query = db_select('prs_counselor_submit_data', 'pcsd')
+          ->fields('pcsd', array('count', 'title', 'peer_comments'))
+          ->condition('pcsd.nid', $nid)
+          ->condition('pcsd.csiid', $csiid)
+          ->orderBy('pcsd.count')
+          ->execute()->fetchAll();
+  return $query;
 }
 
 /**
-  * synthesize_self_review_ratings_and_comments
-  * @param
-  * @return 
-**/
+ * synthesize_self_review_ratings_and_comments
+ * @param
+ * @return 
+ * */
 function synthesize_self_review_ratings_and_comments() {
   $result = array();
-  for($i = 0; $i < 12; $i++) {
+  for ($i = 0; $i < 12; $i++) {
     $temp = new stdClass();
     $temp->item_num = 'num';
     $temp->rreid = 'rreid';
@@ -234,20 +232,20 @@ function synthesize_self_review_ratings_and_comments() {
  * @param array by reference $mapping_table
  * @param int $item_count
  * @return array 
-**/
+ * */
 function synthesize_all_peer_review_ratings_and_comments($rreid, &$nid_pname_array, &$pr_data_array, &$mapping_table, $item_count) {
-	$all_peer_review_content = array();
-	$count = count($nid_pname_array);
-	if (count($nid_pname_array) != 0) {
-		$providerName = $nid_pname_array[0]['providerName'];
-	}
-	else {
-		$msg = 'No new provider comments was added.';
-		drupal_set_message($msg, 'status');
-		return;
-	}
-	$rating_array = _generate_provider_syn_ratings_array($pr_data_array, $item_count);
-	$comment_array = _generate_provider_syn_comments_array($pr_data_array, $item_count);
+  $all_peer_review_content = array();
+  $count = count($nid_pname_array);
+  if (count($nid_pname_array) != 0) {
+    $providerName = $nid_pname_array[0]['providerName'];
+  }
+  else {
+    $msg = 'No new provider comments was added.';
+    drupal_set_message($msg, 'status');
+    return;
+  }
+  $rating_array = _generate_provider_syn_ratings_array($pr_data_array, $item_count);
+  $comment_array = _generate_provider_syn_comments_array($pr_data_array, $item_count);
 
   // We should iterate the content according to the adjusted sequence as mapping table!.
   $temp_idx = 0;
@@ -262,11 +260,11 @@ function synthesize_all_peer_review_ratings_and_comments($rreid, &$nid_pname_arr
     $obj->question['title'] = $pr_data_array[$providerName]->dataset[$i]->name;
 
     $obj->ratings = $rating_array[$mapping_table[$temp_idx]['rating_idx']];
-		$obj->comments = $comment_array[$mapping_table[$temp_idx]['comment_idx']];
+    $obj->comments = $comment_array[$mapping_table[$temp_idx]['comment_idx']];
     $temp_idx++;
-		array_push($all_peer_review_content, $obj);
-	}
-	return $all_peer_review_content;
+    array_push($all_peer_review_content, $obj);
+  }
+  return $all_peer_review_content;
 }
 
 /**
@@ -274,7 +272,7 @@ function synthesize_all_peer_review_ratings_and_comments($rreid, &$nid_pname_arr
  * @param array $pr_data_array
  * @param int $count
  * @return array 
-**/
+ * */
 function _generate_provider_syn_ratings_array($pr_data_array, $count) {
 	$rating_array = range(0, $count-1);
 	for($i = 0; $i < $count; $i++) {
@@ -298,14 +296,14 @@ function _generate_provider_syn_ratings_array($pr_data_array, $count) {
  * @param array $pr_data_array
  * @param int $count
  * @return array 
-**/
+ * */
 function _generate_provider_syn_comments_array($pr_data_array, $count) {
-	$comment_array = range(0, $count-1);
-  for($i = 0; $i < $count; $i++) {
+  $comment_array = range(0, $count - 1);
+  for ($i = 0; $i < $count; $i++) {
     $comment_array[$i] = array();
   }
-  foreach($pr_data_array as $item) {
-    for($i = 0; $i < $count; $i++) {
+  foreach ($pr_data_array as $item) {
+    for ($i = 0; $i < $count; $i++) {
       if ($item->dataset[$i]->type == 'textarea' && $item->dataset[$i]->DATA != 'NIL') {
         $comment_array[$item->dataset[$i]->cid][$item->providerName] = $item->dataset[$i]->DATA;
       }
@@ -314,14 +312,14 @@ function _generate_provider_syn_comments_array($pr_data_array, $count) {
       }
     }
   }
-	return $comment_array;
+  return $comment_array;
 }
 
 /**
  * _fetch_cid_formkey_from_dataset
  * @param array $data_src
  * @rerturn array
-**/
+ * */
 function _fetch_cid_formkey_from_dataset($data_src) {
   $index = array_keys($data_src);
   $cid_formkey_type_array = array();
@@ -340,7 +338,7 @@ function _fetch_cid_formkey_from_dataset($data_src) {
  * reorder_form_contents
  * @param array $pr_data_array
  * @return array
-**/
+ * */
 function reorder_form_contents($pr_data_array, &$cid_formkey_type_array, &$adj_list) {
   /////////////////////////////////////
   // $cid_formkey_type mapping ralations
@@ -355,7 +353,6 @@ function reorder_form_contents($pr_data_array, &$cid_formkey_type_array, &$adj_l
   $sequential_list = dfs_travel_all_node($adj_list);
   $mapping_table = adjust_question_and_answer($cid_formkey_type_array, $sequential_list);
   // for($i = 0; $i < count($sequential_list); $i++) {
-
   // }
   return $mapping_table;
 }
@@ -366,12 +363,12 @@ function reorder_form_contents($pr_data_array, &$cid_formkey_type_array, &$adj_l
  * @param array $src_array
  * @param array $dfs_tree
  * @return array $qa_array
-**/
+ * */
 function adjust_question_and_answer($src_array, $dfs_tree) {
   $qa_array = array();
   $comment_array = array();
   $count = count($src_array);
-  for($i = 0; $i < $count; $i++) {
+  for ($i = 0; $i < $count; $i++) {
     if (!array_key_exists($i, $src_array)) {
       continue;
     }
@@ -383,7 +380,7 @@ function adjust_question_and_answer($src_array, $dfs_tree) {
       unset($src_array[$i]);
     }
   }
-  for($i = 0; $i < count($dfs_tree); $i++) {
+  for ($i = 0; $i < count($dfs_tree); $i++) {
     if (!array_key_exists($dfs_tree[$i], $src_array)) {
       continue;
     }
@@ -405,7 +402,7 @@ function adjust_question_and_answer($src_array, $dfs_tree) {
 /**
  * These functions which their signature start with a profix "dfs_" below implement node walk by Depth Fisrt according to their parent and children relationship.
  * by Anfernee
-**/
+ * */
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -413,14 +410,14 @@ function adjust_question_and_answer($src_array, $dfs_tree) {
  * generate the adjacent list which represents a tree datastructure. Each subarray stands for all the children nodes of their index node
  * @param array $cid_formkey_type_array
  * @return array $adj_list
-**/
+ * */
 function dfs_generate_adjacent_list($cid_formkey_type_array) {
   $cid_index = array_keys($cid_formkey_type_array);
   $adj_list = array();
   foreach ($cid_index as $item) {
     $adj_list[$item] = array();
   }
-  for($i = 0; $i < count($cid_index); $i++) {
+  for ($i = 0; $i < count($cid_index); $i++) {
     $pnode = $cid_formkey_type_array[$cid_index[$i]]['pid'];
     if (!array_key_exists($pnode, $adj_list)) {
       $adj_list[$pnode] = array();
@@ -435,7 +432,7 @@ function dfs_generate_adjacent_list($cid_formkey_type_array) {
  * travel all the node by Depth First 
  * @param array $adj_list
  * @return array $visited_array
-**/
+ * */
 function dfs_travel_all_node($adj_list) {
   // The nodes those have been visited.
   $visited_array = array();
@@ -461,12 +458,13 @@ function dfs_travel_all_node($adj_list) {
  * push all the element in array $source into array $target on by one, which behaves like a stack.
  * @param array by reference $target
  * @param array $source
-**/
+ * */
 function dfs_push(&$target, $source) {
-  for ($i = count($source)-1; $i >= 0; $i--) {
+  for ($i = count($source) - 1; $i >= 0; $i--) {
     array_push($target, $source[$i]);
   }
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -474,7 +472,7 @@ function dfs_push(&$target, $source) {
  * @param int $nid
  * @return array $dataset,data which contains $cid, $sid, $pid, $form_key, $type, $weight, $name, $data.
  * if you would like to accuire additional data from here, feel free to adjust the db_query statement.
-**/
+ * */
 function get_latest_submitted_data_from_db($nid, $sid) {
   $dataset = db_query('SELECT
         webform_component.cid,
@@ -502,8 +500,7 @@ function get_latest_submitted_data_from_db($nid, $sid) {
         WHERE
           webform_component.nid = :nid
         ORDER BY
-          webform_component.cid', 
-    array(':sid'=> $sid, ':nid' => $nid ))->fetchAll();
+          webform_component.cid', array(':sid' => $sid, ':nid' => $nid))->fetchAll();
   return $dataset;
 }
 
@@ -511,15 +508,15 @@ function get_latest_submitted_data_from_db($nid, $sid) {
  * insert counselor's submission info to db table prs_counselor_submit_info
  * @param int $nid
  * @return int $csiid
-**/
+ * */
 function _insert_counselor_submittion_info_to_DB($nid) {
   $csiid = '';
   $timestamp = time();
   $csiid = db_insert('prs_counselor_submit_info')
-        ->fields(array(
-          'nid' => $nid,
-          'submitTimestamp' => $timestamp,
-          'isDraft' => 1,
+          ->fields(array(
+            'nid' => $nid,
+            'submitTimestamp' => $timestamp,
+            'isDraft' => 1,
           ))->execute();
   return $csiid;
 }
@@ -530,18 +527,18 @@ function _insert_counselor_submittion_info_to_DB($nid) {
  * @param int $csiid
  * @param array by reference $data_array
  * @return array $csdid_array
-**/
+ * */
 function _insert_counselor_submittion_data_to_DB($nid, $csiid, &$data_array) {
   $csdid_array = array();
   foreach ($data_array as $data) {
     $csdid = db_insert('prs_counselor_submit_data')
-          ->fields(array(
-            'nid' => $nid,
-            'csiid' => $csiid,
-            'count' => $data['count'],
-            'header' => $data['header'],
-            'rating' => $data['rating'],
-            'comment' => $data['comment'],
+            ->fields(array(
+              'nid' => $nid,
+              'csiid' => $csiid,
+              'count' => $data['count'],
+              'header' => $data['header'],
+              'rating' => $data['rating'],
+              'comment' => $data['comment'],
             ))->execute();
     if ($csdid != -1) {
       array_push($csdid_array, $csdid);
@@ -561,24 +558,24 @@ function _insert_counselor_submittion_data_to_DB($nid, $csiid, &$data_array) {
  * @param int $nid
  * @param string by referen $reject_comments
  * @return bool 
-**/
+ * */
 function _append_counselor_reject_info_to_DB($nid, &$reject_comments) {
   $sid = get_last_sid_by_nid($nid);
   $result1 = db_update('prs_rel_provider_employee')
-          ->fields(array(
-            'status' => 0,
-            'isRead' => 1,
-            'isCounselorApproved' => 2,
-            'deniedInfo' => $reject_comments,
-            ))
-          ->condition('nid', $nid)
-          ->execute();
+      ->fields(array(
+        'status' => 0,
+        'isRead' => 1,
+        'isCounselorApproved' => 2,
+        'deniedInfo' => $reject_comments,
+      ))
+      ->condition('nid', $nid)
+      ->execute();
   $result2 = db_update('webform_submissions')
-          ->fields(array(
-            'is_draft' => 1,))
-          ->condition('nid', $nid)
-          ->condition('sid', $sid)
-          ->execute();
+      ->fields(array(
+        'is_draft' => 1,))
+      ->condition('nid', $nid)
+      ->condition('sid', $sid)
+      ->execute();
   if (($result1 != 0) && ($result2 != 0)) {
     return TRUE;
   }
@@ -586,8 +583,6 @@ function _append_counselor_reject_info_to_DB($nid, &$reject_comments) {
     return FALSE;
   }
 }
-
-
 
 function _generate_headerInfo($headerInfo) {
   return explode('---', $headerInfo);
@@ -599,17 +594,17 @@ function _generate_headerInfo($headerInfo) {
  * @param array by reference $ratings
  * @param array by reference $comments
  * @return array that migrating above array together.
-**/
+ * */
 function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments) {
-  $target_array = array() ;
-  for($i = 0; $i < 24; $i++) {
+  $target_array = array();
+  for ($i = 0; $i < 24; $i++) {
     if ($i == 0 || $i == 1) {
       $target_array[$i] = array(
         'count' => $i,
         'header' => $headerInfo[$i],
         'rating' => 0,
         'comment' => '',
-        );
+      );
     }
     else if ($i == 2 || $i == 9) {
       continue;
@@ -620,7 +615,7 @@ function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments)
         'header' => '',
         'rating' => $ratings[$i],
         'comment' => $comments[$i],
-        );
+      );
     }
     else if (in_array($i, range(15, 20))) {
       $target_array[$i] = array(
@@ -628,7 +623,7 @@ function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments)
         'header' => '',
         'rating' => 0,
         'comment' => $comments[$i],
-        );
+      );
     }
     else if ($i == 23) {
       $target_array[$i] = array(
@@ -636,33 +631,33 @@ function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments)
         'header' => '',
         'rating' => $ratings[$i],
         'comments' => '',
-        );
+      );
     }
   }
   return $target_array;
 }
 
 function _generate_rating_qa_sheet($src_array) {
-	$target_array = array();
-	foreach($src_array as $item) {
-		if ($item['identifier'] == 2) {
-			array_push($target_array, $item);
-		}
-	}
-	return $target_array;
+  $target_array = array();
+  foreach ($src_array as $item) {
+    if ($item['identifier'] == 2) {
+      array_push($target_array, $item);
+    }
+  }
+  return $target_array;
 }
 
 /**
-  *This func is temporarily used to map the header and its result of the survey by hard code.
-  *It will be replaced later.
-**/
+ * This func is temporarily used to map the header and its result of the survey by hard code.
+ * It will be replaced later.
+ * */
 function generate_selfassessment_result_array($qa_table) {
   $target = array();
   for ($i = 0; $i < count($qa_table); $i++) {
-/*    if ($qa_table[$i]->cid == 'NIL') {
+    /*    if ($qa_table[$i]->cid == 'NIL') {
       continue;
-    }
-*/    $key = $qa_table[$i]->cid;
+      }
+     */ $key = $qa_table[$i]->cid;
     $value = $i;
     $target[$key] = $value;
   }
@@ -675,167 +670,167 @@ function generate_selfassessment_result_array($qa_table) {
       'question' => 'Project Roles And Responsibilities',
       'rating' => '',
       'comment' => $qa_table[$target[55]]->DATA,
-      ),
+    ),
     '1' => array(
       'description' => 'Client(Date)',
       'identifier' => 0,
       'question' => 'Client(Date)',
       'rating' => '',
       'comment' => $qa_table[$target[54]]->DATA,
-      ),
+    ),
     '2' => array(
       'description' => 'Core competencies',
       'identifier' => 1,
       'question' => 'Core Competencies',
       'rating' => '',
       'comment' => '',
-      ),
+    ),
     '3' => array(
       'description' => 'client engagement',
       'identifier' => 2,
       'question' => $qa_table[$target[8]]->name,
       'rating' => $qa_table[$target[8]]->DATA,
       'comment' => $qa_table[$target[11]]->DATA,
-      ),
+    ),
     '4' => array(
       'description' => 'consulting skills',
       'identifier' => 2,
       'question' => $qa_table[$target[10]]->name,
       'rating' => $qa_table[$target[10]]->DATA,
       'comment' => $qa_table[$target[12]]->DATA,
-      ),
+    ),
     '5' => array(
       'description' => 'technical ability',
       'identifier' => 2,
       'question' => $qa_table[$target[9]]->name,
       'rating' => $qa_table[$target[9]]->DATA,
       'comment' => $qa_table[$target[13]]->DATA,
-      ),
+    ),
     '6' => array(
       'description' => 'professionalism',
       'identifier' => 2,
       'question' => $qa_table[$target[25]]->name,
       'rating' => $qa_table[$target[25]]->DATA,
       'comment' => $qa_table[$target[26]]->DATA,
-      ),
+    ),
     '7' => array(
       'description' => 'leadership',
       'identifier' => 2,
       'question' => $qa_table[$target[27]]->name,
       'rating' => $qa_table[$target[27]]->DATA,
       'comment' => $qa_table[$target[28]]->DATA,
-      ),
+    ),
     '8' => array(
       'description' => 'teamwork',
       'identifier' => 2,
       'question' => $qa_table[$target[29]]->name,
       'rating' => $qa_table[$target[29]]->DATA,
       'comment' => $qa_table[$target[30]]->DATA,
-      ),
+    ),
     '9' => array(
       'description' => 'Internal Contributions',
       'identifier' => 1,
       'question' => 'Internal Contributions',
       'rating' => '',
       'comment' => ''
-      ),
+    ),
     '10' => array(
       'description' => 'business dev',
       'identifier' => 2,
       'question' => $qa_table[$target[15]]->name,
       'rating' => $qa_table[$target[15]]->DATA,
       'comment' => $qa_table[$target[16]]->DATA,
-      ),
+    ),
     '11' => array(
       'description' => 'career counseling',
       'identifier' => 2,
       'question' => $qa_table[$target[17]]->name,
       'rating' => $qa_table[$target[17]]->DATA,
       'comment' => $qa_table[$target[18]]->DATA,
-      ),
+    ),
     '12' => array(
       'description' => 'recruiting assist',
       'identifier' => 2,
       'question' => $qa_table[$target[19]]->name,
       'rating' => $qa_table[$target[19]]->DATA,
       'comment' => $qa_table[$target[20]]->DATA,
-      ),
+    ),
     '13' => array(
       'description' => 'internal contribution',
       'identifier' => 2,
       'question' => $qa_table[$target[21]]->name,
       'rating' => $qa_table[$target[21]]->DATA,
       'comment' => $qa_table[$target[22]]->DATA,
-      ),
+    ),
     '14' => array(
       'description' => 'perficient basis',
       'identifier' => 2,
       'question' => $qa_table[$target[23]]->name,
       'rating' => $qa_table[$target[23]]->DATA,
       'comment' => $qa_table[$target[24]]->DATA,
-      ),
+    ),
     '15' => array(
       'description' => 'Strength',
       'identifier' => 3,
       'question' => 'Strength',
       'rating' => '',
       'comment' => $qa_table[$target[32]]->DATA,
-      ),  
+    ),
     '16' => array(
       'description' => 'Opportunities For Improvement',
       'identifier' => 3,
       'question' => 'Opportunities For Improvement',
       'rating' => '',
       'comment' => $qa_table[$target[34]]->DATA,
-      ),
+    ),
     '17' => array(
       'description' => 'Summary',
       'identifier' => 3,
       'question' => 'Summary',
       'rating' => '',
       'comment' => $qa_table[$target[36]]->DATA,
-      ),
+    ),
     '18' => array(
       'description' => 'Goals',
       'identifier' => 3,
       'question' => 'Goals',
       'rating' => '',
       'comment' => $qa_table[$target[38]]->DATA,
-      ),
+    ),
     '19' => array(
       'description' => 'Development Opportunities',
       'identifier' => 3,
       'question' => 'Development Opportunities',
       'rating' => '',
       'comment' => $qa_table[$target[40]]->DATA,
-      ),
+    ),
     '20' => array(
       'description' => 'Longer Term Goals',
       'identifier' => 3,
       'question' => 'Longer Term Goals',
       'rating' => '',
       'comment' => $qa_table[$target[42]]->DATA,
-      ),
+    ),
     '21' => array(
       'description' => 'Last Year Goal',
       'identifier' => 3,
       'question' => 'Last Year Goal',
       'rating' => '',
       'comment' => $qa_table[$target[43]]->DATA,
-      ),
+    ),
     '22' => array(
       'description' => 'Achievements',
       'identifier' => 3,
       'question' => 'Achievements',
       'rating' => '',
       'comment' => $qa_table[$target[46]]->DATA,
-      ),
+    ),
     '23' => array(
       'description' => 'Overall Scores',
       'identifier' => 4,
       'question' => 'Overall Scores',
       'rating' => '',
       'comment' => $qa_table[$target[49]]->DATA,
-      ),
-    );
+    ),
+  );
 }

@@ -255,7 +255,7 @@ function get_performance_evaluation($self_review) {
     $problem_node['self_rating'] = $self_review[$review['selfkey']]->data;
     $problem_node['self_comment'] = $self_review[$review['commentkey']]->data;
 
-    $core_competencies_content .= theme('page_audit_review_question', array('node' => $problem_node)) . '<hr>';
+    $core_competencies_content .= theme('page_audit_review_question', array('node' => $problem_node));
   }
   $core_competencies_content = add_fieldset(1, 'CORE COMPETENCIES', $core_competencies_content);
 
@@ -266,7 +266,7 @@ function get_performance_evaluation($self_review) {
     $problem_node['description'] = $self_review[$review['selfkey']]->name;
     $problem_node['self_rating'] = $self_review[$review['selfkey']]->data;
     $problem_node['self_comment'] = $self_review[$review['commentkey']]->data;
-    $internal_contributions_content .= theme('page_audit_review_question', array('node' => $problem_node)) . '<hr>';
+    $internal_contributions_content .= theme('page_audit_review_question', array('node' => $problem_node));
   }
   $internal_contributions_content = add_fieldset(1, 'INTERNAL CONTRIBUTIONS', $internal_contributions_content);
 

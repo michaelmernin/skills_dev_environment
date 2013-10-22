@@ -1,13 +1,13 @@
 
 //edit-submitted-performance-evaluation-technical-abilities-productivity-comment
-var technical_abilities_id_pre = '#edit-submitted-performance-evaluation-technical-abilities-';
+var technical_abilities_id_pre = '#edit-submitted-performance-evaluation-technical-abilities-category-';
 var technical_abilities_id = new Array();
 technical_abilities_id[0] = technical_abilities_id_pre + 'productivity';
 technical_abilities_id[1] = technical_abilities_id_pre + 'quality';
 technical_abilities_id[2] = technical_abilities_id_pre + 'results';
 technical_abilities_id[3] = technical_abilities_id_pre + 'technical-skills';
 
-var consulting_skills_id_pre = '#edit-submitted-performance-evaluation-consulting-skills-';
+var consulting_skills_id_pre = '#edit-submitted-performance-evaluation-consulting-skills-category-';
 var consulting_skills_id = new Array();
 consulting_skills_id[0] = consulting_skills_id_pre + 'adaptability';
 consulting_skills_id[1] = consulting_skills_id_pre + 'communication ';
@@ -16,7 +16,7 @@ consulting_skills_id[3] = consulting_skills_id_pre + 'core-consuling-skills';
 
 
 // edit-submitted-performance-evaluation-professionalism-category-attitude
-var professionalism_id_pre = '#edit-submitted-performance-evaluation-professionalism-category-';
+var professionalism_id_pre = '#edit-submitted-performance-evaluation-professionalism-category-category-category-';
 var professionalism_id = new Array();
 professionalism_id[0] = professionalism_id_pre + 'attitude';
 professionalism_id[1] = professionalism_id_pre + 'dependability';

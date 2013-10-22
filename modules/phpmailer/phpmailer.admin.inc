@@ -13,6 +13,14 @@
  * @see phpmailer_settings_form_submit()
  */
 function phpmailer_settings_form($form, $form_state) {
+  //Add by palmer,to check the mail template
+  $form['debug_mail'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Save e-mails to database,but do not send'),
+    '#default_value' => variable_get('debug_mail', 0),
+    '#description' => t('When enabled, Will save mail to database'),
+  );
+  
   $form['smtp_on'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use PHPMailer to send e-mails'),
@@ -194,7 +202,10 @@ function phpmailer_settings_form_validate($form, &$form_state) {
  * @see phpmailer_settings_form()
  */
 function phpmailer_settings_form_submit($form, &$form_state) {
-  // Enable/disable mail sending subsystem.
+  //Modify the debug_mail value
+  variable_set('debug_mail',$form_state['values']['smtp_on']);
+  
+// Enable/disable mail sending subsystem.
   if ($form_state['values']['smtp_on']) {
     if (!phpmailer_enabled()) {
       $mail_system = variable_get('mail_system', array('default-system' => 'DefaultMailSystem'));
@@ -234,7 +245,7 @@ function phpmailer_settings_form_submit($form, &$form_state) {
     $settings[] = 'password';
   }
   foreach ($settings as $setting) {
-    if ($form_state['values']['smtp_'. $setting] != variable_get('smtp_'. $setting, '')) {
+    if ($form_state['values']['smtp_' . $setting] != variable_get('smtp_' . $setting, '')) {
       watchdog('phpmailer', 'SMTP configuration changed.');
       break;
     }
@@ -278,7 +289,7 @@ function phpmailer_preview() {
   // @see mimemail_prepare()
   $body = theme('mimemail_message', $body, $mailkey);
   foreach (module_implements('mail_post_process') as $module) {
-    $function = $module .'_mail_post_process';
+    $function = $module . '_mail_post_process';
     $function($body, $mailkey);
   }
 

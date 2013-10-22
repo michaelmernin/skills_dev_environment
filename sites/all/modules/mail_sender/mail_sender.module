@@ -104,7 +104,7 @@ function mail_sender_mail_template($address, $subject, $params, $templateName, $
     }
   }
   $debug_mail = variable_get('debug_mail');
-
+  
   if ($debug_mail) {
     $mail_insert = db_insert('prs_mail');
     $create_time = time(); //Get current unix timestamp;
@@ -182,8 +182,15 @@ function mail_sender_template_adapter($address, $params, $type) {
       $templateName = 'peer_provider_feedback_remind.tpl.php';
       $isImmediately = true;
       break;
-    case 4;
-      $templateName = 'counselor_counselee_aduit_review_result.tpl.php';
+    //4 stand for counselee audit the review result
+    case 4:
+      $templateName = 'counselor_counselee_audit_review_result.tpl.php';
+      break;
+    //5 stand for counselor audit the review result,notify counselee the review result
+    case 5:
+      $templateName = 'counselee_counselor_audit_review.tpl.php';
+      break;
+    
     default:
       break;
   }
@@ -306,21 +313,48 @@ function counselee_aduit_review_result_remind($rreid, $is_approve) {
   $dataset = $query->execute()->fetchAll();
 
   if ($is_approve == true)
-    $operator = 'approve';
+    $audit = 'approve';
   else
-    $operator = 'disapprove';
-  
-  
+    $audit = 'disapprove';
+
+
   if (count($dataset) == 1) {
     $address = $dataset[0]->mail;
     $params = array(
       'counselor' => $dataset[0]->counselorName,
       'counselee' => $dataset[0]->employeeName,
-      'aduit' => $operator,
+      'aduit' => $audit,
       'reviewname' => $dataset[0]->description,
       'url' => get_curPage_base_url() . 'watchstatus/viewassessment/' . $rreid,
     );
     $template_type = 4;
     return mail_sender_template_adapter($address, $params, $template_type);
   }
+}
+
+
+/**
+ * Send mail notification to counselee,when the counselor had audited the review
+ * 
+ * @param string $address The receiver/counselee e-mail address
+ * @param string $counselee_name The counselee name
+ * @param string $counselor_name The counselor name
+ * @param string $nid The nid of the node,counselee annual performance review node
+ * @param bool $is_approve if
+ */
+function counselor_audit_review_remind($address, $counselee_name, $counselor_name, $token, $rreid, $is_approve) {
+
+  if ($is_approve) {
+    $url = get_curPage_base_url() . 'counseleeconfirmresult/' . $rreid;
+  }
+  else {
+    $url = get_curPage_base_url() . $token;
+  }
+  $params = array(
+    'counselee' => $counselee_name,
+    'counselor' => $counselor_name,
+    'url' => $url,
+  );
+  $type = 5; // 5 stand for counselor audit the review result
+  return mail_sender_template_adapter($address, $params, $type);
 }

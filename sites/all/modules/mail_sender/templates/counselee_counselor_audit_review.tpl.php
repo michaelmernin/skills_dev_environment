@@ -1,9 +1,9 @@
 <div>
   Dear [counselee],<br>
   <br>
-  [reviewname] has begun.The review will end on [datetime].<br>
-  You should review the  by clicking this link of the Enterprise Review System 
-  <a href='[peersurl]'>[peersurl]</a><br>
+  [counselor] disapprove your self review comment.<br>
+  You should do review comment again by clicking this link of the Enterprise Review System 
+  <a href='[url]'>[url]</a><br>
   <br>
   Thank you, <br>
   Enterprise Review System 
