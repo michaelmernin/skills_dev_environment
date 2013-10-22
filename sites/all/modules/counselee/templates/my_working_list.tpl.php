@@ -44,18 +44,42 @@
     }
   }
 
-  var peers = '<?php print json_encode($counseleePeers) ?>';
+  function showReviewList(items)
+  {
+    var obj, name, rpeid, reviewType, url, li;
+    for (var i = 0; i < items.length; i++)
+    {
+      obj = items[i];
+      name = obj.employeeName;
+      rpeid = obj.rpeid;
+      reviewType = obj.reviewType;
+      url = "#?rreid=" + rpeid + "&name=" + name + "&reviewType=" + reviewType;
+      li = " <li> <a href='" + url + "'> Please help [" + name + "] do peers review for her/his [Annual Review]! </a> </li>";
+      jQuery('#myWorkingList').append(li);
+    }
+  }
+
+  var peers = '<?php print json_encode($counseleePeers); ?>';
   var counseleePeers = eval(peers);
   showSelPeersList(counseleePeers, 'counselee');
 
-  peers = '<?php print json_encode($counselorPeers) ?>';
+  peers = '<?php print json_encode($counselorPeers); ?>';
   var counselorPeers = eval(peers);
   showSelPeersList(counselorPeers, 'counselor');
+
+  var review = '<?php print json_encode($reviewList); ?>'
+  var reviewList = eval(review);
+  showReviewList(reviewList);
+
 
   if (counseleePeers.length === 0 && counselorPeers.length === 0)
   {
     var li = " <li> You have no work to do!</li>";
     jQuery('#myWorkingList').append(li);
   }
+
+
+
+
 </script>
 

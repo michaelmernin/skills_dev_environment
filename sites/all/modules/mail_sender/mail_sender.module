@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * 
+ * This is the mail_sender module
+ * 
+ * 
+ */
+
+/**
+ * 
+ * This funciton is to send e-mail
+ * 
+ * @param array $address  e-mail addressee
+ * @param string $subject  The e-mail subject
+ * @param string $body The parameter to send mail
+ */
+function mail_sender_send($address, $subject, $body, $isHtml) {
+  $library_path = libraries_get_path('phpmailer');
+  $class_path = DRUPAL_ROOT . '/' . $library_path . '/' . 'class.phpmailer.php';
+  require $class_path;
+
+  $mail = new PHPMailer(true); //New instance, with exceptions enabled
+
+  $mail->IsSMTP();
+  $mail->SMTPAuth = true;
+  $mail->Port = variable_get('smtp_port');
+  $mail->Host = variable_get('smtp_host');
+  $mail->Username = variable_get('smtp_username');
+  $mail->Password = variable_get('smtp_password');
+  $mail->AddReplyTo($mail->Username, "Perficient");
+
+  $mail->From = variable_get('smtp_from');
+  $mail->FromName = variable_get('smtp_fromname');
+
+  foreach ($address as $to) {
+    $mail->AddAddress($to);
+  }
+  $mail->Subject = $subject;
+  $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
+  $mail->WordWrap = 80; // set word wrap
+  $mail->MsgHTML($body);
+  $mail->IsHTML($isHtml);
+  return $mail->Send();
+}
+
+/**
+ * This function is to send mail through template
+ * 
+ * @param array $address  e-mail addressee
+ * @param string $subject  The e-mail subject
+ * @param array $params The parameter to send mail
+ * @parsm string $templateName The templateName,the template is location 
+ *                             at drupal_get_path('module', 'mail_sender') . '/templates/'
+ * 
+ * @return string The result of send mail
+ *         1 stand for send e-mail success
+ */
+function mail_sender_mail_template($address, $subject, $params, $templateName) {
+
+  $templatePath = drupal_get_path('module', 'mail_sender') . '/templates/' . $templateName;
+  $template = file_get_contents($templatePath);
+
+  try {
+    $content = '';
+    $key = '';
+    $isKey = false;
+    for ($i = 0; $i < strlen($template); $i++) {
+      if ($template[$i] === '[') {
+        $isKey = true;
+      }
+      else if ($template[$i] === ']') {
+        $content .= $params[$key];
+        $isKey = false;
+        $key = '';
+      }
+      else if ($isKey === true) {
+        $key = $key . $template[$i];
+      }
+      else {
+        $content = $content . $template[$i];
+      }
+    }
+  } catch (Exception $e) {
+    return 'Parameters and the file does not match!';
+  }
+
+  return mail_sender_send($address, $subject, $content, true);
+}

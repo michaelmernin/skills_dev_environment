@@ -51,9 +51,10 @@ function counselee_block_view($delta = '') {
       $block['content'] = theme('user_status_view', array('status_info' => $status_info));
       break;
     case 'my_work_stage':
-      $counseleePeers = counselee_select_peers('counselee',get_current_user_name(), 0);
-      $counselorPeers = counselee_select_peers('counselor',get_current_user_name(), 0);
-      $block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers, 'counselorPeers' => $counselorPeers));
+      $counseleePeers = counselee_select_peers('counselee', get_current_user_name(), 0);
+      $counselorPeers = counselee_select_peers('counselor', get_current_user_name(), 0);
+      $reviewList = counselee_do_peersreview(get_current_user_name());
+      $block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers, 'counselorPeers' => $counselorPeers, 'reviewList' => $reviewList));
       break;
   }
   return $block;
@@ -66,7 +67,7 @@ function counselee_theme() {
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'user_status_view',),
     'my_working_list_view' => array(
-      'variables' => array('counseleePeers' => NULL, 'counselorPeers' => NULL),
+      'variables' => array('counseleePeers' => NULL, 'counselorPeers' => NULL, 'reviewList' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'my_working_list',),
   );
@@ -176,6 +177,33 @@ function get_status_from_db($employeeName) {
   $query->condition('re.employeeName', $employeeName, 'in');
   $query->orderBy('re.rstatus', 'ASC');
   $result = $query->execute()->fetchAll();
+  return $result;
+}
+
+/**
+ * This function is to show the user to do peers review
+ * 
+ * @param string $userName the current user login name
+ * @return array Current user to do reviewList
+ */
+function counselee_do_peersreview($userName) {
+  $peers_query = db_select('prs_rel_provider_employee', 'provider');
+  $peers_query->join('prs_general', 'general', 'general.prid = provider.prid');
+  $peers_query->addField('general', 'type');
+  $peers_query->addField('provider', 'employeeName');
+  $peers_query->addField('provider', 'rpeid');
+  $peers_query->condition('provider.providerName', $userName);
+  $dataset = $peers_query->execute()->fetchAll();
+
+  $result = array();
+  $index = 0;
+  foreach ($dataset as $node) {
+    $employeeName = $node->employeeName;
+    $rpeid = $node->rpeid;
+    $reviewtype = $node->type;
+    $temp = array('employeeName' => $employeeName, 'rpeid' => $rpeid, 'reviewType' => $reviewtype);
+    $result[$index++] = $temp;
+  }
   return $result;
 }
 
