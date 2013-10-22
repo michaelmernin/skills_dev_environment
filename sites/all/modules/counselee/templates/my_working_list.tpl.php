@@ -161,7 +161,5 @@
     var li = " <li> You have no work to do!</li>";
     jQuery('#myWorkForMe').append(li);
   }
-
-<?php print counselor_audit_review_remind('ielts@perficient','counselee','counselor','TJJnweifiJJ',44,true); ?>
 </script>
 

@@ -13,7 +13,7 @@ var core_competencies_comment_id = new Array();
 core_competencies_comment_id[0] = core_competencies_id_pre + 'client-engagements-comments';
 core_competencies_comment_id[1] = core_competencies_id_pre + 'technical-abilities-comments';
 core_competencies_comment_id[2] = core_competencies_id_pre + 'consulting-skills-comments';
-core_competencies_comment_id[3] = core_competencies_id_pre + 'professionalism--comments';
+core_competencies_comment_id[3] = core_competencies_id_pre + 'professionalism-comments';
 core_competencies_comment_id[4] = core_competencies_id_pre + 'leadership-comments';
 core_competencies_comment_id[5] = core_competencies_id_pre + 'teamwork-comments';
 
@@ -172,7 +172,7 @@ self_review_internal_contributions();
 
 function check_comments(category, comments)
 {
-    var value, comment, len;
+    var value, comment, len, isRight = true;
     for (var i = 0; i < category.length; i++)
     {
         value = jQuery(category[i]).find('option:selected').val();
@@ -181,14 +181,20 @@ function check_comments(category, comments)
         {
             comment = jQuery(comments[i]).val();
             len = comment.length;
-            if (len < 2) {
+            if (len < 1) {
                 alert('The socre is not 3 points.Please enter comment!');
                 jQuery(comments[i]).focus();
-                return false;
+                jQuery(comments[i]).removeClass().addClass("form-textarea required error");
+                isRight = false;
+                return isRight
+            }
+            else
+            {
+                jQuery(comments[i]).removeClass().addClass("form-textarea");
             }
         }
     }
-    return true;
+    return isRight;
 }
 
 jQuery(document).ready(
@@ -196,8 +202,7 @@ jQuery(document).ready(
             jQuery("input[name='op'][value='Submit']").click(
                     function() {
                         var result = check_comments(core_competencies_id, core_competencies_comment_id)
-                                && check_comments(internal_contributions_id, internal_contributions_comment_id);
-                        alert(result);
+                        result = result && check_comments(internal_contributions_id, internal_contributions_comment_id);
                         return result;
                     });
         }

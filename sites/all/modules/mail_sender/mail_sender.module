@@ -104,7 +104,7 @@ function mail_sender_mail_template($address, $subject, $params, $templateName, $
     }
   }
   $debug_mail = variable_get('debug_mail');
-  
+
   if ($debug_mail) {
     $mail_insert = db_insert('prs_mail');
     $create_time = time(); //Get current unix timestamp;
@@ -138,7 +138,7 @@ function mail_sender_mail_template($address, $subject, $params, $templateName, $
       'body' => $content,
       'status' => 0,
       'createtime' => $create_time);
-    $mail_insert->fields($field)->execute();
+    return $mail_insert->fields($field)->execute();
   }
 }
 
@@ -190,11 +190,11 @@ function mail_sender_template_adapter($address, $params, $type) {
     case 5:
       $templateName = 'counselee_counselor_audit_review.tpl.php';
       break;
-    
+
     default:
       break;
   }
-  mail_sender_mail_template($address, $subject, $params, $templateName, $isImmediately);
+  return mail_sender_mail_template($address, $subject, $params, $templateName, $isImmediately);
 }
 
 /**
@@ -262,7 +262,7 @@ function mail_sender_menu() {
  * 
  */
 function provider_feedback_remind($prid) {
-
+  
   $prid = $_POST['prid'];
   $query = db_select('prs_rel_provider_employee', 'provider');
   $query->join('prs_rel_review_employee', 'review', 'provider.prid= review.prid');
@@ -290,7 +290,7 @@ function provider_feedback_remind($prid) {
 
     //3 stand for the template type
     $template_type = 3;
-    return mail_sender_template_adapter($address, $params, $template_type);
+    print mail_sender_template_adapter($address, $params, $template_type);
   }
 }
 
@@ -331,7 +331,6 @@ function counselee_aduit_review_result_remind($rreid, $is_approve) {
     return mail_sender_template_adapter($address, $params, $template_type);
   }
 }
-
 
 /**
  * Send mail notification to counselee,when the counselor had audited the review

@@ -161,8 +161,15 @@
               type: "POST",
               url: basepath + 'mail-notification/provider-feedback-remind',
               data: {'prid': id},
-              success: function(date) {
-
+              success: function(text) {
+                if (text == 1)
+                {
+                  alert('E-mail send successfully!');
+                }
+                else
+                {
+                  alert('E-mail send failed.Please contact the administrator!');
+                }
               }
             });
 
