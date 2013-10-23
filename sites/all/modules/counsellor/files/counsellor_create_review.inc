@@ -26,12 +26,16 @@ function submit_new_review($data, $employees, $radio_val) {
           $review_ids = insert_reviews_to_DB($emp_array, $general_id);
           set_review_status($review_ids, 0);
           //notify method will be called here.
+          // $msg = 'Review created successfully.';
+          // drupal_set_message($msg, 'status');
         }
         else if ($radio_val == '1') {
           $review_ids = insert_reviews_to_DB($emp_array, $general_id);
           dd($review_ids);
           set_review_status($review_ids, 1);
           // notify method will be called here.
+          // $msg = 'Review created successfully and in draft mode.';
+          // drupal_set_message($msg, 'status');
         }
         else {
           $rval = -1;
@@ -48,7 +52,8 @@ function submit_new_review($data, $employees, $radio_val) {
   }
   else {
     $rval = '-1';
-//    drupal_goto('newreview');
+    $msg = 'Review creation attempt failed!';
+    drupal_set_message($msg, 'error');
   }
   echo $rval;
 }
@@ -111,14 +116,14 @@ function insert_to_general_DB($general_info) {
   }
   if (isset($general_id)) {
 
-    $message = 'Review created successful.';
+/*    $message = 'Review created successful.';
     drupal_set_message($message, 'status');
-  }
+*/  }
   else {
     $general_id = '-1';
-    $message = 'Insert information Error!';
+/*    $message = 'Insert information Error!';
     drupal_set_message($message, 'error');
-  }
+*/  }
 
   return $general_id;
 }
@@ -256,6 +261,11 @@ function explode_time($date) {
   return $ntime;
 }
 
+/** 
+ * explode employees
+ * @param type $employees string 
+ * @return $employee_array
+ */
 function explode_employee($employees) {
   $employee_array = array();
   $employee_array = explode('-', $employees);
@@ -263,6 +273,11 @@ function explode_employee($employees) {
   return $employee_array;
 }
 
+/**
+ * insert_reviews_to_DB prs_rel_review_employee table.
+ * @param array $employees, int $prid
+ * @return array $review_ids
+*/
 function insert_reviews_to_DB($employees, $prid) {
   $rreid = '';
   $review_ids = array();
@@ -286,19 +301,14 @@ function insert_reviews_to_DB($employees, $prid) {
   return $review_ids;
 }
 
+/**
+ * set-review_status
+ * @ param  array $rreid_array, int $status
+ * @ return NULL
+*/
 function set_review_status($rreid_array, $status) {
     $result = db_update('prs_rel_review_employee');
     $result->fields(array('rstatus' => $status,))
            ->condition('rreid', $rreid_array, 'IN')
            ->execute();
-    // dd($result);
-    // if ($result != '-1') {
-    //   $msg = 'Review status was successfully changed to ' . $status .'.';
-    //   drupal_set_message($msg, 'status');
-    // }
-    // else {
-    //   $msg = 'Review status change attempt failed!';
-    //   drupal_set_message($msg, 'error');
-    // }
-  
 }

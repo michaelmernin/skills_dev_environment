@@ -64,7 +64,6 @@
   }
 
   function getSelectedEmployees() {
-    //for Anfernee
     var val ="";
     var name ="";
     var count = 0;
@@ -87,8 +86,9 @@
   }
   
   /**
-   
-  */
+   * get_radio_val
+   * @return radio_val: 0 for individually, 1 for all.
+  **/
   function get_radio_val(){
     //for Anfernee
     var flag = "";

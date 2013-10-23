@@ -30,7 +30,7 @@
         </div> -->
         <form action="">
 <input type="radio" name="radio_val" value="0">Individually.<br>
-<input type="radio" name="radio_val" value="1">All.
+<input type="radio" name="radio_val" value="1" checked="checked">All.
 </form>
         <br >
 </div>

@@ -251,8 +251,3 @@ function select_counselees() {
 
   return $counselees;
 }
-
-/**
- * change_status
-**/
-// function change_status()
