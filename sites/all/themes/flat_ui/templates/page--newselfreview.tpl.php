@@ -42,12 +42,10 @@
       hideConfirmdialog();
       return;
     }
-    var employees = getSelectedEmployees();
-    var radio_val = get_radio_val();
     jQuery.ajax({
       type: "POST",
-      data: {'review_type': review_type, 'review_start_date': review_start_date, 'review_end_date': review_end_date, 'review_from_date': review_from_date, 'review_to_date': review_to_date, 'Project_Name_Text': Project_Name_Text, 'review_from_description': review_from_description},
-      url: '<?php echo $base_path ?>newreview/submitreview/' + employees + '/' + radio_val,
+      data:{'review_type':review_type,'review_start_date':review_start_date,'review_end_date':review_end_date,'review_from_date':review_from_date,'review_to_date':review_to_date,'Project_Name_Text':Project_Name_Text,'review_from_description':review_from_description},
+      url: '<?php echo $base_path ?>newreview/submitselfreview',
       success: function(text) {
         if (text != '-1') {
           window.location.href = "<?php print base_path() . 'mydashboard' ?>";
@@ -58,40 +56,6 @@
       }
     });
 
-  }
-
-  function getSelectedEmployees() {
-    var val ="";
-    var name ="";
-    var count = 0;
-    var pos = 0;
-    jQuery("#users option:selected").each(function() {
-      val += jQuery(this).val() + ",";
-      count++;
-    });
-    if (count == 0) {
-      alert("You should choose at least 1 people!");
-      jQuery('#loading_data_participant').css("display", 'none');
-      return false;
-    }
-    jQuery("#users option:selected").each(function() {
-      name += jQuery(this).text() + "-";
-    });
-    pos = name.lastIndexOf("-");
-    name = name.slice(0, pos);
-    return name;
-  }
-
-  /**
-<<<<<<< Updated upstream
-   * get_radio_val
-   * @return radio_val: 0 for individually, 1 for all.
-  **/
-  function get_radio_val(){
-    //for Anfernee
-    var flag = "";
-    flag = jQuery("input:radio:checked").val();
-    return flag;
   }
 </script>
 <?php require_once 'header.tpl.php'; ?>
@@ -141,8 +105,6 @@
       <?php endif; ?>
       <?php print render($page['basic_info'])
       ?>
-      <?php print render($page['select_participates'])
-      ?>
 
 
 
@@ -153,7 +115,7 @@
         <div class="span12">
           <div id="modal-container-912871" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="close_btn" value="0">×</button>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="close_btn">×</button>
               <h3 id="myModalLabel">
                 Confirm to start review
               </h3>
@@ -171,6 +133,9 @@
           </div>
         </div>
       </div>
+
+      <!--                </div>
+                  </div>-->
     </div>
   </div>
   <!--    <div id="pr_mywokingstage_footer" class="pr_footer">

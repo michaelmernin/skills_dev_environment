@@ -15,6 +15,14 @@ function counselee_menu() {
     'access arguments' => array('access to my dashboard'),
     'file' => 'files/dashboard.pages.inc',
   );
+  $items['newselfreview'] = array(
+    'title' => 'Create My Review',
+    'page callback' => 'show_pr_list',
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'files/dashboard.pages.inc',
+    'weight' => 5,
+  );
   return $items;
 }
 

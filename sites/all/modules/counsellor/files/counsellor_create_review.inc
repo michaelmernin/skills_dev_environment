@@ -7,47 +7,95 @@
  */
 
 /**
- * callback URL:newreview/submitreview/%/%/%
- * @param type $data 
+ * callback URL:newreview/submitreview/%/%
+ * 
  * @param type $employees
  * @param type $radio_val
  */
-function submit_new_review($data, $employees, $radio_val) {
+function submit_new_review($employees = NULL, $radio_val = NULL) {
   $rval = '1';
-  $general_id = insert_to_general_DB($data);
+  if (isset($_POST)) {
+    $general_id = insert_to_general_DB($_POST);
+  }
+  else {
+    $general_id = '-1';
+  }
   $review_ids;
 //  $general_id = '-1';
   if ($general_id != '-1') {
-    if (count($employees)) {
-      if(is_numeric($radio_val)) {
+    if (count($employees) != '0') {
+      //counselor
+      if (is_numeric($radio_val)) {
+        //$radio_val is numeric
         $emp_array = array();
         $emp_array = explode_employee($employees);
         if ($radio_val == '0') {
+          //$radio_val == 0
           $review_ids = insert_reviews_to_DB($emp_array, $general_id);
-          set_review_status($review_ids, 0);
-          //notify method will be called here.
-          // $msg = 'Review created successfully.';
-          // drupal_set_message($msg, 'status');
+          if ($review_ids != '-1') {
+            set_review_status($review_ids, 0);
+            //notify method will be called here.
+
+
+            $message = 'Review created successful.';
+            drupal_set_message($message, 'status');
+          }
+          else {
+            $rval = '-1';
+            $message = 'Review created fail!';
+            drupal_set_message($message, 'error');
+          }
         }
         else if ($radio_val == '1') {
+          //$radio_val == 1
           $review_ids = insert_reviews_to_DB($emp_array, $general_id);
-          dd($review_ids);
-          set_review_status($review_ids, 1);
-          // notify method will be called here.
-          // $msg = 'Review created successfully and in draft mode.';
-          // drupal_set_message($msg, 'status');
+          if ($review_ids != '-1') {
+            set_review_status($review_ids, 1);
+            // notify method will be called here.
+
+
+            $message = 'Review created successful.';
+            drupal_set_message($message, 'status');
+          }
+          else {
+            $rval = '-1';
+            $message = 'Review created fail!';
+            drupal_set_message($message, 'error');
+          }
         }
         else {
-          $rval = -1;
+          //$radio_val error number
+          $rval = '-1';
+          $message = 'Review created fail!';
+          drupal_set_message($message, 'error');
         }
       }
       else {
-        $rval = -1;
+        //$radio_val is not numeric
+        $rval = '-1';
+        $message = 'Review created fail!';
+        drupal_set_message($message, 'error');
+      }
     }
-  }
     else {
-
       //counselee
+      $cur_counselee_name = get_current_user_name();
+      $emp_array = array(
+        $cur_counselee_name
+      );
+      $review_ids = insert_reviews_to_DB($emp_array, $general_id);
+      if ($review_ids != '-1') {
+        set_review_status($review_ids, 1);
+        // notify method will be called here.
+
+        $message = 'Review created successful.';
+        drupal_set_message($message, 'status');
+      }
+      else {
+        $rval = '-1';
+        $message = 'Review created fail!';
+        drupal_set_message($message, 'error');
+      }
     }
   }
   else {
@@ -59,19 +107,25 @@ function submit_new_review($data, $employees, $radio_val) {
 }
 
 /**
- * callback URL:newreview/startreview/%
+ * callback URL:newreview/startreview
  * @param type $review_id
  * @author Mars
  */
-function start_new_review($review_id) {
+function start_new_review() {
   $rval = '-1';
-  $review = query_review($review_id);
-  if ($review[0]->rstatus == '0') {
+  $review_id = isset($_POST['review_id']) ? $_POST['review_id'] : 0;
+  if ($review_id != 0) {
+    $review = query_review($review_id);
+    if ($review[0]->rstatus == '0') {
       $update_num = start_review_update_change_status_0_to_1($review_id);
       // send email
       // code
-      
+
       $rval = '1';
+    }
+    else {
+      $rval = '-1';
+    }
   }
   else {
     $rval = '-1';
@@ -79,6 +133,11 @@ function start_new_review($review_id) {
   echo $rval;
 }
 
+/**
+ * start_review_update_change_status_0_to_1
+ * @param type $review_id
+ * @author Mars
+ */
 function start_review_update_change_status_0_to_1($review_id) {
   $query = db_update('prs_rel_review_employee');
   $query->fields(array(
@@ -106,6 +165,7 @@ function query_review($review_id) {
  * Insert info into prs_general Table
  * @param type $general_info this info is from front site ajax
  * @return type general_id
+ * @author Mars
  */
 function insert_to_general_DB($general_info) {
   $general_id = null;
@@ -115,23 +175,20 @@ function insert_to_general_DB($general_info) {
             ->fields($fields_array)->execute();
   }
   if (isset($general_id)) {
-
-/*    $message = 'Review created successful.';
-    drupal_set_message($message, 'status');
-*/  }
+    
+  }
   else {
     $general_id = '-1';
-/*    $message = 'Insert information Error!';
-    drupal_set_message($message, 'error');
-*/  }
+  }
 
   return $general_id;
 }
 
 /**
  * set general infomation
- * @param type $general_info format:review_type-review_start_date-review_end_date-review_from_date-review_to_date-Project_Name_Text-submit_new_review;
+ * @param type $general_info  $_post
  * @param type $fields_array
+ * @author Mars
  */
 function set_fields_array($general_info, &$fields_array) {
   $starttime = NULL;
@@ -139,45 +196,45 @@ function set_fields_array($general_info, &$fields_array) {
   $periodFtime = NULL;
   $periodTTime = NULL;
   $flag = TRUE;
-  if (strpos($general_info, '-')) {
-    $tmp = explode('-', $general_info);
-  }
+//  if (strpos($general_info, '-')) {
+//    $tmp = explode('-', $general_info);
+//  }
   //type
-  if (isset($tmp['0'])) {
-    $type = check_plain($tmp['0']);
+  if (isset($general_info['review_type'])) {
+    $type = check_plain($general_info['review_type']);
     $fields_array['type'] = $type;
     // project type
-    if ($tmp['0'] == '1') {
-      $projectName = check_plain($tmp['5']);
+    if ($general_info['review_type'] == '1') {
+      $projectName = check_plain($general_info['Project_Name_Text']);
       $fields_array['project_name'] = $projectName;
     }
   }
 
   //start time
-  if (isset($tmp['1'])) {
-    $stime = explode_time($tmp['1']);
+  if (isset($general_info['review_start_date'])) {
+    $stime = explode_time($general_info['review_start_date']);
     $starttime = explode_time_stand($stime);
     $startTime = dateArrayTounixTimestamp($stime);
     $fields_array['period_start'] = check_plain($startTime);
   }
   //end time
-  if (isset($tmp['2'])) {
-    $etime = explode_time($tmp['2']);
+  if (isset($general_info['review_end_date'])) {
+    $etime = explode_time($general_info['review_end_date']);
     $endtime = explode_time_stand($etime);
     $endTime = dateArrayTounixTimestamp($etime);
     $fields_array['period_end'] = check_plain($endTime);
   }
   //period from
-  if (isset($tmp['3'])) {
-    $pftime = explode_time($tmp['3']);
+  if (isset($general_info['review_from_date'])) {
+    $pftime = explode_time($general_info['review_from_date']);
     $periodFtime = explode_time_stand($pftime);
     $periodFrom = dateArrayTounixTimestamp($pftime);
     $fields_array['time_frame_from'] = check_plain($periodFrom);
   }
 
   //period to
-  if (isset($tmp['4'])) {
-    $pttime = explode_time($tmp['4']);
+  if (isset($general_info['review_to_date'])) {
+    $pttime = explode_time($general_info['review_to_date']);
     $periodTTime = explode_time_stand($pttime);
     $periodTo = dateArrayTounixTimestamp($pttime);
     $fields_array['time_frame_to'] = check_plain($periodTo);
@@ -186,10 +243,9 @@ function set_fields_array($general_info, &$fields_array) {
 //    $status = $form_state['values']['review_status'];
 //    $fields_array['active'] = $status;
 //  }
-  
   //description
-  if (isset($tmp['6'])) {
-    $description = check_plain($tmp['6']);
+  if (isset($general_info['review_from_description'])) {
+    $description = check_plain($general_info['review_from_description']);
     $fields_array['description'] = $description;
   }
   if (isset($starttime) && isset($endtime) && isset($periodFtime) && isset($periodTTime)) {
@@ -213,6 +269,7 @@ function set_fields_array($general_info, &$fields_array) {
  * explode to stand time
  * @param type $date
  * @return null
+ * @author Mars
  */
 function explode_time_stand($date) {
   $ntime = NULL;
@@ -229,10 +286,11 @@ function explode_time_stand($date) {
  * explode Time
  * @param type $date mm:dd:yyyy
  * @return type
+ * @author Mars
  */
 function explode_time($date) {
-  if (strpos($date, ':')) {
-    $tmp = explode(':', $date);
+  if (strpos($date, '/')) {
+    $tmp = explode('/', $date);
     $ntime = array();
     if (isset($tmp['0'])) {
       $ntime['month'] = $tmp['0'];
@@ -281,13 +339,13 @@ function explode_employee($employees) {
 function insert_reviews_to_DB($employees, $prid) {
   $rreid = '';
   $review_ids = array();
-  foreach($employees as $employee) {
+  foreach ($employees as $employee) {
     $rreid = db_insert('prs_rel_review_employee')
-              ->fields(array(
-                'employeeName' => $employee,
-                'prid' => $prid,
-                ))
-              ->execute();
+        ->fields(array(
+          'employeeName' => $employee,
+          'prid' => $prid,
+        ))
+        ->execute();
     if ($rreid != '-1') {
       // $msg = 'Reviewee(s) set successfully.';
       // drupal_set_message($msg, 'status');
@@ -296,6 +354,8 @@ function insert_reviews_to_DB($employees, $prid) {
     else {
       // $msg = 'Reviewee(s) set failed!';
       // drupal_set_message($meg, 'error');
+      $review_ids = '-1';
+      break;
     }
   }
   return $review_ids;

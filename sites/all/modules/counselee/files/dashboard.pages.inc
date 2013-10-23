@@ -15,3 +15,15 @@ function dashboard_display() {
     return $pageContent;
 
 }
+
+/**
+ * Display performance review list management for special user
+ * @return string 
+ */
+function show_pr_list() {
+    if (!user_is_anonymous()) {
+        return '';
+    } else {
+        drupal_goto('login');
+    }
+}

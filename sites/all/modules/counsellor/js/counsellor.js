@@ -36,7 +36,8 @@ function start_review(review_id, basepath) {
     jQuery('#status_loading_img_' + review_id).show();
     jQuery.ajax({
         type: "POST",
-        url: basepath + 'newreview/startreview/' + review_id,
+        url: basepath + 'newreview/startreview',
+        data:{'review_id':review_id},
         success: function(date) {
             if (date != '-1')
             {
@@ -48,41 +49,3 @@ function start_review(review_id, basepath) {
         }
     });
 }
-
-//function return_status_string(status, startid, base_path) {
-//    var content="";
-//    switch (status) {
-//        case '0':
-//            //0 for New review start
-////            content = "<button id=\"start_button_" + startid + "\" class=\"btn btn-danger btn-sm\" onclick=\"start_review(" + startid + "," + base_path")\" title=\"Click to start this review.\" style=\"color:#ffffff;font-size:15px;\">Start riview</button>";
-////            content = '<button id="start_button_' + startid +  '" class="btn btn-danger btn-sm" onclick="start_review(' + startid + ',' + '"'+base_path+'")" title="Click to start this review." style="color:#ffffff;font-size:15px;">Start riview</button>';
-//           content='';
-//            break;
-//        case 1:
-//            //1 for review in draft;
-//            content = "<a href=\"javascript:{void(0)}\" title=\"This review is in draft, reviewer can edit it before submit.\">Review in draft</a>";
-//            break;
-//        case 2:
-//            // 2 for review by counsellor;
-//            content = "<a href=\"javascript:{void(0)}\" title=\"This review now is review by counselor.\">Review by counselor</a>";
-//            break;
-//        case 3:
-//            // 3 for approved by counsellor;
-//            content = "<a href=\"javascript:{void(0)}\" title=\"This review is approved by counselor.\">Counselor approved</a>";
-//            break;
-//        case 4:
-//            // 4 for joint review;
-//            content = "<a href=\"javascript:{void(0)}\" title=\"Joint review.\">Joint review</a>";
-//            break;
-//        case 5:
-//            // 5 for GM review;
-//            content = "<a href=\"javascript:{void(0)}\" title=\"This review is review by GM.\">GM review</a>";
-//            break;
-//        case 6:
-//            // 6 for GM approved;
-//            content = "<a href=\"javascript:{void(0)}\" title=\"This review is approved by GM.\">GM approved</a>";
-//            break;
-//  
-//    }
-//    return content;
-//}

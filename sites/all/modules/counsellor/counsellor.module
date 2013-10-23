@@ -23,19 +23,25 @@ function counsellor_menu() {
     'file' => 'files/performance_review_dashboard.pages.inc',
     'weight' => 5,
   );
-  $items['newreview/submitreview/%/%/%'] = array(
+  $items['newreview/submitreview/%/%'] = array(
     'title' => 'Submit A New Review',
     'type' => MENU_CALLBACK,
     'page callback' => 'submit_new_review',
-    'page arguments' => array(2, 3, 4),
+    'page arguments' => array(2, 3),
     'access arguments' => array('Manage Performance Review List'),
     'file' => 'files/counsellor_create_review.inc',
   );
-  $items['newreview/startreview/%'] = array(
+  $items['newreview/submitselfreview'] = array(
+    'title' => 'Submit A New Review',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'submit_new_review',
+    'access arguments' => array('Access create self review'),
+    'file' => 'files/counsellor_create_review.inc',
+  );
+  $items['newreview/startreview'] = array(
     'title' => 'Start a review',
     'type' => MENU_CALLBACK,
     'page callback' => 'start_new_review',
-    'page arguments' => array(2),
     'access arguments' => array('Manage Performance Review List'),
     'file' => 'files/counsellor_create_review.inc',
   );
@@ -101,6 +107,9 @@ function counsellor_permission() {
 //        'config reviews' => array(
 //            'title' => t('Config reviews'),
 //        ),
+    'Access create self review' =>array(
+      'title' => t('Access to counsellor or counselee to create self review'),
+    ),
   );
 }
 
