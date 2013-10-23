@@ -29,7 +29,7 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
         //$radio_val is numeric
         $emp_array = array();
         $emp_array = explode_employee($employees);
-        if ($radio_val == '0') {
+        if ($radio_val == '0' && $emp_array['0'] != 'false') {
           //$radio_val == 0
           $review_ids = insert_reviews_to_DB($emp_array, $general_id);
           if ($review_ids != '-1') {
@@ -319,7 +319,7 @@ function explode_time($date) {
   return $ntime;
 }
 
-/** 
+/**
  * explode employees
  * @param type $employees string 
  * @return $employee_array
@@ -335,7 +335,7 @@ function explode_employee($employees) {
  * insert_reviews_to_DB prs_rel_review_employee table.
  * @param array $employees, int $prid
  * @return array $review_ids
-*/
+ */
 function insert_reviews_to_DB($employees, $prid) {
   $rreid = '';
   $review_ids = array();
@@ -365,10 +365,10 @@ function insert_reviews_to_DB($employees, $prid) {
  * set-review_status
  * @ param  array $rreid_array, int $status
  * @ return NULL
-*/
+ */
 function set_review_status($rreid_array, $status) {
-    $result = db_update('prs_rel_review_employee');
-    $result->fields(array('rstatus' => $status,))
-           ->condition('rreid', $rreid_array, 'IN')
-           ->execute();
+  $result = db_update('prs_rel_review_employee');
+  $result->fields(array('rstatus' => $status,))
+      ->condition('rreid', $rreid_array, 'IN')
+      ->execute();
 }

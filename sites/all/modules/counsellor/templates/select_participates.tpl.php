@@ -9,14 +9,14 @@
 
 <h3 colspan="4">Select Counselee(s)</h3>
 
-<h6>You can select persons from the right list box below</h6>
+<h6>You can select people from the right list box below</h6>
 
 <div style="width:800px;">
   <select id="users" class="multiselect" multiple="multiple" name="users[]" style="display: none; width:600px;height:257px;" >
     <?php display_counselees($counselees) ?>                
   </select>
 </div>
-  <div style="width:400px">
+<!--  <div style="width:400px">
     <form action="">
       <table border="0" cellpadding="1" cellspacing="1">
         <caption>
@@ -25,17 +25,6 @@
         <tbody>
           <tr>
             <td>
-
-              <!-- 
-              <label class="radio">
-                <span class="icons"><span class="first-icon fui-radio-unchecked"></span><span class="second-icon fui-radio-checked"></span></span><input type="radio" name="optionsRadios" id="optionsRadios1" value="0" data-toggle="radio" checked="checked">
-                Individually.
-              </label>
-              <label class="radio">
-                <span class="icons"><span class="first-icon fui-radio-unchecked"></span><span class="second-icon fui-radio-checked"></span></span><input type="radio" name="optionsRadios" id="optionsRadios2" value="1" data-toggle="radio">
-                All.
-              </label>
-            </div> -->
               <input type="radio" name="radio_val" value="0">&nbsp;&nbsp;Individually.</td>
             <td>
               <input type="radio" name="radio_val" value="1" checked="checked">&nbsp;&nbsp;All.</td>
@@ -43,7 +32,7 @@
         </tbody>
       </table>
     </form>
-  </div>
+  </div>-->
   <br >
 
   <script type="text/javascript">

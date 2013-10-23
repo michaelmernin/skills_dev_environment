@@ -43,26 +43,88 @@
       return;
     }
     var employees = getSelectedEmployees();
-    var radio_val = get_radio_val();
-    jQuery.ajax({
-      type: "POST",
-      data: {'review_type': review_type, 'review_start_date': review_start_date, 'review_end_date': review_end_date, 'review_from_date': review_from_date, 'review_to_date': review_to_date, 'Project_Name_Text': Project_Name_Text, 'review_from_description': review_from_description},
-      url: '<?php echo $base_path ?>newreview/submitreview/' + employees + '/' + radio_val,
-      success: function(text) {
-        if (text != '-1') {
-          window.location.href = "<?php print base_path() . 'mydashboard' ?>";
-        } else {
-          window.location.href = "<?php print base_path() . 'newreview' ?>";
-          return;
+//    var radio_val = get_radio_val();
+    if (employees != false) {
+      jQuery.ajax({
+        type: "POST",
+        data: {'review_type': review_type, 'review_start_date': review_start_date, 'review_end_date': review_end_date, 'review_from_date': review_from_date, 'review_to_date': review_to_date, 'Project_Name_Text': Project_Name_Text, 'review_from_description': review_from_description},
+        url: '<?php echo $base_path ?>newreview/submitreview/' + employees + '/1',
+        success: function(text) {
+          if (text != '-1') {
+            window.location.href = "<?php print base_path() . 'mydashboard' ?>";
+          } else {
+            window.location.href = "<?php print base_path() . 'newreview' ?>";
+            return;
+          }
         }
-      }
-    });
+      });
+    } else {
+      hideConfirmdialog();
+      return;
+    }
 
   }
 
+  function saveNewReview() {
+    var review_type = jQuery('#review_type').val();
+    var Project_Name_Text = jQuery('#Project_Name_Text').val().trim();
+    var review_start_date = jQuery('#review_start_date').val();
+    var review_end_date = jQuery('#review_end_date').val();
+    var review_from_date = jQuery('#review_from_date').val();
+    var review_to_date = jQuery('#review_to_date').val();
+    var review_from_description = jQuery('#review_from_description').val().trim();
+    if (review_type == '1') {
+      if (Project_Name_Text == '') {
+        alert('please enter a project name!');
+        return;
+      }
+    }
+    if (review_from_description == '') {
+      if (Project_Name_Text == '') {
+        alert('please enter a review name!');
+        return;
+      }
+    }
+    var nstime = review_start_date.split('/');
+    var real_nstime = parseInt(nstime[2] + nstime[0] + nstime[1]);
+    var netime = review_end_date.split('/');
+    var real_netime = parseInt(netime[2] + netime[0] + netime[1]);
+    if (real_nstime >= real_netime) {
+      alert('start date must early than end date!');
+      return;
+    }
+    var nrstime = review_from_date.split('/');
+    var real_nrstime = parseInt(nrstime[2] + nrstime[0] + nrstime[1]);
+    var nretime = review_to_date.split('/');
+    var real_nretime = parseInt(nretime[2] + nretime[0] + nretime[1]);
+    if (real_nrstime >= real_nretime) {
+      alert('start date must early than end date!');
+      return;
+    }
+    var employees = getSelectedEmployees();
+//    var radio_val = get_radio_val();
+    if (employees != false) {
+      jQuery.ajax({
+        type: "POST",
+        data: {'review_type': review_type, 'review_start_date': review_start_date, 'review_end_date': review_end_date, 'review_from_date': review_from_date, 'review_to_date': review_to_date, 'Project_Name_Text': Project_Name_Text, 'review_from_description': review_from_description},
+        url: '<?php echo $base_path ?>newreview/submitreview/' + employees + '/0',
+        success: function(text) {
+          if (text != '-1') {
+            window.location.href = "<?php print base_path() . 'mydashboard' ?>";
+          } else {
+            window.location.href = "<?php print base_path() . 'newreview' ?>";
+            return;
+          }
+        }
+      });
+    } else {
+      return;
+    }
+  }
+
   function getSelectedEmployees() {
-    var val ="";
-    var name ="";
+    var val = "";
+    var name = "";
     var count = 0;
     var pos = 0;
     jQuery("#users option:selected").each(function() {
@@ -83,16 +145,15 @@
   }
 
   /**
-<<<<<<< Updated upstream
    * get_radio_val
    * @return radio_val: 0 for individually, 1 for all.
-  **/
-  function get_radio_val(){
-    //for Anfernee
-    var flag = "";
-    flag = jQuery("input:radio:checked").val();
-    return flag;
-  }
+   **/
+//  function get_radio_val(){
+//    //for Anfernee
+//    var flag = "";
+//    flag = jQuery("input:radio:checked").val();
+//    return flag;
+//  }
 </script>
 <?php require_once 'header.tpl.php'; ?>
 <div id="pr_mywokingstage_page" class="container">
@@ -147,7 +208,7 @@
 
 
       <a id="modal-912871" href="#modal-container-912871" role="button" class="btn" data-toggle="modal">Start Review</a>
-
+      <a role="button" class="btn" onclick="saveNewReview();">Save as Draft</a>
 
       <div class="row-fluid">
         <div class="span12">

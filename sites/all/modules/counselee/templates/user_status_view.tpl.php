@@ -10,10 +10,10 @@
   <thead>
     <tr>
       <th>Counselee<br></th>
-      <th>Type<br></th>
       <th>Review Name<br></th>
       <th>Start Date<br></th>
       <th>End Date<br></th>
+      <th>Type<br></th>
       <th>Status</th>
     </tr>
   </thead>
@@ -100,10 +100,10 @@
       else {
         print '<td style="vertical-align:middle"><a href="javascript:{void(0)}" title="Click to watch this review\'s status." onclick="watch_reveiw_status(\'' . $url . '\')" name="' . $status->rreid . '" style="text-decoration: underline;">' . render($status->employeeName) . '</a></td>';
       }
-      print '<td style="text-align:center;vertical-align:middle">'. $review_type.'</td>';
       print '<td style="text-align:center;vertical-align:middle">'. render($status->description).'</td>';
       print '<td style="text-align:center;vertical-align:middle">' . render($start_date_format) . '</td>';
       print '<td style="text-align:center;vertical-align:middle">' . render($end_date_format) . '</td>';
+      print '<td style="text-align:center;vertical-align:middle">'. $review_type.'</td>';
       print '<td style="text-align:center;vertical-align:middle" id="review_status_' . $startid . '">' . $content;
       print '<img class="loading_img" id="status_loading_img_' . $startid . '" title="loading..." style="width: 25px; height: 25px; display: none; text-align:center;" src="' . base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif"></td>';
       print '</tr>';
