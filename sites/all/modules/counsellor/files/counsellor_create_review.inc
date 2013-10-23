@@ -85,7 +85,17 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
       );
       $review_ids = insert_reviews_to_DB($emp_array, $general_id);
       if ($review_ids != '-1') {
-        set_review_status($review_ids, 1);
+        if ($_POST['flag'] == '1') {
+          set_review_status($review_ids, 1);
+          if (module_exists('mail_sender') && module_enable(array('mail_sender'))) {
+//            $my_address=$cur_counselee_name.'@perficient.com';
+//            $address = 'mars.shen@perficient.com';
+//            $parems = array('username' => $cur_counselee_name);
+//            dd('=================');
+//            mail_sender_template_adapter($address, $parems, 0);
+//            dd('-----------------');
+          }
+        }
         // notify method will be called here.
 
         $message = 'Review created successful.';
