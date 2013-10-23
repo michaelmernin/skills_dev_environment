@@ -99,6 +99,12 @@ function counsellor_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'prid' => array(
+        'description' => 'Foreign key of prs_general',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'status' => array(
         'description' => '0: provider doesn\'t finish the review; 1: provider finish the review',
         'type' => 'int',
