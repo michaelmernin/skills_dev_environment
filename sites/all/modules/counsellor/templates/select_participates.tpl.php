@@ -12,46 +12,59 @@
 <h6>You can select persons from the right list box below</h6>
 
 <div style="width:800px;">
-<select id="users" class="multiselect" multiple="multiple" name="users[]" style="display: none; width:600px;height:257px;" >
-<?php display_counselees($counselees)  ?>                
-</select>
-
-      <div class="col-md-3">
-          <h3 class="demo-panel-title">Start</h3>
-          <!-- 
-          <label class="radio">
-            <span class="icons"><span class="first-icon fui-radio-unchecked"></span><span class="second-icon fui-radio-checked"></span></span><input type="radio" name="optionsRadios" id="optionsRadios1" value="0" data-toggle="radio" checked="checked">
-            Individually.
-          </label>
-          <label class="radio">
-            <span class="icons"><span class="first-icon fui-radio-unchecked"></span><span class="second-icon fui-radio-checked"></span></span><input type="radio" name="optionsRadios" id="optionsRadios2" value="1" data-toggle="radio">
-            All.
-          </label>
-        </div> -->
-        <form action="">
-<input type="radio" name="radio_val" value="0">Individually.<br>
-<input type="radio" name="radio_val" value="1" checked="checked">All.
-</form>
-        <br >
+  <select id="users" class="multiselect" multiple="multiple" name="users[]" style="display: none; width:600px;height:257px;" >
+    <?php display_counselees($counselees) ?>                
+  </select>
 </div>
-<script type="text/javascript">
-    jQuery(function(){
-    renderMultiselect();
-});
+  <div style="width:400px">
+    <form action="">
+      <table border="0" cellpadding="1" cellspacing="1">
+        <caption>
+          <h6>Start pattern</h6>
+        </caption>
+        <tbody>
+          <tr>
+            <td>
 
-function destoryMultiselect(){
-    jQuery('.multiselect').multiselect('destroy');
-}
+              <!-- 
+              <label class="radio">
+                <span class="icons"><span class="first-icon fui-radio-unchecked"></span><span class="second-icon fui-radio-checked"></span></span><input type="radio" name="optionsRadios" id="optionsRadios1" value="0" data-toggle="radio" checked="checked">
+                Individually.
+              </label>
+              <label class="radio">
+                <span class="icons"><span class="first-icon fui-radio-unchecked"></span><span class="second-icon fui-radio-checked"></span></span><input type="radio" name="optionsRadios" id="optionsRadios2" value="1" data-toggle="radio">
+                All.
+              </label>
+            </div> -->
+              <input type="radio" name="radio_val" value="0">&nbsp;&nbsp;Individually.</td>
+            <td>
+              <input type="radio" name="radio_val" value="1" checked="checked">&nbsp;&nbsp;All.</td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+  <br >
 
-function renderMultiselect(){
-    jQuery(".multiselect").multiselect({
-        sortable: true, 
-        searchable: true, 
-        dividerLocation: 0.6
+  <script type="text/javascript">
+    jQuery(function() {
+      renderMultiselect();
     });
-}
 
-<?php   
+    function destoryMultiselect() {
+      jQuery('.multiselect').multiselect('destroy');
+    }
+
+    function renderMultiselect() {
+      jQuery(".multiselect").multiselect({
+        sortable: true,
+        searchable: true,
+        dividerLocation: 0.6
+      });
+    }
+
+<?php
+
 function display_counselees($counselees) {
   $ceeElem;
   foreach ($counselees as $ceeElem) {
@@ -67,4 +80,4 @@ function display_counselees($counselees) {
 }
 ?>
 
-</script>
+  </script>
