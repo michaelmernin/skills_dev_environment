@@ -59,8 +59,8 @@ function counselee_block_view($delta = '') {
       $block['content'] = theme('user_status_view', array('status_info' => $status_info));
       break;
     case 'my_work_stage':
-      $counseleePeers = counselee_select_peers('counselee', get_current_user_name(), 0);
-      $counselorPeers = counselee_select_peers('counselor', get_current_user_name(), 0);
+      $counseleePeers = counselee_select_peers('counselee', get_current_user_name());
+      $counselorPeers = counselee_select_peers('counselor', get_current_user_name());
       $reviewList = counselee_do_peersreview(get_current_user_name());
       $block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers, 'counselorPeers' => $counselorPeers, 'reviewList' => $reviewList));
       break;
@@ -130,7 +130,7 @@ function select_reviewer_status_from_BD() {
  * @return result The review to select peers  
  * @author Palmer
  */
-function counselee_select_peers($userType, $userName, $reviewType) {
+function counselee_select_peers($userType, $userName) {
 
   if ($userType === 'counselee') {
     $selPeersStatus = array(0, 2);
@@ -139,9 +139,10 @@ function counselee_select_peers($userType, $userName, $reviewType) {
     $counselee_query->addField('review', 'employeeName');
     $counselee_query->addField('review', 'rreid');
     $counselee_query->addField('general', 'type');
+    $counselee_query->addField('general','description');
     $counselee_query->condition('review.employeeName', $userName);
     $counselee_query->condition('review.rstatus', 1);
-    $counselee_query->condition('general.type', $reviewType);
+    //$counselee_query->condition('general.type', $reviewType);
     $counselee_query->condition('review.spstatus', $selPeersStatus, 'in');
 
     $dataset = $counselee_query->execute()->fetchAll();
@@ -154,9 +155,10 @@ function counselee_select_peers($userType, $userName, $reviewType) {
     $counselor_query->addField('relation', 'employeeName');
     $counselor_query->addField('review', 'rreid');
     $counselor_query->addField('general', 'type');
+    $counselor_query->addField('general', 'description');
     $counselor_query->condition('relation.counselorName', $userName);
     $counselor_query->condition('review.rstatus', 1);
-    $counselor_query->condition('general.type', $reviewType);
+    //$counselor_query->condition('general.type', $reviewType);
     $counselor_query->condition('review.spstatus', $selPeersStatus, 'in');
 
     $dataset = $counselor_query->execute()->fetchAll();
@@ -168,7 +170,8 @@ function counselee_select_peers($userType, $userName, $reviewType) {
     $employeeName = $node->employeeName;
     $rreid = $node->rreid;
     $reviewtype = $node->type;
-    $temp = array('employeeName' => $employeeName, 'rreid' => $rreid, 'reviewType' => $reviewtype);
+    $description = $node->description;
+    $temp = array('employeeName' => $employeeName, 'rreid' => $rreid, 'reviewType' => $reviewtype,'description'=>$description);
     $result[$index++] = $temp;
   }
   return $result;
@@ -208,6 +211,7 @@ function counselee_do_peersreview($userName) {
   $peers_query->addField('general', 'type');
   $peers_query->addField('provider', 'employeeName');
   $peers_query->addField('provider', 'rpeid');
+  $peers_query->addField('general','description');
   $peers_query->condition('provider.providerName', $userName);
   $dataset = $peers_query->execute()->fetchAll();
 
@@ -217,7 +221,8 @@ function counselee_do_peersreview($userName) {
     $employeeName = $node->employeeName;
     $rpeid = $node->rpeid;
     $reviewtype = $node->type;
-    $temp = array('employeeName' => $employeeName, 'rpeid' => $rpeid, 'reviewType' => $reviewtype);
+    $description = $node->description;
+    $temp = array('employeeName' => $employeeName, 'rpeid' => $rpeid, 'reviewType' => $reviewtype,'description'=>$description);
     $result[$index++] = $temp;
   }
   return $result;

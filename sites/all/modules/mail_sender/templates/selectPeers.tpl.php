@@ -1,16 +1,14 @@
 <div>
-Dear [username],<br>
-<br>
+  Dear [user:employee],<br>
+  <br>
+  This is automatically generated email to notify you that a new review has been started for [counselor] and is currently in New Review Stated status. <br>
 
-<a href='[url]'> Click here to select peers </a>
+  URL: <a href='[url]'> [url] </a> <br>
+  <br>
 
-[mailbody]<br>
-This is automatically generated email to notify you that<br>
-[content] <br>
-Thank you in advance for spending time to provide the feedback. <br>
-<br>
-Regards, <br>
-Perficient Review System. <br>
+  Thank you in advance for spending time to provide the feedback. <br>
+  Regards, <br>
+  Perficient Review System. 
+
 </div>
-
 

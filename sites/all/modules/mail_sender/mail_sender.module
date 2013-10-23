@@ -34,9 +34,12 @@ function mail_sender_send($address, $subject, $body, $isHtml) {
   $mail->From = variable_get('smtp_from');
   $mail->FromName = variable_get('smtp_fromname');
 
-  foreach ($address as $to) {
-    $mail->AddAddress($to);
-  }
+  if (is_array($address))
+    foreach ($address as $to)
+      $mail->AddAddress($to);
+  else
+    $mail->AddAddress($address);
+
   $mail->Subject = $subject;
   $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
   $mail->WordWrap = 80; // set word wrap
@@ -87,4 +90,15 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
   }
 
   return mail_sender_send($address, $subject, $content, true);
+}
+
+function mail_sender_template_adapter($address, $params, $type) {
+  $subject = 'Enterprise Review Notification';
+  if ($type == 0) {
+    $templateName = 'new_review_started.tpl.php';
+  }
+  else if ($type == 1) {
+    $templateName = 'selectPeers.tpl.php';
+  }
+  mail_sender_mail_template($address, $subject, $params, $templateName);
 }

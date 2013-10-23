@@ -8,6 +8,8 @@
 
 <script>
 
+  var workingItemsNum = 0;
+
   function postwith(to, p) {
     var myForm = document.create_r_r_rElement_x("form");
     myForm.method = "post";
@@ -23,6 +25,17 @@
     document.body.removeChild(myForm);
   }
 
+  function reviewName(type)
+  {
+    if (type === '0')
+      return 'Annual Review';
+    else if (type === '1')
+      return 'Project Review';
+    else if (type === '2')
+      return '3-Mouth Review';
+    else
+      return 'Review';
+  }
   function showSelPeersList(items, userType)
   {
     var obj, name, rreid, reviewType, url, li;
@@ -32,13 +45,14 @@
       name = obj.employeeName;
       rreid = obj.rreid;
       reviewType = obj.reviewType;
+      description = obj.description;
       url = "#?rreid=" + rreid + "&name=" + name + "&reviewType=" + reviewType;
 
       if (userType == 'counselee') {
-        li = " <li> <a href='" + url + "'> Please select peers for your [Annual Review] </a> </li>";
+        li = " <li> <a href='" + url + "'>" + description + " is started.Please select peers for your " + ".(" + reviewName(reviewType) + ") </a> </li>";
       }
       else if (userType == 'counselor') {
-        li = " <li> <a href='" + url + "'> Please help [" + name + "] to select [Annual Review] peers  </a> </li>";
+        li = " <li> <a href='" + url + "'>" + description + " is started.Please select peers for [" + name + "] " + ".(" + reviewName(reviewType) + ")</a> </li>";
       }
       jQuery('#myWorkingList').append(li);
     }
@@ -46,15 +60,17 @@
 
   function showReviewList(items)
   {
-    var obj, name, rpeid, reviewType, url, li;
+    var obj, name, rpeid, reviewType, description, url, li;
     for (var i = 0; i < items.length; i++)
     {
       obj = items[i];
       name = obj.employeeName;
       rpeid = obj.rpeid;
       reviewType = obj.reviewType;
+      description = obj.description;
+
       url = "#?rreid=" + rpeid + "&name=" + name + "&reviewType=" + reviewType;
-      li = " <li> <a href='" + url + "'> Please help [" + name + "] do peers review for her/his [Annual Review]! </a> </li>";
+      li = " <li> <a href='" + url + "'>" + description + " is started.Please do peers review for [" + name + " ].(" + reviewName(reviewType) + ")</a> </li>";
       jQuery('#myWorkingList').append(li);
     }
   }
@@ -72,13 +88,12 @@
   showReviewList(reviewList);
 
 
-  if (counseleePeers.length === 0 && counselorPeers.length === 0)
+  var workingItemsNum = counseleePeers.length + counselorPeers.length + reviewList.length;
+  if (workingItemsNum == 0)
   {
     var li = " <li> You have no work to do!</li>";
     jQuery('#myWorkingList').append(li);
   }
-
-
 
 
 </script>
