@@ -93,8 +93,8 @@ function counsellor_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'prid' => array(
-        'description' => 'Foreign key of prs_general',
+      'rreid' => array(
+        'description' => 'Foreign key of prs_rel_review_employee',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
