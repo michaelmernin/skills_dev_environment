@@ -197,7 +197,7 @@ function start_new_review() {
   if ($review_id != 0) {
     $review = query_review($review_id);
     if ($review[0]->rstatus == '0') {
-      $update_num = start_review_update_change_status_0_to_1($review_id);
+      $update_num = set_review_status(array($review_id), 1);
       // send email
       // code
       if (module_exists('counsellor') && module_enable(array('counsellor'))) {
