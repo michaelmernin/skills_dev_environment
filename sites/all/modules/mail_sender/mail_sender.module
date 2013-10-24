@@ -9,6 +9,13 @@
  */
 
 /**
+ * Implements hook_cron().
+ */
+function mail_sender_cron() {
+  mail_sender_do_task();
+}
+
+/**
  * 
  * This funciton is to send e-mail
  * 
@@ -89,16 +96,60 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
     return 'Parameters and the file does not match!';
   }
 
+  $mail_insert = db_insert('prs_mail');
+
+  $create_time = 0;
+  if (module_exists('counselor'))
+    $create_time = explode_time_stand($date());
+
+  $field = array(
+    'pmid' => 0,
+    'address' => $address,
+    'subject' => $subject,
+    'body' => $content,
+    'status' => 0,
+    'createtime' => $create_time);
+
+  $mail_insert->fields($field)->execute();
   return mail_sender_send($address, $subject, $content, true);
 }
 
 function mail_sender_template_adapter($address, $params, $type) {
   $subject = 'Enterprise Review Notification';
   if ($type == 0) {
+    $subject = $params['reviewname'] + "has begun.Please select peers for youself before" + $params['deadline'];
     $templateName = 'new_review_started.tpl.php';
   }
   else if ($type == 1) {
     $templateName = 'selectPeers.tpl.php';
   }
   mail_sender_mail_template($address, $subject, $params, $templateName);
+}
+
+function mail_sander_do_task() {
+
+  $max_send = 10;
+
+  $mail_query = db_select('prs_mail', 'mail');
+  $mail_query->addField('mail', 'pmid');
+  $mail_query->addField('mail', 'address');
+  $mail_query->addField('mail', 'subject');
+  $mail_query->addField('mail', 'body');
+  $mail_query->condition('mail.status', 0);
+
+  $mail_query->range(0, $max_send);
+  $mail_result = $mail_query->execute()->fetchAll();
+  $mail_id = array();
+
+
+  foreach ($mail_result as $task) {
+
+    $id = $task->pmid;
+    $address = $task->address;
+    $subject = $task->subject;
+    $body = $task->body;
+
+    return $send_message = mail_sender_send('673021974@qq.com', $subject, $body, false);
+    //return $send_message = mail_sender_send('673021974@qq.com', 'sdfa', '<div></div>', true);
+  }
 }

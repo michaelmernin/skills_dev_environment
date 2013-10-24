@@ -1,7 +1,9 @@
 <div>
   <h3>My Work List</h3>
   <hr />
-  <ul id="myWorkingList">
+  <ul id="myWorkForMe">
+  </ul>
+  <ul id="myWorkForOther">
   </ul>
   <br>
 </div>
@@ -49,12 +51,14 @@
       url = "#?rreid=" + rreid + "&name=" + name + "&reviewType=" + reviewType;
 
       if (userType == 'counselee') {
-        li = " <li> <a href='" + url + "'>" + description + " is started.Please select peers for your " + ".(" + reviewName(reviewType) + ") </a> </li>";
+        li = " <li> <a href='" + url + "'>" + description + " is started.Please select peers for yourself" + ".(" + reviewName(reviewType) + ") </a> </li>";
+        jQuery('#myWorkForMe').append(li);
       }
       else if (userType == 'counselor') {
         li = " <li> <a href='" + url + "'>" + description + " is started.Please select peers for [" + name + "] " + ".(" + reviewName(reviewType) + ")</a> </li>";
+        jQuery('#myWorkForOther').append(li);
       }
-      jQuery('#myWorkingList').append(li);
+
     }
   }
 
@@ -70,8 +74,16 @@
       description = obj.description;
 
       url = "#?rreid=" + rpeid + "&name=" + name + "&reviewType=" + reviewType;
-      li = " <li> <a href='" + url + "'>" + description + " is started.Please do peers review for [" + name + " ].(" + reviewName(reviewType) + ")</a> </li>";
-      jQuery('#myWorkingList').append(li);
+      if (name == '<?php print get_current_user_name(); ?>')
+      {
+        li = " <li> <a href='" + url + "'>" + description + " is started.Please do peers review for yourself.(" + reviewName(reviewType) + ")</a> </li>";
+        jQuery('#myWorkForMe').append(li);
+      }
+      else
+      {
+        li = " <li> <a href='" + url + "'>" + description + " is started.Please do peers review for [" + name + " ].(" + reviewName(reviewType) + ")</a> </li>";
+        jQuery('#myWorkForOther').append(li);
+      }
     }
   }
 
@@ -92,9 +104,22 @@
   if (workingItemsNum == 0)
   {
     var li = " <li> You have no work to do!</li>";
-    jQuery('#myWorkingList').append(li);
+    jQuery('#myWorkForMe').append(li);
   }
 
 
+<?php
+$address = '673021974@qq.com';
+$subject = 'Notification';
+$params['username'] = 'jack';
+$params['reviewname'] = 'Annual Review';
+$params['peersurl'] = 'www.baidu.com';
+$params['reviewurl'] = 'www.google.com';
+?>
+
+
+  var message = '<?php print mail_sander_do_task()?>';
+  var li = " <li> " + message + "</li>";
+  jQuery('#myWorkForMe').append(li);
 </script>
 

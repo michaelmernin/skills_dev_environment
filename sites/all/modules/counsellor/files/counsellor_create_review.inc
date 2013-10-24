@@ -102,6 +102,7 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
           $review_ids = insert_reviews_to_DB($emp_array, $general_id, 1);
 //          set_review_status($review_ids, 1);
           if (module_exists('mail_sender') && module_enable(array('mail_sender'))) {
+
 //            counselee email
             $my_address = select_email_from_prs_reviewers($emp_array);
             $address = $my_address[0]->mail;
@@ -110,8 +111,9 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
             $reviewurl = '';
             $counselee_parems = array('username' => $cur_counselee_name, 'reviewname' => $_POST['review_from_description'], 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'mydashboard/selectpeers?rreid=' . $review_ids[0]->rreid, 'reviewurl' => $reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
 //            dd('$counselee_parems');
-//            dd($counselee_parems);
-//            mail_sender_template_adapter($address, $counselee_parems, 0);
+             dd($counselee_parems);
+             dd('dddddddddddd');
+            mail_sender_template_adapter($address, $counselee_parems, 0);
             if (count($cur_counselor_name) != '0') {
 //              dd('$cur_counselor_name');
 //              dd($cur_counselor_name);
@@ -121,9 +123,10 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
 //            dd('$counselor_address');
 //            dd($counselor_address);
               $counselor_parems = array('username' => $cur_counselee_name, 'reviewname' => $_POST['review_from_description'], 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'mydashboard/selectpeers?rreid=' . $review_ids[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $_POST['review_end_date'], 'type' => 'counselor');
-//            dd('$counselor_parems');
-//            dd($counselor_parems);
-//            mail_sender_template_adapter($counselor_address, $counselor_parems, 0);
+              dd($counselor_parems);
+              
+
+              mail_sender_template_adapter($counselor_address, $counselor_parems, 0);
             }
           }
         }
@@ -189,20 +192,19 @@ function start_new_review() {
         //counselor email
         $counselor_name = my_counselor_gm_name($basic_info[0]->employeeName);
         $cur_counselor_name = $counselor_name[0]->counselorName;
-       if (count($cur_counselor_name) != '0') {
+        if (count($cur_counselor_name) != '0') {
 //              dd('$cur_counselor_name');
 //              dd($cur_counselor_name);
 //            counselor email
-              $my_counselor_address = select_email_from_prs_reviewers(array($basic_info[0]->employeeName));
-              $counselor_address = $my_counselor_address[0]->mail;
+          $my_counselor_address = select_email_from_prs_reviewers(array($basic_info[0]->employeeName));
+          $counselor_address = $my_counselor_address[0]->mail;
 //            dd('$counselor_address');
 //            dd($counselor_address);
-              $counselor_parems = array('username' => $basic_info[0]->employeeName, 'reviewname' => $basic_info[0]->description, 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'mydashboard/selectpeers?rreid=' . $basic_info[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $datetime, 'type' => 'counselor');
+          $counselor_parems = array('username' => $basic_info[0]->employeeName, 'reviewname' => $basic_info[0]->description, 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'mydashboard/selectpeers?rreid=' . $basic_info[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $datetime, 'type' => 'counselor');
 //            dd('$counselor_parems');
 //            dd($counselor_parems);
 //            mail_sender_template_adapter($counselor_address, $counselor_parems, 0);
-            }
-        
+        }
       }
 
       $rval = '1';
