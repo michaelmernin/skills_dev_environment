@@ -107,19 +107,5 @@
     jQuery('#myWorkForMe').append(li);
   }
 
-
-<?php
-$address = '673021974@qq.com';
-$subject = 'Notification';
-$params['username'] = 'jack';
-$params['reviewname'] = 'Annual Review';
-$params['peersurl'] = 'www.baidu.com';
-$params['reviewurl'] = 'www.google.com';
-?>
-
-
-  var message = '<?php print mail_sander_do_task()?>';
-  var li = " <li> " + message + "</li>";
-  jQuery('#myWorkForMe').append(li);
 </script>
 

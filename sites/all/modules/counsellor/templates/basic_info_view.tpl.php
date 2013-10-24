@@ -8,7 +8,7 @@
         <h6>Review Name<span class="form-required" title="This field is required.">*</span>:</h6>
       </td>
       <td colspan="3"><input type="text" value="" id="review_from_description" style="color:#34495E;background-color:#ffffff"></td>
-      </tr>
+    </tr>
     <tr>
       <td>
         <h6>Type<span class="form-required" title="This field is required.">*</span>:</h6>
@@ -86,6 +86,8 @@
 
   });
   jQuery(".datetimepicker").datepicker({
-    firstDay: 1
+    firstDay: 1,
+    changeMonth: true,
+    changeYear: true
   });
 </script>

@@ -13553,7 +13553,7 @@ body.vjs-full-window {
 
 /* line 17, ../sass/modules/_login.sass */
 .login-icon {
-  left: 200px;
+  left: 250px;
   position: absolute;
   top: 160px;
   width: 96px;
@@ -13585,6 +13585,7 @@ body.vjs-full-window {
   border-radius: 6px;
   padding: 24px 23px 20px;
   position: relative;
+  left:50px;
   width:380px;login-field
 }
 /* line 48, ../sass/modules/_login.sass */

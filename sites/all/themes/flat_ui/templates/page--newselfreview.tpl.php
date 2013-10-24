@@ -44,7 +44,7 @@
     }
     jQuery.ajax({
       type: "POST",
-      data:{'review_type':review_type,'review_start_date':review_start_date,'review_end_date':review_end_date,'review_from_date':review_from_date,'review_to_date':review_to_date,'Project_Name_Text':Project_Name_Text,'review_from_description':review_from_description,'flag':flag},
+      data:{'review_type':review_type,'review_start_date':review_start_date,'review_end_date':review_end_date,'review_from_date':review_from_date,'review_to_date':review_to_date,'Project_Name_Text':Project_Name_Text,'review_from_description':review_from_description,'self_draft_flag':flag},
       url: '<?php echo $base_path ?>newreview/submitselfreview',
       success: function(text) {
         if (text != '-1') {

@@ -34,7 +34,7 @@ function counsellor_menu() {
   $items['newreview/submitselfreview'] = array(
     'title' => 'Submit A New Review',
     'type' => MENU_CALLBACK,
-    'page callback' => 'submit_new_review',
+    'page callback' => 'submit_new_self_review',
     'access arguments' => array('Access create self review'),
     'file' => 'files/counsellor_create_review.inc',
   );
@@ -115,13 +115,13 @@ function counsellor_permission() {
 
 function appendCSSJS() {
   $counsellor_path = drupal_get_path('module', 'counsellor');
-  drupal_add_css($counsellor_path . '/css/ui.multiselect.css');
+//  drupal_add_css($counsellor_path . '/css/ui.multiselect.css');
 //    drupal_add_css($counsellor_path . '/css/ui-lightness/jquery-ui-1.8.16.custom.css');
 //    drupal_add_css($counsellor_path . '/css/ui-lightness/colorbox.css');
 //    drupal_add_css($counsellor_path . '/reviewlist.css');
 //    drupal_add_js($counsellor_path . '/js/jquery.colorbox.js');
-  drupal_add_js($counsellor_path . '/js/ui.multiselect.js');
-  drupal_add_js($counsellor_path . '/js/flatui-radi.js');
+//  drupal_add_js($counsellor_path . '/js/ui.multiselect.js');
+//  drupal_add_js($counsellor_path . '/js/flatui-radi.js');
   drupal_add_js($counsellor_path . '/js/counsellor.js');
   drupal_add_library('system', 'ui.datepicker');
 }
@@ -188,7 +188,7 @@ function dateArrayTounixTimestamp($date_array) {
     $day = $date_array['day'];
     $month = $date_array['month'];
     $year = $date_array['year'];
-    $timestamp = mktime(0, 0, 0, $month, $day, $year);
+    $timestamp = mktime(23, 59, 59, $month, $day, $year);
   }
   return $timestamp;
 }
@@ -274,6 +274,12 @@ function my_counselor_gm_name($my_name) {
   return $result;
 }
 
+/**
+ * get basic information from db
+ * @param type $review_id
+ * @return type
+ * @author Mars
+ */
 function get_basic_review_infomation($review_id) {
 //   $cur_user_name = get_current_user_name();
   $query = db_select('prs_rel_review_employee', 're');
