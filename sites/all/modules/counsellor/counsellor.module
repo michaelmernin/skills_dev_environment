@@ -42,7 +42,7 @@ function counsellor_menu() {
     'title' => 'Start a review',
     'type' => MENU_CALLBACK,
     'page callback' => 'start_new_review',
-    'access arguments' => array('Manage Performance Review List'),
+    'access arguments' => array('Access create self review'),
     'file' => 'files/counsellor_create_review.inc',
   );
   return $items;
@@ -107,7 +107,7 @@ function counsellor_permission() {
 //        'config reviews' => array(
 //            'title' => t('Config reviews'),
 //        ),
-    'Access create self review' =>array(
+    'Access create self review' => array(
       'title' => t('Access to counsellor or counselee to create self review'),
     ),
   );
@@ -138,7 +138,6 @@ function counsellor_theme() {
       'path' => drupal_get_path('module', 'counsellor') . '/templates',
       'template' => 'select_participates',
     ),
-
   );
 }
 
@@ -215,7 +214,7 @@ function get_counselees_from_db() {
   $query->condition('precg.counselorName', $cur_user_name, '=');
   $query->orderBy('precg.employeeName', 'ASC');
   $result = $query->execute()->fetchAll();
-  
+
   return $result;
 }
 
@@ -252,11 +251,42 @@ function generate_selected_participant_array($counseleeNames) {
 /**
  * select_counselees
  * @return array
-*/
+ */
 function select_counselees() {
   $counselee_names = get_counselees_from_db();
   $counselees = array();
   $counselees = generate_selected_participant_array($counselee_names);
 
   return $counselees;
+}
+
+/**
+ * return my counselor and gm name
+ * @param type $my_name
+ * @return type
+ * @author Mars
+ */
+function my_counselor_gm_name($my_name) {
+  $query = db_select('prs_rel_employee_counselor_gm', 'prec');
+  $query->fields('prec', array('counselorName', 'gmName'));
+  $query->condition('prec.employeeName', $my_name);
+  $result = $query->execute()->fetchAll();
+  return $result;
+}
+
+function get_basic_review_infomation($review_id) {
+//   $cur_user_name = get_current_user_name();
+  $query = db_select('prs_rel_review_employee', 're');
+  $query->join('prs_general', 'pg', 'pg.prid=re.prid');
+  $query->fields('re', array('employeeName', 'rreid', 'rstatus'));
+  $query->addField('pg', 'period_start');
+  $query->addField('pg', 'period_end');
+  $query->addField('pg', 'time_frame_from');
+  $query->addField('pg', 'time_frame_to');
+  $query->addField('pg', 'project_name');
+  $query->addField('pg', 'type');
+  $query->addField('pg', 'description');
+  $query->condition('re.rreid', $review_id);
+  $result = $query->execute()->fetchAll();
+  return $result;
 }
