@@ -52,9 +52,8 @@ function mail_sender_send($address, $subject, $body, $isHtml) {
     $mail->WordWrap = 80; // set word wrap
     $mail->MsgHTML($body);
     $mail->IsHTML($isHtml);
-    
-//    dd($mail);
-    
+
+
     return $mail->Send();
   } catch (phpmailerException $e) {
     watchdog('mail sender send', $e->errorMessage(), array(), WATCHDOG_ERROR);
@@ -79,7 +78,7 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
   if (file_exists($templatePath))
     $template = file_get_contents($templatePath);
   else {
-//    dd('File not exist' . $templatePath);
+    watchdog('mail sender template', 'Template files does not exist', array(), WATCHDOG_ERROR);
     $template = '<div>Jack</div>';
   }
 
@@ -113,9 +112,6 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
     'body' => $content,
     'status' => 0,
     'createtime' => $create_time);
-
-  dd($field);
-  dd($mail_insert->fields($field)->execute());
   return mail_sender_send($address, $subject, $content, true);
 }
 
@@ -136,8 +132,6 @@ function mail_sender_template_adapter($address, $params, $type) {
     default:
       break;
   }
-  dd($subject);
-  dd($params);
   mail_sender_mail_template($address, $subject, $params, $templateName);
 }
 
