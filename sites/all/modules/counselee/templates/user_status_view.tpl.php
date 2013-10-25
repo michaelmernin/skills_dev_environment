@@ -31,7 +31,7 @@
       $start_date_format = date_to_format($start_date);
       $end_date_format = date_to_format($end_date);
       $startid = $status->rreid;
-      $url = '/EnterpriseReview/watchstatus/' . $startid;
+      $url = '/EnterpriseReview/watchstatus/basicinfo/' . $startid;
       switch ($status->rstatus) {
         case 0:
           //0 for New review start
@@ -111,7 +111,7 @@
     //no review data
     if ($count == 0) {
       print '<tr>
-             <td colspan="5">There is no review for you.</td>
+             <td colspan="6">There is no review for you.</td>
              </tr>';
     }
     ?>

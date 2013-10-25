@@ -1,7 +1,63 @@
 <?php $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() ?>
 <script type="text/javascript">
-
-  function submitSelfReview(flag) {
+//
+//  function submitSelfReview(flag) {
+//    clickSubmitButton();
+//    var review_type = jQuery('#review_type').val();
+//    var Project_Name_Text = jQuery('#Project_Name_Text').val().trim();
+//    var review_start_date = jQuery('#review_start_date').val();
+//    var review_end_date = jQuery('#review_end_date').val();
+//    var review_from_date = jQuery('#review_from_date').val();
+//    var review_to_date = jQuery('#review_to_date').val();
+//    var review_from_description = jQuery('#review_from_description').val().trim();
+//    if (review_type == '1') {
+//      if (Project_Name_Text == '') {
+//        alert('please enter a project name!');
+//        hideConfirmdialog();
+//        return;
+//      }
+//    }
+//    if (review_from_description == '') {
+//      if (Project_Name_Text == '') {
+//        alert('please enter a review name!');
+//        hideConfirmdialog();
+//        return;
+//      }
+//    }
+//    var nstime = review_start_date.split('/');
+//    var real_nstime = parseInt(nstime[2] + nstime[0] + nstime[1]);
+//    var netime = review_end_date.split('/');
+//    var real_netime = parseInt(netime[2] + netime[0] + netime[1]);
+//    if (real_nstime >= real_netime) {
+//      alert('start date must early than end date!');
+//      hideConfirmdialog();
+//      return;
+//    }
+//    var nrstime = review_from_date.split('/');
+//    var real_nrstime = parseInt(nrstime[2] + nrstime[0] + nrstime[1]);
+//    var nretime = review_to_date.split('/');
+//    var real_nretime = parseInt(nretime[2] + nretime[0] + nretime[1]);
+//    if (real_nrstime >= real_nretime) {
+//      alert('start date must early than end date!');
+//      hideConfirmdialog();
+//      return;
+//    }
+//    jQuery.ajax({
+//      type: "POST",
+//      data:{'review_type':review_type,'review_start_date':review_start_date,'review_end_date':review_end_date,'review_from_date':review_from_date,'review_to_date':review_to_date,'Project_Name_Text':Project_Name_Text,'review_from_description':review_from_description,'self_draft_flag':flag},
+//      url: '<?php echo $base_path ?>newreview/submitselfreview',
+//      success: function(text) {
+//        if (text != '-1') {
+//          window.location.href = "<?php print base_path() . 'mydashboard' ?>";
+//        } else {
+//          window.location.href = "<?php print base_path() . 'newreview' ?>";
+//          return;
+//        }
+//      }
+//    });
+//
+//  }
+    function submitSelfReview(flag) {
     clickSubmitButton();
     var review_type = jQuery('#review_type').val();
     var Project_Name_Text = jQuery('#Project_Name_Text').val().trim();
@@ -9,7 +65,33 @@
     var review_end_date = jQuery('#review_end_date').val();
     var review_from_date = jQuery('#review_from_date').val();
     var review_to_date = jQuery('#review_to_date').val();
-    var review_from_description = jQuery('#review_from_description').val().trim();
+//    var review_from_description = jQuery('#review_from_description').val().trim();
+
+    if (review_start_date == '') {
+      alert('please enter start date!');
+      hideConfirmdialog();
+      return;
+
+    }
+    if (review_end_date == '') {
+      alert('please enter end date!');
+      hideConfirmdialog();
+      return;
+
+    }
+    if (review_from_date == '') {
+      alert('please enter period from date!');
+      hideConfirmdialog();
+      return;
+
+    }
+    if (review_to_date == '') {
+      alert('please enter period to date!');
+      hideConfirmdialog();
+      return;
+
+    }
+
     if (review_type == '1') {
       if (Project_Name_Text == '') {
         alert('please enter a project name!');
@@ -17,13 +99,13 @@
         return;
       }
     }
-    if (review_from_description == '') {
-      if (Project_Name_Text == '') {
-        alert('please enter a review name!');
-        hideConfirmdialog();
-        return;
-      }
-    }
+//    if (review_from_description == '') {
+//      if (Project_Name_Text == '') {
+//        alert('please enter a review name!');
+//        hideConfirmdialog();
+//        return;
+//      }
+//    }
     var nstime = review_start_date.split('/');
     var real_nstime = parseInt(nstime[2] + nstime[0] + nstime[1]);
     var netime = review_end_date.split('/');
@@ -42,21 +124,22 @@
       hideConfirmdialog();
       return;
     }
-    jQuery.ajax({
-      type: "POST",
-      data:{'review_type':review_type,'review_start_date':review_start_date,'review_end_date':review_end_date,'review_from_date':review_from_date,'review_to_date':review_to_date,'Project_Name_Text':Project_Name_Text,'review_from_description':review_from_description,'self_draft_flag':flag},
-      url: '<?php echo $base_path ?>newreview/submitselfreview',
-      success: function(text) {
-        if (text != '-1') {
-          window.location.href = "<?php print base_path() . 'mydashboard' ?>";
-        } else {
-          window.location.href = "<?php print base_path() . 'newreview' ?>";
-          return;
-        }
-      }
-    });
 
+      jQuery.ajax({
+        type: "POST",
+        data: {'review_type': review_type, 'review_start_date': review_start_date, 'review_end_date': review_end_date, 'review_from_date': review_from_date, 'review_to_date': review_to_date, 'Project_Name_Text': Project_Name_Text,'self_draft_flag':flag},
+        url: '<?php echo $base_path ?>newreview/submitselfreview',
+        success: function(text) {
+          if (text != '-1') {
+            window.location.href = "<?php print base_path() . 'mydashboard' ?>";
+          } else {
+            window.location.href = "<?php print base_path() . 'newreview' ?>";
+            return;
+          }
+        }
+      });
   }
+  
 </script>
 <?php require_once 'header.tpl.php'; ?>
 <div id="pr_mywokingstage_page" class="container">
@@ -70,9 +153,9 @@
         jQuery(document).ready(function() {
           switchProjectName(0);
           jQuery('#review_start_date').val(formatDateTime('0', '0', '0'));
-          jQuery('#review_end_date').val(formatDateTime('0', '1', '0'));
-          jQuery('#review_from_date').val(formatDateTime('-1', '0', '0'));
-          jQuery('#review_to_date').val(formatDateTime('0', '0', '0'));
+//          jQuery('#review_end_date').val(formatDateTime('0', '1', '0'));
+//          jQuery('#review_from_date').val(formatDateTime('-1', '0', '0'));
+//          jQuery('#review_to_date').val(formatDateTime('0', '0', '0'));
           jQuery("#tree ul").hide();
           jQuery("#tree li").each(function() {
             var handleSpan = jQuery("<span></span>");
@@ -109,7 +192,7 @@
 
 
       <a id="modal-912871" href="#modal-container-912871" role="button" class="btn" data-toggle="modal">Start Review</a>
-      <a role="button" class="btn" onclick="submitSelfReview(0);">Save as Draft</a>
+      <!--<a role="button" class="btn" onclick="submitSelfReview(0);">Save as Draft</a>-->
 
       <div class="row-fluid">
         <div class="span12">

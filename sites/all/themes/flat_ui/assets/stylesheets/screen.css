@@ -13963,3 +13963,47 @@ div.error {
  color: #34495E;
 
 }
+
+
+/****************************************CSS for tabs******************/
+.pr360-tabs {
+    line-height: 27px;
+    text-transform: uppercase;
+}
+.pr360-tabs li {
+    display: inline;
+    list-style: none;
+}
+.pr360-tabs li a,
+.pr360-tabs li a:active,
+.pr360-tabs li a:visited,
+.pr360-tabs li a:hover {
+    background-color: #575757;
+    -moz-border-radius: 8px 8px 0 0;
+    -webkit-border-top-left-radius: 8px;
+    -webkit-border-top-right-radius: 8px;
+    border-radius: 8px 8px 0 0;
+    color: #000;
+    display: inline-block;
+    font-size: 1em;
+    font-weight: bold;
+    margin: 0 0 2px 0;
+    outline: 0;
+    padding: 5px 14px;
+    text-decoration: none;
+}
+.pr360-tabs li.active a,
+.pr360-tabs li.active a.active,
+.pr360-tabs li.active a:active,
+.pr360-tabs li.active a:visited {
+    color: #fff;
+    margin: 0;
+}
+.pr360-tabs li a:focus,
+.pr360-tabs li a:hover {
+    color: #fff;
+}
+.pr360-tabs li.active a:focus,
+.pr360-tabs li.active a:hover {
+    color: #000;
+}

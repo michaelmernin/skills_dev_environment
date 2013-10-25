@@ -3,12 +3,12 @@
     <h3>Basic Information</h3>
   </caption>
   <tbody>
-    <tr>
+<!--    <tr>
       <td>
         <h6>Review Name<span class="form-required" title="This field is required.">*</span>:</h6>
       </td>
       <td colspan="3"><input type="text" value="" id="review_from_description" style="color:#34495E;background-color:#ffffff"></td>
-    </tr>
+    </tr>-->
     <tr>
       <td>
         <h6>Type<span class="form-required" title="This field is required.">*</span>:</h6>
@@ -60,24 +60,24 @@
     switch (jQuery('#review_type').val()) {
       case '0':
         switchProjectName(0);
-        jQuery('#review_start_date').val(formatDateTime('0', '0', '0'));
-        jQuery('#review_end_date').val(formatDateTime('0', '1', '0'));
-        jQuery('#review_from_date').val(formatDateTime('-1', '0', '0'));
-        jQuery('#review_to_date').val(formatDateTime('0', '0', '0'));
+//        jQuery('#review_start_date').val(formatDateTime('0', '0', '0'));
+//        jQuery('#review_end_date').val(formatDateTime('0', '1', '0'));
+//        jQuery('#review_from_date').val(formatDateTime('-1', '0', '0'));
+//        jQuery('#review_to_date').val(formatDateTime('0', '0', '0'));
         break;
       case '1':
         switchProjectName(1);
-        jQuery('#review_start_date').val(formatDateTime('0', '0', '0'));
-        jQuery('#review_end_date').val(formatDateTime('0', '1', '0'));
-        jQuery('#review_from_date').val(formatDateTime('0', '-1', '0'));
-        jQuery('#review_to_date').val(formatDateTime('0', '0', '0'));
+//        jQuery('#review_start_date').val(formatDateTime('0', '0', '0'));
+//        jQuery('#review_end_date').val(formatDateTime('0', '1', '0'));
+//        jQuery('#review_from_date').val(formatDateTime('0', '-1', '0'));
+//        jQuery('#review_to_date').val(formatDateTime('0', '0', '0'));
         break;
       case '2':
         switchProjectName(0);
-        jQuery('#review_start_date').val(formatDateTime('0', '0', '0'));
-        jQuery('#review_end_date').val(formatDateTime('0', '1', '0'));
-        jQuery('#review_from_date').val(formatDateTime('0', '-3', '0'));
-        jQuery('#review_to_date').val(formatDateTime('0', '0', '0'));
+//        jQuery('#review_start_date').val(formatDateTime('0', '0', '0'));
+//        jQuery('#review_end_date').val(formatDateTime('0', '1', '0'));
+//        jQuery('#review_from_date').val(formatDateTime('0', '-3', '0'));
+//        jQuery('#review_to_date').val(formatDateTime('0', '0', '0'));
         break;
 
     }

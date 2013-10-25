@@ -80,7 +80,12 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
         $message = 'Review created fail!';
         drupal_set_message($message, 'error');
       }
-    }
+    }else {
+        //there is no select counselee
+        $rval = '-1';
+        $message = 'Review created fail!';
+        drupal_set_message($message, 'error');
+      }
   }
   else {
     $rval = '-1';
@@ -117,7 +122,7 @@ function submit_new_self_review() {
     $emp_array = array(
       $cur_counselee_name
     );
-    if (module_exists('counsellor') && module_enable(array('counsellor'))) {
+    if (module_exists('common') && module_enable(array('common'))) {
       $counselor_name = my_counselor_gm_name($cur_counselee_name);
       $cur_counselor_name = $counselor_name[0]->counselorName;
     }
@@ -138,8 +143,8 @@ function submit_new_self_review() {
 //            dd($counselee_parems);
            mail_sender_template_adapter($address, $counselee_parems, 0);
           if (count($cur_counselor_name) != '0') {
-//              dd('$cur_counselor_name');
-//              dd($cur_counselor_name);
+              dd('$cur_counselor_name');
+              dd($cur_counselor_name);
 //            counselor email
             $my_counselor_address = select_email_from_prs_reviewers(array($cur_counselor_name));
             $counselor_address = $my_counselor_address[0]->mail;
@@ -202,7 +207,7 @@ function start_new_review() {
       $update_num = set_review_status(array($review_id), 1);
       // send email
       // code
-      if (module_exists('counsellor') && module_enable(array('counsellor'))) {
+      if (module_exists('common') && module_enable(array('common'))) {
         //counselee email
         $basic_info = get_basic_review_infomation($review_id);
         $datetime_timestamp = unixTimestampToDateArray($basic_info[0]->period_end);
@@ -305,6 +310,7 @@ function set_fields_array($general_info, &$fields_array) {
   $periodFtime = NULL;
   $periodTTime = NULL;
   $flag = TRUE;
+  $review_type=NULL;
 //  if (strpos($general_info, '-')) {
 //    $tmp = explode('-', $general_info);
 //  }
@@ -313,9 +319,19 @@ function set_fields_array($general_info, &$fields_array) {
     $type = check_plain($general_info['review_type']);
     $fields_array['type'] = $type;
     // project type
-    if ($general_info['review_type'] == '1') {
+    switch ($general_info['review_type']) {
+      case '0':
+        $review_type='ANNUAL_REVIEW';
+        break;
+      case '1':
+        $review_type='PROJECT_REVIEW';
       $projectName = check_plain($general_info['Project_Name_Text']);
       $fields_array['project_name'] = $projectName;
+      break;
+    case '2':
+        $review_type='THREE_MONTH_REVIEW';
+        break;
+      
     }
   }
 
@@ -325,6 +341,9 @@ function set_fields_array($general_info, &$fields_array) {
     $starttime = explode_time_stand($stime);
     $startTime = dateArrayTounixTimestamp($stime);
     $fields_array['period_start'] = check_plain($startTime);
+  }else{
+    
+    return FALSE;
   }
   //end time
   if (isset($general_info['review_end_date'])) {
@@ -332,6 +351,9 @@ function set_fields_array($general_info, &$fields_array) {
     $endtime = explode_time_stand($etime);
     $endTime = dateArrayTounixTimestamp($etime);
     $fields_array['period_end'] = check_plain($endTime);
+  }else{
+    
+    return FALSE;
   }
   //period from
   if (isset($general_info['review_from_date'])) {
@@ -339,6 +361,9 @@ function set_fields_array($general_info, &$fields_array) {
     $periodFtime = explode_time_stand($pftime);
     $periodFrom = dateArrayTounixTimestamp($pftime);
     $fields_array['time_frame_from'] = check_plain($periodFrom);
+  }else{
+    
+    return FALSE;
   }
 
   //period to
@@ -347,16 +372,19 @@ function set_fields_array($general_info, &$fields_array) {
     $periodTTime = explode_time_stand($pttime);
     $periodTo = dateArrayTounixTimestamp($pttime);
     $fields_array['time_frame_to'] = check_plain($periodTo);
+  }else{
+    
+    return FALSE;
   }
 //  if (isset($form_state['values']['review_status'])) {
 //    $status = $form_state['values']['review_status'];
 //    $fields_array['active'] = $status;
 //  }
   //description
-  if (isset($general_info['review_from_description'])) {
-    $description = check_plain($general_info['review_from_description']);
+//  if (isset($general_info['review_from_description'])) {
+    $description = check_plain($general_info['review_start_date'].'_'.$review_type);
     $fields_array['description'] = $description;
-  }
+//  }
   if (isset($starttime) && isset($endtime) && isset($periodFtime) && isset($periodTTime)) {
     if ($starttime >= $endtime) {
 

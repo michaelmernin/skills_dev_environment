@@ -23,6 +23,21 @@ function counselee_menu() {
     'file' => 'files/dashboard.pages.inc',
     'weight' => 5,
   );
+  $items['watchstatus'] = array(
+    'title' => 'Watch status',
+    'page callback' => 'show_pr_list',
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'files/dashboard.pages.inc',
+  );
+  $items['watchstatus/basicinfo/%'] = array(
+        'title' => 'Basic Information',
+        'page callback' => 'watch_basic_information',
+        'page arguments' => array(2),
+        'access arguments' => array('access to my dashboard'),
+        'type' => MENU_LOCAL_TASK,
+        'file' => 'files/watch_review_status.inc',
+    );
   return $items;
 }
 

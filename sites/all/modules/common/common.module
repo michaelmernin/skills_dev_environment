@@ -7,3 +7,40 @@
  * 
  * 
  */
+
+/**
+ * return my counselor and gm name
+ * @param type $my_name
+ * @return type
+ * @author Mars
+ */
+function my_counselor_gm_name($my_name) {
+  $query = db_select('prs_rel_employee_counselor_gm', 'prec');
+  $query->fields('prec', array('counselorName', 'gmName'));
+  $query->condition('prec.employeeName', $my_name);
+  $result = $query->execute()->fetchAll();
+  return $result;
+}
+
+/**
+ * get basic information from db
+ * @param type $review_id
+ * @return type
+ * @author Mars
+ */
+function get_basic_review_infomation($review_id) {
+//   $cur_user_name = get_current_user_name();
+  $query = db_select('prs_rel_review_employee', 're');
+  $query->join('prs_general', 'pg', 'pg.prid=re.prid');
+  $query->fields('re', array('employeeName', 'rreid', 'rstatus'));
+  $query->addField('pg', 'period_start');
+  $query->addField('pg', 'period_end');
+  $query->addField('pg', 'time_frame_from');
+  $query->addField('pg', 'time_frame_to');
+  $query->addField('pg', 'project_name');
+  $query->addField('pg', 'type');
+  $query->addField('pg', 'description');
+  $query->condition('re.rreid', $review_id);
+  $result = $query->execute()->fetchAll();
+  return $result;
+}

@@ -36,7 +36,7 @@ function mail_sender_send($address, $subject, $body, $isHtml) {
     $mail->Password = variable_get('smtp_password');
     $mail->AddReplyTo($mail->Username, "Perficient");
 
-    $mail->From = variable_get('smtp_from');
+    $mail->From = variable_get('smtp_fromname');
     $mail->FromName = variable_get('smtp_fromname');
     $mail->CharSet = 'iso-8859-1';
 
@@ -52,9 +52,12 @@ function mail_sender_send($address, $subject, $body, $isHtml) {
     $mail->WordWrap = 80; // set word wrap
     $mail->MsgHTML($body);
     $mail->IsHTML($isHtml);
+    
+//    dd($mail);
+    
     return $mail->Send();
   } catch (phpmailerException $e) {
-    dd($e->errorMessage());
+//    dd($e->errorMessage());
   }
 }
 
@@ -76,11 +79,11 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
   if (file_exists($templatePath))
     $template = file_get_contents($templatePath);
   else {
-    dd('File not exist' . $templatePath);
+//    dd('File not exist' . $templatePath);
     $template = '<div>Jack</div>';
   }
 
-  dd($template);
+//  dd($template);
 
 
   $content = '';
