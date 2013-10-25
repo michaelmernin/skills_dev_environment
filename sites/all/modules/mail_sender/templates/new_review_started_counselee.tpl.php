@@ -4,7 +4,7 @@
 
   [reviewname] has begun. <br>
   <br>
-  1,You need to Select Peers to help you complete the peers review!<br>
+  1,You need to Select Peers to help yourself to complete the peers review!<br>
   You can Select Peers by clicking this below link of the Enterprise Review System or copy-pasting the link to your browser.<br>
   Link:<a href='[peersurl]'>[peersurl]</a><br>
   <br>
