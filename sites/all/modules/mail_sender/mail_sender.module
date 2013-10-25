@@ -116,7 +116,7 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
     'createtime' => $create_time);
 
   $mail_insert->fields($field)->execute();
-  //return mail_sender_send($address, $subject, $content, true);
+  return mail_sender_send($address, $subject, $content, true);
 }
 
 function mail_sender_template_adapter($address, $params, $type) {
