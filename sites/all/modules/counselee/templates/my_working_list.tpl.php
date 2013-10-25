@@ -95,7 +95,7 @@
   var counselorPeers = eval(peers);
   showSelPeersList(counselorPeers, 'counselor');
 
-  var review = '<?php print json_encode($reviewList); ?>'
+  var review = '<?php print json_encode($reviewList); ?>';
   var reviewList = eval(review);
   showReviewList(reviewList);
 

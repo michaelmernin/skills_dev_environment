@@ -1,5 +1,6 @@
 <?php
 
+require DRUPAL_ROOT . '/' . libraries_get_path('phpmailer') . '/' . 'class.phpmailer.php';
 /**
  * @file
  * 
@@ -12,7 +13,7 @@
  * Implements hook_cron().
  */
 function mail_sender_cron() {
-  mail_sender_do_task();
+  mail_sander_task();
 }
 
 /**
@@ -24,35 +25,37 @@ function mail_sender_cron() {
  * @param string $body The parameter to send mail
  */
 function mail_sender_send($address, $subject, $body, $isHtml) {
-  $library_path = libraries_get_path('phpmailer');
-  $class_path = DRUPAL_ROOT . '/' . $library_path . '/' . 'class.phpmailer.php';
-  require $class_path;
 
-  $mail = new PHPMailer(true); //New instance, with exceptions enabled
+  try {
+    $mail = new PHPMailer(true); //New instance, with exceptions enabled
+    $mail->IsSMTP();
+    $mail->SMTPAuth = true;
+    $mail->Port = variable_get('smtp_port');
+    $mail->Host = variable_get('smtp_host');
+    $mail->Username = variable_get('smtp_username');
+    $mail->Password = variable_get('smtp_password');
+    $mail->AddReplyTo($mail->Username, "Perficient");
 
-  $mail->IsSMTP();
-  $mail->SMTPAuth = true;
-  $mail->Port = variable_get('smtp_port');
-  $mail->Host = variable_get('smtp_host');
-  $mail->Username = variable_get('smtp_username');
-  $mail->Password = variable_get('smtp_password');
-  $mail->AddReplyTo($mail->Username, "Perficient");
+    $mail->From = variable_get('smtp_from');
+    $mail->FromName = variable_get('smtp_fromname');
+    $mail->CharSet = 'iso-8859-1';
 
-  $mail->From = variable_get('smtp_from');
-  $mail->FromName = variable_get('smtp_fromname');
 
-  if (is_array($address))
-    foreach ($address as $to)
-      $mail->AddAddress($to);
-  else
-    $mail->AddAddress($address);
+    if (is_array($address))
+      foreach ($address as $to)
+        $mail->AddAddress($to);
+    else
+      $mail->AddAddress($address);
 
-  $mail->Subject = $subject;
-  $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
-  $mail->WordWrap = 80; // set word wrap
-  $mail->MsgHTML($body);
-  $mail->IsHTML($isHtml);
-  return $mail->Send();
+    $mail->Subject = $subject;
+    $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
+    $mail->WordWrap = 80; // set word wrap
+    $mail->MsgHTML($body);
+    $mail->IsHTML($isHtml);
+    return $mail->Send();
+  } catch (phpmailerException $e) {
+    dd($e->errorMessage());
+  }
 }
 
 /**
@@ -70,38 +73,40 @@ function mail_sender_send($address, $subject, $body, $isHtml) {
 function mail_sender_mail_template($address, $subject, $params, $templateName) {
 
   $templatePath = drupal_get_path('module', 'mail_sender') . '/templates/' . $templateName;
-  $template = file_get_contents($templatePath);
-
-  try {
-    $content = '';
-    $key = '';
-    $isKey = false;
-    for ($i = 0; $i < strlen($template); $i++) {
-      if ($template[$i] === '[') {
-        $isKey = true;
-      }
-      else if ($template[$i] === ']') {
-        $content .= $params[$key];
-        $isKey = false;
-        $key = '';
-      }
-      else if ($isKey === true) {
-        $key = $key . $template[$i];
-      }
-      else {
-        $content = $content . $template[$i];
-      }
-    }
-  } catch (Exception $e) {
-    return 'Parameters and the file does not match!';
+  if (file_exists($templatePath))
+    $template = file_get_contents($templatePath);
+  else {
+    dd('File not exist' . $templatePath);
+    $template = '<div>Jack</div>';
   }
 
+  dd($template);
+
+
+  $content = '';
+  $key = '';
+  $isKey = false;
+  for ($i = 0; $i < strlen($template); $i++) {
+    if ($template[$i] == '[') {
+      $isKey = true;
+    }
+    else if ($template[$i] == ']') {
+      $content .= $params[$key];
+      $isKey = false;
+      $key = '';
+    }
+    else if ($isKey == true) {
+      $key = $key . $template[$i];
+    }
+    else {
+      $content = $content . $template[$i];
+    }
+  }
+
+//  dd($content);
   $mail_insert = db_insert('prs_mail');
 
   $create_time = 0;
-  if (module_exists('counselor'))
-    $create_time = explode_time_stand($date());
-
   $field = array(
     'pmid' => 0,
     'address' => $address,
@@ -111,22 +116,29 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
     'createtime' => $create_time);
 
   $mail_insert->fields($field)->execute();
-  return mail_sender_send($address, $subject, $content, true);
+  //return mail_sender_send($address, $subject, $content, true);
 }
 
 function mail_sender_template_adapter($address, $params, $type) {
   $subject = 'Enterprise Review Notification';
-  if ($type == 0) {
-    $subject = $params['reviewname'] + "has begun.Please select peers for youself before" + $params['deadline'];
-    $templateName = 'new_review_started.tpl.php';
-  }
-  else if ($type == 1) {
-    $templateName = 'selectPeers.tpl.php';
+  switch ($type) {
+    case 0:
+      if ($params['type'] == 'counselee') {
+        $subject = $params['reviewname'] . " has begun.Please select peers for youself before" . $params['datetime'];
+        $templateName = 'new_review_started_counselee.tpl.php';
+      }
+      else if ($params['type'] == 'counselor') {
+        $subject = $params['reviewname'] . " has begun.Please select peers for " . $params['username'] . " before " . $params['datetime'];
+        $templateName = 'new_review_started_counselor.tpl.php';
+      }
+      break;
+    default:
+      break;
   }
   mail_sender_mail_template($address, $subject, $params, $templateName);
 }
 
-function mail_sander_do_task() {
+function mail_sander_task() {
 
   $max_send = 10;
 
@@ -141,15 +153,28 @@ function mail_sander_do_task() {
   $mail_result = $mail_query->execute()->fetchAll();
   $mail_id = array();
 
-
   foreach ($mail_result as $task) {
-
     $id = $task->pmid;
     $address = $task->address;
     $subject = $task->subject;
     $body = $task->body;
-
-    return $send_message = mail_sender_send('673021974@qq.com', $subject, $body, false);
-    //return $send_message = mail_sender_send('673021974@qq.com', 'sdfa', '<div></div>', true);
+    $send_message = mail_sender_send($address, $subject, $body, true);
+    if ($send_message == '1') {
+      $mail_id[] = $id;
+    }
+    else {
+      watchdog('mail', $send_message, WATCHDOG_ERROR);
+    }
   }
+
+  foreach ($mail_id as $id) {
+    try {
+      $delete_query = "delete from prs_mail where pmid = $id";
+      db_query($delete_query);
+    } catch (Exception $e) {
+      watchdog('mail sender task', 'Error delete mail sender task.', array(), WATCHDOG_ERROR);
+    }
+  }
+
+  return true;
 }

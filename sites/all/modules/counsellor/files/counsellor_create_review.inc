@@ -136,7 +136,7 @@ function submit_new_self_review() {
           $counselee_parems = array('username' => $cur_counselee_name, 'reviewname' => $_POST['review_from_description'], 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'mydashboard/selectpeers?rreid=' . $review_ids[0]->rreid, 'reviewurl' => $reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
 //            dd('$counselee_parems');
 //            dd($counselee_parems);
-//            mail_sender_template_adapter($address, $counselee_parems, 0);
+           mail_sender_template_adapter($address, $counselee_parems, 0);
           if (count($cur_counselor_name) != '0') {
 //              dd('$cur_counselor_name');
 //              dd($cur_counselor_name);
@@ -148,8 +148,8 @@ function submit_new_self_review() {
 
             $counselor_parems = array('username' => $cur_counselee_name, 'reviewname' => $_POST['review_from_description'], 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'mydashboard/selectpeers?rreid=' . $review_ids[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $_POST['review_end_date'], 'type' => 'counselor');
 //            dd('$counselor_parems');
-//            dd($counselor_parems);
-//            mail_sender_template_adapter($counselor_address, $counselor_parems, 0);
+//          dd($counselor_parems);
+            mail_sender_template_adapter($counselor_address, $counselor_parems, 0);
           }
         }
       }
