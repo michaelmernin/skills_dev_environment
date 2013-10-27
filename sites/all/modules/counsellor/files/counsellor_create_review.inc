@@ -143,8 +143,8 @@ function submit_new_self_review() {
 //            dd($counselee_parems);
         mail_sender_template_adapter($address, $counselee_parems, 0);
         if (count($cur_counselor_name) != '0') {
-          dd('$cur_counselor_name');
-          dd($cur_counselor_name);
+//          dd('$cur_counselor_name');
+//          dd($cur_counselor_name);
 //            counselor email
           $my_counselor_address = select_email_from_prs_reviewers(array($cur_counselor_name));
           $counselor_address = $my_counselor_address[0]->mail;

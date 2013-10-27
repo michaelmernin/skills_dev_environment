@@ -178,7 +178,7 @@
 
 
 
-      <a id="modal-912871" href="#modal-container-912871" role="button" class="btn" data-toggle="modal">Start Review</a>
+      <a id="modal-912871" href="#modal-container-912871" role="button" class="btn btn-danger" data-toggle="modal">Start Review</a>
       <!--<a role="button" class="btn" onclick="submitNewReview();">Save as Draft</a>-->
 
       <div class="row-fluid">
@@ -198,7 +198,7 @@
             </div>
             <div class="modal-footer">
               <img class="loading_img" id="status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
-              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-primary" id="submit_button" onclick="submitNewReview()">Submit</button>
+              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="submit_button" onclick="submitNewReview()">Submit</button>
             </div>
           </div>
         </div>

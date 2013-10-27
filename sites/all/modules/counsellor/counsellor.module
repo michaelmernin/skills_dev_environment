@@ -84,8 +84,8 @@ function counsellor_block_view($delta = '') {
 //            $block['subject'] = render_subject_use_image('Configure Timeslot');
       $nTime = unixTimestampToDateArray('0');
       //information array about my counselor and my anniversary month
-      $my_info=get_my_anniversary_counselor();
-      $block['content'] = theme('basic_info_view', array('nTime' => $nTime,'myInfo'=>$my_info));
+      $my_info = get_my_anniversary_counselor();
+      $block['content'] = theme('basic_info_view', array('nTime' => $nTime, 'myInfo' => $my_info));
       break;
 
     case 'select_participates':
@@ -131,7 +131,7 @@ function appendCSSJS() {
 function counsellor_theme() {
   return array(
     'basic_info_view' => array(
-      'variables' => array('nTime' => NULL,'myInfo'=>NULL),
+      'variables' => array('nTime' => NULL, 'myInfo' => NULL),
       'path' => drupal_get_path('module', 'counsellor') . '/templates',
       'template' => 'basic_info_view',
     ),
@@ -268,16 +268,20 @@ function get_my_anniversary_counselor() {
   $my_counselor_gm_name = my_counselor_gm_name($my_name);
   $my_counselor_name = $my_counselor_gm_name[0]->counselorName;
   $my_anniversary_month = my_anniversary_date($my_name);
-  $info['my_counselor_name']=format_login_name($my_counselor_name);
-  $info['my_anniversary_month']=$my_anniversary_month;
+  $info['my_counselor_name'] = format_login_name($my_counselor_name);
+  $info['my_anniversary_month'] = $my_anniversary_month;
   return $info;
-  
 }
 
 function my_anniversary_date($login_name) {
   $result = db_select('prs_reviewers', 'pr')->fields('pr', array('account_created'))->condition('login_name', $login_name)->execute()->fetchAll();
-  $a_date = $result[0]->account_created;
-  $year = substr($a_date, 0, 4);
-  $month = substr($a_date, 4, 2);
-  return $year . '/' . $month;
+  if (count($result) != 0) {
+    $a_date = $result[0]->account_created;
+    $year = substr($a_date, 0, 4);
+    $month = substr($a_date, 4, 2);
+    return $year . '/' . $month;
+  }
+  else {
+    return '';
+  }
 }
