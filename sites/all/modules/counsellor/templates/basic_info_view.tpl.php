@@ -9,6 +9,12 @@
       </td>
       <td colspan="3"><input type="text" value="" id="review_from_description" style="color:#34495E;background-color:#ffffff"></td>
     </tr>-->
+    <tr id="myInfo">
+      <td>Anniversary Month:</td>
+      <td><?php print render($myInfo['my_anniversary_month'])?></td>
+      <td>My Counselor:</td>
+      <td><?php print render($myInfo['my_counselor_name'])?></td>
+    </tr>
     <tr>
       <td>
         <h6>Type<span class="form-required" title="This field is required.">*</span>:</h6>

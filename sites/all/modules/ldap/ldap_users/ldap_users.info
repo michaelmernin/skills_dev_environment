@@ -1,0 +1,16 @@
+name = LDAP Users
+description = LDAP Users
+
+package = "PerficientReviewSystem"
+
+dependencies[] = ldap_servers
+dependencies[] = ldap_query
+
+core = 7.x
+php = 5.3
+
+; Information added by drupal.org packaging script on 2012-03-13
+version = "7.x-1.0-dev"
+core = "7.x"
+project = "360Review"
+datestamp = "1331004047"

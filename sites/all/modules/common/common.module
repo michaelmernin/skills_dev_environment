@@ -44,3 +44,17 @@ function get_basic_review_infomation($review_id) {
   $result = $query->execute()->fetchAll();
   return $result;
 }
+
+
+function format_login_name($login_name) {
+    $formated_name = '';
+    if (strpos($login_name, '.')) {
+        $tmp = explode('.', $login_name);
+        foreach ($tmp as $value) {
+            $formated_name .= ucfirst($value) . ' ';
+        }
+    } else {
+        $formated_name = $login_name;
+    }
+    return trim($formated_name);
+}

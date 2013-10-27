@@ -1,0 +1,180 @@
+<?php
+
+define('LDAP_QUERY_ID_FOR_FETCH_GDC_USER', 'FetchGDCUsers');
+
+function ldap_users_permission() {
+  return array(
+    'access to ldap config' => array(
+      'title' => t('Access to ldap config'),
+    ),
+  );
+}
+
+function ldap_users_menu() {
+  $items['admin/config/people/ldap/fetchUsers'] = array(
+    'title' => 'FetchingUser',
+    'page callback' => 'ldap_fetchUsers',
+    'page arguments' => array(),
+    'weight' => 0,
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access to ldap config'),
+    'file' => 'ldap_users.inc',
+  );
+
+  return $items;
+}
+
+function ldap_users_cron() {
+  $h = intval(date("H"));
+  if ($h == 0) {
+  $inserted_gdc_reviewers_count = 0;
+  $inserted_nongdc_reviewers_count = 0;
+  if (db_delete_exist_users()) {
+    $inserted_gdc_reviewers_count = ldap_fetch_GDC_Users();
+    $inserted_nongdc_reviewers_count = ldap_fetch_NonGDC_Users();
+  }
+  $total_count = $inserted_gdc_reviewers_count + $inserted_nongdc_reviewers_count;
+  drupal_set_message('Fetched ' . $total_count . ' people from Perficient AD.', 'status');
+  }
+}
+
+function ldap_fetch_GDC_Users() {
+  $query_id = LDAP_QUERY_ID_FOR_FETCH_GDC_USER;
+  $inserted_reviewers_count = 0;
+  if (db_delete_exist_users()) {
+    $results = ldap_query_get_result($query_id);
+    $inserted_reviewers_count = db_insert_ldap_users($results, 0);
+  }
+  return $inserted_reviewers_count;
+}
+
+function ldap_fetch_NonGDC_Users() {
+  $inserted_reviewers_count = 0;
+  for ($i = 65; $i < 90; $i++) {
+    $query_id = 'FetchUsers' . chr($i);
+    $results = ldap_query_get_result($query_id);
+    $count = db_insert_ldap_users($results, 2);
+    $inserted_reviewers_count = $count + $inserted_reviewers_count;
+  }
+  return $inserted_reviewers_count;
+}
+
+function ldap_query_get_result($query_id) {
+  $ldapQuery = ldap_query_get_queries($query_id, 'enabled', TRUE);
+  if ($ldapQuery != NULL) {
+    return $ldapQuery->query();
+  }
+  return NULL;
+}
+
+function db_insert_ldap_users($results, $type) {
+  $inserted_reviewers_count = 0;
+  if ($results != NULL) {
+    foreach ($results as $user) {
+      $code = fetch_user_info($user, 'employeeid');
+      $login_name = fetch_user_info($user, 'samaccountname');
+      $mail = fetch_user_info($user, 'mail');
+      $family_name = fetch_user_info($user, 'sn');
+      $given_name = fetch_user_info($user, 'givenname');
+      $title = fetch_user_info($user, 'title');
+      $account_created = fetch_user_info($user, 'whencreated');
+      if (reviewer_info_completed($code, $login_name, $mail, $family_name, $given_name, $title, $account_created)) {
+        create_ldap_reviewer($code, $login_name, $mail, $family_name, $given_name, $title, $type, $account_created);
+        create_ldap_reviewer_gm($login_name);
+        $inserted_reviewers_count++;
+      }
+    }
+    return $inserted_reviewers_count;
+  }
+  return 0;
+}
+
+function create_ldap_reviewer($code, $login_name, $mail, $family_name, $given_name, $title, $type, $account_created) {
+  $rid = db_insert('prs_reviewers')
+      ->fields(array(
+        'code' => $code,
+        'login_name' => $login_name,
+        'family_name' => $family_name,
+        'given_name' => $given_name,
+        'mail' => $mail,
+        'title' => $title,
+        'type' => $type,
+        'account_created' => $account_created,
+      ))
+      ->execute();
+  return $rid;
+}
+
+function db_delete_exist_users() {
+  $exist_user_num = count_exist_users();
+  $deleted_user_num = db_delete('prs_reviewers')->condition('type', 1, '<>')->execute();
+  if (delete_all_exist_user($exist_user_num, $deleted_user_num)) {
+    return true;
+  }
+  return false;
+}
+
+function count_exist_users() {
+  $count = db_select('prs_reviewers', 'rid')->fields('rid')->condition('type', 1, '<>')->execute()->rowCount();
+  return $count;
+}
+
+function delete_all_exist_user($exist_user_num, $deleted_user_num) {
+  if ($exist_user_num == $deleted_user_num) {
+    return true;
+  }
+  return false;
+}
+
+function fetch_user_info($user, $prop) {
+  if (is_array($user)) {
+    if (array_key_exists($prop, $user)) {
+      $result = $user[$prop][0];
+      if (isResultEmtpy($result)) {
+        return 'null';
+      }
+      return $result;
+    }
+    return 'null';
+  }
+
+  return 'null';
+}
+
+function reviewer_info_completed($code, $login_name, $mail, $family_name, $given_name, $title, $account_created) {
+  if ($code == 'null' || $login_name == 'null' || $mail == 'null' || $family_name == 'null' || $given_name == 'null' || $title == 'null' || $account_created == 'null') {
+    return false;
+  }
+  return true;
+}
+
+function isResultEmtpy($result) {
+  if ($result == null) {
+    return true;
+  }
+  return false;
+}
+
+function create_ldap_reviewer_gm($login_name) {
+  if(!exist_in_counselor_gm_table($login_name)){
+    $rid = db_insert('prs_rel_employee_counselor_gm')
+      ->fields(array(
+        'employeeName' => $login_name,
+      ))
+      ->execute();
+  return $rid;
+    
+  }
+}
+
+function exist_in_counselor_gm_table($login_name) {
+  $count = db_select('prs_rel_employee_counselor_gm', 'precg')->fields('precg')->condition('employeeName', $login_name)->execute()->rowCount();
+  if ($count > 0) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+?>

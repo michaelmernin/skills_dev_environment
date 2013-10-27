@@ -137,6 +137,7 @@
         jQuery(document).ready(function() {
           switchProjectName(0);
           jQuery('#review_start_date').val(formatDateTime('0', '0', '0'));
+          jQuery('#myInfo').hide();
 //          jQuery('#review_end_date').val(formatDateTime('0', '1', '0'));
 //          jQuery('#review_from_date').val(formatDateTime('-1', '0', '0'));
 //          jQuery('#review_to_date').val(formatDateTime('0', '0', '0'));

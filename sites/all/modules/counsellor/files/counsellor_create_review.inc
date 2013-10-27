@@ -50,7 +50,7 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
             foreach ($review_ids as $review) {
               $counselee_address = select_email_from_prs_reviewers(array($review->employeeName));
               $address = $counselee_address[0]->mail;
-              $counselee_parems = array('username' => $review->employeeName, 'reviewname' => $_POST['review_from_description'], 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'mydashboard/selectpeers?rreid=' . $review->rreid, 'reviewurl' => $reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
+              $counselee_parems = array('username' => $review->employeeName, 'reviewname' => return_review_name($_POST), 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'mydashboard/selectpeers?rreid=' . $review->rreid, 'reviewurl' => $reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
 //              dd('$counselee_parems');
 //              dd($counselee_parems);
 //            mail_sender_template_adapter($address, $counselee_parems, 0);
@@ -80,12 +80,13 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
         $message = 'Review created fail!';
         drupal_set_message($message, 'error');
       }
-    }else {
-        //there is no select counselee
-        $rval = '-1';
-        $message = 'Review created fail!';
-        drupal_set_message($message, 'error');
-      }
+    }
+    else {
+      //there is no select counselee
+      $rval = '-1';
+      $message = 'Review created fail!';
+      drupal_set_message($message, 'error');
+    }
   }
   else {
     $rval = '-1';
@@ -126,50 +127,43 @@ function submit_new_self_review() {
       $counselor_name = my_counselor_gm_name($cur_counselee_name);
       $cur_counselor_name = $counselor_name[0]->counselorName;
     }
-    if ($review_ids != '-1') {
-      if ($_POST['self_draft_flag'] == '1') {
-        $review_ids = insert_reviews_to_DB($emp_array, $general_id, 1);
+    if ($_POST['self_draft_flag'] == '1') {
+      $review_ids = insert_reviews_to_DB($emp_array, $general_id, 1);
 //          set_review_status($review_ids, 1);
-        if (module_exists('mail_sender') && module_enable(array('mail_sender'))) {
+      if (module_exists('mail_sender') && module_enable(array('mail_sender'))) {
 
 //            counselee email
-          $my_address = select_email_from_prs_reviewers($emp_array);
-          $address = $my_address[0]->mail;
+        $my_address = select_email_from_prs_reviewers($emp_array);
+        $address = $my_address[0]->mail;
 //            dd('$address');
 //            dd($address);
-          $reviewurl = '';
-          $counselee_parems = array('username' => $cur_counselee_name, 'reviewname' => $_POST['review_from_description'], 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'mydashboard/selectpeers?rreid=' . $review_ids[0]->rreid, 'reviewurl' => $reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
+        $reviewurl = '';
+        $counselee_parems = array('username' => $cur_counselee_name, 'reviewname' => return_review_name($_POST), 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'mydashboard/selectpeers?rreid=' . $review_ids[0]->rreid, 'reviewurl' => $reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
 //            dd('$counselee_parems');
 //            dd($counselee_parems);
-           mail_sender_template_adapter($address, $counselee_parems, 0);
-          if (count($cur_counselor_name) != '0') {
-              dd('$cur_counselor_name');
-              dd($cur_counselor_name);
+        mail_sender_template_adapter($address, $counselee_parems, 0);
+        if (count($cur_counselor_name) != '0') {
+          dd('$cur_counselor_name');
+          dd($cur_counselor_name);
 //            counselor email
-            $my_counselor_address = select_email_from_prs_reviewers(array($cur_counselor_name));
-            $counselor_address = $my_counselor_address[0]->mail;
+          $my_counselor_address = select_email_from_prs_reviewers(array($cur_counselor_name));
+          $counselor_address = $my_counselor_address[0]->mail;
 //            dd('$counselor_address');
 //            dd($counselor_address);
 
-            $counselor_parems = array('username' => $cur_counselee_name, 'reviewname' => $_POST['review_from_description'], 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'mydashboard/selectpeers?rreid=' . $review_ids[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $_POST['review_end_date'], 'type' => 'counselor');
+          $counselor_parems = array('username' => $cur_counselee_name, 'reviewname' => return_review_name($_POST), 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'mydashboard/selectpeers?rreid=' . $review_ids[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $_POST['review_end_date'], 'type' => 'counselor');
 //            dd('$counselor_parems');
 //          dd($counselor_parems);
-            mail_sender_template_adapter($counselor_address, $counselor_parems, 0);
-          }
+          mail_sender_template_adapter($counselor_address, $counselor_parems, 0);
         }
       }
-      else {
-        //self review in draft
-        $review_ids = insert_reviews_to_DB($emp_array, $general_id);
-      }
-      $message = 'Review created successful.';
-      drupal_set_message($message, 'status');
     }
     else {
-      $rval = '-1';
-      $message = 'Review created fail!';
-      drupal_set_message($message, 'error');
+      //self review in draft
+      $review_ids = insert_reviews_to_DB($emp_array, $general_id);
     }
+    $message = 'Review created successful.';
+    drupal_set_message($message, 'status');
   }
   else {
     $rval = '-1';
@@ -248,20 +242,6 @@ function start_new_review() {
 }
 
 /**
- * start_review_update_change_status_0_to_1
- * @param type $review_id
- * @author Mars
- */
-function start_review_update_change_status_0_to_1($review_id) {
-  $query = db_update('prs_rel_review_employee');
-  $query->fields(array(
-        'rstatus' => 1,
-      ))
-      ->condition('rreid', $review_id)
-      ->execute();
-}
-
-/**
  * query a review by review id
  * @param type $review_id
  * @return type
@@ -310,7 +290,7 @@ function set_fields_array($general_info, &$fields_array) {
   $periodFtime = NULL;
   $periodTTime = NULL;
   $flag = TRUE;
-  $review_type=NULL;
+  $review_type = NULL;
 //  if (strpos($general_info, '-')) {
 //    $tmp = explode('-', $general_info);
 //  }
@@ -321,17 +301,16 @@ function set_fields_array($general_info, &$fields_array) {
     // project type
     switch ($general_info['review_type']) {
       case '0':
-        $review_type='ANNUAL_REVIEW';
+        $review_type = 'ANNUAL_REVIEW';
         break;
       case '1':
-        $review_type='PROJECT_REVIEW';
-      $projectName = check_plain($general_info['Project_Name_Text']);
-      $fields_array['project_name'] = $projectName;
-      break;
-    case '2':
-        $review_type='THREE_MONTH_REVIEW';
+        $review_type = 'PROJECT_REVIEW';
+        $projectName = check_plain($general_info['Project_Name_Text']);
+        $fields_array['project_name'] = $projectName;
         break;
-      
+      case '2':
+        $review_type = 'THREE_MONTH_REVIEW';
+        break;
     }
   }
 
@@ -341,8 +320,9 @@ function set_fields_array($general_info, &$fields_array) {
     $starttime = explode_time_stand($stime);
     $startTime = dateArrayTounixTimestamp($stime);
     $fields_array['period_start'] = check_plain($startTime);
-  }else{
-    
+  }
+  else {
+
     return FALSE;
   }
   //end time
@@ -351,8 +331,9 @@ function set_fields_array($general_info, &$fields_array) {
     $endtime = explode_time_stand($etime);
     $endTime = dateArrayTounixTimestamp($etime);
     $fields_array['period_end'] = check_plain($endTime);
-  }else{
-    
+  }
+  else {
+
     return FALSE;
   }
   //period from
@@ -361,8 +342,9 @@ function set_fields_array($general_info, &$fields_array) {
     $periodFtime = explode_time_stand($pftime);
     $periodFrom = dateArrayTounixTimestamp($pftime);
     $fields_array['time_frame_from'] = check_plain($periodFrom);
-  }else{
-    
+  }
+  else {
+
     return FALSE;
   }
 
@@ -372,8 +354,9 @@ function set_fields_array($general_info, &$fields_array) {
     $periodTTime = explode_time_stand($pttime);
     $periodTo = dateArrayTounixTimestamp($pttime);
     $fields_array['time_frame_to'] = check_plain($periodTo);
-  }else{
-    
+  }
+  else {
+
     return FALSE;
   }
 //  if (isset($form_state['values']['review_status'])) {
@@ -382,8 +365,8 @@ function set_fields_array($general_info, &$fields_array) {
 //  }
   //description
 //  if (isset($general_info['review_from_description'])) {
-    $description = check_plain($general_info['review_start_date'].'_'.$review_type);
-    $fields_array['description'] = $description;
+  $description = check_plain($general_info['review_start_date'] . '_' . $review_type);
+  $fields_array['description'] = $description;
 //  }
   if (isset($starttime) && isset($endtime) && isset($periodFtime) && isset($periodTTime)) {
     if ($starttime >= $endtime) {
@@ -562,4 +545,26 @@ function set_review_status($rreid_array, $status) {
   $result->fields(array('rstatus' => $status,))
       ->condition('rreid', $rreid_array, 'IN')
       ->execute();
+}
+
+
+/**
+ * return_review_name
+ * @param type $date
+ * @return type
+ */
+function return_review_name($date) {
+  $review_type = NULL;
+  switch ($date['review_type']) {
+    case '0':
+      $review_type = 'ANNUAL_REVIEW';
+      break;
+    case '1':
+      $review_type = 'PROJECT_REVIEW';
+      break;
+    case '2':
+      $review_type = 'THREE_MONTH_REVIEW';
+      break;
+  }
+  return $date['review_start_date'] . '_' . $review_type;
 }
