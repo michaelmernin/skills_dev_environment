@@ -37,12 +37,6 @@ function mail_sender_send($address, $subject, $body, $isHtml) {
     $mail->From = variable_get('site_mail');
     $mail->FromName = variable_get('site_name');
     $mail->AddReplyTo($mail->From, $mail->FromName);
-
-<<<<<<< Updated upstream
-=======
-    $mail->From = variable_get('smtp_username');
-    $mail->FromName = variable_get('smtp_fromname');
->>>>>>> Stashed changes
     $mail->CharSet = 'iso-8859-1';
 
 
