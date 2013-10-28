@@ -31,7 +31,7 @@
       $start_date_format = date_to_format($start_date);
       $end_date_format = date_to_format($end_date);
       $startid = $status->rreid;
-      $url = '/EnterpriseReview/watchstatus/basicinfo/' . $startid;
+      $url = base_path().'watchstatus/basicinfo/' . $startid;
       switch ($status->rstatus) {
         case 0:
           //0 for New review start
