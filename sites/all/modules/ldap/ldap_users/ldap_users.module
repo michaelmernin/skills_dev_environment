@@ -27,14 +27,14 @@ function ldap_users_menu() {
 function ldap_users_cron() {
   $h = intval(date("H"));
   if ($h == 0) {
-  $inserted_gdc_reviewers_count = 0;
-  $inserted_nongdc_reviewers_count = 0;
-  if (db_delete_exist_users()) {
-    $inserted_gdc_reviewers_count = ldap_fetch_GDC_Users();
-    $inserted_nongdc_reviewers_count = ldap_fetch_NonGDC_Users();
-  }
-  $total_count = $inserted_gdc_reviewers_count + $inserted_nongdc_reviewers_count;
-  drupal_set_message('Fetched ' . $total_count . ' people from Perficient AD.', 'status');
+    $inserted_gdc_reviewers_count = 0;
+    $inserted_nongdc_reviewers_count = 0;
+    if (db_delete_exist_users()) {
+      $inserted_gdc_reviewers_count = ldap_fetch_GDC_Users();
+      $inserted_nongdc_reviewers_count = ldap_fetch_NonGDC_Users();
+    }
+    $total_count = $inserted_gdc_reviewers_count + $inserted_nongdc_reviewers_count;
+    drupal_set_message('Fetched ' . $total_count . ' people from Perficient AD.', 'status');
   }
 }
 
@@ -156,14 +156,13 @@ function isResultEmtpy($result) {
 }
 
 function create_ldap_reviewer_gm($login_name) {
-  if(!exist_in_counselor_gm_table($login_name)){
+  if (!exist_in_counselor_gm_table($login_name)) {
     $rid = db_insert('prs_rel_employee_counselor_gm')
-      ->fields(array(
-        'employeeName' => $login_name,
-      ))
-      ->execute();
-  return $rid;
-    
+        ->fields(array(
+          'employeeName' => $login_name,
+        ))
+        ->execute();
+    return $rid;
   }
 }
 

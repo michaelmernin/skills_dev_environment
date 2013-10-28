@@ -261,27 +261,3 @@ function select_counselees() {
 
   return $counselees;
 }
-
-function get_my_anniversary_counselor() {
-  $info = array();
-  $my_name = get_current_user_name();
-  $my_counselor_gm_name = my_counselor_gm_name($my_name);
-  $my_counselor_name = $my_counselor_gm_name[0]->counselorName;
-  $my_anniversary_month = my_anniversary_date($my_name);
-  $info['my_counselor_name'] = format_login_name($my_counselor_name);
-  $info['my_anniversary_month'] = $my_anniversary_month;
-  return $info;
-}
-
-function my_anniversary_date($login_name) {
-  $result = db_select('prs_reviewers', 'pr')->fields('pr', array('account_created'))->condition('login_name', $login_name)->execute()->fetchAll();
-  if (count($result) != 0) {
-    $a_date = $result[0]->account_created;
-    $year = substr($a_date, 0, 4);
-    $month = substr($a_date, 4, 2);
-    return $year . '/' . $month;
-  }
-  else {
-    return '';
-  }
-}

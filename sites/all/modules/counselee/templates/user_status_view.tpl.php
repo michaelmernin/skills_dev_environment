@@ -76,37 +76,39 @@
                       </a>';
           break;
       }
-      switch ($status->type){
+      switch ($status->type) {
         case 0:
           //  0 for annual review;
-          $review_type='Annual review';
+          $review_type = 'Annual review';
           break;
         case 1:
           // 1 for project review;
-          $review_type='Project review';
+          $review_type = 'Project review';
           break;
         case 2:
           // 2 for 3-month review
-          $review_type='Three-month review';
+          $review_type = 'Three-month review';
           break;
-        
-        
       }
-      
-      print '<tr>';
+
       if ($status->rstatus == 0) {
-        print '<td style="vertical-align:middle">'.render($status->employeeName) .'</td>';
+        print '<tr>';
       }
       else {
-        print '<td style="vertical-align:middle"><a href="javascript:{void(0)}" title="Click to watch this review\'s status." onclick="watch_reveiw_status(\'' . $url . '\')" name="' . $status->rreid . '" style="text-decoration: underline;">' . render($status->employeeName) . '</a></td>';
+//        print '<a href="javascript:{void(0)}" title="Click to watch this review\'s status." onclick="watch_reveiw_status(\'' . $url . '\')" name="' . $status->rreid . '" style="text-decoration: underline;"><tr>';
+        print '<tr title="Click to watch this review\'s status." onclick="watch_reveiw_status(\'' . $url . '\')" name="' . $status->rreid . '" style="cursor:pointer">';
       }
-      print '<td style="text-align:center;vertical-align:middle">'. render($status->description).'</td>';
+      print '<td style="vertical-align:middle">' . render($status->employeeName) . '</td>';
+      print '<td style="text-align:center;vertical-align:middle">' . render($status->description) . '</td>';
       print '<td style="text-align:center;vertical-align:middle">' . render($start_date_format) . '</td>';
       print '<td style="text-align:center;vertical-align:middle">' . render($end_date_format) . '</td>';
-      print '<td style="text-align:center;vertical-align:middle">'. $review_type.'</td>';
+      print '<td style="text-align:center;vertical-align:middle">' . $review_type . '</td>';
       print '<td style="text-align:center;vertical-align:middle" id="review_status_' . $startid . '">' . $content;
       print '<img class="loading_img" id="status_loading_img_' . $startid . '" title="loading..." style="width: 25px; height: 25px; display: none; text-align:center;" src="' . base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif"></td>';
       print '</tr>';
+//      if ($status->rstatus != 0) {
+//        print '</a>';
+//      }
     }
     //no review data
     if ($count == 0) {
