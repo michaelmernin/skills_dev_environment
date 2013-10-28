@@ -32,13 +32,13 @@ function counselee_menu() {
     'file' => 'files/dashboard.pages.inc',
   );
   $items['watchstatus/basicinfo/%'] = array(
-        'title' => 'Basic Information',
-        'page callback' => 'watch_basic_information',
-        'page arguments' => array(2),
-        'access arguments' => array('access to my dashboard'),
-        'type' => MENU_LOCAL_TASK,
-        'file' => 'files/watch_review_status.inc',
-    );
+    'title' => 'Basic Information',
+    'page callback' => 'watch_basic_information',
+    'page arguments' => array(2),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'files/watch_review_status.inc',
+  );
   $items['watchstatus/selectpeers/%'] = array(
     'title' => 'Select Peers',
     'page callback' => 'display_select_peers_page',
@@ -92,7 +92,6 @@ function counselee_block_view($delta = '') {
       $reviewList = counselee_do_peersreview(get_current_user_name());
       $block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers, 'counselorPeers' => $counselorPeers, 'reviewList' => $reviewList));
       break;
-
   }
   return $block;
 }
@@ -108,7 +107,7 @@ function counselee_theme() {
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'my_working_list',),
     'select_peers' => array(
-      'variables' => array('all_employee_array' => NULL, 'selected_array' => NULL, 'unselected_array' => NULL, 'userId_flag' => NULL,),
+      'variables' => array('all_employee_array' => NULL, 'selected_array' => NULL, 'unselected_array' => NULL, 'userId_flag' => NULL,'peers_status'=>NULL,),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'select_peers',),
   );
@@ -145,7 +144,6 @@ function select_reviewer_status_from_BD() {
     }
     else {
 // counselee login
-
     }
   }
   $status_info = $my_review_status;
@@ -172,7 +170,7 @@ function counselee_select_peers($userType, $userName) {
     $counselee_query->addField('review', 'employeeName');
     $counselee_query->addField('review', 'rreid');
     $counselee_query->addField('general', 'type');
-    $counselee_query->addField('general','description');
+    $counselee_query->addField('general', 'description');
     $counselee_query->condition('review.employeeName', $userName);
     $counselee_query->condition('review.rstatus', 1);
     //$counselee_query->condition('general.type', $reviewType);
@@ -196,7 +194,7 @@ function counselee_select_peers($userType, $userName) {
 
     $dataset = $counselor_query->execute()->fetchAll();
   }
-  
+
   $result = array();
   $index = 0;
   foreach ($dataset as $node) {
@@ -204,7 +202,7 @@ function counselee_select_peers($userType, $userName) {
     $rreid = $node->rreid;
     $reviewtype = $node->type;
     $description = $node->description;
-    $temp = array('employeeName' => $employeeName, 'rreid' => $rreid, 'reviewType' => $reviewtype,'description'=>$description);
+    $temp = array('employeeName' => $employeeName, 'rreid' => $rreid, 'reviewType' => $reviewtype, 'description' => $description);
     $result[$index++] = $temp;
   }
   return $result;
@@ -241,14 +239,14 @@ function get_status_from_db($employeeName) {
 function counselee_do_peersreview($userName) {
   $peers_query = db_select('prs_rel_provider_employee', 'provider');
   $peers_query->join('prs_general', 'general', 'general.prid = provider.prid');
-  $peers_query->join('prs_rel_review_employee','review','review.rreid = provider.rreid');
+  $peers_query->join('prs_rel_review_employee', 'review', 'review.rreid = provider.rreid');
   $peers_query->addField('general', 'type');
   $peers_query->addField('provider', 'employeeName');
   $peers_query->addField('provider', 'rpeid');
-  $peers_query->addField('general','description');
+  $peers_query->addField('general', 'description');
   $peers_query->condition('provider.providerName', $userName);
-  $peers_query->condition('provider.status',0);
-  $peers_query->condition('review.rstatus',1);
+  $peers_query->condition('provider.status', 0);
+  $peers_query->condition('review.rstatus', 1);
   $dataset = $peers_query->execute()->fetchAll();
 
   $result = array();
@@ -258,7 +256,7 @@ function counselee_do_peersreview($userName) {
     $rpeid = $node->rpeid;
     $reviewtype = $node->type;
     $description = $node->description;
-    $temp = array('employeeName' => $employeeName, 'rpeid' => $rpeid, 'reviewType' => $reviewtype,'description'=>$description);
+    $temp = array('employeeName' => $employeeName, 'rpeid' => $rpeid, 'reviewType' => $reviewtype, 'description' => $description);
     $result[$index++] = $temp;
   }
   return $result;
@@ -274,7 +272,6 @@ function counselee_do_peersreview($userName) {
 //     $query->condition('precg.employeeName', $cur_user_name, '!=');
 //     $query->orderBy('precg.employeeName', 'ASC');
 //     $result = $query->execute()->fetchAll();
-
 //   } 
 //   // dd($result);
 //   return $result;
@@ -291,11 +288,9 @@ function get_all_employees_from_db() {
   $query->condition('precg.employeeName', $cur_user_name, '!=');
   $query->orderBy('precg.employeeName', 'ASC');
   $result = $query->execute()->fetchAll();
-  $employees =generate_array($result, 'employeeName');
+  $employees = generate_array($result, 'employeeName');
   return $employees;
 }
-
-
 
 // /**
 //  * select_counselees
@@ -305,7 +300,6 @@ function get_all_employees_from_db() {
 //   $employee_names = get_all_employees_from_db();
 //   $employees = array();
 //   $employees = generate_array($employee_names);
-
 //   return $employees;
 // }
 
@@ -350,7 +344,6 @@ function get_review_spstatus_from_db($rreid) {
   $result = $query->execute()->fetchAll();
   return $result;
 }
-
 
 /*function is_firsttime_select($rreid) {
   $result = db_select('prs_rel_review_employee', 'prre')

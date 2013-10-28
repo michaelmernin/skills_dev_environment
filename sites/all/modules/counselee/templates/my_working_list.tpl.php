@@ -57,7 +57,7 @@
       reviewType = obj.reviewType;
       description = obj.description;
 
-      url = "./watchstatus/selectepeers/" + rreid;
+      url = "./watchstatus/selectpeers/" + rreid;
 
 
       if (userType == 'counselee') {
