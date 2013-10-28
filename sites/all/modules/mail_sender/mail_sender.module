@@ -80,7 +80,7 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
     watchdog('mail sender template', 'Template files does not exist', array(), WATCHDOG_ERROR);
     $template = '<div>Error</div>';
   }
-  
+
   $content = '';
   $key = '';
   $isKey = false;
@@ -115,10 +115,21 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
   return mail_sender_send($address, $subject, $content, true);
 }
 
+/**
+ * Send e-mail notification through template
+ * 
+ * @param array $address The e-mail where send to 
+ * @param array $params The parameter that the template need 
+ * @param int  $type The e-mail notification type
+ *             0 stand for new_review_started_notification
+ *             1 stand for filling up the peer review form notification
+ *
+ */
 function mail_sender_template_adapter($address, $params, $type) {
   $subject = 'Enterprise Review Notification';
 
   switch ($type) {
+    // 0 stand for new_review_started_notification
     case 0:
       if ($params['type'] == 'counselee') {
         $subject = $params['reviewname'] . " has begun.Please select peers for yourself";
@@ -129,6 +140,12 @@ function mail_sender_template_adapter($address, $params, $type) {
         $templateName = 'new_review_started_counselor.tpl.php';
       }
       break;
+    //1 stand for notifying user to fill up peers-review form
+    case 1:
+      $subject = $params['reviewname']. " has begun.Please help ".$params['username']." fill up peer review form";
+      $templateName = 'selectPeers.tpl.php';
+      break;
+
     default:
       break;
   }
@@ -136,7 +153,7 @@ function mail_sender_template_adapter($address, $params, $type) {
 }
 
 /**
- * Read data from database and send it.
+ * Read e-mail content from database and send it.
  * 
  * dataTable is 'PRS_mail'
  * 

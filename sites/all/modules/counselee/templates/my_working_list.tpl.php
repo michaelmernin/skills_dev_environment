@@ -38,7 +38,7 @@
     else
       return 'Review';
   }
-  
+
   /**
    * Show the user will select peeers
    * 
@@ -90,12 +90,12 @@
       url = "./?=" + rpeid + "&name=" + name + "&reviewType=" + reviewType;
       if (name == '<?php print get_current_user_name(); ?>')
       {
-        li = " <li> <a href='" + url + "'>" + description + " is started.Please fill up your self-review form.(" + reviewName(reviewType) + ")</a> </li>";
+        li = " <li> <a href='" + url + "'>" + description + " is started.Please fill up your Self-Review form.(" + reviewName(reviewType) + ")</a> </li>";
         jQuery('#myWorkForMe').append(li);
       }
       else
       {
-        li = " <li> <a href='" + url + "'>" + description + " is started.Please do peers review for [" + name + " ].(" + reviewName(reviewType) + ")</a> </li>";
+        li = " <li> <a href='" + url + "'>" + description + " is started.Please fill up Peer Review form for [" + name + " ].(" + reviewName(reviewType) + ")</a> </li>";
         jQuery('#myWorkForOther').append(li);
       }
     }
