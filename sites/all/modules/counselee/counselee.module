@@ -23,6 +23,7 @@ function counselee_menu() {
     'file' => 'files/dashboard.pages.inc',
     'weight' => 5,
   );
+
   $items['watchstatus'] = array(
     'title' => 'Watch status',
     'page callback' => 'show_pr_list',
@@ -38,6 +39,14 @@ function counselee_menu() {
         'type' => MENU_LOCAL_TASK,
         'file' => 'files/watch_review_status.inc',
     );
+  $items['watchstatus/selectpeers/%'] = array(
+    'title' => 'Select Peers',
+    'page callback' => 'display_select_peers_page',
+    'page arguments' => array(2),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'files/watch_review_status.inc',
+  );
   return $items;
 }
 
@@ -61,6 +70,10 @@ function counselee_block_info() {
     'info' => t('My Working Stage'),
     'cache' => DRUPAL_NO_CACHE,
   );
+  // $blocks['select_peers'] = array(
+  //   'info' => t('Select Peers'),
+  //   'cache' => DRUPAL_NO_CACHE,
+// );
   return $blocks;
 }
 
@@ -79,6 +92,7 @@ function counselee_block_view($delta = '') {
       $reviewList = counselee_do_peersreview(get_current_user_name());
       $block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers, 'counselorPeers' => $counselorPeers, 'reviewList' => $reviewList));
       break;
+
   }
   return $block;
 }
@@ -93,6 +107,10 @@ function counselee_theme() {
       'variables' => array('counseleePeers' => NULL, 'counselorPeers' => NULL, 'reviewList' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'my_working_list',),
+    'select_peers' => array(
+      'variables' => array('all_employee_array' => NULL, 'selected_array' => NULL, 'unselected_array' => NULL, 'userId_flag' => NULL,),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'select_peers',),
   );
 }
 
@@ -245,4 +263,104 @@ function counselee_do_peersreview($userName) {
   }
   return $result;
 }
+
+// function get_all_employees_from_db() {
+//   if (module_exists('counsellor') && module_enable(array('counsellor'))) {
+//     $cur_user_name = get_current_user_name();
+//     dd($cur_user_name);
+//     $result = array();
+//     $query = db_select('prs_rel_employee_counselor_gm', 'precg');
+//     $query->fields('precg', array('employeeName'));
+//     $query->condition('precg.employeeName', $cur_user_name, '!=');
+//     $query->orderBy('precg.employeeName', 'ASC');
+//     $result = $query->execute()->fetchAll();
+
+//   } 
+//   // dd($result);
+//   return $result;
+// }
+
+/**
+ * get_counselees_from_db
+ * @return type
+ */
+function get_all_employees_from_db() {
+  $cur_user_name = get_current_user_name();
+  $query = db_select('prs_rel_employee_counselor_gm', 'precg');
+  $query->fields('precg', array('employeeName'));
+  $query->condition('precg.employeeName', $cur_user_name, '!=');
+  $query->orderBy('precg.employeeName', 'ASC');
+  $result = $query->execute()->fetchAll();
+  $employees =generate_array($result, 'employeeName');
+  return $employees;
+}
+
+
+
+// /**
+//  * select_counselees
+//  * @return array
+// */
+// function select_employees() {
+//   $employee_names = get_all_employees_from_db();
+//   $employees = array();
+//   $employees = generate_array($employee_names);
+
+//   return $employees;
+// }
+
+function get_selected_peers_from_db($rreid) {
+  $cur_user_name = get_current_user_name();
+  $query = db_select('prs_rel_provider_employee', 'prpe');
+  $query->fields('prpe', array('providerName'));
+  $query->condition('prpe.rreid', $rreid, '=');
+  $query->condition('prpe.providerName', $cur_user_name, '!=');
+  $query->orderBy('prpe.providerName', 'ASC');
+  $result = $query->execute()->fetchAll();
+  $selected_array = generate_array($result, 'providerName');
+  return $selected_array;
+}
+
+function get_unselected_peers_from_db($rreid) {
+  $cur_user_name = get_current_user_name();
+  $query = db_select('prs_rel_employee_counselor_gm', 'precg');
+  $query->leftjoin('prs_rel_provider_employee', 'prpe', 'precg.employeeName = prpe.providerName');
+  $query->fields('precg', array('employeeName'));
+  $query->isNull('prpe.providerName');
+  $query->condition('precg.employeeName', $cur_user_name, '!=');
+  $query->orderBy('precg.employeeName', 'ASC');
+  $result = $query->execute()->fetchAll();
+  $unselected_array = generate_array($result, 'employeeName');
+  return $unselected_array;
+}
+
+function get_reviewee_from_db($rreid) {
+  $query = db_select('prs_rel_review_employee', 'prre');
+  $query->fields('prre', array('employeeName'));
+  $query->condition('prre.rreid', $rreid, '=');
+  $result = $query->execute()->fetchAll();
+  $reviewee = generate_array($result, 'employeeName');
+  return $reviewee;
+}
+
+function get_review_spstatus_from_db($rreid) {
+  $query = db_select('prs_rel_review_employee', 'prre');
+  $query->fields('prre', array('spstatus'));
+  $query->condition('prre.rreid', $rreid, '=');
+  $result = $query->execute()->fetchAll();
+  return $result;
+}
+
+
+/*function is_firsttime_select($rreid) {
+  $result = db_select('prs_rel_review_employee', 'prre')
+          ->fields('prre', array('spstatus'))
+          ->condition('prre.rreid', $rreid, '=')
+          ->execute();
+
+  if ($result == '0') 
+    return TRUE;
+  else
+    return FALSE;
+}*/
 

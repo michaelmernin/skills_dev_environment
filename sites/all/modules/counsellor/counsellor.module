@@ -221,6 +221,20 @@ function get_counselees_from_db() {
 }
 
 /**
+ * generate_selected_participant_array
+ * @param type $counseleeNames
+ * @return array
+ */
+function generate_selected_participant_array($counseleeNames) {
+  $counselee_names_array = array();
+  foreach ($counseleeNames as $key => $selectName) {
+    $employee_name = $selectName->employeeName;
+    array_push($counselee_names_array, $employee_name);
+  }
+  return $counselee_names_array;
+}
+
+/**
  * get_current_user_name
  * @global type $user
  * @return string
@@ -234,20 +248,6 @@ function get_current_user_name() {
     $cur_name = 'anonymous';
   }
   return $cur_name;
-}
-
-/**
- * generate_selected_participant_array
- * @param type $counseleeNames
- * @return array
- */
-function generate_selected_participant_array($counseleeNames) {
-  $counselee_names_array = array();
-  foreach ($counseleeNames as $key => $selectName) {
-    $employee_name = $selectName->employeeName;
-    array_push($counselee_names_array, $employee_name);
-  }
-  return $counselee_names_array;
 }
 
 /**

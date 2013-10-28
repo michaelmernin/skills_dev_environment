@@ -52,6 +52,7 @@ function format_login_name($login_name) {
     foreach ($tmp as $value) {
       $formated_name .= ucfirst($value) . ' ';
     }
+
   }
   else {
     $formated_name = $login_name;
@@ -81,4 +82,53 @@ function my_anniversary_date($login_name) {
   else {
     return '';
   }
+  return trim($formated_name);
 }
+/*
+ * generate_array from db return format to array
+ * @param type array is generated from db, item is the attribute which you want to format.
+ * @return array
+ * by Anfernee
+ */
+function generate_array($source_array, $attribute) {
+  $result_array = array();
+  foreach ($source_array as $key => $source_item) {
+    $target_item = $source_item->$attribute;
+    array_push($result_array, $target_item);
+  }
+  return $result_array;
+}
+
+function get_counselor($employeeName) {
+  $query = db_select('prs_rel_employee_counselor_gm', 'precg')
+          ->fields('precg', array('counselorName'))
+          ->condition('precg.employeeName', $employeeName, '=');
+  $result = $query->execute()->fetchAll();
+  $counselor = generate_array($result, 'counselorName');
+
+  return $counselor;
+}
+
+function get_user_identity($rreid) {
+  $cur_user_name = get_current_user_name();
+  $reviewee = get_reviewee_from_db($rreid);
+  $counselor = get_counselor($reviewee);
+  if ($reviewee[0] == $cur_user_name) {
+    return 0;
+  }
+  else if ($cur_user_name == $counselor[0]) {
+    return 1;
+  }
+  else {
+    return -1;
+  }
+}
+
+function access_authen($rreid) {
+  $id = get_user_identity($rreid);
+  if ($id == -1) {
+    drupal_goto('mydashboard');
+  }
+}
+
+

@@ -168,7 +168,7 @@ function counsellor_schema() {
         'default' => 0,
       ),
       'spstatus' => array(
-        'description' => 'Status of counselee and counselor select peers for review:0 for no one selected; 1 for only counselee selected;2 for only counselor selected;4 for both selected;',
+        'description' => 'Status of counselee and counselor select peers for review:0 for no one selected; 1 for only counselee selected;2 for only counselor selected;3 for both selected;',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,

@@ -27,3 +27,4 @@ function show_pr_list() {
         drupal_goto('login');
     }
 }
+

@@ -14,6 +14,7 @@
 <div style="width:800px;">
 <select id="users" class="multiselect" multiple="multiple" name="users[]" style="display: none; width:600px;height:257px;" >
 <?php    
+    dd($all_employee_array);
     if ($all_employee_array != '') {
       display_unselected_peers($all_employee_array);
     }

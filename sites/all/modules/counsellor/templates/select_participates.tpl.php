@@ -1,4 +1,4 @@
-<?php $module_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() . '/' . drupal_get_path('module', 'counsellor') ?>
+  <?php $module_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() . '/' . drupal_get_path('module', 'counsellor') ?>
 <?php $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() ?>
 <script type="text/javascript" src="<?php echo $module_path ?>/js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="<?php echo $module_path ?>/js/jquery-ui.min.js"></script>

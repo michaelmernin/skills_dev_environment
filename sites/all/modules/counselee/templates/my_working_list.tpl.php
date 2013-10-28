@@ -56,7 +56,9 @@
       rreid = obj.rreid;
       reviewType = obj.reviewType;
       description = obj.description;
-      url = "./watchstatus/" + rreid;
+
+      url = "./watchstatus/selectepeers/" + rreid;
+
 
       if (userType == 'counselee') {
         li = " <li> <a href='" + url + "'>" + description + " is started.Please select peers for yourself" + ".(" + reviewName(reviewType) + ") </a> </li>";
