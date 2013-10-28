@@ -13,7 +13,7 @@ require DRUPAL_ROOT . '/' . libraries_get_path('phpmailer') . '/' . 'class.phpma
  * Implements hook_cron().
  */
 function mail_sender_cron() {
-  mail_sander_task();
+  //mail_sander_task();
 }
 
 /**
@@ -78,9 +78,9 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
     $template = file_get_contents($templatePath);
   else {
     watchdog('mail sender template', 'Template files does not exist', array(), WATCHDOG_ERROR);
-    $template = '<div>Jack</div>';
+    $template = '<div>Error</div>';
   }
-
+  
   $content = '';
   $key = '';
   $isKey = false;
@@ -103,14 +103,15 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
 
   $mail_insert = db_insert('prs_mail');
 
-  $create_time = 0;
+  $create_time = time(); //Get current unix timestamp;
   $field = array(
     'pmid' => 0,
-    'address' => $address,
+    'address' => json_encode($address),
     'subject' => $subject,
     'body' => $content,
     'status' => 0,
     'createtime' => $create_time);
+  $mail_insert->fields($field)->execute();
   return mail_sender_send($address, $subject, $content, true);
 }
 
@@ -120,11 +121,11 @@ function mail_sender_template_adapter($address, $params, $type) {
   switch ($type) {
     case 0:
       if ($params['type'] == 'counselee') {
-        $subject = $params['reviewname'] . " has begun.Please select peers for youself before" . $params['datetime'];
+        $subject = $params['reviewname'] . " has begun.Please select peers for yourself";
         $templateName = 'new_review_started_counselee.tpl.php';
       }
       else if ($params['type'] == 'counselor') {
-        $subject = $params['reviewname'] . " has begun.Please select peers for " . $params['username'] . " before " . $params['datetime'];
+        $subject = $params['reviewname'] . " has begun.Please select peers for " . $params['username'];
         $templateName = 'new_review_started_counselor.tpl.php';
       }
       break;
@@ -142,7 +143,7 @@ function mail_sender_template_adapter($address, $params, $type) {
  */
 function mail_sander_task() {
 
-  $max_send = 2;
+  $max_send = 10;
 
   $mail_query = db_select('prs_mail', 'mail');
   $mail_query->addField('mail', 'pmid');
@@ -157,7 +158,7 @@ function mail_sander_task() {
 
   foreach ($mail_result as $task) {
     $id = $task->pmid;
-    $address = $task->address;
+    $address = json_decode($task->address);
     $subject = $task->subject;
     $body = $task->body;
     $send_message = mail_sender_send($address, $subject, $body, true);

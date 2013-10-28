@@ -1,14 +1,11 @@
 <div>
-  Dear [user:employee],<br>
+  Dear [username],<br>
   <br>
-  This is automatically generated email to notify you that a new review has been started for [counselor] and is currently in New Review Stated status. <br>
-
-  URL: <a href='[url]'> [url] </a> <br>
+  [reviewname] has begun.The review will end on [datetime].<br>
+  You can start to fill up your peers-review form by clicking this link of the Enterprise Review System 
+  <a href='[peersurl]'>[peersurl]</a><br>
   <br>
-
-  Thank you in advance for spending time to provide the feedback. <br>
-  Regards, <br>
-  Perficient Review System. 
-
+  Thank you, <br>
+  <br>
+  Enterprise Review System 
 </div>
-

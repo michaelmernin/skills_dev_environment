@@ -38,6 +38,14 @@
     else
       return 'Review';
   }
+  
+  /**
+   * Show the user will select peeers
+   * 
+   * @param {array} items The items will to show
+   * @param {string} userType The user type
+   * 
+   * */
   function showSelPeersList(items, userType)
   {
     var obj, name, rreid, reviewType, url, li;
@@ -48,7 +56,7 @@
       rreid = obj.rreid;
       reviewType = obj.reviewType;
       description = obj.description;
-      url = "#?rreid=" + rreid + "&name=" + name + "&reviewType=" + reviewType;
+      url = "./watchstatus/" + rreid;
 
       if (userType == 'counselee') {
         li = " <li> <a href='" + url + "'>" + description + " is started.Please select peers for yourself" + ".(" + reviewName(reviewType) + ") </a> </li>";
@@ -62,6 +70,12 @@
     }
   }
 
+  /**
+   * Show the list of the user to do form
+   * 
+   * @param {array} items The items will to show
+   * 
+   * */
   function showReviewList(items)
   {
     var obj, name, rpeid, reviewType, description, url, li;
@@ -73,10 +87,10 @@
       reviewType = obj.reviewType;
       description = obj.description;
 
-      url = "#?rreid=" + rpeid + "&name=" + name + "&reviewType=" + reviewType;
+      url = "./?=" + rpeid + "&name=" + name + "&reviewType=" + reviewType;
       if (name == '<?php print get_current_user_name(); ?>')
       {
-        li = " <li> <a href='" + url + "'>" + description + " is started.Please do peers review for yourself.(" + reviewName(reviewType) + ")</a> </li>";
+        li = " <li> <a href='" + url + "'>" + description + " is started.Please fill up your self-review form.(" + reviewName(reviewType) + ")</a> </li>";
         jQuery('#myWorkForMe').append(li);
       }
       else
