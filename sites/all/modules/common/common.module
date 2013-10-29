@@ -23,6 +23,22 @@ function my_counselor_gm_name($my_name) {
 }
 
 /**
+ * get_current_user_name
+ * @global type $user
+ * @return string
+ */
+function get_current_user_name() {
+  global $user;
+  if ($user->uid != 0) {
+    $cur_name = $user->name;
+  }
+  else {
+    $cur_name = 'anonymous';
+  }
+  return $cur_name;
+}
+
+/**
  * get basic information from db
  * @param type $review_id
  * @return type
@@ -52,7 +68,6 @@ function format_login_name($login_name) {
     foreach ($tmp as $value) {
       $formated_name .= ucfirst($value) . ' ';
     }
-
   }
   else {
     $formated_name = $login_name;
@@ -84,12 +99,14 @@ function my_anniversary_date($login_name) {
   }
   return trim($formated_name);
 }
+
 /*
  * generate_array from db return format to array
  * @param type array is generated from db, item is the attribute which you want to format.
  * @return array
  * by Anfernee
  */
+
 function generate_array($source_array, $attribute) {
   $result_array = array();
   foreach ($source_array as $key => $source_item) {
@@ -101,8 +118,8 @@ function generate_array($source_array, $attribute) {
 
 function get_counselor($employeeName) {
   $query = db_select('prs_rel_employee_counselor_gm', 'precg')
-          ->fields('precg', array('counselorName'))
-          ->condition('precg.employeeName', $employeeName, '=');
+      ->fields('precg', array('counselorName'))
+      ->condition('precg.employeeName', $employeeName, '=');
   $result = $query->execute()->fetchAll();
   $counselor = generate_array($result, 'counselorName');
 
@@ -131,4 +148,213 @@ function access_authen($rreid) {
   }
 }
 
+/**
+ * unixTimestampToDateArray
+ * @param type $timestamp
+ * @param type $later
+ * @param type $earlier
+ * @return type
+ */
+function unixTimestampToDateArray($timestamp, $later = 0, $earlier = 0) {
+  $date_array = array();
+  if ($timestamp == 0) {
+    // configure first time
+    $timestamp = time();
+    $date_array['day'] = date('j', $timestamp);
+    $date_array['month'] = date('n', $timestamp);
+    if ($later) {
+      $date_array['month'] = date('n', mktime(0, 0, 0, date('n', $timestamp) + 1, date('j', $timestamp), date('Y', $timestamp)));
+    }
+    if ($earlier) {
+      $date_array['month'] = date('n', mktime(0, 0, 0, date('n', $timestamp) - 1, date('j', $timestamp), date('Y', $timestamp)));
+    }
+
+    if ($date_array['month'] == 12 && $earlier) {
+      $date_array['year'] = date('Y', $timestamp) - 1;
+    }
+    else {
+      $date_array['year'] = date('Y', $timestamp);
+    }
+  }
+  else {
+    $date_array['day'] = date('j', $timestamp);
+    $date_array['month'] = date('n', $timestamp);
+    $date_array['year'] = date('Y', $timestamp);
+  }
+  return $date_array;
+}
+
+/**
+ * dateArrayTounixTimestamp
+ * @param type $date_array
+ * @return type
+ */
+function dateArrayTounixTimestamp($date_array) {
+  $timestamp = 0;
+  if (!empty($date_array)) {
+    $day = $date_array['day'];
+    $month = $date_array['month'];
+    $year = $date_array['year'];
+    $timestamp = mktime(23, 59, 59, $month, $day, $year);
+  }
+  return $timestamp;
+}
+
+/**
+ * date_to_format
+ * @param type $date
+ * @return type
+ * @author Mars
+ */
+function date_to_format($date) {
+  return $date['month'] . '/' . $date['day'] . '/' . $date['year'];
+}
+
+
+function is_counselor() {
+  $cur_user_name = get_current_user_name();
+  $query = db_select('prs_rel_employee_counselor_gm', 'precg')
+      ->fields('precg', array('counselorName'))
+      ->condition('precg.counselorName', $cur_user_name);
+  $count = $query->execute()->rowCount();
+  if ($count > 0) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+function is_gm() {
+  $cur_user_name = get_current_user_name();
+  $query = db_select('prs_rel_employee_counselor_gm', 'precg')
+      ->fields('precg', array('counselorName'))
+      ->condition('precg.gmName', $cur_user_name);
+  $count = $query->execute()->rowCount();
+  if ($count > 0) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+function get_role_id($roles) {
+  $cur_user_name = get_current_user_name();
+  $query = db_select('role', 'role')
+      ->fields('role')
+      ->condition('role.name', $roles, 'in');
+  $result = $query->execute()->fetchAll();
+  foreach ($result as $role) {
+    $rval[$role->name] = $role->rid;
+  }
+  return $rval;
+}
+
+function is_exist_counselor($role) {
+  global $user;
+  $query = db_select('users_roles', 'ur')
+      ->fields('ur')
+      ->condition('ur.uid', $user->uid)
+      ->condition('ur.rid', $role['counselor']);
+  $count = $query->execute()->rowCount();
+  if ($count > 0) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+function is_exist_gm($role) {
+  global $user;
+  $query = db_select('users_roles', 'ur')
+      ->fields('ur')
+      ->condition('ur.uid', $user->uid)
+      ->condition('ur.rid', $role['GM']);
+  $count = $query->execute()->rowCount();
+  if ($count > 0) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+function insert_counselor_role($role) {
+  global $user;
+  $id = db_insert('users_roles')
+      ->fields(array(
+        'uid' => $user->uid,
+        'rid' => $role['counselor'],
+      ))
+      ->execute();
+  return $id;
+}
+
+function delete_counselor_role($role) {
+  global $user;
+  $id = db_delete('users_roles')
+      ->condition('uid', $user->uid)
+      ->condition('rid', $role['counselor'])
+      ->execute();
+
+  return $id;
+}
+
+function insert_gm_role($role) {
+  global $user;
+  $id = db_insert('users_roles')
+      ->fields(array(
+        'uid' => $user->uid,
+        'rid' => $role['GM'],
+      ))
+      ->execute();
+  return $id;
+}
+
+function delete_gm_role($role) {
+  global $user;
+  $id = db_delete('users_roles')
+      ->condition('uid', $user->uid)
+      ->condition('rid', $role['GM'])
+      ->execute();
+
+  return $id;
+}
+
+
+
+/**
+ *  implement something after login in ldap_authentication.inc line 485
+ */
+function prs_user_login_role() {
+  $roles = array('counselor', 'GM');
+  $rids = get_role_id($roles);
+  $is_exist_counselor = is_exist_counselor($rids);
+  $is_exist_gm = is_exist_gm($rids);
+  if (is_counselor()) {
+    if (!$is_exist_counselor) {
+      insert_counselor_role($rids);
+    }
+  }
+  else {
+    if ($is_exist_counselor) {
+      delete_counselor_role($rids);
+    }
+  }
+
+  if (is_gm()) {
+    if (!$is_exist_gm) {
+      insert_gm_role($rids);
+    }
+  }
+  else {
+    if ($is_exist_gm) {
+      delete_gm_role($rids);
+    }
+    
+    
+  }
+}
 

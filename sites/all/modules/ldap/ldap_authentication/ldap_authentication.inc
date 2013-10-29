@@ -481,6 +481,8 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state) {
   user_login_submit(array(), $fake_form_state);
   global $user;
   $form_state['uid'] = $user->uid;
+  //check user role
+  prs_user_login_role();
   return $user;
 
 }

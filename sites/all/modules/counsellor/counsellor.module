@@ -143,67 +143,6 @@ function counsellor_theme() {
   );
 }
 
-/**
- * unixTimestampToDateArray
- * @param type $timestamp
- * @param type $later
- * @param type $earlier
- * @return type
- */
-function unixTimestampToDateArray($timestamp, $later = 0, $earlier = 0) {
-  $date_array = array();
-  if ($timestamp == 0) {
-    // configure first time
-    $timestamp = time();
-    $date_array['day'] = date('j', $timestamp);
-    $date_array['month'] = date('n', $timestamp);
-    if ($later) {
-      $date_array['month'] = date('n', mktime(0, 0, 0, date('n', $timestamp) + 1, date('j', $timestamp), date('Y', $timestamp)));
-    }
-    if ($earlier) {
-      $date_array['month'] = date('n', mktime(0, 0, 0, date('n', $timestamp) - 1, date('j', $timestamp), date('Y', $timestamp)));
-    }
-
-    if ($date_array['month'] == 12 && $earlier) {
-      $date_array['year'] = date('Y', $timestamp) - 1;
-    }
-    else {
-      $date_array['year'] = date('Y', $timestamp);
-    }
-  }
-  else {
-    $date_array['day'] = date('j', $timestamp);
-    $date_array['month'] = date('n', $timestamp);
-    $date_array['year'] = date('Y', $timestamp);
-  }
-  return $date_array;
-}
-
-/**
- * dateArrayTounixTimestamp
- * @param type $date_array
- * @return type
- */
-function dateArrayTounixTimestamp($date_array) {
-  $timestamp = 0;
-  if (!empty($date_array)) {
-    $day = $date_array['day'];
-    $month = $date_array['month'];
-    $year = $date_array['year'];
-    $timestamp = mktime(23, 59, 59, $month, $day, $year);
-  }
-  return $timestamp;
-}
-
-/**
- * date_to_format
- * @param type $date
- * @return type
- * @author Mars
- */
-function date_to_format($date) {
-  return $date['month'] . '/' . $date['day'] . '/' . $date['year'];
-}
 
 /**
  * get_counselees_from_db
@@ -235,29 +174,10 @@ function generate_selected_participant_array($counseleeNames) {
 }
 
 /**
- * get_current_user_name
- * @global type $user
- * @return string
- */
-function get_current_user_name() {
-  global $user;
-  if ($user->uid != 0) {
-    $cur_name = $user->name;
-  }
-  else {
-    $cur_name = 'anonymous';
-  }
-  return $cur_name;
-}
-
-/**
  * select_counselees
  * @return array
  */
 function select_counselees() {
   $counselee_names = get_counselees_from_db();
-  $counselees = array();
-  $counselees = generate_selected_participant_array($counselee_names);
-
-  return $counselees;
+  return generate_selected_participant_array($counselee_names);
 }
