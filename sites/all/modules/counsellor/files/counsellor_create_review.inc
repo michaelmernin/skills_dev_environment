@@ -116,35 +116,35 @@ function insert_new_review_into_general_db($data) {
  */
 function submit_new_self_review() {
   $rval = '1';
-  $general_id = insert_new_review_into_general_db($_POST);
-  //counselee
-  if ($general_id != '-1') {
-    $cur_counselee_name = get_current_user_name();
-    $emp_array = array(
-      $cur_counselee_name
-    );
-    if (module_exists('common') && module_enable(array('common'))) {
-      $counselor_name = my_counselor_gm_name($cur_counselee_name);
-      $cur_counselor_name = $counselor_name[0]->counselorName;
-    }
-    if ($_POST['self_draft_flag'] == '1') {
-      $review_ids = insert_reviews_to_DB($emp_array, $general_id, 1);
+  $cur_counselee_name = get_current_user_name();
+  if (module_exists('common') && module_enable(array('common'))) {
+    $counselor_name = my_counselor_gm_name($cur_counselee_name);
+    $cur_counselor_name = $counselor_name[0]->counselorName;
+  }
+//  dd('$cur_counselor_name');
+//  dd($cur_counselor_name);
+  if ($cur_counselor_name != '') {
+    $general_id = insert_new_review_into_general_db($_POST);
+    //counselee
+    if ($general_id != '-1') {
+      $emp_array = array(
+        $cur_counselee_name
+      );
+      if ($_POST['self_draft_flag'] == '1') {
+        $review_ids = insert_reviews_to_DB($emp_array, $general_id, 1);
 //          set_review_status($review_ids, 1);
-      if (module_exists('mail_sender') && module_enable(array('mail_sender'))) {
+        if (module_exists('mail_sender') && module_enable(array('mail_sender'))) {
 
 //            counselee email
-        $my_address = select_email_from_prs_reviewers($emp_array);
-        $address = $my_address[0]->mail;
+          $my_address = select_email_from_prs_reviewers($emp_array);
+          $address = $my_address[0]->mail;
 //            dd('$address');
 //            dd($address);
-        $reviewurl = '';
-        $counselee_parems = array('username' => $cur_counselee_name, 'reviewname' => return_review_name($_POST), 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selectpeers/' . $review_ids[0]->rreid, 'reviewurl' => $reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
+          $reviewurl = '';
+          $counselee_parems = array('username' => $cur_counselee_name, 'reviewname' => return_review_name($_POST), 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selectpeers/' . $review_ids[0]->rreid, 'reviewurl' => $reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
 //            dd('$counselee_parems');
 //            dd($counselee_parems);
-        mail_sender_template_adapter($address, $counselee_parems, 0);
-        if (count($cur_counselor_name) != '0') {
-//          dd('$cur_counselor_name');
-//          dd($cur_counselor_name);
+          mail_sender_template_adapter($address, $counselee_parems, 0);
 //            counselor email
           $my_counselor_address = select_email_from_prs_reviewers(array($cur_counselor_name));
           $counselor_address = $my_counselor_address[0]->mail;
@@ -157,17 +157,22 @@ function submit_new_self_review() {
           mail_sender_template_adapter($counselor_address, $counselor_parems, 0);
         }
       }
+      else {
+        //self review in draft
+        $review_ids = insert_reviews_to_DB($emp_array, $general_id);
+      }
+      $message = 'Review created successful.';
+      drupal_set_message($message, 'status');
     }
     else {
-      //self review in draft
-      $review_ids = insert_reviews_to_DB($emp_array, $general_id);
+      $rval = '-1';
+      $msg = 'Review creation attempt failed!';
+      drupal_set_message($msg, 'error');
     }
-    $message = 'Review created successful.';
-    drupal_set_message($message, 'status');
   }
   else {
     $rval = '-1';
-    $msg = 'Review creation attempt failed!';
+    $msg = 'Please ask HR for set your counselor first!';
     drupal_set_message($msg, 'error');
   }
   echo $rval;

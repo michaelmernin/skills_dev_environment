@@ -55,7 +55,7 @@
     var netime = review_end_date.split('/');
     var real_netime = parseInt(netime[2] + netime[0] + netime[1]);
     if (real_nstime >= real_netime) {
-      alert('start date must early than end date!');
+      alert('Start Date must early than End Date!');
       hideConfirmdialog();
       return;
     }
@@ -64,7 +64,7 @@
     var nretime = review_to_date.split('/');
     var real_nretime = parseInt(nretime[2] + nretime[0] + nretime[1]);
     if (real_nrstime >= real_nretime) {
-      alert('start date must early than end date!');
+      alert('Period From date must early than Period To date!');
       hideConfirmdialog();
       return;
     }

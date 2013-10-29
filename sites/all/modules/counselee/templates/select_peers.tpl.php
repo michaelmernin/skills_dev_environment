@@ -26,6 +26,9 @@
   </select>
 </div>
 
+<a id="modal-912871" href="#modal-container-912871" role="button" class="btn btn-danger" data-toggle="modal">Select</a>
+
+
 <table class="table table-hover" id="status_review">
   <caption>
     <h3>Peers Status</h3>
@@ -42,7 +45,7 @@
     $count = 0;
     foreach ($peers_status as $status) {
       $count++;
-      $startid = $status->rreid;
+      $startid = $status->rpeid;
       $url = base_path() . 'watchstatus/basicinfo/' . $startid;
       switch ($status->status) {
         case 0:
@@ -59,12 +62,12 @@
           break;
       }
 
-      if ($status->rstatus == 0) {
-        print '<tr>';
+      if ($status->status == 1) {
+        print '<tr title="Click to watch this review\'s status." onclick="watch_reveiw_status(\'' . $url . '\')" name="' . $status->rreid . '" style="cursor:pointer">';
       }
       else {
+        print '<tr>';
 //        print '<a href="javascript:{void(0)}" title="Click to watch this review\'s status." onclick="watch_reveiw_status(\'' . $url . '\')" name="' . $status->rreid . '" style="text-decoration: underline;"><tr>';
-        print '<tr title="Click to watch this review\'s status." onclick="watch_reveiw_status(\'' . $url . '\')" name="' . $status->rreid . '" style="cursor:pointer">';
       }
       print '<td style="vertical-align:middle">' . render($status->providerName) . '</td>';
       print '<td style="text-align:center;vertical-align:middle">' . $content . '</td>';
@@ -84,7 +87,7 @@
 
 <br>
 
-<a id="modal-912871" href="#modal-container-912871" role="button" class="btn btn-danger" data-toggle="modal">Select</a>
+
 
 
 
