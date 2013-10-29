@@ -312,24 +312,25 @@ function get_all_employees_from_db() {
 // }
 
 function get_selected_peers_from_db($rreid) {
-  $cur_user_name = get_current_user_name();
-  $query = db_select('prs_rel_provider_employee', 'prpe');
-  $query->fields('prpe', array('providerName'));
-  $query->condition('prpe.rreid', $rreid, '=');
-  $query->condition('prpe.providerName', $cur_user_name, '!=');
-  $query->orderBy('prpe.providerName', 'ASC');
+  $reviewee = get_reviewee_from_db($rreid);
+  $query = db_select('prs_rel_provider_employee');
+  $query->fields('prs_rel_provider_employee', array('providerName'));
+  $query->condition('prs_rel_provider_employee.rreid', $rreid, '=');
+  $query->condition('prs_rel_provider_employee.providerName', $reviewee, '!=');
+  $query->orderBy('prs_rel_provider_employee.providerName', 'ASC');
   $result = $query->execute()->fetchAll();
   $selected_array = generate_array($result, 'providerName');
   return $selected_array;
 }
 
 function get_unselected_peers_from_db($rreid) {
-  $cur_user_name = get_current_user_name();
+  $reviewee = get_reviewee_from_db($rreid);
+  $or = db_or()->condition('prpe.rreid', $rreid, '!=')->isNull('prpe.providerName');
   $query = db_select('prs_rel_employee_counselor_gm', 'precg');
   $query->leftjoin('prs_rel_provider_employee', 'prpe', 'precg.employeeName = prpe.providerName');
   $query->fields('precg', array('employeeName'));
-  $query->isNull('prpe.providerName');
-  $query->condition('precg.employeeName', $cur_user_name, '!=');
+  $query->condition('precg.employeeName', $reviewee, '!=');
+  $query->condition($or);
   $query->orderBy('precg.employeeName', 'ASC');
   $result = $query->execute()->fetchAll();
   $unselected_array = generate_array($result, 'employeeName');
