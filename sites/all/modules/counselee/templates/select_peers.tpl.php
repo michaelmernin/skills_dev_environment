@@ -12,22 +12,30 @@
 <h6>You can select peers for feedback from the right list box below</h6>
 
 <div style="width:800px;">
-  <select id="users" class="multiselect" multiple="multiple" name="users[]" style="display: none; width:600px;height:257px;" >
-    <?php
+
+<select id="users" class="multiselect" multiple="multiple" name="users[]" style="display: none; width:600px;height:257px;" >  
+
+<?php    
+
     if ($all_employee_array != '') {
       display_unselected_peers($all_employee_array);
     }
     else {
-      display_unselected_peers($unselected_array);
-      display_selected_peers($selected_array);
+      display_unselected_peers($unselected_peers_array);
+      display_selected_peers($selected_peers_array);
     }
-    ?>
+
+ 
+?>
+
 
   </select>
 </div>
+<br>
 
 <a id="modal-912871" href="#modal-container-912871" role="button" class="btn btn-danger" data-toggle="modal">Select</a>
-
+<br>
+<br>
 
 <table class="table table-hover" id="status_review">
   <caption>
@@ -87,7 +95,9 @@
 
 <br>
 
-
+<input style="display:none" id="rreid" value="<?php print $rreid ?>"/>
+<input style="display:none" id="spstatus" value="<?php print $spstatus ?>"></div>
+<input style="display:none" id="userId_flag" value="<?php print $userId_flag ?>"></div>
 
 
 
@@ -109,6 +119,7 @@
       <div class="modal-footer">
         <img class="loading_img" id="status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="submit_button" onclick="submitNewReview()">Submit</button>
+
       </div>
     </div>
   </div>
@@ -130,11 +141,12 @@
             });
           }
 
+
 <?php
 
 function display_selected_peers($selected_array) {
   foreach ($selected_array as $item) {
-    print '<option value="' . $item . '">' . $item . ' selected="selected"</option>';
+    print '<option value="' . $item . '" selected="selected">' . $item . '</option>';
   }
 }
 

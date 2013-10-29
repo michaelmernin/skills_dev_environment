@@ -80,7 +80,7 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
     watchdog('mail sender template', 'Template files does not exist', array(), WATCHDOG_ERROR);
     $template = '<div>Error</div>';
   }
-
+  dd('template');
   $content = '';
   $key = '';
   $isKey = false;
@@ -142,7 +142,7 @@ function mail_sender_template_adapter($address, $params, $type) {
       break;
     //1 stand for notifying user to fill up peers-review form
     case 1:
-      $subject = $params['reviewname']. " has begun.Please help ".$params['username']." fill up peer review form";
+      $subject = $params['reviewname']. " has begun.Please help ".$params['employeeName']." fill up peer review form";
       $templateName = 'selectPeers.tpl.php';
       break;
 

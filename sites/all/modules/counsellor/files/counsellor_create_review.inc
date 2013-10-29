@@ -179,20 +179,6 @@ function submit_new_self_review() {
 }
 
 /**
- * select_email_from_prs_reviewers
- * @param type $employee_name_array
- * @return type
- * @author Mars
- */
-function select_email_from_prs_reviewers($employee_name_array) {
-  $query = db_select('prs_reviewers', 'pr');
-  $query->fields('pr', array('mail', 'login_name'));
-  $query->condition('pr.login_name', $employee_name_array, 'in');
-  $result = $query->execute()->fetchAll();
-  return $result;
-}
-
-/**
  * callback URL:newreview/startreview
  * @param type $review_id
  * @author Mars
@@ -452,7 +438,6 @@ function explode_time($date) {
 function explode_employee($employees) {
   $employee_array = array();
   $employee_array = explode('-', $employees);
-  // dd($employee_array);
   return $employee_array;
 }
 

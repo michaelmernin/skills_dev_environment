@@ -47,6 +47,14 @@ function counselee_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'files/watch_review_status.inc',
   );
+  $items['watchstatus/submitupdate'] = array(
+    'title' => 'Submit Updates',
+    'page callback' => 'submit_peer_update',
+    'page arguments' => array(),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'files/watch_review_status.inc',
+  );
   return $items;
 }
 
@@ -342,7 +350,8 @@ function get_review_spstatus_from_db($rreid) {
   $query->fields('prre', array('spstatus'));
   $query->condition('prre.rreid', $rreid, '=');
   $result = $query->execute()->fetchAll();
-  return $result;
+  $spstatus = generate_array($result, 'spstatus');
+  return $spstatus[0];
 }
 
 /*function is_firsttime_select($rreid) {
