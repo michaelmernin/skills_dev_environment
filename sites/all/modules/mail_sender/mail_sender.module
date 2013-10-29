@@ -13,7 +13,7 @@ require DRUPAL_ROOT . '/' . libraries_get_path('phpmailer') . '/' . 'class.phpma
  * Implements hook_cron().
  */
 function mail_sender_cron() {
-  //mail_sander_task();
+//  mail_sander_task();
 }
 
 /**
@@ -168,6 +168,7 @@ function mail_sander_task() {
   $mail_query->addField('mail', 'subject');
   $mail_query->addField('mail', 'body');
   $mail_query->condition('mail.status', 0);
+  $mail_query->orderBy('mail.pmid', 'desc');
 
   $mail_query->range(0, $max_send);
   $mail_result = $mail_query->execute()->fetchAll();
