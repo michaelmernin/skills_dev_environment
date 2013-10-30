@@ -52,7 +52,6 @@ function mail_sender_send($address, $subject, $body, $isHtml) {
     $mail->MsgHTML($body);
     $mail->IsHTML($isHtml);
 
-
     return $mail->Send();
   } catch (phpmailerException $e) {
     watchdog('mail sender send', $e->errorMessage(), array(), WATCHDOG_ERROR);
@@ -80,7 +79,6 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
     watchdog('mail sender template', 'Template files does not exist', array(), WATCHDOG_ERROR);
     $template = '<div>Error</div>';
   }
-//  dd('template');
   $content = '';
   $key = '';
   $isKey = false;
