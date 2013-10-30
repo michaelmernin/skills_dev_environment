@@ -251,7 +251,7 @@ function submit_peer_update() {
   else {
     $rpeid = update_peer_item_to_DB($rreid, $providers, $spstatus, $userId_flag, $email_receivers);
   }
-  dd($rpeid);
+//  dd($rpeid);
   $count = count($rpeid);
   if ($count != 0) {
     $msg = $count . ' peer(s) selection updated successfully!';

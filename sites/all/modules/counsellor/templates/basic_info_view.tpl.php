@@ -10,10 +10,10 @@
       <td colspan="3"><input type="text" value="" id="review_from_description" style="color:#34495E;background-color:#ffffff"></td>
     </tr>-->
     <tr id="myInfo">
-      <td>Anniversary Month:</td>
-      <td><?php print render($myInfo['my_anniversary_month'])?></td>
-      <td>My Counselor:</td>
-      <td><?php print render($myInfo['my_counselor_name'])?></td>
+      <td><h6>Anniversary Month:</h6></td>
+      <td style="text-align:left;vertical-align:middle"><?php print render($myInfo['my_anniversary_month'])?></td>
+      <td><h6>My Counselor:</h6></td>
+      <td style="text-align:left;vertical-align:middle"><?php print render($myInfo['my_counselor_name'])?></td>
     </tr>
     <tr>
       <td>
