@@ -5,7 +5,7 @@ function hideConfirmdialog() {
     jQuery('#close_btn').click();
     jQuery('#status_loading_img').hide();
     jQuery('#submit_button').removeClass();
-    jQuery('#submit_button').addClass("btn btn-primary");
+    jQuery('#submit_button').addClass("btn btn-danger");
 }
 
 function clickSubmitButton() {
