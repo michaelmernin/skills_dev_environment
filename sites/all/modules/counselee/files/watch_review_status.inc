@@ -157,7 +157,7 @@ function _insert_items_to_DB($rreid, $providers, &$email_receivers) {
         array_push($rpeids_array, $rpeid);
         array_push($email_receivers, $provider);
       }
-    }
+      }
   }
   if (count($rpeids_array) != 0)
     return $rpeids_array;

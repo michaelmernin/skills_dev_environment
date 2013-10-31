@@ -44,7 +44,7 @@ function get_current_user_name() {
  * @return type
  * @author Mars
  */
-function get_basic_review_infomation($review_id) {
+function get_basic_review_information($review_id) {
 //   $cur_user_name = get_current_user_name();
   $query = db_select('prs_rel_review_employee', 're');
   $query->join('prs_general', 'pg', 'pg.prid=re.prid');
