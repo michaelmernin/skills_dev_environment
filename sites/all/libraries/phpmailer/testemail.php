@@ -27,7 +27,7 @@ try {
 	$mail->From       = "review360@126.com";
 	$mail->FromName   = "First Last";
 
-	$to = "492992927@qq.com";
+	$to = "review360@126.com";
 
 	$mail->AddAddress($to);
 

@@ -26,6 +26,12 @@ function mail_sender_cron() {
  */
 function mail_sender_send($address, $subject, $body, $isHtml) {
 
+  $mail_on = variable_get('smtp_on', 1);
+  if ($mail_on == 0) {
+    watchdog('mail sender send', 'phpmailer is off', array(), WATCHDOG_NOTICE);
+    return 'Phpmailer is off.';
+  }
+
   try {
     $mail = new PHPMailer(true); //New instance, with exceptions enabled
     $mail->IsSMTP();
@@ -140,7 +146,7 @@ function mail_sender_template_adapter($address, $params, $type) {
       break;
     //1 stand for notifying user to fill up peers-review form
     case 1:
-      $subject = $params['reviewname']. " has begun.Please help ".$params['employeeName']." fill up peer review form";
+      $subject = $params['reviewname'] . " has begun.Please help " . $params['employeeName'] . " fill up peer review form";
       $templateName = 'selectPeers.tpl.php';
       break;
 
