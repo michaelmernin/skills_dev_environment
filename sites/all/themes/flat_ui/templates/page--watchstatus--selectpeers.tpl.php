@@ -29,6 +29,9 @@
       success: function(text) {
         // if (text != '-1') {
           location.reload();
+          if(typeof(jQuery("#submit_button").attr("disabled"))!="undefined") {
+          jQuery('#submit_button').removeAttr("disabled");
+        }
           // window.location.href = "<?php print base_path() . 'mydashboard' ?>";
         // } else {
         //   // window.location.href = "<?php print base_path() . 'selectpeers' ?>";
