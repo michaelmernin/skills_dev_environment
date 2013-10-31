@@ -21,7 +21,7 @@
     rreid = getParamRreid();
     spstatus = getParamSpstatus();
     userId_flag = getParamUserIdflag();
-
+    if(providers!=false){
     jQuery.ajax({
       type: "POST",
       data: {'rreid': rreid, 'providers': providers, 'spstatus': spstatus, 'userId_flag': userId_flag },
@@ -36,6 +36,10 @@
         // }
       }
     });
+  }else{
+    hideConfirmdialog();
+    return;
+  }
 
   }
 

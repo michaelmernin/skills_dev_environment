@@ -108,10 +108,8 @@ function my_anniversary_date($login_name) {
  * @author Mars
  */
 function select_email_from_prs_reviewers($employee_name_array) {
-//  dd('employee_name_array');
-//  dd($employee_name_array);
   $query = db_select('prs_reviewers', 'pr');
-  $query->fields('pr', array('mail', 'login_name'));
+  $query->fields('pr', array('mail', 'login_name'));  
   $query->condition('pr.login_name', $employee_name_array, 'in');
   $result = $query->execute()->fetchAll();
   return $result;
@@ -140,17 +138,17 @@ function get_counselor($employeeName) {
   $result = $query->execute()->fetchAll();
   $counselor = generate_array($result, 'counselorName');
 
-  return $counselor;
+  return $counselor[0];
 }
 
 function get_user_identity($rreid) {
   $cur_user_name = get_current_user_name();
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
-  if ($reviewee[0] == $cur_user_name) {
+  if ($reviewee == $cur_user_name) {
     return 0;
   }
-  else if ($cur_user_name == $counselor[0]) {
+  else if ($cur_user_name == $counselor) {
     return 1;
   }
   else {

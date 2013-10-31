@@ -194,7 +194,7 @@ function start_new_review() {
       // code
       if (module_exists('common') && module_enable(array('common'))) {
         //counselee email
-        $basic_info = get_basic_review_infomation($review_id);
+        $basic_info = get_basic_review_information($review_id);
         $datetime_timestamp = unixTimestampToDateArray($basic_info[0]->period_end);
         $my_address = select_email_from_prs_reviewers(array($basic_info[0]->employeeName));
         $address = $my_address[0]->mail;

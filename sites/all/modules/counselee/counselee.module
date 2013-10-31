@@ -134,15 +134,11 @@ function select_reviewer_status_from_BD() {
     // counselee login
     $my_name = array($cur_user_name);
     $my_review_status = get_status_from_db($my_name);
-//    dd('$my_review_status');
-//    dd($my_review_status);
     if (count($result) != '0') {
 
       // counsellor login
       $counselee_name_array = generate_selected_participant_array($result);
       $counselee_status = get_status_from_db($counselee_name_array);
-//      dd('$counselee_status');
-//      dd($counselee_status);
       foreach ($counselee_status as $key => $status) {
         array_push($my_review_status, $status);
       }
@@ -155,8 +151,6 @@ function select_reviewer_status_from_BD() {
     }
   }
   $status_info = $my_review_status;
-//  dd('$status_info');
-//  dd($status_info);
   return $status_info;
 }
 
@@ -273,7 +267,6 @@ function counselee_do_peersreview($userName) {
 // function get_all_employees_from_db() {
 //   if (module_exists('counsellor') && module_enable(array('counsellor'))) {
 //     $cur_user_name = get_current_user_name();
-//     dd($cur_user_name);
 //     $result = array();
 //     $query = db_select('prs_rel_employee_counselor_gm', 'precg');
 //     $query->fields('precg', array('employeeName'));
@@ -281,12 +274,12 @@ function counselee_do_peersreview($userName) {
 //     $query->orderBy('precg.employeeName', 'ASC');
 //     $result = $query->execute()->fetchAll();
 //   } 
-//   // dd($result);
 //   return $result;
 // }
 
 /**
- * get_counselees_from_db
+ * get_all_employees_from_db
+ * the result excludes the current login user
  * @return type
  */
 function get_all_employees_from_db() {
@@ -300,17 +293,28 @@ function get_all_employees_from_db() {
   return $employees;
 }
 
-// /**
-//  * select_counselees
-//  * @return array
-// */
-// function select_employees() {
-//   $employee_names = get_all_employees_from_db();
-//   $employees = array();
-//   $employees = generate_array($employee_names);
-//   return $employees;
-// }
+/**
+ * get_all_peer_candidates_from_db
+ * the result will not contain the corresponding reviewee of the param $rreid
+ * @param int $rreid
+ * @return array $candidates
+**/
+function get_all_peer_candidates_from_db($rreid) {
+  $reviewee = get_reviewee_from_db($rreid);
+  $query = db_select('prs_rel_employee_counselor_gm', 'precg');
+  $query->fields('precg', array('employeeName'));
+  $query->condition('precg.employeeName', $reviewee, '!=');
+  $query->orderBy('precg.employeeName', 'ASC');
+  $result = $query->execute()->fetchAll();
+  $candidates = generate_array($result, 'employeeName');
+  return $candidates;
+}
 
+/**
+ * get_selected_peers_from_db
+ * @param $rreid
+ * @return $selected_array
+**/
 function get_selected_peers_from_db($rreid) {
   $reviewee = get_reviewee_from_db($rreid);
   $query = db_select('prs_rel_provider_employee');
@@ -323,29 +327,45 @@ function get_selected_peers_from_db($rreid) {
   return $selected_array;
 }
 
-function get_unselected_peers_from_db($rreid) {
+/**
+ * get_unselected_peers_from_db
+ * @param $rreid
+ * @return $selected_array
+**/
+function get_unselected_peers_from_db($rreid, $selected_array) {
+  $count = count($selected_array);
   $reviewee = get_reviewee_from_db($rreid);
-  $or = db_or()->condition('prpe.rreid', $rreid, '!=')->isNull('prpe.providerName');
-  $query = db_select('prs_rel_employee_counselor_gm', 'precg');
-  $query->leftjoin('prs_rel_provider_employee', 'prpe', 'precg.employeeName = prpe.providerName');
-  $query->fields('precg', array('employeeName'));
-  $query->condition('precg.employeeName', $reviewee, '!=');
-  $query->condition($or);
-  $query->orderBy('precg.employeeName', 'ASC');
+  $query = db_select('prs_reviewers');
+  $query->fields('prs_reviewers', array('login_name'));
+  $query->condition('prs_reviewers.login_name', $reviewee, '!=');
+  if($count != 0) {
+    $query->condition('prs_reviewers.login_name', $selected_array, 'not in');
+  }
+  $query->orderBy('prs_reviewers.login_name', 'ASC');
   $result = $query->execute()->fetchAll();
-  $unselected_array = generate_array($result, 'employeeName');
+  $unselected_array = generate_array($result, 'login_name');
   return $unselected_array;
 }
 
+/**
+ * get_reviewee_from_db
+ * @param int $rreid
+ * @return type $reviewee
+**/
 function get_reviewee_from_db($rreid) {
   $query = db_select('prs_rel_review_employee', 'prre');
   $query->fields('prre', array('employeeName'));
   $query->condition('prre.rreid', $rreid, '=');
   $result = $query->execute()->fetchAll();
   $reviewee = generate_array($result, 'employeeName');
-  return $reviewee;
+  return $reviewee[0];
 }
 
+/**
+ * get_review_spstatus_from_db
+ * @param int $rreid
+ * @return type $spstatus
+**/
 function get_review_spstatus_from_db($rreid) {
   $query = db_select('prs_rel_review_employee', 'prre');
   $query->fields('prre', array('spstatus'));
@@ -354,16 +374,4 @@ function get_review_spstatus_from_db($rreid) {
   $spstatus = generate_array($result, 'spstatus');
   return $spstatus[0];
 }
-
-/*function is_firsttime_select($rreid) {
-  $result = db_select('prs_rel_review_employee', 'prre')
-          ->fields('prre', array('spstatus'))
-          ->condition('prre.rreid', $rreid, '=')
-          ->execute();
-
-  if ($result == '0') 
-    return TRUE;
-  else
-    return FALSE;
-}*/
 
