@@ -95,9 +95,9 @@
 
 <br>
 
-<input style="display:none" id="rreid" value="<?php print $rreid ?>"/>
-<input style="display:none" id="spstatus" value="<?php print $spstatus ?>"></div>
-<input style="display:none" id="userId_flag" value="<?php print $userId_flag ?>"></div>
+<input type="hidden" id="rreid" value="<?php print $rreid ?>"/>
+<input type="hidden" id="spstatus" value="<?php print $spstatus ?>"></div>
+<input type="hidden" id="userId_flag" value="<?php print $userId_flag ?>"></div>
 
 
 

@@ -458,6 +458,7 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag) {
       'datetime' => $date,
       'peersurl' => $peer_select_url,
       'type' => $userId_flag,
+      'peername' => $email_receiver,
       );
     $email_address = select_email_from_prs_reviewers(array($email_receiver));
     mail_sender_template_adapter($email_address[0]->mail, $peer_info_params, 1);
