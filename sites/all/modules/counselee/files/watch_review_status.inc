@@ -412,6 +412,7 @@ function submit_peer_update() {
 function get_peers_status($rreid) {
   $query = db_select('prs_rel_provider_employee', 'prpe')
       ->fields('prpe')
+      ->where('prpe.employeeName!=prpe.providerName')
       ->condition('prpe.rreid', $rreid);
   $result = $query->execute()->fetchAll();
   return $result;
