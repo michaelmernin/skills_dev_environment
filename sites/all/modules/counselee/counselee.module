@@ -316,11 +316,10 @@ function get_all_peer_candidates_from_db($rreid) {
  * @return $selected_array
 **/
 function get_selected_peers_from_db($rreid) {
-  $reviewee = get_reviewee_from_db($rreid);
   $query = db_select('prs_rel_provider_employee');
   $query->fields('prs_rel_provider_employee', array('providerName'));
   $query->condition('prs_rel_provider_employee.rreid', $rreid, '=');
-  $query->condition('prs_rel_provider_employee.providerName', $reviewee, '!=');
+  $query->where('prs_rel_provider_employee.providerName!=prs_rel_provider_employee.employeeName');
   $query->orderBy('prs_rel_provider_employee.providerName', 'ASC');
   $result = $query->execute()->fetchAll();
   $selected_array = generate_array($result, 'providerName');
@@ -329,12 +328,11 @@ function get_selected_peers_from_db($rreid) {
 
 /**
  * get_unselected_peers_from_db
- * @param $rreid
- * @return $selected_array
+ * @param string $reviewee
+ * @return array $selected_array
 **/
-function get_unselected_peers_from_db($rreid, $selected_array) {
+function get_unselected_peers_from_db($reviewee, $selected_array) {
   $count = count($selected_array);
-  $reviewee = get_reviewee_from_db($rreid);
   $query = db_select('prs_reviewers');
   $query->fields('prs_reviewers', array('login_name'));
   $query->condition('prs_reviewers.login_name', $reviewee, '!=');

@@ -16,9 +16,10 @@ function watch_basic_information($review_id) {
 **/ 
 function display_select_peers_page($rreid = NULL) {
     access_authen($rreid);
+    $reviewee = get_reviewee_from_db($rreid);
     $all_employee_array = get_all_peer_candidates_from_db($rreid);
     $selected_peers_array = get_selected_peers_from_db($rreid);
-    $unselected_peers_array = get_unselected_peers_from_db($rreid, $selected_peers_array);
+    $unselected_peers_array = get_unselected_peers_from_db($reviewee, $selected_peers_array);
     $select_peers_status = get_peers_status($rreid);
     $userId_flag = get_user_identity($rreid);
     $pageContent = display_peer_selection_page($rreid, $userId_flag, $all_employee_array, $selected_peers_array, $unselected_peers_array, $select_peers_status);
