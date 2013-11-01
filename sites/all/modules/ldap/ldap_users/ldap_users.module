@@ -53,7 +53,7 @@ function ldap_fetch_NonGDC_Users() {
   $inserted_reviewers_count = 0;
   for ($i = 65; $i < 91; $i++) {
     $query_id = LDAP_QUERY_ID_FOR_FETCH_USER . chr($i);
-    dd($query_id,'$query_id');
+//    dd($query_id,'$query_id');
     $results = ldap_query_get_result($query_id);
 //    dd($results,'$results');
     $count = db_insert_ldap_users($results, 2);
