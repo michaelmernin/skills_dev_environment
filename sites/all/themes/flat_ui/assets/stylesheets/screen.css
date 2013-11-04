@@ -1877,8 +1877,8 @@ select:focus:invalid:focus {
  /* padding: 19px 20px 20px;*/
   margin-top: 20px;
   margin-bottom: 20px;
-  background-color: whitesmoke;
-  border-top: 1px solid #e5e5e5;
+ /* background-color: whitesmoke;
+  border-top: 1px solid #e5e5e5;*/
   *zoom: 1;
 }
 /* line 15, ../../../../../../../../../../usr/local/.rvm/gems/ruby-2.0.0-p0/gems/compass_twitter_bootstrap-2.3.1/stylesheets/compass_twitter_bootstrap/_mixins.scss */
@@ -14034,4 +14034,24 @@ div.error {
   height: 100%;
   /* Negative indent footer by it's height */
   margin-top: 15px;
+}
+/*==========webform===============*/
+.month,
+.day,
+.year{
+    width: 80px;
+}
+
+.description {
+    width: 240px;
+}
+
+
+#wrap {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-bottom: 3px solid #B81007;
+    border-top: 3px solid #B81007;
+    margin: 0 auto;
+    padding: 0 40px 65px;
+    width: 920px;
 }

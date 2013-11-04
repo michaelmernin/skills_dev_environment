@@ -30,28 +30,9 @@
     <?php endif; ?>
     <div id="content">
       <a id="main-content"></a>
-      <div id="page-header">
-          <div class="container">
-            <?php if ($title): ?>
-              <div class="page-header">
-                <h1 class="title"><?php print $title; ?></h1>
-              </div>
-            <?php endif; ?>
-            <?php if ($tabs): ?>
-              <div class="tabs">
-                <?php print render($tabs); ?>
-              </div>
-            <?php endif; ?>
-            <?php if ($action_links): ?>
-              <ul class="nav nav-pills action-links">
-                <?php print render($action_links); ?>
-              </ul>
-            <?php endif; ?>
-          </div>
-      </div>
       <?php print render($page['content']); ?>
      
-
+page template
           
       
       
