@@ -462,6 +462,13 @@ function create_node($title, $template_name, $is_selfreview = 0) {
   }
 
   change_redirect_path($node->nid, $is_selfreview);
+  
+  //copy validate rules
+  $validate = new stdClass();
+  $validate->clone_from_original_nid = $temp_nid;
+  $validate->nid = $node->nid;
+  webform_validation_node_clone($validate);
+
   return array($node->nid, $random_string);
 }
 

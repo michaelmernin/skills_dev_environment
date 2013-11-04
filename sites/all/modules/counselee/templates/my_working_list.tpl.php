@@ -114,8 +114,8 @@
       if (isCounseleeApproved == 0)
         li = " <li> <a href='" + url + "'>[" + name + "] has finished " + description + " self reivew.(" + reviewName(reviewType) + ")</a> </li>";
       else if (isCounseleeApproved == 2)
-         li = " <li> <a href='" + url + "'>[" + name + "] disagreed " + description + ".Please check the review again.(" + reviewName(reviewType) + ")</a> </li>";
-        jQuery('#myWorkForOther').append(li);
+        li = " <li> <a href='" + url + "'>[" + name + "] disagreed " + description + ".Please check the review again.(" + reviewName(reviewType) + ")</a> </li>";
+      jQuery('#myWorkForOther').append(li);
     }
 
   }

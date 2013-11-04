@@ -138,7 +138,7 @@ function counselee_menu() {
     'file' => 'files/page_audit_review.inc',
   );
 
-  //counselor_submit_review_result
+//counselor_submit_review_result
   $items['watchstatus/submitreview/%'] = array(
     'title' => 'Submit Review Result',
     'page callback' => 'counselor_submit_review_result',
@@ -198,10 +198,10 @@ function counselee_block_info() {
     'info' => t('My Working Stage'),
     'cache' => DRUPAL_NO_CACHE,
   );
-  // $blocks['select_peers'] = array(
-  //   'info' => t('Select Peers'),
-  // 'cache' => DRUPAL_NO_CACHE, // no cache
-  //   'cache' => DRUPAL_NO_CACHE,
+// $blocks['select_peers'] = array(
+//   'info' => t('Select Peers'),
+// 'cache' => DRUPAL_NO_CACHE, // no cache
+//   'cache' => DRUPAL_NO_CACHE,
 // );
   return $blocks;
 }
@@ -337,12 +337,12 @@ function select_reviewer_status_from_BD() {
   $cur_user_name = get_current_user_name();
   if (module_exists('counsellor') && module_enable(array('counsellor'))) {
     $result = get_counselees_from_db();
-    // counselee login
+// counselee login
     $my_name = array($cur_user_name);
     $my_review_status = get_status_from_db($my_name);
     if (count($result) != '0') {
 
-      // counsellor login
+// counsellor login
       $counselee_name_array = generate_selected_participant_array($result);
       $counselee_status = get_status_from_db($counselee_name_array);
       foreach ($counselee_status as $key => $status) {
@@ -381,7 +381,7 @@ function counselee_select_peers($userType, $userName) {
     $counselee_query->addField('general', 'description');
     $counselee_query->condition('review.employeeName', $userName);
     $counselee_query->condition('review.rstatus', 1);
-    //$counselee_query->condition('general.type', $reviewType);
+//$counselee_query->condition('general.type', $reviewType);
     $counselee_query->condition('review.spstatus', $selPeersStatus, 'in');
 
     $dataset = $counselee_query->execute()->fetchAll();
@@ -397,7 +397,7 @@ function counselee_select_peers($userType, $userName) {
     $counselor_query->addField('general', 'description');
     $counselor_query->condition('relation.counselorName', $userName);
     $counselor_query->condition('review.rstatus', 1);
-    //$counselor_query->condition('general.type', $reviewType);
+//$counselor_query->condition('general.type', $reviewType);
     $counselor_query->condition('review.spstatus', $selPeersStatus, 'in');
 
     $dataset = $counselor_query->execute()->fetchAll();
@@ -475,7 +475,7 @@ function counselee_do_peersreview($userName) {
       'reviewType' => $reviewtype,
       'description' => $description,
       'token' => $token,
-      'isApproved' =>$ispproved,
+      'isApproved' => $ispproved,
     );
     $result[$index++] = $temp;
   }
@@ -597,16 +597,16 @@ function get_review_spstatus_from_db($rreid) {
  * @param $tabs
  * */
 function print_render_tabs($tabs) {
-  // fetch the review id from the tab info
+// fetch the review id from the tab info
   $tmp = $tabs['tabs']['output']['2']['#link']['href'];
   $pos = strrpos($tmp, '/');
-  // prepare the arguments
+// prepare the arguments
   $rreid = substr($tmp, $pos + 1);
   $userId_flag = get_user_identity($rreid);
   $rstatus = get_review_status_from_db($rreid);
   print render($tabs['tabs']['output']['0']);
   print render($tabs['tabs']['output']['1']);
-  // identify the user and review status
+// identify the user and review status
   if (_is_assessment_editable($userId_flag, $rstatus)) {
     print render($tabs['tabs']['output']['2']);
   }
@@ -628,7 +628,7 @@ function print_render_tabs($tabs) {
  * @return bool
  * */
 function _is_assessment_editable($userId_flag, $rstatus) {
-  // while login user is the counselee of review and status is REVIEW_IN_DRAFT
+// while login user is the counselee of review and status is REVIEW_IN_DRAFT
   if ($userId_flag == 0 && $rstatus == 1) {
     return TRUE;
   }
@@ -660,6 +660,82 @@ function counselee_webform_submission_update($node, $submission) {
   _alert_after_submited($node, $submission);
 }
 
+function counselee_webform_validation_validators() {
+
+  return array(
+    'check_comment' => array(
+      'name' => "Check Comment",
+      'component_types' => array(
+        'select',
+        'textarea',
+      ),
+    )
+  );
+}
+
+/**
+ * validate hook
+ * 
+ */
+function counselee_webform_validation_validate($validator_name, $items, $components, $rule) {
+
+  if ($items) {
+    switch ($validator_name) {
+      case 'check_comment':
+        $select_arr = array();
+        $comment_arr = array();
+
+        foreach ($items as $key => $val) {
+          if ($components[$key]['type'] == 'select') {
+            $select_arr[$components[$key]['form_key']] = $val;
+          }
+          else if ($components[$key]['type'] == 'textarea') {
+            $comment_arr[$components[$key]['form_key']] = array('key' => $key, 'val' => $val);
+          }
+        }
+
+        foreach ($select_arr as $key => $val) {
+          if (isset($comment_arr[$key . '_comments'])) {
+            $comment_val = $comment_arr[$key . '_comments']['val'];
+            $comment_key = $comment_arr[$key . '_comments']['key'];
+          }
+          else if (isset($comment_arr[$key . '_comment'])) {
+            $comment_val = $comment_arr[$key . '_comment']['val'];
+            $comment_key = $comment_arr[$key . '_comment']['key'];
+          }
+          else {
+            $comment_val = 'Don\'t need to check';
+          }
+          $select_val = $val;
+          if (($select_val != '3' || $select_val != 3) && ($comment_val == '')) {
+            $field_name = get_field_name($key);
+            $errors[$comment_key] = t('%item Comment field is required,because its score is not 3 point.', array('%item' => $field_name));
+          }
+        }
+        if (isset($errors))
+          return $errors;
+        break;
+    }
+  }
+}
+
+function get_field_name($form_key) {
+  $field_name = '';  //strtoupper() 
+  $form_key = ucfirst($form_key);
+
+  for ($i = 0; $i < strlen($form_key); $i++) {
+    $char = substr($form_key, $i, 1);
+    if ($char == '_') {
+      $i++;
+      $field_name .= ' ' . ucfirst(substr($form_key, $i, 1));
+    }
+    else {
+      $field_name.=$char;
+    }
+  }
+  return $field_name;
+}
+
 /**
  *
  * @param type $node
@@ -671,11 +747,11 @@ function counselee_webform_submission_insert($node, $submission) {
 
 function _alert_after_submited($node, $submission) {
   if (is_selfreview($node->webform['nid'])) {
-    //self review
+//self review
     if (has_submitted($node)) {
       if (modify_feedback_status($node->webform['nid'])) {
         if (modify_review_status($node->webform['nid'], $rreid)) {
-          //======================================send email===============
+//======================================send email===============
           $cur_counselee_name = get_current_user_name();
           $counselor_name = my_counselor_gm_name($cur_counselee_name);
           $cur_counselor_name = $counselor_name[0]->counselorName;
@@ -696,14 +772,14 @@ function _alert_after_submited($node, $submission) {
             $counselor_parems = array('username' => format_login_name($cur_counselor_name), 'reviewname' => $description, 'url' => get_curPage_base_url() . 'watchstatus/viewassessment/' . $rreid, 'counselee' => format_login_name($cur_counselee_name));
 
             mail_sender_template_adapter($counselor_address, $counselor_parems, 2);
-            //======================================send email end============
+//======================================send email end============
           }
         }
       }
     }
   }
   else {
-    // peer review
+// peer review
     if (has_submitted($node)) {
       modify_feedback_status($node->webform['nid']);
     }
@@ -777,7 +853,7 @@ function get_self_review_finished_list($counselor) {
   $query->addField('review', 'rreid');
   $query->addField('review', 'employeename');
   $query->addField('general', 'description');
-  $query->addField('review','isCounseleeApproved');
+  $query->addField('review', 'isCounseleeApproved');
   $query->condition('relation.counselorname', $counselor);
   $query->condition('review.rstatus', 2); // 2 Stand for self reivew has finished
 
@@ -791,12 +867,12 @@ function get_self_review_finished_list($counselor) {
     $reviewtype = $node->type;
     $description = $node->description;
     $isCounseleeApproved = $node->isCounseleeApproved;
-    $temp = array('employeeName' => $employeeName, 
-      'rreid' => $rreid, 
+    $temp = array('employeeName' => $employeeName,
+      'rreid' => $rreid,
       'reviewType' => $reviewtype,
       'description' => $description,
-      'isCounseleeApproved'=>$isCounseleeApproved,
-        );
+      'isCounseleeApproved' => $isCounseleeApproved,
+    );
     $result[$index++] = $temp;
   }
   return $result;
