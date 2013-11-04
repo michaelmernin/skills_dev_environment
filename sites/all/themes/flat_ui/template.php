@@ -1,9 +1,9 @@
 <?php
+
 /**
  * @file
  * Theme functions
  */
-
 require_once dirname(__FILE__) . '/includes/structure.inc';
 require_once dirname(__FILE__) . '/includes/form.inc';
 require_once dirname(__FILE__) . '/includes/menu.inc';
@@ -31,104 +31,71 @@ function flat_ui_preprocess_page(&$variables) {
   if ($copyright = theme_get_setting('copyright')) {
     $variables['copyright'] = check_markup($copyright['value'], $copyright['format']);
   }
+  if (isset($variables['node'])) {
+    if ($variables['node']->type == 'webform') {
+//      dd('$variables[\'node\']');
+//      dd($variables['node']);
+      $variables['theme_hook_suggestions'][] = 'page__' . str_replace('_', '--', $variables['node']->type);
+    }
+  }
 }
 
-// function flat_ui_theme() { 
-//   return array( 
-//     'user_login_block' => array('template' => 'user_login', 
-//     'arguments' => array('form' => NULL),
-//      ),);
-//   } 
-//   
-//   function flat_ui_preprocess_user_login_block(&$variables)
-//   { 
-//     $variables['form']['name']['#title']='xxxxxx'; 
-//     $variables['form']['pass']['#title']='oooooo'; 
-//     $variables['form']['submit']['#value']='ssssss'; 
-//     $variables['form']['links']['#value']=''; 
-//     $variables['rendered']=drupal_render($variables['form']);
-//   }
-
-//function  flat_ui_theme() {
-//  return array(
-//    'user_login_block' => array(
-//      'template' => 'user_login',
-//      'variables' => array('form' => NULL),
-//      'preprocess functions' => array('flat_ui_preprocess_user_login_block'),
-//    ),
-//  );
-//}
-
 function flat_ui_theme() {
-  return array(    
-    'user_login_block' => array(        
-      'render element' => 'form',        
-      'path' => drupal_get_path('theme', 'flat_ui') . '/templates',        
-      'template' => 'user_login',        
-      'preprocess functions' => array(          
+  return array(
+    'user_login_block' => array(
+      'render element' => 'form',
+      'path' => drupal_get_path('theme', 'flat_ui') . '/templates',
+      'template' => 'user_login',
+      'preprocess functions' => array(
         'flat_ui_preprocess_user_login_block',
-          ),   
-      
+      ),
 //      'counsellor_create_review_form' => array(        
 //      'render element' => 'form',        
 //      'path' => drupal_get_path('theme', 'flat_ui') . '/templates',        
 //      'template' => 'page--newreview',        
 //    
 //        ),
-      ),  
-    );
+    ),
+  );
 }
 
 function flat_ui_preprocess_user_login_block(&$variables) {
   unset($variables['form']['name']['#title']);
-  unset($variables['form']['pass']['#title']);   
-  unset($variables['form']['links']);   
-  $variables['form']['name']['#attributes']['class']= array('class' => 'form-control login-field');
+  unset($variables['form']['pass']['#title']);
+  unset($variables['form']['links']);
+  $variables['form']['name']['#attributes']['class'] = array('class' => 'form-control login-field');
   unset($variables['form']['name']['#prefix']);
   unset($variables['form']['name']['#suffix']);
-//  $variables['form']['name']['#prefix']='<div class="form-group">';
-//  $variables['form']['name']['#suffix']='</div>';
-//    $variables['form']['name']['#attributes']['width']='370';
-//    
-//     $variables['form']['pass']['#attributes']['width']='370';
-  $variables['form']['name']['#attributes']['id']='login-name';
-  $variables['form']['pass']['#attributes']['id']='login-pass';
-//  $variables['form']['submit']['#attributes']['class']=array('class' => 'btn btn-primary btn-lg btn-block');
-  $variables['form']['name']['#attributes']['placeholder']='Enter your name';
-  $variables['form']['pass']['#attributes']['placeholder']='Enter your password';
-  $variables['form']['pass']['#attributes']['class']=array('class' => 'form-control login-field');
-  $variables['form']['actions']['submit']['#value']='login';
-  $variables['form']['actions']['submit']['#attributes']['class']=array('class' => 'btn btn-primary btn-lg btn-block');
+  $variables['form']['name']['#attributes']['id'] = 'login-name';
+  $variables['form']['pass']['#attributes']['id'] = 'login-pass';
+  $variables['form']['name']['#attributes']['placeholder'] = 'Enter your name';
+  $variables['form']['pass']['#attributes']['placeholder'] = 'Enter your password';
+  $variables['form']['pass']['#attributes']['class'] = array('class' => 'form-control login-field');
+  $variables['form']['actions']['submit']['#value'] = 'login';
+  $variables['form']['actions']['submit']['#attributes']['class'] = array('class' => 'btn btn-primary btn-lg btn-block');
 }
-//function flat_ui_form_alter(&$form, &$form_state, $form_id) {
-//
-//    //dsm($form_id);
-//
-////    if ($form_id == 'user-login-form') {
-////        // add prefix and suffix to form
-////        $form['#prefix'] = '<div class="form-class">';
-////        $form['#suffix'] = '</div>';
-////    }
-//  
-//  if ($form['#id'] == 'user-login-form') {
-//    dpm($form);
+
+
+//function flat_ui_preprocess_webform_view(&$variables){
+//  if($variables['webform']['#form']['#node']->title=='test webform'){
+//    dd($variables);
+//    unset($variables['webform']['#form']['#theme']);
+////    $variables['theme_hook_suggestions'][0] = 'page__webform--form--test';
+//    $variables['webform']['#form']['#theme']=array('0'=>'webform_form_test');
+////    dd($variables['webform']['#form']['#theme'],'111111111111');
+////    $variables['webform']['#form']['submitted']['project_roles_and_responsibilities']['#attributes']['style']='background-color:red';
+////      $variables['webform']['#form']['submitted']['project_roles_and_responsibilities']['p_date']['#title']['#prefix']='<div style="width:40px">';
+////      $variables['webform']['#form']['submitted']['project_roles_and_responsibilities']['p_date']['#title']['#suffix']='</div>';
 //    
-//    
-//  
 //  }
+////  dd($variables);
+//  return "flat_ui_preprocess_webform_view";
+//  
 //}
 
-
-//function flat_ui_preprocess_user_login_block(&$variables) {
-//
-////注释代码，你需要就可以去掉
-//$variables['form']['name']['#title']='xxxxxx'; 
-//     $variables['form']['pass']['#title']='oooooo'; 
-//     $variables['form']['submit']['#value']='ssssss'; 
-//     $variables['form']['links']['#value']=''; 
-//
-////  $variables['form']['name']['#title']='';
-////  $variables['form']['pass']['#title']='';
-//$variables['rendered']=drupal_render($variables['form']);
-//
+//function flat_ui_preprocess_webform_form(&$variables){
+//  
+////  $variables['element']['#title']['#prefix']='<div style="width:40px">Date111</div>';
+//  dd($variables,'dd($variables)');
+//  
 //}
