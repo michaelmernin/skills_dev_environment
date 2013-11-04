@@ -21,7 +21,8 @@
     }
     else {
       display_unselected_peers($unselected_peers_array);
-      display_selected_peers($selected_peers_array);
+      // Temporary disable display peer who have been selected.
+      // display_selected_peers($selected_peers_array);
     }
 
  
@@ -112,7 +113,7 @@
       <div class="modal-body">
         <p>
           Do you want to select these peers? <br>
-          Anyway you can add additional employees for peer review.
+          Anyway you can add additional employees for peer review. All the peers that have been selected cannot be removed!
         </p>
       </div>
       <div class="modal-footer">
