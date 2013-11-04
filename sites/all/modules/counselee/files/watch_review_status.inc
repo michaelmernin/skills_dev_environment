@@ -5,7 +5,21 @@
  * Page callback file for the counselee module.
  */
 function watch_basic_information($review_id) {
-  $pageContent = '';
+  access_authen($review_id);
+  $counsellor_path = drupal_get_path('module', 'counsellor');
+  drupal_add_js($counsellor_path . '/js/counsellor.js');
+  $basic_info = get_basic_review_information($review_id);
+//  dd($basic_info, '$basic_info');
+  if (count($basic_info) != 0) {
+    if ($basic_info[0]->employeeName != '') {
+      $my_info = get_my_anniversary_counselor($basic_info[0]->employeeName);
+    }
+    $pageContent = theme('watch_basic_info', array(
+      'basic_info' => $basic_info[0],
+      'myInfo' => $my_info,
+    ));
+  }
+//  dd($pageContent,'$pageContent');
   return $pageContent;
 }
 
@@ -13,7 +27,7 @@ function watch_basic_information($review_id) {
  * @file
  * Page callback file for counselee module
  * in order to differ page display according to the role of the login userId_flag
-**/ 
+ * */
 function display_select_peers_page($rreid = NULL) {
     access_authen($rreid);
     $reviewee = get_reviewee_from_db($rreid);
@@ -23,49 +37,48 @@ function display_select_peers_page($rreid = NULL) {
     $select_peers_status = get_peers_status($rreid);
     $userId_flag = get_user_identity($rreid);
     $pageContent = display_peer_selection_page($rreid, $userId_flag, $all_employee_array, $selected_peers_array, $unselected_peers_array, $select_peers_status);
-
   return $pageContent;
 }
 
 /**
  * display_firsttime_select
  * The first time select peer, depending the role of login user, func returns different $spstatus
-**/
+ * */
 function display_firsttime_select($rreid, $all_employee_array, $spstatus, $userId_flag, $select_peers_status) {
-    return theme('select_peers', array(
-        'rreid' => $rreid,      
-        'all_employee_array' => $all_employee_array,
-        'spstatus' => $spstatus,
-        'userId_flag' => $userId_flag,    // 0 for counselee, 1 for counselor
-        'peers_status'=>$select_peers_status,  
-        ));
+  return theme('select_peers', array(
+    'rreid' => $rreid,
+    'all_employee_array' => $all_employee_array,
+    'spstatus' => $spstatus,
+    'userId_flag' => $userId_flag, // 0 for counselee, 1 for counselor
+    'peers_status' => $select_peers_status,
+  ));
 }
 
 function display_select($rreid, $selected_peers_array, $unselected_peers_array, $spstatus, $userId_flag, $select_peers_status) {
-    return theme('select_peers', array(
-        'rreid' => $rreid,
-        'selected_peers_array' => $selected_peers_array,
-        'unselected_peers_array' => $unselected_peers_array,
-        'spstatus' => $spstatus,
-        'userId_flag' => $userId_flag,
-        'peers_status'=>$select_peers_status,  
-        ));
+  return theme('select_peers', array(
+    'rreid' => $rreid,
+    'selected_peers_array' => $selected_peers_array,
+    'unselected_peers_array' => $unselected_peers_array,
+    'spstatus' => $spstatus,
+    'userId_flag' => $userId_flag,
+    'peers_status' => $select_peers_status,
+  ));
 }
 
 function display_update($rreid, $selected_peers_array, $unselected_peers_array, $spstatus, $userId_flag, $select_peers_status) {
-    return theme('select_peers', array(
-        'rreid' => $rreid,
-        'selected_peers_array' => $selected_peers_array,
-        'unselected_peers_array' => $unselected_peers_array,
-        'spstatus' => $spstatus,
-        'userId_flag' => $userId_flag,
-        'peers_status'=>$select_peers_status,  
-        ));
+  return theme('select_peers', array(
+    'rreid' => $rreid,
+    'selected_peers_array' => $selected_peers_array,
+    'unselected_peers_array' => $unselected_peers_array,
+    'spstatus' => $spstatus,
+    'userId_flag' => $userId_flag,
+    'peers_status' => $select_peers_status,
+  ));
 }
 
 /**
  * the function that manupulates to display different pages
-**/
+ * */
 function display_peer_selection_page($rreid, $userId_flag, $all_employee_array, $selected_peers_array, $unselected_peers_array, $select_peers_status) {
   $spstatus = get_review_spstatus_from_db($rreid);
   if ($spstatus == 0) {
@@ -76,7 +89,7 @@ function display_peer_selection_page($rreid, $userId_flag, $all_employee_array, 
     // $sptatus == '0' && $userId_flag == '2' ==>  counselor has selected and counselee selects for the 1st time
 
     return display_select($rreid, $selected_peers_array, $unselected_peers_array, $spstatus, $userId_flag, $select_peers_status);
-  }  
+  }
   else {
     // both have selected their first time and from now on selection means updating.
     return display_update($rreid, $selected_peers_array, $unselected_peers_array, $spstatus, $userId_flag, $select_peers_status);
@@ -94,7 +107,7 @@ function display_peer_selection_page($rreid, $userId_flag, $all_employee_array, 
  * 3 for both selected 
  * @param int $rreid
  * @param int @userId_flag
-*/
+ */
 function update_review_spstatus_manager($rreid, $userId_flag) {
   $cur_spstatus = get_review_spstatus_from_db($rreid);
   if ($cur_spstatus == 0 && $userId_flag == 0) {
@@ -124,12 +137,12 @@ function update_review_spstatus_manager($rreid, $userId_flag) {
  * the func that executing db_update operation actually.
  * @param int $rreid
  * @param int $dest_spstatus
-**/ 
+ * */
 function update_review_spstatus($rreid, $dest_spstatus) {
   $result = db_update('prs_rel_review_employee')
-          ->fields(array('spstatus' => $dest_spstatus))
-          ->condition('rreid', $rreid)
-          ->execute();
+      ->fields(array('spstatus' => $dest_spstatus))
+      ->condition('rreid', $rreid)
+      ->execute();
 }
 
 /**
@@ -138,41 +151,41 @@ function update_review_spstatus($rreid, $dest_spstatus) {
  * @param array $providers
  * @param array reference $email_receivers
  * @return array $rpeids_array
-**/
+ * */
 function _insert_items_to_DB($rreid, $providers, &$email_receivers) {
   $rpeid = '';
   $employeeName = _get_provider_employeeName($rreid);
   $prid = _get_provider_prid($rreid);
   $selected_array = get_selected_peers_from_db($rreid);
   $rpeids_array = array();
-  foreach($providers as $provider) {
+  foreach ($providers as $provider) {
     if (!in_array($provider, $selected_array)) {
       $rpeid = db_insert('prs_rel_provider_employee')
               ->fields(array(
                 'employeeName' => $employeeName,
-                'prid' => $prid, 
+                'prid' => $prid,
                 'rreid' => $rreid,
                 'providerName' => $provider,
-                ))->execute();
+              ))->execute();
       if ($rpeid != -1) {
         array_push($rpeids_array, $rpeid);
         array_push($email_receivers, $provider);
       }
-      }
+    }
   }
   if (count($rpeids_array) != 0)
     return $rpeids_array;
   else {
     $msg = 'You did not update any peers!';
     drupal_set_message($msg, 'status');
-    return;    
+    return;
   }
 }
 
 /*
-function insert_peer_item_to_DB($rreid, $providers, $spstatus, $userId_flag, &$email_receivers) {
+  function insert_peer_item_to_DB($rreid, $providers, $spstatus, $userId_flag, &$email_receivers) {
   if ($userId_flag == -1) {
-    drupal_goto('mydashboard');
+  drupal_goto('mydashboard');
   }
   $rpeid = '';
   $rpeids_array = array();
@@ -180,56 +193,56 @@ function insert_peer_item_to_DB($rreid, $providers, $spstatus, $userId_flag, &$e
   $prid = _get_provider_prid($rreid);
 
   if ($spstatus == 0) {
-    if ($userId_flag == 0) {
-      foreach ($providers as $provider) {
-        $result = db_update('prs_rel_review_employee');
-                $result->fields(array('spstatus' => 1,));
-                $result->condition('rreid', $rreid, '=');
-                $result->execute();
+  if ($userId_flag == 0) {
+  foreach ($providers as $provider) {
+  $result = db_update('prs_rel_review_employee');
+  $result->fields(array('spstatus' => 1,));
+  $result->condition('rreid', $rreid, '=');
+  $result->execute();
 
-        $rpeid = db_insert('prs_rel_provider_employee')
-               ->fields(array(
-                'employeeName' => $employeeName,
-                'prid' => $prid,
-                'rreid' => $rreid,
-                'providerName' => $provider,
-              ))->execute();
-        dd($rpeid);
-        array_push($email_receivers, $provider);
-        if ($rpeid != -1) {
-          array_push($rpeids_array, $rpeid);
-        }
-      }
-    }
-    else if ($userId_flag == 1) {
-      foreach ($providers as $provider) {
-       /* $rpeid = db_insert('prs_rel_review_provider')
-              ->fields(array(
-                'employeeName' => $employeeName,
-                'prid' => $prid,
-                'provider' => $provider,
-                'spstatus' => 2,
-                ))->execute();
-        array_push($email_receivers, $provider);
-        $result = db_update('prs_rel_review_employee');
-                $result->fields(array('spstatus' => 2,));
-                $result->condition('rreid', $rreid, '=');
-                $result->execute();
+  $rpeid = db_insert('prs_rel_provider_employee')
+  ->fields(array(
+  'employeeName' => $employeeName,
+  'prid' => $prid,
+  'rreid' => $rreid,
+  'providerName' => $provider,
+  ))->execute();
+  dd($rpeid);
+  array_push($email_receivers, $provider);
+  if ($rpeid != -1) {
+  array_push($rpeids_array, $rpeid);
+  }
+  }
+  }
+  else if ($userId_flag == 1) {
+  foreach ($providers as $provider) {
+  /* $rpeid = db_insert('prs_rel_review_provider')
+  ->fields(array(
+  'employeeName' => $employeeName,
+  'prid' => $prid,
+  'provider' => $provider,
+  'spstatus' => 2,
+  ))->execute();
+  array_push($email_receivers, $provider);
+  $result = db_update('prs_rel_review_employee');
+  $result->fields(array('spstatus' => 2,));
+  $result->condition('rreid', $rreid, '=');
+  $result->execute();
 
-          $rpeid = db_insert('prs_rel_provider_employee')
-                 ->fields(array(
-                  'employeeName' => $employeeName,
-                  'prid' => $prid,
-                  'rreid' => $rreid,
-                  'providerName' => $provider,
-                ))->execute();
-          array_push($email_receivers, $provider);
-       
-      }
-    }
-    // else {
+  $rpeid = db_insert('prs_rel_provider_employee')
+  ->fields(array(
+  'employeeName' => $employeeName,
+  'prid' => $prid,
+  'rreid' => $rreid,
+  'providerName' => $provider,
+  ))->execute();
+  array_push($email_receivers, $provider);
 
-    // }
+  }
+  }
+  // else {
+
+  // }
   }
   // else if (($spstatus == 1 && $userId_flag == 1) || ($spstatus == 2 && $userId_flag == 0)) {
   //   foreach ($providers as $provider) {
@@ -240,17 +253,17 @@ function insert_peer_item_to_DB($rreid, $providers, $spstatus, $userId_flag, &$e
   //               'provider' => $provider,
   //               'spstatus' => 3,
   //               ))->execute();
-      // }
+  // }
   // // }
   // else {
 
   // }
   return $rpeids_array;
-}
+  }
 
-function update_peer_item_to_DB($rreid, $providers, $spstatus, $userId_flag, &$email_receivers) {
-   if ($userId_flag == -1) {
-    drupal_goto('mydashboard');
+  function update_peer_item_to_DB($rreid, $providers, $spstatus, $userId_flag, &$email_receivers) {
+  if ($userId_flag == -1) {
+  drupal_goto('mydashboard');
   }
   $rpeid = '';
   $rpeids_array = array();
@@ -258,61 +271,62 @@ function update_peer_item_to_DB($rreid, $providers, $spstatus, $userId_flag, &$e
   $prid = _get_provider_prid($rreid);
 
   if (($spstatus == 1 && $userId_flag == 1) || ($spstatus == 2 && $userId_flag == 0)) {
-    $count = 0;
-    foreach($providers as $provider) {
-      if (!is_provider_item_existing($rreid, $provider)) {
-          $result = db_update('prs_rel_review_employee');
-                $result->fields(array('spstatus' => 3,));
-                $result->condition('rreid', $rreid, '=');
-                $result->execute();
+  $count = 0;
+  foreach($providers as $provider) {
+  if (!is_provider_item_existing($rreid, $provider)) {
+  $result = db_update('prs_rel_review_employee');
+  $result->fields(array('spstatus' => 3,));
+  $result->condition('rreid', $rreid, '=');
+  $result->execute();
 
-          $rpeid = db_insert('prs_rel_provider_employee')
-                 ->fields(array(
-                  'employeeName' => $employeeName,
-                  'prid' => $prid,
-                  'rreid' => $rreid,
-                  'providerName' => $provider,
-                ))->execute();
-          array_push($email_receivers, $provider);
-          if ($rpeid != -1) {
-        array_push($rpeids_array, $rpeid);
-        }
-        $count++;
-      }
-      else {
-        continue;
-      }
-    }
+  $rpeid = db_insert('prs_rel_provider_employee')
+  ->fields(array(
+  'employeeName' => $employeeName,
+  'prid' => $prid,
+  'rreid' => $rreid,
+  'providerName' => $provider,
+  ))->execute();
+  array_push($email_receivers, $provider);
+  if ($rpeid != -1) {
+  array_push($rpeids_array, $rpeid);
+  }
+  $count++;
   }
   else {
-    foreach($providers as $provider) {
-      if (!is_provider_item_existing($rreid, $provider)) {
-          $rpeid = db_insert('prs_rel_provider_employee')
-                 ->fields(array(
-                  'employeeName' => $employeeName,
-                  'prid' => $prid,
-                  'rreid' => $rreid,
-                  'providerName' => $provider,
-                ))->execute();
-          array_push($email_receivers, $provider);
-        if ($rpeid != -1) {
-        array_push($rpeids_array, $rpeid);
-        }
-      }
-      else {
-        continue;
-      }
-    }
+  continue;
+  }
+  }
+  }
+  else {
+  foreach($providers as $provider) {
+  if (!is_provider_item_existing($rreid, $provider)) {
+  $rpeid = db_insert('prs_rel_provider_employee')
+  ->fields(array(
+  'employeeName' => $employeeName,
+  'prid' => $prid,
+  'rreid' => $rreid,
+  'providerName' => $provider,
+  ))->execute();
+  array_push($email_receivers, $provider);
+  if ($rpeid != -1) {
+  array_push($rpeids_array, $rpeid);
+  }
+  }
+  else {
+  continue;
+  }
+  }
   }
 
   return $rpeids_array;
-}
-*/
+  }
+ */
+
 /**
  * _get_provider_employeeName()
  * @param int $rreid
  * @return string employeeName
-**/
+ * */
 function _get_provider_employeeName($rreid) {
   $query = db_select('prs_rel_review_employee', 'prre')
       ->fields('prre', array('employeeName'))
@@ -321,7 +335,6 @@ function _get_provider_employeeName($rreid) {
   $employeeName = generate_array($result, 'employeeName');
   return $employeeName[0];
 }
-
 
 function _get_provider_prid($rreid) {
   $query = db_select('prs_rel_review_employee', 'prre')
@@ -336,7 +349,7 @@ function _get_provider_prid($rreid) {
  * format the employee, from "name-name" style to array
  * @param string $employees
  * @return array $employee_array
-*/
+ */
 function explode_employee($employees) {
   $employee_array = array();
   $employee_array = explode('-', $employees);
@@ -350,8 +363,7 @@ function explode_employee($employees) {
  * @param type $providers
  * @param type $spstatus
  * @param type $userId_flag
-**/
-
+ * */
 function submit_peer_update() {
   $result_val = '1';
   $rreid = $_POST['rreid'];
@@ -359,13 +371,13 @@ function submit_peer_update() {
   $spstatus = $_POST['spstatus'];
   $userId_flag = $_POST['userId_flag'];
   $email_receivers = array();
-/*  if ($spstatus == 0) {
+  /*  if ($spstatus == 0) {
     $rpeid = insert_peer_item_to_DB($rreid, $providers, $sptatus, $userId_flag, $email_receivers);
-  }
-  else {
+    }
+    else {
     $rpeid = update_peer_item_to_DB($rreid, $providers, $spstatus, $userId_flag, $email_receivers);
-  }
-*/
+    }
+   */
   update_review_spstatus_manager($rreid, $userId_flag);
   $rpeids_array = _insert_items_to_DB($rreid, $providers, $email_receivers);
   // dd('after db insert');
@@ -383,9 +395,9 @@ function submit_peer_update() {
   //   drupal_set_message($msg, 'error');
   // }
 
-/*  foreach($email_receivers as $email_receiver) {
+  /*  foreach($email_receivers as $email_receiver) {
     if (module_exists('common') && module_enable(array('common'))) {
-      $tmp = get_basic_review_information($rreid);
+    $tmp = get_basic_review_information($rreid);
     }
     $review_description = $tmp[0]->description;
     $employeeName = $tmp[0]->employeeName;
@@ -393,18 +405,18 @@ function submit_peer_update() {
     $date = date_to_format($review_end_date);
     $url = '#';
     $peer_params = array(
-      'employeeName' => $employeeName, 
-      'reviewname' => $review_description,
-      'datetime' => $date,
-      'peersurl' => $url, 
-      'type' => $userId_flag,
-      'peername' => $email_receiver,
-      );
+    'employeeName' => $employeeName,
+    'reviewname' => $review_description,
+    'datetime' => $date,
+    'peersurl' => $url,
+    'type' => $userId_flag,
+    'peername' => $email_receiver,
+    );
     $temp_array = array($email_receiver);
     $email_address = select_email_from_prs_reviewers($temp_array);
     mail_sender_template_adapter($email_address[0]->mail, $peer_params, 1);
-  }
-*/  
+    }
+   */
   send_peer_email_notification($rreid, $email_receivers, $userId_flag);
 
   echo $rval;
@@ -434,19 +446,17 @@ function is_provider_item_existing($rreid, $provider) {
   }
 }
 
-
-
 function send_peer_email_notification($rreid, $email_receivers, $userId_flag) {
   if (module_exists('common') && module_enable(array('common'))) {
     // call func in common module to get basic info of this review
     $info = get_basic_review_information($rreid);
-  } 
+  }
   else {
     $msg = 'Email notify module does not exist or enable!';
     drupal_set_message($msg, 'error');
     return;
   }
-  if (count($email_receivers) == 0) 
+  if (count($email_receivers) == 0)
     return;
   foreach ($email_receivers as $email_receiver) {
     $review_description = $info[0]->description;
@@ -461,7 +471,7 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag) {
       'peersurl' => $peer_select_url,
       'type' => $userId_flag,
       'peername' => $email_receiver,
-      );
+    );
     $email_address = select_email_from_prs_reviewers(array($email_receiver));
     mail_sender_template_adapter($email_address[0]->mail, $peer_info_params, 1);
   }

@@ -115,9 +115,13 @@ function counselee_theme() {
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'my_working_list',),
     'select_peers' => array(
-      'variables' => array('all_employee_array' => NULL, 'selected_array' => NULL, 'unselected_array' => NULL, 'userId_flag' => NULL,'peers_status'=>NULL,),
+      'variables' => array('all_employee_array' => NULL, 'selected_array' => NULL, 'unselected_array' => NULL, 'userId_flag' => NULL, 'peers_status' => NULL,),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'select_peers',),
+    'watch_basic_info' => array(
+      'variables' => array('basic_info' => NULL, 'myInfo' => NULL),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'watch_basic_info',),
   );
 }
 
@@ -298,7 +302,7 @@ function get_all_employees_from_db() {
  * the result will not contain the corresponding reviewee of the param $rreid
  * @param int $rreid
  * @return array $candidates
-**/
+ * */
 function get_all_peer_candidates_from_db($rreid) {
   $reviewee = get_reviewee_from_db($rreid);
   $query = db_select('prs_rel_employee_counselor_gm', 'precg');
@@ -314,7 +318,7 @@ function get_all_peer_candidates_from_db($rreid) {
  * get_selected_peers_from_db
  * @param $rreid
  * @return $selected_array
-**/
+ * */
 function get_selected_peers_from_db($rreid) {
   $query = db_select('prs_rel_provider_employee');
   $query->fields('prs_rel_provider_employee', array('providerName'));
@@ -336,7 +340,7 @@ function get_unselected_peers_from_db($reviewee, $selected_array) {
   $query = db_select('prs_reviewers');
   $query->fields('prs_reviewers', array('login_name'));
   $query->condition('prs_reviewers.login_name', $reviewee, '!=');
-  if($count != 0) {
+  if ($count != 0) {
     $query->condition('prs_reviewers.login_name', $selected_array, 'not in');
   }
   $query->orderBy('prs_reviewers.login_name', 'ASC');
@@ -349,7 +353,7 @@ function get_unselected_peers_from_db($reviewee, $selected_array) {
  * get_reviewee_from_db
  * @param int $rreid
  * @return type $reviewee
-**/
+ * */
 function get_reviewee_from_db($rreid) {
   $query = db_select('prs_rel_review_employee', 'prre');
   $query->fields('prre', array('employeeName'));
@@ -363,7 +367,7 @@ function get_reviewee_from_db($rreid) {
  * get_review_spstatus_from_db
  * @param int $rreid
  * @return type $spstatus
-**/
+ * */
 function get_review_spstatus_from_db($rreid) {
   $query = db_select('prs_rel_review_employee', 'prre');
   $query->fields('prre', array('spstatus'));

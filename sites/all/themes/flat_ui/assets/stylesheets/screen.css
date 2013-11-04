@@ -10660,7 +10660,8 @@ h5 {
 /* line 39, ../sass/modules/_type.sass */
 h6 {
   font-size: 13px;
-  font-weight: 500;
+  /*font-weight: 500;*/
+  font-weight: 700;
   text-transform: uppercase;
 }
 
@@ -13969,7 +13970,10 @@ div.error {
  color: #34495E;
 
 }
-
+/*******************************watch status basic*********************/
+#watch-table td {
+    width: 25%;
+}
 
 /****************************************CSS for tabs******************/
 .pr360-tabs {
@@ -14035,7 +14039,7 @@ div.error {
   /* Negative indent footer by it's height */
   margin-top: 15px;
 }
-/*==========webform===============*/
+/***********************************webform*****************************/
 .month,
 .day,
 .year{
@@ -14054,4 +14058,15 @@ div.error {
     margin: 0 auto;
     padding: 0 40px 65px;
     width: 920px;
+}
+
+.submitted {
+    background: none repeat scroll 0 0 #DFDDDD;
+    border-radius: 4px;
+    clear: both;
+    color: #383838;
+    display: block;
+    margin-bottom: 2px;
+    padding: 4px 9px;
+    text-shadow: 1px 1px #FFFFFF;
 }

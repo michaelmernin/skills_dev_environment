@@ -75,9 +75,8 @@ function format_login_name($login_name) {
   return trim($formated_name);
 }
 
-function get_my_anniversary_counselor() {
+function get_my_anniversary_counselor($my_name) {
   $info = array();
-  $my_name = get_current_user_name();
   $my_counselor_gm_name = my_counselor_gm_name($my_name);
   $my_counselor_name = $my_counselor_gm_name[0]->counselorName;
   $my_anniversary_month = my_anniversary_date($my_name);
