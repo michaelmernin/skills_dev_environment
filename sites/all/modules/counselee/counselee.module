@@ -55,6 +55,26 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'files/watch_review_status.inc',
   );
+
+
+  $items['peer-review-basic-information'] = array(
+    'title' => 'Basic Information',
+    'page callback' => 'get_peer_basic_information',
+    'page arguments' => array(),
+    'access arguments' => array('access to peer review'),
+    'type' => MENU_CALLBACK,
+    'file' =>'files/peer_review_form.inc'
+  );
+
+
+  $items['peer-review-score-overall'] = array(
+    'title' => 'Overall Rating',
+    'page callback' => 'get_peer_review_score_overall',
+    'page arguments' => array(),
+    'access arguments' => array('access to peer review'),
+    'type' => MENU_CALLBACK,
+    'file'=> 'files/peer_review_form.inc'
+  );
   return $items;
 }
 
@@ -63,9 +83,9 @@ function counselee_permission() {
     'access to my dashboard' => array(
       'title' => t('Access to my dashboard'),
     ),
-//        'config reviews' => array(
-//            'title' => t('Config reviews'),
-//        ),
+    'access to peer review' => array(
+      'title' => t('Access to peer review form'),
+    ),
   );
 }
 
@@ -118,10 +138,22 @@ function counselee_theme() {
       'variables' => array('all_employee_array' => NULL, 'selected_array' => NULL, 'unselected_array' => NULL, 'userId_flag' => NULL, 'peers_status' => NULL,),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'select_peers',),
+
     'watch_basic_info' => array(
       'variables' => array('basic_info' => NULL, 'myInfo' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'watch_basic_info',),
+
+    'peer-review-form' => array(
+      'variables' => array('basic_info' => null),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'peer-review-form',),
+    'peer-review-form-overall' => array(
+      'variables' => array('score_overall' => null),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'peer-review-form-overall',),
+    
+
   );
 }
 
@@ -334,7 +366,7 @@ function get_selected_peers_from_db($rreid) {
  * get_unselected_peers_from_db
  * @param string $reviewee
  * @return array $selected_array
-**/
+ * */
 function get_unselected_peers_from_db($reviewee, $selected_array) {
   $count = count($selected_array);
   $query = db_select('prs_reviewers');
