@@ -37,14 +37,14 @@ function start_review(review_id, basepath) {
     jQuery.ajax({
         type: "POST",
         url: basepath + 'newreview/startreview',
-        data:{'review_id':review_id},
+        data: {'review_id': review_id},
         success: function(date) {
             if (date != '-1')
             {
                 jQuery('#review_status_' + review_id).html('<a href="javascript:{void(0)}" title="This review is in draft, reviewer can edit it before submit.">Review in draft</a>');
             }
             else {
-               window.location.href = basepath+ 'mydashboard';
+                window.location.href = basepath + 'mydashboard';
             }
         }
     });
@@ -52,51 +52,53 @@ function start_review(review_id, basepath) {
 
 
 
-function get_review_status_tiplink(status){
-    var content='';
+function get_review_status_tiplink(status) {
+    var content = '';
     switch (status) {
         case 1:
-          //1 for review in draft;
-          content = "<a href=\"javascript:{void(0)}\" title=\"This review is in draft, reviewer can edit it before submit.\">Review in Draft</a>";
-          break;
+            //1 for review in draft;
+            content = "<a href=\"javascript:{void(0)}\" title=\"This review is in draft, reviewer can edit it before submit.\">Review in Draft</a>";
+            break;
         case 2:
-          // 2 for review by counsellor;
-          content = "<a href=\"javascript:{void(0)}\" title=\"This review now is review by counselor.\">Review by Counselor</a>";
-          break;
+            // 2 for review by counsellor;
+            content = "<a href=\"javascript:{void(0)}\" title=\"This review now is review by counselor.\">Review by Counselor</a>";
+            break;
         case 3:
-          // 3 for approved by counsellor;
-          content = "<a href=\"javascript:{void(0)}\" title=\"This review is approved by counselor.\">Approved by Counselor</a>";
-          break;
+            // 3 for approved by counsellor;
+            content = "<a href=\"javascript:{void(0)}\" title=\"This review is approved by counselor.\">Approved by Counselor</a>";
+            break;
         case 4:
-          // 4 for joint review;
-          content = "<a href=\"javascript:{void(0)}\" title=\"Joint review.\">Joint review</a>";
-          break;
+            // 4 for joint review;
+            content = "<a href=\"javascript:{void(0)}\" title=\"Joint review.\">Joint review</a>";
+            break;
         case 5:
-          // 5 for GM review;
-          content = "<a href=\"javascript:{void(0)}\" title=\"This review is review by GM.\">GM Review</a>";
-          break;
+            // 5 for GM review;
+            content = "<a href=\"javascript:{void(0)}\" title=\"This review is review by GM.\">GM Review</a>";
+            break;
         case 6:
-          // 6 for GM approved;
-          content = "<a href=\"javascript:{void(0)}\" title=\"This review is approved by GM.\">GM Approve</a>";
-          break;
-      }
+            // 6 for GM approved;
+            content = "<a href=\"javascript:{void(0)}\" title=\"This review is approved by GM.\">GM Approve</a>";
+            break;
+    }
     return content;
-    
+
 }
 
-function get_review_type_tiplink(status){
-      switch (status) {
+function get_review_type_tiplink(status) {
+    var review_type = '';
+    switch (status) {
         case 0:
-          //  0 for annual review;
-          review_type = 'Annual review';
-          break;
+            //  0 for annual review;
+            review_type = 'Annual review';
+            break;
         case 1:
-          // 1 for project review;
-          review_type = 'Project review';
-          break;
+            // 1 for project review;
+            review_type = 'Project review';
+            break;
         case 2:
-          // 2 for 3-month review
-          review_type = 'Three-month review';
-          break;
-      }
+            // 2 for 3-month review
+            review_type = 'Three-month review';
+            break;
+    }
+    return review_type;
 }
