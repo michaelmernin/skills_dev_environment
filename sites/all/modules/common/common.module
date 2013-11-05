@@ -224,7 +224,7 @@ function date_to_format($date) {
   return $date['month'] . '/' . $date['day'] . '/' . $date['year'];
 }
 
-
+/************************About login by Mars*****************************************/
 function is_counselor() {
   $cur_user_name = get_current_user_name();
   $query = db_select('prs_rel_employee_counselor_gm', 'precg')
@@ -338,7 +338,6 @@ function delete_gm_role($role) {
 }
 
 
-
 /**
  *  implement something after login in ldap_authentication.inc line 485
  */
@@ -370,5 +369,57 @@ function prs_user_login_role() {
     
     
   }
+}
+/************************About login by Mars*****************************************/
+
+/**
+ * 
+ * @param type $review_title
+ * @param type $employee_name
+ * @param type $provider_name
+ * @return type
+ */
+function create_review_node($review_title, $employee_name, $provider_name) {
+    $temp_name = get_temp($review_title, $employee_name);
+    $node = new stdClass();
+    $node->type = "webform";
+    $node->title = $temp_name . ' for ' . $employee_name . ' (provider: ' . $provider_name . ')';
+    $node->language = LANGUAGE_NONE;
+    $node->uid = 1; // Or any id you 
+    $random_string = random_string(10);
+    $node->path = array('alias' => $random_string);
+    $node->comment = 1;
+    node_object_prepare($node);
+
+    $node = node_submit($node);
+    node_save($node);
+
+    $temp_nid = get_temp_node_id($temp_name . ' template');
+    $query = db_select('webform_component', 'wc');
+    $query->fields('wc');
+    $query->condition('nid', $temp_nid);
+    $result = $query->execute()->fetchAll();
+
+    foreach ($result as $key => $values) {
+        $field_array = array();
+
+        $field_array['nid'] = $node->nid;
+        $field_array['cid'] = $values->cid;
+        $field_array['pid'] = $values->pid;
+        $field_array['form_key'] = $values->form_key;
+        $field_array['name'] = $values->name;
+        $field_array['type'] = $values->type;
+        $field_array['value'] = $values->value;
+        $field_array['extra'] = $values->extra;
+        $field_array['mandatory'] = $values->mandatory;
+        $field_array['weight'] = $values->weight;
+        $field_array['score_weight'] = $values->score_weight;
+        $field_array['min_length'] = $values->min_length;
+
+        db_insert('webform_component')->fields($field_array)->execute();
+    }
+
+    change_redirect_path($node->nid);
+    return array($node->nid, $random_string);
 }
 

@@ -25,7 +25,7 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
         $emp_array = explode_employee($employees);
         if ($radio_val == '0' && $emp_array['0'] != 'false') {
           //$radio_val == 0
-          $review_ids = insert_reviews_to_DB($emp_array, $general_id);
+          $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST['review_type']);
           if ($review_ids != '-1') {
 //            set_review_status($review_ids, 0);
             $message = 'Review created successful.';
@@ -39,7 +39,7 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
         }
         else if ($radio_val == '1') {
           //$radio_val == 1
-          $review_ids = insert_reviews_to_DB($emp_array, $general_id, 1);
+          $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST['review_type'], 1);
           if ($review_ids != '-1') {
 //            set_review_status($review_ids, 1);
             // notify method will be called here.
@@ -131,7 +131,7 @@ function submit_new_self_review() {
         $cur_counselee_name
       );
       if ($_POST['self_draft_flag'] == '1') {
-        $review_ids = insert_reviews_to_DB($emp_array, $general_id, 1);
+        $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST['review_type'], 1);
 //          set_review_status($review_ids, 1);
         if (module_exists('mail_sender') && module_enable(array('mail_sender'))) {
 
@@ -159,7 +159,7 @@ function submit_new_self_review() {
       }
       else {
         //self review in draft
-        $review_ids = insert_reviews_to_DB($emp_array, $general_id);
+        $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST['review_type']);
       }
       $message = 'Review created successful.';
       drupal_set_message($message, 'status');
@@ -446,7 +446,7 @@ function explode_employee($employees) {
  * @param array $employees, int $prid
  * @return array $review_ids
  */
-function insert_reviews_to_DB($employees, $prid, $rstatus = 0) {
+function insert_reviews_to_DB($employees, $prid, $reviewtype, $rstatus = 0) {
   $rreid = '';
   $review_ids = array();
   if ($rstatus == 0) {
@@ -458,6 +458,12 @@ function insert_reviews_to_DB($employees, $prid, $rstatus = 0) {
           ))
           ->execute();
       // need create node later ==================================
+//      $nid_token = create_review_node($employee,$reviewtype);
+//      $nid = $nid_token[0];
+//      $token = $nid_token[1];
+//      dd($employee,'$employee');
+
+
 
       $rpeid = db_insert('prs_rel_provider_employee')
           ->fields(array(
@@ -496,7 +502,10 @@ function insert_reviews_to_DB($employees, $prid, $rstatus = 0) {
           ))
           ->execute();
       // need create node later ==================================
-
+      //      $nid_token = create_review_node($employee,$reviewtype);
+//      $nid = $nid_token[0];
+//      $token = $nid_token[1];
+//      dd($employee, '$employee');
       $rpeid = db_insert('prs_rel_provider_employee')
           ->fields(array(
             'employeeName' => $employee,
