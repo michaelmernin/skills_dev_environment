@@ -1,3 +1,6 @@
+
+
+//
 var technical_abilities_id_pre = '#edit-submitted-performance-evaluation-technical-abilities-';
 var technical_abilities_id = new Array();
 technical_abilities_id[0] = technical_abilities_id_pre + 'productivity';
@@ -111,6 +114,7 @@ function peer_review_overall_score_calculate(category, reviewer_composite_scores
     {
         var score_rating = sum / count;
         jQuery(reviewer_composite_scores_id).html(score_rating);
+        jQuery('#peer_review_composite_technical').html(score_rating);
     }
     else
     {
@@ -156,6 +160,11 @@ function peer_review_teamwork_value_change()
 {
     peer_review_select_value_change(teamwork_id, overall_reviewer_composite_scores_id[4]);
 }
+
+
+var composite_score_technical = '<table class="table"><thead><tr><th>Composite Score: Core Competencies</th><th id = "peer_review_composite_technical"></th></tr></thead></table>';
+jQuery('#peer_review_composite_score_technical').html(composite_score_technical);
+
 
 
 register_peer_review_select_onchange_event(technical_abilities_id, peer_review_technical_value_change);

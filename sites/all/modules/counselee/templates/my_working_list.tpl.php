@@ -80,7 +80,7 @@
    * */
   function showReviewList(items)
   {
-    var obj, name, rpeid, reviewType, description, url, li;
+    var obj, name, rpeid, reviewType, description,token, url, li;
     for (var i = 0; i < items.length; i++)
     {
       obj = items[i];
@@ -88,8 +88,9 @@
       rpeid = obj.rpeid;
       reviewType = obj.reviewType;
       description = obj.description;
+      token = obj.token;
 
-      url = "./?=" + rpeid + "&name=" + name + "&reviewType=" + reviewType;
+      url = "./"+token;
       if (name == '<?php print get_current_user_name(); ?>')
       {
         li = " <li> <a href='" + url + "'>" + description + " is started.Please fill up your Self-Review form.(" + reviewName(reviewType) + ")</a> </li>";
