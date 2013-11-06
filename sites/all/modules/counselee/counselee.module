@@ -55,8 +55,6 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'files/watch_review_status.inc',
   );
-
-
   $items['peer-review-basic-information'] = array(
     'title' => 'Basic Information',
     'page callback' => 'get_peer_basic_information',
@@ -65,8 +63,6 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' =>'files/peer_review_form.inc'
   );
-
-
   $items['peer-review-score-overall'] = array(
     'title' => 'Overall Rating',
     'page callback' => 'get_peer_review_score_overall',
@@ -74,6 +70,22 @@ function counselee_menu() {
     'access arguments' => array('access to peer review'),
     'type' => MENU_CALLBACK,
     'file'=> 'files/peer_review_form.inc'
+  );
+  $items['watchstatus/selfassessment/%'] = array(
+    'title' => 'Self Assessment',
+    'page callback' => 'display_self_assessment',
+    'page arguments' => array(2),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'files/watch_review_status.inc',
+  );
+  $items['watchstatus/viewassessment/%'] = array(
+    'title' => 'View Assessment',
+    'page callback' => 'load_self_assessment',
+    'page arguments' => array(2),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'files/watch_review_status.inc',
   );
   return $items;
 }
@@ -92,7 +104,6 @@ function counselee_permission() {
 function counselee_block_info() {
   $blocks['user_status'] = array(
     'info' => t('User Status View'),
-    'cache' => DRUPAL_NO_CACHE, // no cache
   );
   $blocks['my_work_stage'] = array(
     'info' => t('My Working Stage'),
@@ -100,6 +111,7 @@ function counselee_block_info() {
   );
   // $blocks['select_peers'] = array(
   //   'info' => t('Select Peers'),
+    // 'cache' => DRUPAL_NO_CACHE, // no cache
   //   'cache' => DRUPAL_NO_CACHE,
 // );
   return $blocks;
@@ -143,7 +155,6 @@ function counselee_theme() {
       'variables' => array('basic_info' => NULL, 'myInfo' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'watch_basic_info',),
-
     'peer-review-form' => array(
       'variables' => array('basic_info' => null),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
@@ -152,8 +163,14 @@ function counselee_theme() {
       'variables' => array('score_overall' => null),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'peer-review-form-overall',),
-    
-
+    'self_assessment' => array(
+      'variables' => array('rreid' => NULL),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'self_assessment',),
+    'view_assessment' => array(
+      'variables' => array('rreid' => NULL),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'view_assessment',),
   );
 }
 
@@ -409,3 +426,61 @@ function get_review_spstatus_from_db($rreid) {
   return $spstatus[0];
 }
 
+/**
+ * print_render_tabs
+ * this   func is to switch the self assessment tab displayed or hidden when differenet users login. 
+ * This tab will remain hidden until the login user is the counselor of this reviewee and the counselee has 
+ * submitted his/her self assessment form (rstatus >= 2 ).
+ * @param $tabs
+ * */
+function print_render_tabs($tabs) {
+  // fetch the review id from the tab info
+  $tmp = $tabs['tabs']['output']['2']['#link']['href'];
+  $pos = strrpos($tmp, '/');
+  // prepare the arguments
+  $rreid = substr($tmp, $pos+1);
+  $userId_flag = get_user_identity($rreid);
+  $rstatus = get_review_status_from_db($rreid);
+  print render($tabs['tabs']['output']['0']);
+  print render($tabs['tabs']['output']['1']);
+  // identify the user and review status
+  if (_is_assessment_editable($userId_flag, $rstatus)) {
+    print render($tabs['tabs']['output']['2']);
+  }
+  else if (_is_assessment_visible_for_counselor($rstatus)) {
+    print render($tabs['tabs']['output']['3']);
+  }
+  else if ($userId_flag == 0) {
+    print render($tabs['tabs']['output']['3']);
+  }
+}
+
+/**
+ * is_assessment_editable
+ * this func is to judge whether the self assessment is editable according to the login user identity and the review status.
+ * @param int $rreid
+ * @return bool
+**/
+function _is_assessment_editable($userId_flag, $rstatus) {
+  // while login user is the counselee of review and status is REVIEW_IN_DRAFT
+  if ($userId_flag == 0 && $rstatus == 1) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * _is_assessment_visible_for_counselor
+ * this func is to identify whether the self assessment is visible for counselor. When the status is 
+ * REVIEW_IN_DRAFT, the result is no
+**/
+function _is_assessment_visible_for_counselor($rstatus) {
+  if ($rstatus > 1 && $rstatus <= 6) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}

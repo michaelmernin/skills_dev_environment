@@ -41,9 +41,35 @@ function display_select_peers_page($rreid = NULL) {
 }
 
 /**
+ * @file
+ * Page callback function for self assessment.
+**/
+function display_self_assessment($rreid = NULL) {
+  access_authen($rreid);
+  // all the page display, access control and other function will be implemented later!
+  $pageContent = theme('self_assessment', array(
+    'rreid' => $rreid
+    ));
+  return $pageContent;
+}
+
+/**
+ * @file 
+ * Page callback function for view assessment.
+**/
+function load_self_assessment($rreid) {
+  access_authen($rreid);
+  // all the page display, access control and other function will be implemented later!
+  $pageContent = theme('view_assessment', array(
+    'rreid' => $rreid
+    ));
+  return $pageContent;  
+}
+
+/**
  * display_firsttime_select
  * The first time select peer, depending the role of login user, func returns different $spstatus
- * */
+**/
 function display_firsttime_select($rreid, $all_employee_array, $spstatus, $userId_flag, $select_peers_status) {
   return theme('select_peers', array(
     'rreid' => $rreid,

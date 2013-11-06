@@ -423,3 +423,12 @@ function create_review_node($review_title, $employee_name, $provider_name) {
     return array($node->nid, $random_string);
 }
 
+function get_review_status_from_db($rreid) {
+  $query = db_select('prs_rel_review_employee', 'prre')
+        ->fields('prre', array('rstatus'))
+        ->condition('prre.rreid', $rreid)
+        ->execute()->fetchAll();
+  $result = generate_array($query, 'rstatus');
+  return $result[0];
+}
+

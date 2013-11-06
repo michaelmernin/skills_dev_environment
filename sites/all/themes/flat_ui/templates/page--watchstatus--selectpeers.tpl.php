@@ -99,7 +99,7 @@
        <?php
         $tabs = menu_local_tasks();
         if ($tabs['tabs']['count'] >= 1):
-          ?><div class="tab"><ul class="pr360-tabs"><?php print render($tabs['tabs']['output']);
+          ?><div class="tab"><ul class="pr360-tabs"><?php print_render_tabs($tabs);
           ?></ul></div><?php endif; ?>
      <?php if ($messages): ?>
               <div id="messages">
