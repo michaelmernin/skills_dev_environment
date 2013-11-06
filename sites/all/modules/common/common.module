@@ -99,7 +99,6 @@ function my_anniversary_date($login_name) {
   return trim($formated_name);
 }
 
-
 /**
  * select_email_from_prs_reviewers
  * @param type $employee_name_array
@@ -108,12 +107,12 @@ function my_anniversary_date($login_name) {
  */
 function select_email_from_prs_reviewers($employee_name_array) {
   $query = db_select('prs_reviewers', 'pr');
-  $query->fields('pr', array('mail', 'login_name'));  
+  $query->fields('pr', array('mail', 'login_name'));
   $query->condition('pr.login_name', $employee_name_array, 'in');
   $result = $query->execute()->fetchAll();
   return $result;
 }
-  
+
 /*
  * generate_array from db return format to array
  * @param type array is generated from db, item is the attribute which you want to format.
@@ -224,7 +223,8 @@ function date_to_format($date) {
   return $date['month'] . '/' . $date['day'] . '/' . $date['year'];
 }
 
-/************************About login by Mars*****************************************/
+/* * **********************About login by Mars**************************************** */
+
 function is_counselor() {
   $cur_user_name = get_current_user_name();
   $query = db_select('prs_rel_employee_counselor_gm', 'precg')
@@ -337,7 +337,6 @@ function delete_gm_role($role) {
   return $id;
 }
 
-
 /**
  *  implement something after login in ldap_authentication.inc line 485
  */
@@ -366,69 +365,102 @@ function prs_user_login_role() {
     if ($is_exist_gm) {
       delete_gm_role($rids);
     }
-    
-    
   }
 }
-/************************About login by Mars*****************************************/
+
+/* * **********************About login by Mars end**************************************** */
 
 /**
- * 
- * @param type $review_title
- * @param type $employee_name
- * @param type $provider_name
+ * common create 
+ * @param type $title
+ * @param type $template_name
  * @return type
  */
-function create_review_node($review_title, $employee_name, $provider_name) {
-    $temp_name = get_temp($review_title, $employee_name);
-    $node = new stdClass();
-    $node->type = "webform";
-    $node->title = $temp_name . ' for ' . $employee_name . ' (provider: ' . $provider_name . ')';
-    $node->language = LANGUAGE_NONE;
-    $node->uid = 1; // Or any id you 
-    $random_string = random_string(10);
-    $node->path = array('alias' => $random_string);
-    $node->comment = 1;
-    node_object_prepare($node);
+function create_node($title, $template_name) {
+  $node = new stdClass();
+  $node->type = "webform";
+  $node->title = $title;
+  $node->language = LANGUAGE_NONE;
+  $node->uid = 1; // Or any id you 
+  $random_string = random_string(10);
+  $node->path = array('alias' => $random_string);
+  $node->comment = 1;
+  node_object_prepare($node);
 
-    $node = node_submit($node);
-    node_save($node);
+  $node = node_submit($node);
+  node_save($node);
 
-    $temp_nid = get_temp_node_id($temp_name . ' template');
-    $query = db_select('webform_component', 'wc');
-    $query->fields('wc');
-    $query->condition('nid', $temp_nid);
-    $result = $query->execute()->fetchAll();
+  $temp_nid = get_temp_node_id($template_name);
+  $query = db_select('webform_component', 'wc');
+  $query->fields('wc');
+  $query->condition('nid', $temp_nid);
+  $result = $query->execute()->fetchAll();
 
-    foreach ($result as $key => $values) {
-        $field_array = array();
+  foreach ($result as $key => $values) {
+    $field_array = array();
 
-        $field_array['nid'] = $node->nid;
-        $field_array['cid'] = $values->cid;
-        $field_array['pid'] = $values->pid;
-        $field_array['form_key'] = $values->form_key;
-        $field_array['name'] = $values->name;
-        $field_array['type'] = $values->type;
-        $field_array['value'] = $values->value;
-        $field_array['extra'] = $values->extra;
-        $field_array['mandatory'] = $values->mandatory;
-        $field_array['weight'] = $values->weight;
-        $field_array['score_weight'] = $values->score_weight;
-        $field_array['min_length'] = $values->min_length;
+    $field_array['nid'] = $node->nid;
+    $field_array['cid'] = $values->cid;
+    $field_array['pid'] = $values->pid;
+    $field_array['form_key'] = $values->form_key;
+    $field_array['name'] = $values->name;
+    $field_array['type'] = $values->type;
+    $field_array['extra'] = $values->extra;
+    $field_array['value'] = $values->value;
+//        $field_array['mandatory'] = $values->mandatory;
+    $field_array['required'] = $values->required;
+    $field_array['weight'] = $values->weight;
+//        $field_array['score_weight'] = $values->score_weight;
+//        $field_array['min_length'] = $values->min_length;
 
-        db_insert('webform_component')->fields($field_array)->execute();
-    }
+    db_insert('webform_component')->fields($field_array)->execute();
+  }
 
-    change_redirect_path($node->nid);
-    return array($node->nid, $random_string);
+  change_redirect_path($node->nid);
+  return array($node->nid, $random_string);
+}
+
+function get_temp_node_id($temp_name) {
+  $nid = 0;
+  $query = db_select('node', 'n');
+  $query->fields('n');
+  $query->condition('title', $temp_name);
+  $result = $query->execute()->fetchAll();
+  foreach ($result as $value) {
+    $nid = $value->nid;
+  }
+  return $nid;
+}
+
+function change_redirect_path($nid) {
+  $url = 'feedbacksubmitsuccess';
+  $allow_draft = 1;
+  $submit_limit = 1;
+  $query = db_update('webform');
+  $query
+      ->fields(array(
+        'redirect_url' => $url,
+        'allow_draft' => $allow_draft,
+        'submit_limit' => $submit_limit,
+      ))
+      ->condition('nid', $nid)
+      ->execute();
+}
+
+function random_string($length = 8) {
+  $str = '';
+  for ($i = 0; $i < $length; $i++) {
+    $str .= chr(mt_rand(65, 90));
+    $str .= chr(mt_rand(97, 122));
+  }
+  return $str;
 }
 
 function get_review_status_from_db($rreid) {
   $query = db_select('prs_rel_review_employee', 'prre')
-        ->fields('prre', array('rstatus'))
-        ->condition('prre.rreid', $rreid)
-        ->execute()->fetchAll();
+          ->fields('prre', array('rstatus'))
+          ->condition('prre.rreid', $rreid)
+          ->execute()->fetchAll();
   $result = generate_array($query, 'rstatus');
   return $result[0];
 }
-

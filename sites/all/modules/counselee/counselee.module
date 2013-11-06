@@ -23,6 +23,14 @@ function counselee_menu() {
     'file' => 'files/dashboard.pages.inc',
     'weight' => 5,
   );
+  $items['accessdenied'] = array(
+    'title' => 'Access Denied',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'accessdenied',
+    'page arguments' => array(),
+    'access callback' => TRUE,
+    'file' => 'files/dashboard.pages.inc',
+  );
 
   $items['watchstatus'] = array(
     'title' => 'Watch status',

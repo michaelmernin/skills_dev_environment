@@ -5,6 +5,7 @@
  * 
  * 
  */
+defined('ANNUAL_TEMP') or define('ANNUAL_TEMP', 'Annual Performace Review Tempate');
 
 /**
  * callback URL:newreview/submitreview/%/%
@@ -25,7 +26,7 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
         $emp_array = explode_employee($employees);
         if ($radio_val == '0' && $emp_array['0'] != 'false') {
           //$radio_val == 0
-          $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST['review_type']);
+          $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST);
           if ($review_ids != '-1') {
 //            set_review_status($review_ids, 0);
             $message = 'Review created successful.';
@@ -39,18 +40,17 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
         }
         else if ($radio_val == '1') {
           //$radio_val == 1
-          $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST['review_type'], 1);
+          $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST, 1);
           if ($review_ids != '-1') {
 //            set_review_status($review_ids, 1);
             // notify method will be called here.
 //            counselee email
 //            dd('$my_address');
 //            dd($my_address);
-            $reviewurl = '';
             foreach ($review_ids as $review) {
               $counselee_address = select_email_from_prs_reviewers(array($review->employeeName));
               $address = $counselee_address[0]->mail;
-              $counselee_parems = array('username' => $review->employeeName, 'reviewname' => return_review_name($_POST), 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selectpeers/' . $review->rreid, 'reviewurl' => $reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
+              $counselee_parems = array('username' => $review->employeeName, 'reviewname' => return_review_name($_POST), 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selectpeers/' . $review->rreid, 'reviewurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . $review->reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
 //              dd('$counselee_parems');
 //              dd($counselee_parems);
               mail_sender_template_adapter($address, $counselee_parems, 0);
@@ -131,7 +131,7 @@ function submit_new_self_review() {
         $cur_counselee_name
       );
       if ($_POST['self_draft_flag'] == '1') {
-        $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST['review_type'], 1);
+        $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST, 1);
 //          set_review_status($review_ids, 1);
         if (module_exists('mail_sender') && module_enable(array('mail_sender'))) {
 
@@ -140,8 +140,7 @@ function submit_new_self_review() {
           $address = $my_address[0]->mail;
 //            dd('$address');
 //            dd($address);
-          $reviewurl = '';
-          $counselee_parems = array('username' => $cur_counselee_name, 'reviewname' => return_review_name($_POST), 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selectpeers/' . $review_ids[0]->rreid, 'reviewurl' => $reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
+          $counselee_parems = array('username' => $cur_counselee_name, 'reviewname' => return_review_name($_POST), 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selectpeers/' . $review_ids[0]->rreid, 'reviewurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . $review_ids[0]->reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
 //            dd('$counselee_parems');
 //            dd($counselee_parems);
           mail_sender_template_adapter($address, $counselee_parems, 0);
@@ -159,7 +158,7 @@ function submit_new_self_review() {
       }
       else {
         //self review in draft
-        $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST['review_type']);
+        $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST);
       }
       $message = 'Review created successful.';
       drupal_set_message($message, 'status');
@@ -446,7 +445,7 @@ function explode_employee($employees) {
  * @param array $employees, int $prid
  * @return array $review_ids
  */
-function insert_reviews_to_DB($employees, $prid, $reviewtype, $rstatus = 0) {
+function insert_reviews_to_DB($employees, $prid, $review_basic_info, $rstatus = 0) {
   $rreid = '';
   $review_ids = array();
   if ($rstatus == 0) {
@@ -458,19 +457,17 @@ function insert_reviews_to_DB($employees, $prid, $reviewtype, $rstatus = 0) {
           ))
           ->execute();
       // need create node later ==================================
-//      $nid_token = create_review_node($employee,$reviewtype);
-//      $nid = $nid_token[0];
-//      $token = $nid_token[1];
-//      dd($employee,'$employee');
-
-
-
+      $nid_token = create_review_node($employee, $review_basic_info);
+      $nid = $nid_token[0];
+      $token = $nid_token[1];
       $rpeid = db_insert('prs_rel_provider_employee')
           ->fields(array(
             'employeeName' => $employee,
             'providerName' => $employee,
             'prid' => $prid,
             'rreid' => $rreid,
+            'nid' => $nid,
+            'token' => $token,
           ))
           ->execute();
       if ($rreid != '-1' && $rpeid != '-1') {
@@ -502,16 +499,17 @@ function insert_reviews_to_DB($employees, $prid, $reviewtype, $rstatus = 0) {
           ))
           ->execute();
       // need create node later ==================================
-      //      $nid_token = create_review_node($employee,$reviewtype);
-//      $nid = $nid_token[0];
-//      $token = $nid_token[1];
-//      dd($employee, '$employee');
+      $nid_token = create_review_node($employee, $review_basic_info);
+      $nid = $nid_token[0];
+      $token = $nid_token[1];
       $rpeid = db_insert('prs_rel_provider_employee')
           ->fields(array(
             'employeeName' => $employee,
             'providerName' => $employee,
             'prid' => $prid,
             'rreid' => $rreid,
+            'nid' => $nid,
+            'token' => $token,
           ))
           ->execute();
       if ($rreid != '-1' && $rpeid != '-1') {
@@ -565,4 +563,48 @@ function return_review_name($date) {
       break;
   }
   return $date['review_start_date'] . '_' . $review_type;
+}
+
+/**
+ * create webform node when create a new review
+ * @param type $employee
+ * @param type $review_basic_info
+ * @return type
+ */
+function create_review_node($employee, $review_basic_info) {
+//  dd($reviewtype,'$reviewtype');
+  switch ($review_basic_info['review_type']) {
+    //0 for annual review;
+    case 0:
+
+      $nid_token = create_annual_review_node($employee, $review_basic_info);
+      break;
+    // 1 for project review;
+    case 1:
+      break;
+    // 2 for 3-month review
+    case 2:
+      break;
+  }
+  return $nid_token;
+}
+
+/**
+ * create a annual review node
+ * @param type $employee
+ * @param type $review_basic_info
+ */
+function create_annual_review_node($employee, $review_basic_info) {
+  $employee_name = format_login_name($employee);
+  $start_year = substr($review_basic_info['review_from_date'], 6, 9);
+  $end_year = substr($review_basic_info['review_to_date'], 6, 9);
+  if ($start_year === $end_year) {
+    $title = $employee_name . ' ' . $start_year . ' Annual Performace Review.';
+  }
+  else {
+    $title = $employee_name . ' ' . $start_year . '-' . $end_year . ' Annual Performace Review.';
+  }
+//  dd($title,'$title');
+  $nid_token = create_node($title, ANNUAL_TEMP);
+  return $nid_token;
 }

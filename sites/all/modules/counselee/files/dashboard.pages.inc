@@ -28,3 +28,7 @@ function show_pr_list() {
     }
 }
 
+function accessdenied() {
+    $pageContent = '';
+    return $pageContent;
+}

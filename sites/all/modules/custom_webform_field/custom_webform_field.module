@@ -1,0 +1,26 @@
+<?php
+/**
+ * @file 
+ * custom webform field here
+ */
+
+/**
+ * implement hook_webform_component_info()
+ * @return type 
+ */
+function custom_webform_field_webform_component_info() {
+  return array(
+    'lastyeargoal' => array(
+     'label' => t('Last Year Goals'),
+      'description' => t('show counselee\'s last year goal.'),
+      'features' => array(
+        'csv' => FALSE,
+        'required' => FALSE,
+        'conditional' => FALSE,
+        'group' => TRUE,
+        'title_display' => FALSE,
+      ),
+      'file' => 'files/lastyeargoal.inc',
+    ),
+  );
+}
