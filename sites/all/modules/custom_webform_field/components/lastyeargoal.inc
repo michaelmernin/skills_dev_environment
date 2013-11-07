@@ -157,8 +157,7 @@ function _webform_render_lastyeargoal($component, $value = NULL, $filter = TRUE)
     if ($sid != 0) {
       $cid = get_cid_by_string(($filter ? _webform_filter_xss($component['extra']['goal_string']) : $component['extra']['goal_string']), $last_nid);
       if ($cid != 0) {
-        $last_year_goal = get_last_year_goal($last_nid, $sid, $cid);
-        $display = $last_year_goal;
+        $display = get_last_year_goal($last_nid, $sid, $cid);
       }
       else {
         $display = 'config error! please connection Admin.';
@@ -254,7 +253,7 @@ function get_cid_by_string($string, $last_nid) {
   foreach ($result as $value) {
     $cid = $value->cid;
   }
-//dd($result,'$result');
+dd($cid,'$cid');
   return $cid;
 }
 

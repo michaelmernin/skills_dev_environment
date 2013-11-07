@@ -529,5 +529,26 @@ function get_last_sid_by_nid($nid) {
   foreach ($result as $value) {
     $sid = $value->sid;
   }
+//  dd($sid,'$sid');
+//  dd($nid,'$nid');
   return $sid;
+}
+
+/**
+ * get_provider_info
+ * @param type $rreid
+ * @param type $provider_name
+ * @return type
+ */
+function get_provider_info($rreid, $provider_name = 0) {
+  $query = db_select('prs_rel_provider_employee', 'prpe');
+  $query->fields('prpe');
+  $query->condition('prpe.rreid', $rreid);
+  if ($provider_name != 0) {
+    $query->condition('prpe.providerName', $provider_name);
+  }else{
+    $query->where('prpe.employeeName=prpe.providerName');
+  }
+  $result = $query->execute()->fetchAll();
+  return $result;
 }

@@ -103,7 +103,7 @@ function counselee_block_info() {
   );
   // $blocks['select_peers'] = array(
   //   'info' => t('Select Peers'),
-    // 'cache' => DRUPAL_NO_CACHE, // no cache
+  // 'cache' => DRUPAL_NO_CACHE, // no cache
   //   'cache' => DRUPAL_NO_CACHE,
 // );
   return $blocks;
@@ -147,7 +147,7 @@ function counselee_theme() {
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'watch_basic_info',),
     'self_assessment' => array(
-      'variables' => array('rreid' => NULL),
+      'variables' => array('rreid' => NULL, 'node' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'self_assessment',),
     'view_assessment' => array(
@@ -232,7 +232,7 @@ function counselee_select_peers($userType, $userName) {
 
     $dataset = $counselor_query->execute()->fetchAll();
   }
-  
+
   $result = array();
   $index = 0;
   foreach ($dataset as $node) {
@@ -279,7 +279,7 @@ function counselee_do_peersreview($userName) {
   $peers_query->join('prs_general', 'general', 'general.prid = provider.prid');
   $peers_query->join('prs_rel_review_employee', 'review', 'review.rreid = provider.rreid');
   $peers_query->addField('general', 'type');
-  $peers_query->addField('provider','token');
+  $peers_query->addField('provider', 'token');
   $peers_query->addField('provider', 'employeeName');
   $peers_query->addField('provider', 'rpeid');
   $peers_query->addField('general', 'description');
@@ -297,11 +297,11 @@ function counselee_do_peersreview($userName) {
     $description = $node->description;
     $token = $node->token;
     $temp = array('employeeName' => $employeeName,
-      'rpeid' => $rpeid, 
+      'rpeid' => $rpeid,
       'reviewType' => $reviewtype,
       'description' => $description,
-      'token' =>$token,
-        );
+      'token' => $token,
+    );
     $result[$index++] = $temp;
   }
   return $result;
@@ -428,7 +428,7 @@ function print_render_tabs($tabs) {
   $tmp = $tabs['tabs']['output']['2']['#link']['href'];
   $pos = strrpos($tmp, '/');
   // prepare the arguments
-  $rreid = substr($tmp, $pos+1);
+  $rreid = substr($tmp, $pos + 1);
   $userId_flag = get_user_identity($rreid);
   $rstatus = get_review_status_from_db($rreid);
   print render($tabs['tabs']['output']['0']);
@@ -450,7 +450,7 @@ function print_render_tabs($tabs) {
  * this func is to judge whether the self assessment is editable according to the login user identity and the review status.
  * @param int $rreid
  * @return bool
-**/
+ * */
 function _is_assessment_editable($userId_flag, $rstatus) {
   // while login user is the counselee of review and status is REVIEW_IN_DRAFT
   if ($userId_flag == 0 && $rstatus == 1) {
@@ -465,7 +465,7 @@ function _is_assessment_editable($userId_flag, $rstatus) {
  * _is_assessment_visible_for_counselor
  * this func is to identify whether the self assessment is visible for counselor. When the status is 
  * REVIEW_IN_DRAFT, the result is no
-**/
+ * */
 function _is_assessment_visible_for_counselor($rstatus) {
   if ($rstatus > 1 && $rstatus <= 6) {
     return TRUE;

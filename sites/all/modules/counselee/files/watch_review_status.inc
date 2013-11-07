@@ -29,47 +29,67 @@ function watch_basic_information($review_id) {
  * in order to differ page display according to the role of the login userId_flag
  * */
 function display_select_peers_page($rreid = NULL) {
-    access_authen($rreid);
-    $reviewee = get_reviewee_from_db($rreid);
-    $all_employee_array = get_all_peer_candidates_from_db($rreid);
-    $selected_peers_array = get_selected_peers_from_db($rreid);
-    $unselected_peers_array = get_unselected_peers_from_db($reviewee, $selected_peers_array);
-    $select_peers_status = get_peers_status($rreid);
-    $userId_flag = get_user_identity($rreid);
-    $pageContent = display_peer_selection_page($rreid, $userId_flag, $all_employee_array, $selected_peers_array, $unselected_peers_array, $select_peers_status);
+  access_authen($rreid);
+  $reviewee = get_reviewee_from_db($rreid);
+  $all_employee_array = get_all_peer_candidates_from_db($rreid);
+  $selected_peers_array = get_selected_peers_from_db($rreid);
+  $unselected_peers_array = get_unselected_peers_from_db($reviewee, $selected_peers_array);
+  $select_peers_status = get_peers_status($rreid);
+  $userId_flag = get_user_identity($rreid);
+  $pageContent = display_peer_selection_page($rreid, $userId_flag, $all_employee_array, $selected_peers_array, $unselected_peers_array, $select_peers_status);
   return $pageContent;
 }
 
 /**
  * @file
  * Page callback function for self assessment.
-**/
+ * */
 function display_self_assessment($rreid = NULL) {
-  access_authen($rreid);
+//  access_authen($rreid);
   // all the page display, access control and other function will be implemented later!
+  $typeset = get_basic_review_information($rreid);
+  if (count($typeset)) {
+    $type = $typeset[0]->type;
+  }
+  else {
+    $type = 0;
+  }
+//  dd($type,'$type');
+//  dd(get_user_identity_by_nid($node->nid));
+  if ($type == 0 && get_user_identity($rreid) != 0) {
+    drupal_goto('mydashboard');
+  }
+  $result = get_provider_info($rreid);
+  if (count($result)) {
+    $nid = $result[0]->nid;
+    $node = node_load($nid);
+//    dd($node,'$node');
+  }
+
   $pageContent = theme('self_assessment', array(
-    'rreid' => $rreid
-    ));
+    'rreid' => $rreid,
+    'node' => $node
+  ));
   return $pageContent;
 }
 
 /**
  * @file 
  * Page callback function for view assessment.
-**/
+ * */
 function load_self_assessment($rreid) {
   access_authen($rreid);
   // all the page display, access control and other function will be implemented later!
   $pageContent = theme('view_assessment', array(
     'rreid' => $rreid
-    ));
-  return $pageContent;  
+  ));
+  return $pageContent;
 }
 
 /**
  * display_firsttime_select
  * The first time select peer, depending the role of login user, func returns different $spstatus
-**/
+ * */
 function display_firsttime_select($rreid, $all_employee_array, $spstatus, $userId_flag, $select_peers_status) {
   return theme('select_peers', array(
     'rreid' => $rreid,
