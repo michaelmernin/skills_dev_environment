@@ -7,6 +7,8 @@
  * 
  * 
  */
+defined('ANNUAL_TEMP') or define('ANNUAL_TEMP', 'Annual Performace Review Tempate');
+defined('GOAL_STRING') or define('GOAL_STRING', 'goals_text');
 
 /**
  * return my counselor and gm name
@@ -434,6 +436,7 @@ function get_temp_node_id($temp_name) {
 
 function change_redirect_path($nid) {
   $url = 'feedbacksubmitsuccess';
+  // you can change here if you want to copy template totally, you can change here to query first
   $allow_draft = 1;
   $submit_limit = 1;
   $query = db_update('webform');
@@ -463,4 +466,68 @@ function get_review_status_from_db($rreid) {
           ->execute()->fetchAll();
   $result = generate_array($query, 'rstatus');
   return $result[0];
+}
+
+function get_user_identity_by_nid($nid) {
+  $cur_user_name = get_current_user_name();
+  $reviewee = get_reviewee_from_db_by_nid($nid);
+  if ($reviewee != 'template_access') {
+    $counselor = get_counselor($reviewee);
+    if ($reviewee == $cur_user_name) {
+      return 0;
+    }
+    else if ($cur_user_name == $counselor) {
+      return 1;
+    }
+    else {
+      return -1;
+    }
+  }
+  else {
+    return 0;
+  }
+}
+
+function get_reviewee_from_db_by_nid($nid) {
+  $query = db_select('prs_rel_provider_employee', 'prpe');
+  $query->fields('prpe', array('employeeName'));
+  $query->condition('prpe.nid', $nid, '=');
+  $result = $query->execute()->fetchAll();
+  if (count($result)) {
+    return $result[0]->employeeName;
+  }
+  else {
+    //template access
+    return 'template_access';
+  }
+}
+
+function get_basic_review_information_by_nid($nid) {
+
+  $query = db_select('prs_rel_provider_employee', 'prpe');
+  $query->join('prs_general', 'pg', 'pg.prid=prpe.prid');
+//  $query->fields('re', array('employeeName', 'rreid', 'rstatus'));
+  $query->fields('pg', array('period_start'));
+  $query->addField('pg', 'period_end');
+  $query->addField('pg', 'time_frame_from');
+  $query->addField('pg', 'time_frame_to');
+  $query->addField('pg', 'project_name');
+  $query->addField('pg', 'type');
+  $query->addField('pg', 'description');
+  $query->condition('prpe.nid', $nid);
+  $result = $query->execute()->fetchAll();
+  return $result;
+}
+
+function get_last_sid_by_nid($nid) {
+  $sid = 0;
+  $query = db_select('webform_submissions', 'ws');
+  $query->fields('ws', array('sid'));
+  $query->condition('ws.nid', $nid);
+  $query->condition('ws.is_draft', 0);
+  $result = $query->execute()->fetchAll();
+  foreach ($result as $value) {
+    $sid = $value->sid;
+  }
+  return $sid;
 }

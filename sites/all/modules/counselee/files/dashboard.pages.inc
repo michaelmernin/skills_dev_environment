@@ -11,8 +11,11 @@
  * @return string 
  */
 function dashboard_display() {
-    $pageContent = '';
-    return $pageContent;
+    if (!user_is_anonymous()) {
+        return '';
+    } else {
+        drupal_goto('login');
+    }
 
 }
 

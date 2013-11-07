@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Customize the display of a complete webform.
@@ -18,20 +17,53 @@
  */
 ?>
 <div id="wrap" style="padding-top: 20px;" class="container">
-<?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
-<?php print $messages; ?>
-<?php 
+  <?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
+  <?php print $messages; ?>
+  <?php
+//dd($node,'node');
+  $typeset = get_basic_review_information_by_nid($node->nid);
+  if (count($typeset)) {
+    $type = $typeset[0]->type;
+  }
+  else {
+    $type = 0;
+  }
+//  dd($type,'$type');
+//  dd(get_user_identity_by_nid($node->nid));
+  if ($type == 0 && get_user_identity_by_nid($node->nid) != 0) {
+    drupal_goto('mydashboard');
+  }
 //dd($page['content']['system_main']['nodes'][3]['webform']['#node']->webform['components']);
 //print render($page['content']['system_main']['nodes'][3]['webform']['#node']->webform['components']);
 //dd($page['content'],'====================');
-print render($page['content']);
+  print render($page['content']);
 // Print out the main part of the form.
   // Feel free to break this up and move the pieces within the array.
 //  print drupal_render($form['submitted']);
 //
 //  // Always print out the entire $form. This renders the remaining pieces of the
 //  // form that haven't yet been rendered above.
-//  print drupal_render_children($form);?>
+//  print drupal_render_children($form);
+  ?>
 
 
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <div id="modal-container-1752468" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="left: auto; width: auto; margin-left: 10%; margin-right: 10%;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="close_btn" value="0">×</button>
+        <h3 id="myModalLabel">
+          Performance Rating Scale
+        </h3>
+      </div>
+      <div class="modal-body">
+        <img class="Performance-Rating-Scale" style="width: auto; height: auto;" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/Performance_Rating_Scale.jpg' ?>">
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+      </div>
+    </div>
+  </div>
 </div>

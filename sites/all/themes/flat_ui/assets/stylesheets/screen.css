@@ -14092,3 +14092,13 @@ div.error {
     font-size: 15px;
 }
 
+.wfm-item .form-item.webform-component {
+    float: left;
+    margin-right: 5%;
+}
+.wfm-remove.form-submit.btn.btn-large.ajax-processed {
+    padding: 1px 5px 1px 5px;
+}
+.wfm-add.form-submit.btn.btn-large.ajax-processed {
+    padding: 5px 4px;
+}

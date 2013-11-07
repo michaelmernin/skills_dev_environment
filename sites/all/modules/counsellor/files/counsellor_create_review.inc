@@ -5,7 +5,6 @@
  * 
  * 
  */
-defined('ANNUAL_TEMP') or define('ANNUAL_TEMP', 'Annual Performace Review Tempate');
 
 /**
  * callback URL:newreview/submitreview/%/%
@@ -355,7 +354,8 @@ function set_fields_array($general_info, &$fields_array) {
 //  }
   //description
 //  if (isset($general_info['review_from_description'])) {
-  $description = check_plain($general_info['review_start_date'] . '_' . $review_type);
+  $end_year = substr($general_info['review_to_date'], 6, 9);
+  $description = check_plain($end_year . '_' . $review_type);
   $fields_array['description'] = $description;
 //  }
   if (isset($starttime) && isset($endtime) && isset($periodFtime) && isset($periodTTime)) {
@@ -598,13 +598,14 @@ function create_annual_review_node($employee, $review_basic_info) {
   $employee_name = format_login_name($employee);
   $start_year = substr($review_basic_info['review_from_date'], 6, 9);
   $end_year = substr($review_basic_info['review_to_date'], 6, 9);
-  if ($start_year === $end_year) {
-    $title = $employee_name . ' ' . $start_year . ' Annual Performace Review.';
-  }
-  else {
-    $title = $employee_name . ' ' . $start_year . '-' . $end_year . ' Annual Performace Review.';
-  }
+//  if ($start_year === $end_year) {
+//    $title = $employee_name . ' ' . $end_year . ' Annual Performace Review.';
+//  }
+//  else {
+//    $title = $employee_name . ' ' . $start_year . '-' . $end_year . ' Annual Performace Review.';
+//  }
 //  dd($title,'$title');
+  $title = $employee_name . ' ' . $end_year . ' Annual Performace Review.';
   $nid_token = create_node($title, ANNUAL_TEMP);
   return $nid_token;
 }
