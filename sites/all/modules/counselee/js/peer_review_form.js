@@ -38,7 +38,12 @@ var teamwork_id = new Array();
 teamwork_id[0] = teamwork_id_pre + 'teamwork';
 teamwork_id[1] = teamwork_id_pre + 'customer-focus';
 
-
+var composite_score_id = new Array();
+composite_score_id[0] = '#composite_technical_abilities';
+composite_score_id[1] = '#composite_consulting_skills';
+composite_score_id[2] = '#composite_professionalism';
+composite_score_id[3] = '#composite_leadership';
+composite_score_id[4] = '#composite_teamwork';
 
 var overall_reviewer_composite_scores_id = new Array();
 overall_reviewer_composite_scores_id[0] = '#rating_technical_abilities';
@@ -55,7 +60,7 @@ var overall_reviewer_scores_average_id = '#rating_all';
  * */
 function IsNum(str)
 {
-    if (str != null && str != "" && str!=' ')
+    if (str != null && str != "" && str != ' ')
     {
         return !isNaN(str);
     }
@@ -70,7 +75,7 @@ function IsNum(str)
  * @type string reviewer_composite_scores_id  The html element that need to change;
  * 
  * */
-function peer_review_select_value_change(category, reviewer_composite_scores_id)
+function peer_review_select_value_change(category, index)
 {
     var i = 0, count = 0, sum = 0, value;
     for (i = 0; i < category.length; i++)
@@ -85,11 +90,14 @@ function peer_review_select_value_change(category, reviewer_composite_scores_id)
     if (count != 0)
     {
         var score_rating = sum / count;
-        jQuery(reviewer_composite_scores_id).html(score_rating);
+        jQuery(composite_score_id[index]).html(score_rating);
+        jQuery(overall_reviewer_composite_scores_id[index]).html(score_rating);
+
     }
     else
     {
-        jQuery(reviewer_composite_scores_id).html('');
+        jQuery(composite_score_id[index]).html('');
+        jQuery(overall_reviewer_composite_scores_id[index]).html('');
     }
     peer_review_overall_score_calculate(overall_reviewer_composite_scores_id, overall_reviewer_scores_average_id);
 }
@@ -97,7 +105,7 @@ function peer_review_select_value_change(category, reviewer_composite_scores_id)
 /**
  * Calculate the overall score average
  * */
-function peer_review_overall_score_calculate(category, reviewer_composite_scores_id)
+function peer_review_overall_score_calculate(category, overall_rating)
 {
     var i = 0, count = 0, sum = 0, value;
     for (i = 0; i < category.length; i++)
@@ -113,12 +121,11 @@ function peer_review_overall_score_calculate(category, reviewer_composite_scores
     if (count != 0)
     {
         var score_rating = sum / count;
-        jQuery(reviewer_composite_scores_id).html(score_rating);
-        jQuery('#peer_review_composite_technical').html(score_rating);
+        jQuery(overall_rating).html(score_rating);
     }
     else
     {
-        jQuery(reviewer_composite_scores_id).html('');
+        jQuery(overall_rating).html('');
     }
 
 }
@@ -142,30 +149,27 @@ function register_peer_review_select_onchange_event(category, onchangeEvent)
  **/
 function peer_review_technical_value_change()
 {
-    peer_review_select_value_change(technical_abilities_id, overall_reviewer_composite_scores_id[0]);
+    peer_review_select_value_change(technical_abilities_id, 0);
 }
 function peer_review_consulting_value_change()
 {
-    peer_review_select_value_change(consulting_skills_id, overall_reviewer_composite_scores_id[1]);
+    peer_review_select_value_change(consulting_skills_id, 1);
 }
 function peer_review_professionalism_value_change()
 {
-    peer_review_select_value_change(professionalism_id, overall_reviewer_composite_scores_id[2]);
+    peer_review_select_value_change(professionalism_id, 2);
 }
 function peer_review_leadership_value_change()
 {
-    peer_review_select_value_change(leadership_id, overall_reviewer_composite_scores_id[3]);
+    peer_review_select_value_change(leadership_id, 3);
 }
 function peer_review_teamwork_value_change()
 {
-    peer_review_select_value_change(teamwork_id, overall_reviewer_composite_scores_id[4]);
+    peer_review_select_value_change(teamwork_id, 4);
 }
-
 
 var composite_score_technical = '<table class="table"><thead><tr><th>Composite Score: Core Competencies</th><th id = "peer_review_composite_technical"></th></tr></thead></table>';
 jQuery('#peer_review_composite_score_technical').html(composite_score_technical);
-
-
 
 register_peer_review_select_onchange_event(technical_abilities_id, peer_review_technical_value_change);
 register_peer_review_select_onchange_event(consulting_skills_id, peer_review_consulting_value_change);

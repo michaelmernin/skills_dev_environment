@@ -257,7 +257,7 @@ function counselee_select_peers($userType, $userName) {
 
     $dataset = $counselor_query->execute()->fetchAll();
   }
-
+  
   $result = array();
   $index = 0;
   foreach ($dataset as $node) {

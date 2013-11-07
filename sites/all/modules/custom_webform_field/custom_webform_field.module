@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file 
  * custom webform field here
@@ -11,7 +12,7 @@
 function custom_webform_field_webform_component_info() {
   return array(
     'lastyeargoal' => array(
-     'label' => t('Last Year Goals'),
+      'label' => t('Last Year Goals'),
       'description' => t('show counselee\'s last year goal.'),
       'features' => array(
         'csv' => FALSE,
@@ -20,7 +21,44 @@ function custom_webform_field_webform_component_info() {
         'group' => TRUE,
         'title_display' => FALSE,
       ),
-      'file' => 'files/lastyeargoal.inc',
+      'file' => 'components/lastyeargoal.inc',
     ),
+    'compositescore' => array(
+      'label' => t('Composite Score'),
+      'description' => t('Display the the score calculate result'),
+      'features' => array(
+        'csv' => FALSE,
+        'default_value' => FALSE,
+        'required' => FALSE,
+        'conditional' => FALSE,
+        'title_display' => FALSE,
+      ),
+      'file' => 'components/compositescore.inc',
+    ),
+    'compositescore' => array(
+      'label' => t('Basic Information'),
+      'description' => t('Display the peer review form basic information'),
+      'features' => array(
+        'csv' => FALSE,
+        'default_value' => FALSE,
+        'required' => FALSE,
+        'conditional' => FALSE,
+        'title_display' => FALSE,
+      ),
+      'file' => 'components/basic_information.inc',
+    ),
+  );
+}
+
+/**
+ * Implement hook_theme
+ * 
+ */
+function custom_webform_field_theme() {
+  return array(
+    'peer-review-form' => array(
+      'variables' => array('basic_info' => null),
+      'path' => drupal_get_path('module', 'custom_webform_field') . '/templates',
+      'template' => 'peer-review-form',),
   );
 }
