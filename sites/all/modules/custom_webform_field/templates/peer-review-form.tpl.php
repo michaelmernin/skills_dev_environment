@@ -39,15 +39,15 @@
 
 
 <script>
-
-
-
   var basic_info_json = '<?php print json_encode($basic_info); ?>';
   var basic_info = eval(basic_info_json);
-  jQuery('#basic_info_colleague').html(basic_info[0].colleague);
-  jQuery('#basic_info_counselor').html(basic_info[0].counselor);
-  jQuery('#basic_info_reviewer').html(basic_info[0].reviewer);
 
+  if (basic_info.length == 1)
+  {
+    jQuery('#basic_info_colleague').html(basic_info[0].colleague);
+    jQuery('#basic_info_counselor').html(basic_info[0].counselor);
+    jQuery('#basic_info_reviewer').html(basic_info[0].reviewer);
+  }
 </script>
 
 

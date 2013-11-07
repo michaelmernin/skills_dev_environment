@@ -63,22 +63,6 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'files/watch_review_status.inc',
   );
-  $items['peer-review-basic-information'] = array(
-    'title' => 'Basic Information',
-    'page callback' => 'get_peer_basic_information',
-    'page arguments' => array(),
-    'access arguments' => array('access to peer review'),
-    'type' => MENU_CALLBACK,
-    'file' =>'files/peer_review_form.inc'
-  );
-  $items['peer-review-score-overall'] = array(
-    'title' => 'Overall Rating',
-    'page callback' => 'get_peer_review_score_overall',
-    'page arguments' => array(),
-    'access arguments' => array('access to peer review'),
-    'type' => MENU_CALLBACK,
-    'file'=> 'files/peer_review_form.inc'
-  );
   $items['watchstatus/selfassessment/%'] = array(
     'title' => 'Self Assessment',
     'page callback' => 'display_self_assessment',
@@ -158,19 +142,10 @@ function counselee_theme() {
       'variables' => array('all_employee_array' => NULL, 'selected_array' => NULL, 'unselected_array' => NULL, 'userId_flag' => NULL, 'peers_status' => NULL,),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'select_peers',),
-
     'watch_basic_info' => array(
       'variables' => array('basic_info' => NULL, 'myInfo' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'watch_basic_info',),
-    'peer-review-form' => array(
-      'variables' => array('basic_info' => null),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'peer-review-form',),
-    'peer-review-form-overall' => array(
-      'variables' => array('score_overall' => null),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'peer-review-form-overall',),
     'self_assessment' => array(
       'variables' => array('rreid' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',

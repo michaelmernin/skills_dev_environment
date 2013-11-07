@@ -1,6 +1,3 @@
-
-
-//
 var technical_abilities_id_pre = '#edit-submitted-performance-evaluation-technical-abilities-';
 var technical_abilities_id = new Array();
 technical_abilities_id[0] = technical_abilities_id_pre + 'productivity';
@@ -89,7 +86,7 @@ function peer_review_select_value_change(category, index)
     }
     if (count != 0)
     {
-        var score_rating = sum / count;
+        var score_rating = (sum / count).toFixed(2);
         jQuery(composite_score_id[index]).html(score_rating);
         jQuery(overall_reviewer_composite_scores_id[index]).html(score_rating);
 
@@ -120,7 +117,7 @@ function peer_review_overall_score_calculate(category, overall_rating)
     }
     if (count != 0)
     {
-        var score_rating = sum / count;
+        var score_rating = (sum / count).toFixed(2);
         jQuery(overall_rating).html(score_rating);
     }
     else

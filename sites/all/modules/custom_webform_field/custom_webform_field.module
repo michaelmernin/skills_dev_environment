@@ -35,7 +35,7 @@ function custom_webform_field_webform_component_info() {
       ),
       'file' => 'components/compositescore.inc',
     ),
-    'compositescore' => array(
+    'basicinformation' => array(
       'label' => t('Basic Information'),
       'description' => t('Display the peer review form basic information'),
       'features' => array(
@@ -45,7 +45,19 @@ function custom_webform_field_webform_component_info() {
         'conditional' => FALSE,
         'title_display' => FALSE,
       ),
-      'file' => 'components/basic_information.inc',
+      'file' => 'components/basicinformation.inc',
+    ),
+    'overallsocre' => array(
+      'label' => t('Overall Composite Scores'),
+      'description' => t('Display the peer review form basic information'),
+      'features' => array(
+        'csv' => FALSE,
+        'default_value' => FALSE,
+        'required' => FALSE,
+        'conditional' => FALSE,
+        'title_display' => FALSE,
+      ),
+      'file' => 'components/overallsocre.inc',
     ),
   );
 }
@@ -60,5 +72,10 @@ function custom_webform_field_theme() {
       'variables' => array('basic_info' => null),
       'path' => drupal_get_path('module', 'custom_webform_field') . '/templates',
       'template' => 'peer-review-form',),
+    'peer-review-form-overall' => array(
+      'variables' => array('score_overall' => null),
+      'path' => drupal_get_path('module', 'custom_webform_field') . '/templates',
+      'template' => 'peer-review-form-overall',),
   );
 }
+
