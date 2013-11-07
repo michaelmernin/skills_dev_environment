@@ -253,7 +253,7 @@ function get_cid_by_string($string, $last_nid) {
   foreach ($result as $value) {
     $cid = $value->cid;
   }
-dd($cid,'$cid');
+//dd($cid,'$cid');
   return $cid;
 }
 
