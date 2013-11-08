@@ -64,9 +64,6 @@ function _webform_render_overallscore($component, $value = NULL, $filter = TRUE)
   else {
     $content = get_self_review_score_overall();
   }
-  
-  dd($content);
-
   $element = array(
     '#type' => 'Overall Composite Scores',
     '#title' => $filter ? webform_filter_xss($component['name']) : $component['name'],
