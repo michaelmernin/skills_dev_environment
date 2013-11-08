@@ -30,9 +30,9 @@
   }
 //  dd($type,'$type');
 //  dd(get_user_identity_by_nid($node->nid));
-  if ($type == 0 && get_user_identity_by_nid($node->nid) != 0) {
-    drupal_goto('mydashboard');
-  }
+//  if ($type == 0 && get_user_identity_by_nid($node->nid) != 0) {
+//    drupal_goto('mydashboard');
+//  }
 //dd($page['content']['system_main']['nodes'][3]['webform']['#node']->webform['components']);
 //print render($page['content']['system_main']['nodes'][3]['webform']['#node']->webform['components']);
 //dd($page['content'],'====================');
