@@ -11,9 +11,6 @@
       <th>
         Reviewer
       </th>
-      <th>
-        Overall Rating
-    </tr>
   </thead>
 
   <tbody id="peer-review-form-overall-tbody">
@@ -30,8 +27,7 @@
   for (i = 0; i < peer_review_overall.length; i++)
   {
     obj = peer_review_overall[i];
-    tr = '<tr><td>' + obj.category + '</td><td>' + obj.reviewer
-            + '</td> <td id=' + obj.tdid + '> ' + obj.rating + '</td></tr>';
+    tr = '<tr><td>' + obj.category + '</td><td id=' + obj.tdid + '> ' + obj.rating + '</td></tr>';
     tbody += tr;
   }
   jQuery('#peer-review-form-overall-tbody').html(tbody);

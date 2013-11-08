@@ -47,7 +47,7 @@ function custom_webform_field_webform_component_info() {
       ),
       'file' => 'components/basicinformation.inc',
     ),
-    'overallsocre' => array(
+    'overallscore' => array(
       'label' => t('Overall Composite Scores'),
       'description' => t('Display the peer review form basic information'),
       'features' => array(
@@ -57,7 +57,7 @@ function custom_webform_field_webform_component_info() {
         'conditional' => FALSE,
         'title_display' => FALSE,
       ),
-      'file' => 'components/overallsocre.inc',
+      'file' => 'components/overallscore.inc',
     ),
   );
 }

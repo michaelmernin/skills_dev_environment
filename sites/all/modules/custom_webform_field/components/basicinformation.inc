@@ -52,6 +52,36 @@ function _webform_edit_basicinformation($component) {
 }
 
 /**
+ * Get peer reiview form basic informaiton 
+ * 
+ * @param string $nid The webform node id
+ * 
+ */
+function get_review_basic_information_by_nid($nid) {
+  $query = db_select('prs_rel_provider_employee', 'provider');
+  $query->join('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName = provider.employeeName');
+  $query->addField('provider', 'employeeName', 'colleague');
+  $query->addField('relation', 'counselorName', 'counselor');
+  $query->addField('provider', 'providerName', 'reviewer');
+  $query->condition('provider.nid', $nid);
+  $result = $query->execute()->fetchAll();
+
+  $result_set = array();
+  $index = 0;
+
+  foreach ($result as $value) {
+    $temp = array(
+      'colleague' => $value->colleague,
+      'counselor' => $value->counselor,
+      'reviewer' => $value->reviewer,
+    );
+    $result_set[$index++] = $temp;
+  }
+  return $result_set;
+}
+
+
+/**
  * Implements _webform_render_component().
  */
 function _webform_render_basicinformation($component, $value = NULL, $filter = TRUE) {
@@ -107,31 +137,3 @@ function _webform_display_basicinformation($component, $value, $format = 'html')
   return $element;
 }
 
-/**
- * Get peer reiview form basic informaiton 
- * 
- * @param string $nid The webform node id
- * 
- */
-function get_review_basic_information_by_nid($nid) {
-  $query = db_select('prs_rel_provider_employee', 'provider');
-  $query->join('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName = provider.employeeName');
-  $query->addField('provider', 'employeeName', 'colleague');
-  $query->addField('relation', 'counselorName', 'counselor');
-  $query->addField('provider', 'providerName', 'reviewer');
-  $query->condition('provider.nid', $nid);
-  $result = $query->execute()->fetchAll();
-
-  $result_set = array();
-  $index = 0;
-
-  foreach ($result as $value) {
-    $temp = array(
-      'colleague' => $value->colleague,
-      'counselor' => $value->counselor,
-      'reviewer' => $value->reviewer,
-    );
-    $result_set[$index++] = $temp;
-  }
-  return $result_set;
-}

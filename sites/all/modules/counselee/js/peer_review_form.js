@@ -57,7 +57,7 @@ var overall_reviewer_scores_average_id = '#rating_all';
  * */
 function IsNum(str)
 {
-    if (str != null && str != "" && str != ' ')
+    if (str != null && str != "" && str != ' ' && str!='0')
     {
         return !isNaN(str);
     }
@@ -78,7 +78,7 @@ function peer_review_select_value_change(category, index)
     for (i = 0; i < category.length; i++)
     {
         value = jQuery(category[i]).find('option:selected').val();
-        if (IsNum(value))
+        if (IsNum(value) && value!='0')
         {
             count++;
             sum += parseInt(value);
@@ -174,3 +174,8 @@ register_peer_review_select_onchange_event(professionalism_id, peer_review_profe
 register_peer_review_select_onchange_event(leadership_id, peer_review_leadership_value_change);
 register_peer_review_select_onchange_event(teamwork_id, peer_review_teamwork_value_change);
 
+peer_review_technical_value_change();
+peer_review_consulting_value_change();
+peer_review_professionalism_value_change();
+peer_review_leadership_value_change();
+peer_review_teamwork_value_change();
