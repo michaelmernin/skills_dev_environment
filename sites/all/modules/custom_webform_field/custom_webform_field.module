@@ -73,7 +73,7 @@ function custom_webform_field_theme() {
       'path' => drupal_get_path('module', 'custom_webform_field') . '/templates',
       'template' => 'peer-review-form',),
     'peer-review-form-overall' => array(
-      'variables' => array('score_overall' => null),
+      'variables' => array('score_overall' => null, 'table_head' => null),
       'path' => drupal_get_path('module', 'custom_webform_field') . '/templates',
       'template' => 'peer-review-form-overall',),
   );

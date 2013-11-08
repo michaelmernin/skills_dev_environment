@@ -64,6 +64,8 @@ function _webform_render_overallscore($component, $value = NULL, $filter = TRUE)
   else {
     $content = get_self_review_score_overall();
   }
+  
+  dd($content);
 
   $element = array(
     '#type' => 'Overall Composite Scores',
@@ -113,6 +115,8 @@ function _webform_display_overallscore($component, $value, $format = 'html') {
 
 function get_peer_review_score_overall() {
 
+  $table_head = array('Reviewer Composite Scores', 'Reviewer');
+
   $peer_review_overall [0] = array('category' => 'Technical Abilities', 'tdid' => 'rating_technical_abilities');
   $peer_review_overall [1] = array('category' => 'Consulting Skills', 'tdid' => 'rating_consulting_skills');
   $peer_review_overall [2] = array('category' => 'Professionalism', 'tdid' => 'rating_professionalism');
@@ -123,11 +127,13 @@ function get_peer_review_score_overall() {
   for ($i = 0; $i < count($peer_review_overall); $i++) {
     $peer_review_overall[$i]['rating'] = '';
   }
-  $content = theme('peer-review-form-overall', array('score_overall' => $peer_review_overall));
+  $content = theme('peer-review-form-overall', array('score_overall' => $peer_review_overall, 'table_head' => $table_head));
   return $content;
 }
 
 function get_self_review_score_overall() {
+
+  $table_head = array('Reviewer Composite Scores', 'Self');
 
   $self_review_overall [0] = array('category' => 'Client Engagements', 'tdid' => 'rating_client_engagements');
   $self_review_overall [1] = array('category' => 'Technical Abilities', 'tdid' => 'rating_technical_abilities');
@@ -141,6 +147,6 @@ function get_self_review_score_overall() {
   for ($i = 0; $i < count($self_review_overall); $i++) {
     $self_review_overall[$i]['rating'] = '';
   }
-  $content = theme('peer-review-form-overall', array('score_overall' => $self_review_overall));
+  $content = theme('peer-review-form-overall', array('score_overall' => $self_review_overall, 'table_head' => $table_head));
   return $content;
 }

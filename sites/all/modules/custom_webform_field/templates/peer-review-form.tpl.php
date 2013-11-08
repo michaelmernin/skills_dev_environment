@@ -29,8 +29,8 @@
       <td>
         <h6> Date</h6>
       </td>
-      <td>
-        <input id="basic_info_date" type='text' value=''/>
+      <td id="basic_info_date">
+       
       </td>
     </tr>
 
@@ -48,6 +48,9 @@
     jQuery('#basic_info_counselor').html(basic_info[0].counselor);
     jQuery('#basic_info_reviewer').html(basic_info[0].reviewer);
   }
+  var showtime = '<?php print date("Y-m-d H:i:s"); ?> ';
+  jQuery('#basic_info_date').html(showtime);
+
 </script>
 
 

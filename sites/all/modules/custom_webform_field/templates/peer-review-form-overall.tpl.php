@@ -3,14 +3,8 @@
     <h3>Overall Evaluation</h3>
   </caption>
 
-  <thead>
-    <tr>
-      <th>
-        Reviewer Composite Scores
-      </th>
-      <th>
-        Reviewer
-      </th>
+  <thead id='peer-review-form-overall-thead'>
+
   </thead>
 
   <tbody id="peer-review-form-overall-tbody">
@@ -19,6 +13,11 @@
 
 <script>
 
+
+  var head_json = '<?php print json_encode($table_head) ?>';
+  var head = eval(head_json);
+  var thead = '<tr><th>' + head[0] + '</th><th>' + head[1] + '</th>';
+  jQuery('#peer-review-form-overall-thead').html(thead);
 
   var peer_review_overall_json = '<?php print json_encode($score_overall); ?>';
   var peer_review_overall = eval(peer_review_overall_json);
