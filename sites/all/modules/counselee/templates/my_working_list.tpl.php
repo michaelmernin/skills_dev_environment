@@ -90,7 +90,8 @@
       description = obj.description;
       token = obj.token;
 
-      url = "./"+token;
+      basePath = '<?php print $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path();?>';
+      url = basePath+token;
       if (name == '<?php print get_current_user_name(); ?>')
       {
         li = " <li> <a href='" + url + "'>" + description + " is started.Please fill up your Self-Review form.(" + reviewName(reviewType) + ")</a> </li>";

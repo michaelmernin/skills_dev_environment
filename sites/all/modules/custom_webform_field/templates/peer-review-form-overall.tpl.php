@@ -1,7 +1,4 @@
 <table class="table">
-  <caption>
-    <h3>Overall Evaluation</h3>
-  </caption>
 
   <thead id='peer-review-form-overall-thead'>
 

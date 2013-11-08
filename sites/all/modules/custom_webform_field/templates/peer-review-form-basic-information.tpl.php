@@ -21,13 +21,13 @@
 
     <tr>
       <td>
-        <h6> Reviewer</h6>
+        <h6> Reviewer:</h6>
       </td>
 
       <td id="basic_info_reviewer" style="text-align:left;vertical-align:middle"></td>
 
       <td>
-        <h6> Date</h6>
+        <h6> Date:</h6>
       </td>
       <td id="basic_info_date">
        

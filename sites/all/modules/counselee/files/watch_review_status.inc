@@ -417,13 +417,6 @@ function submit_peer_update() {
   $spstatus = $_POST['spstatus'];
   $userId_flag = $_POST['userId_flag'];
   $email_receivers = array();
-  /*  if ($spstatus == 0) {
-    $rpeid = insert_peer_item_to_DB($rreid, $providers, $sptatus, $userId_flag, $email_receivers);
-    }
-    else {
-    $rpeid = update_peer_item_to_DB($rreid, $providers, $spstatus, $userId_flag, $email_receivers);
-    }
-   */
   update_review_spstatus_manager($rreid, $userId_flag);
   $rpeids_array = _insert_items_to_DB($rreid, $providers, $email_receivers);
   // dd('after db insert');
@@ -432,38 +425,7 @@ function submit_peer_update() {
     $msg = $count . ' peer(s) selection updated successfully!';
     drupal_set_message($msg, 'status');
   }
-  // else if ($count == 0 && $spstatus != 0) {
-  //   $msg = 'You did not update any peers!';
-  //   drupal_set_message($msg, 'status');
-  // }
-  // else {
-  //   $msg = 'Update failed!!!';
-  //   drupal_set_message($msg, 'error');
-  // }
-
-  /*  foreach($email_receivers as $email_receiver) {
-    if (module_exists('common') && module_enable(array('common'))) {
-    $tmp = get_basic_review_information($rreid);
-    }
-    $review_description = $tmp[0]->description;
-    $employeeName = $tmp[0]->employeeName;
-    $review_end_date = unixTimestampToDateArray($tmp[0]->period_end);
-    $date = date_to_format($review_end_date);
-    $url = '#';
-    $peer_params = array(
-    'employeeName' => $employeeName,
-    'reviewname' => $review_description,
-    'datetime' => $date,
-    'peersurl' => $url,
-    'type' => $userId_flag,
-    'peername' => $email_receiver,
-    );
-    $temp_array = array($email_receiver);
-    $email_address = select_email_from_prs_reviewers($temp_array);
-    mail_sender_template_adapter($email_address[0]->mail, $peer_params, 1);
-    }
-   */
-  send_peer_email_notification($rreid, $email_receivers, $userId_flag);
+  send_peer_email_notification($rreid, $email_receivers, $userId_flag, $rpeids_array);
 
   echo $rval;
 }
@@ -492,9 +454,8 @@ function is_provider_item_existing($rreid, $provider) {
   }
 }
 
-function send_peer_email_notification($rreid, $email_receivers, $userId_flag) {
+function send_peer_email_notification($rreid, $email_receivers, $userId_flag, $rpeids_array) {
   if (module_exists('common') && module_enable(array('common'))) {
-    // call func in common module to get basic info of this review
     $info = get_basic_review_information($rreid);
   }
   else {
@@ -504,12 +465,27 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag) {
   }
   if (count($email_receivers) == 0)
     return;
-  foreach ($email_receivers as $email_receiver) {
-    $review_description = $info[0]->description;
+
+  for ($i = 0; $i < count($email_receivers); $i++) {
+    //foreach ($email_receivers as $email_receiver)
+    $email_receiver = $email_receivers[$i];
     $employeeName = $info[0]->employeeName;
+
+    //Generate peer review form for each peer
+    $form_title = "Annual Performace Peer Review $email_receiver for $employeeName";
+    $peer_review_template_name = 'For Demo Peer Review Form Template';
+    $node_msg = create_node($form_title, $peer_review_template_name);
+    db_update('prs_rel_provider_employee')
+        ->fields(array('nid' => $node_msg[0], 'token' => $node_msg[1]))
+        ->condition('rpeid', $rpeids_array[$i])
+        ->execute();
+
+    $review_description = $info[0]->description;
+
     $review_end_date = unixTimestampToDateArray($info[0]->period_end);
     $date = date_to_format($review_end_date);
-    $peer_select_url = '#';
+    $base_path = $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path();
+    $peer_select_url = $base_path.$node_msg[1];
     $peer_info_params = array(
       'employeeName' => $employeeName,
       'reviewname' => $review_description,
