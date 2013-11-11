@@ -503,6 +503,15 @@ function counselee_webform_submission_update($node, $submission) {
   _alert_after_submited($node, $submission);
 }
 
+/**
+ *
+ * @param type $node
+ * @param type $submission 
+ */
+function counselee_webform_submission_insert($node, $submission) {
+  _alert_after_submited($node, $submission);
+}
+
 function _alert_after_submited($node, $submission) {
   if (is_selfreview($node->webform['nid'])) {
     //self review
