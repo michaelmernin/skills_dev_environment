@@ -14094,13 +14094,20 @@ div.error {
 
 .wfm-item .form-item.webform-component {
     float: left;
-    margin-right: 8%;
+    margin-right: 5%;
 }
+/*
 .wfm-item .form-item.webform-component.webform-component-select {
-    margin-right: 0;
+   margin-right: 0;
 }
+*/
 .wfm-remove.form-submit.btn.btn-large.ajax-processed {
     padding: 1px 5px 1px 5px;
+}
+
+.wfm-item .form-item.webform-component.webform-component-textarea {
+    clear: left;
+	width: 100%;
 }
 .wfm-add.form-submit.btn.btn-large.ajax-processed {
     padding: 5px 4px;

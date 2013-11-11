@@ -149,6 +149,9 @@ function mail_sender_template_adapter($address, $params, $type) {
       $subject = $params['reviewname'] . " has begun.Please help " . $params['employeeName'] . " fill up peer review form";
       $templateName = 'selectPeers.tpl.php';
       break;
+    case 2:
+      $templateName = 'counselee_submited.tpl.php';
+      break;
 
     default:
       break;

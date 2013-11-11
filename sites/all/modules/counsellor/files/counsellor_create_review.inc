@@ -46,6 +46,7 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
 //            counselee email
 //            dd('$my_address');
 //            dd($my_address);
+            //==========================================counselee email==================
             foreach ($review_ids as $review) {
               $counselee_address = select_email_from_prs_reviewers(array($review->employeeName));
               $address = $counselee_address[0]->mail;
@@ -54,9 +55,9 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
 //              dd($counselee_parems);
               mail_sender_template_adapter($address, $counselee_parems, 0);
             }
-
-//            counselor email added it later
-
+            //==========================================counselor email end==================         
+            //======================counselor email added it later===========================
+            //===============================================================================
             $message = 'Review created successful.';
             drupal_set_message($message, 'status');
           }
@@ -133,8 +134,7 @@ function submit_new_self_review() {
         $review_ids = insert_reviews_to_DB($emp_array, $general_id, $_POST, 1);
 //          set_review_status($review_ids, 1);
         if (module_exists('mail_sender') && module_enable(array('mail_sender'))) {
-
-//            counselee email
+          //==========================================counselee email=================
           $my_address = select_email_from_prs_reviewers($emp_array);
           $address = $my_address[0]->mail;
 //            dd('$address');
@@ -143,7 +143,8 @@ function submit_new_self_review() {
 //            dd('$counselee_parems');
 //            dd($counselee_parems);
           mail_sender_template_adapter($address, $counselee_parems, 0);
-//            counselor email
+          //==========================================counselee email end==============
+          //==========================================counselor email==================
           $my_counselor_address = select_email_from_prs_reviewers(array($cur_counselor_name));
           $counselor_address = $my_counselor_address[0]->mail;
 //            dd('$counselor_address');
@@ -153,6 +154,7 @@ function submit_new_self_review() {
 //            dd('$counselor_parems');
 //          dd($counselor_parems);
           mail_sender_template_adapter($counselor_address, $counselor_parems, 0);
+          //==========================================counselor email end===============
         }
       }
       else {
@@ -554,6 +556,7 @@ function return_review_name($date) {
   switch ($date['review_type']) {
     case '0':
       $review_type = 'ANNUAL_REVIEW';
+      $review_name = substr($date['review_to_date'], 6, 9) . '_' . $review_type;
       break;
     case '1':
       $review_type = 'PROJECT_REVIEW';
@@ -562,7 +565,7 @@ function return_review_name($date) {
       $review_type = 'THREE_MONTH_REVIEW';
       break;
   }
-  return $date['review_start_date'] . '_' . $review_type;
+  return $review_name;
 }
 
 /**

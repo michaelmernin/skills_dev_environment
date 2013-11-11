@@ -86,7 +86,7 @@
 //no review data
     if ($count == 0) {
       print '<tr>
-             <td colspan="3">There is no review for you.</td>
+             <td colspan="3">There is no peer selected.</td>
              </tr>';
     }
     ?>

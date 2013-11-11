@@ -474,3 +474,112 @@ function _is_assessment_visible_for_counselor($rstatus) {
     return FALSE;
   }
 }
+
+/**
+ *
+ * @param type $node
+ * @param type $submission 
+ */
+function counselee_webform_submission_insert($node, $submission) {
+
+  _alert_after_submited($node, $submission);
+}
+
+/**
+ *
+ * @param type $node
+ * @param type $submission 
+ */
+function counselee_webform_submission_update($node, $submission) {
+  _alert_after_submited($node, $submission);
+}
+
+function _alert_after_submited($node, $submission) {
+  if (is_selfreview($node->webform['nid'])) {
+    //self review
+    if (has_submitted($node)) {
+      if (modify_feedback_status($node->webform['nid'])) {
+        if (modify_review_status($node->webform['nid'], $rreid)) {
+          //======================================send email===============
+          $cur_counselee_name = get_current_user_name();
+          $counselor_name = my_counselor_gm_name($cur_counselee_name);
+          $cur_counselor_name = $counselor_name[0]->counselorName;
+//  dd('$cur_counselor_name');
+//  dd($cur_counselor_name);
+          if ($cur_counselor_name != '') {
+            $my_counselor_address = select_email_from_prs_reviewers(array($cur_counselor_name));
+            foreach ($my_counselor_address as $counselor_address) {
+              $counselor_address = $my_counselor_address->mail;
+            }
+            $review = get_basic_review_information($rreid);
+            $counselor_parems = array('username' => format_login_name($cur_counselor_name), 'reviewname' => $review->description, 'url' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selfassessment/' . $rreid, 'counselee' => format_login_name($cur_counselee_name));
+
+            mail_sender_template_adapter($counselor_address, $counselor_parems, 2);
+            //======================================send email end============
+          }
+        }
+      }
+    }
+  }
+  else {
+    // peer review
+    if (has_submitted($node)) {
+      modify_feedback_status($node->webform['nid']);
+    }
+  }
+}
+
+function has_submitted($node) {
+  $query = db_select('webform_submissions', 's');
+  $query->fields('s');
+  $query->condition('s.nid', $node->webform['nid']);
+  $result = $query->execute()->fetchAll();
+  foreach ($result as $submit) {
+    if ($submit->is_draft == 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function modify_feedback_status($nid) {
+  $count = db_update('prs_rel_provider_employee')
+      ->fields(array(
+        'status' => 1,
+      ))
+      ->condition('nid', $nid)
+      ->execute();
+//  dd($count,'$count');
+  if ($count > 0) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+function modify_review_status($nid, &$rreid_rev) {
+  $query = db_select('prs_rel_provider_employee', 'prre');
+  $query->fields('prre');
+  $query->condition('prre.nid', $nid);
+  $results = $query->execute()->fetchAll();
+  foreach ($results as $result) {
+
+    $rreid = $result->rreid;
+    $rreid_rev = $rreid;
+  }
+
+  $count = db_update('prs_rel_review_employee')
+      ->fields(array(
+        'rstatus' => 2,
+      ))
+      ->condition('rreid', $rreid)
+      ->execute();
+//  dd($count, '$count');
+  if ($count > 0) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}

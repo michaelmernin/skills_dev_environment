@@ -21,18 +21,11 @@
   <?php print $messages; ?>
   <?php
 //dd($node,'node');
-  $typeset = get_basic_review_information_by_nid($node->nid);
-  if (count($typeset)) {
-    $type = $typeset[0]->type;
-  }
-  else {
-    $type = 0;
-  }
+  if (is_selfreview($node->nid) && get_user_identity_by_nid($node->nid) != 0) {
 //  dd($type,'$type');
 //  dd(get_user_identity_by_nid($node->nid));
-//  if ($type == 0 && get_user_identity_by_nid($node->nid) != 0) {
-//    drupal_goto('mydashboard');
-//  }
+      drupal_goto('mydashboard');
+  }
 //dd($page['content']['system_main']['nodes'][3]['webform']['#node']->webform['components']);
 //print render($page['content']['system_main']['nodes'][3]['webform']['#node']->webform['components']);
 //dd($page['content'],'====================');
