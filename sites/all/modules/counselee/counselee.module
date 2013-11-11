@@ -122,7 +122,13 @@ function counselee_block_view($delta = '') {
       $counseleePeers = counselee_select_peers('counselee', get_current_user_name());
       $counselorPeers = counselee_select_peers('counselor', get_current_user_name());
       $reviewList = counselee_do_peersreview(get_current_user_name());
-      $block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers, 'counselorPeers' => $counselorPeers, 'reviewList' => $reviewList));
+      $self_review_finished = get_self_review_finished_list(get_current_user_name());
+      $block['content'] = theme('my_working_list_view', 
+              array('counseleePeers' => $counseleePeers,
+            'counselorPeers' => $counselorPeers, 
+                'reviewList' => $reviewList,
+                'self_review_finished' =>$self_review_finished,
+                ));
       break;
   }
   return $block;
@@ -135,7 +141,11 @@ function counselee_theme() {
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'user_status_view',),
     'my_working_list_view' => array(
-      'variables' => array('counseleePeers' => NULL, 'counselorPeers' => NULL, 'reviewList' => NULL),
+      'variables' => array('counseleePeers' => NULL,
+        'counselorPeers' => NULL,
+        'reviewList' => NULL,
+        'self_review_finished'=>NULL,
+        ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'my_working_list',),
     'select_peers' => array(
@@ -480,16 +490,6 @@ function _is_assessment_visible_for_counselor($rstatus) {
  * @param type $node
  * @param type $submission 
  */
-function counselee_webform_submission_insert($node, $submission) {
-
-  _alert_after_submited($node, $submission);
-}
-
-/**
- *
- * @param type $node
- * @param type $submission 
- */
 function counselee_webform_submission_update($node, $submission) {
   _alert_after_submited($node, $submission);
 }
@@ -588,4 +588,34 @@ function modify_review_status($nid, &$rreid_rev) {
   else {
     return FALSE;
   }
+}
+  
+/**
+ * Get finished self review list
+ * 
+ */
+function get_self_review_finished_list($counselor) {
+  $query = db_select('prs_rel_review_employee', 'review');
+  $query->join('prs_general', 'general', 'general.prid = review.prid');
+  $query->join('prs_rel_employee_counselor_gm', 'relation', 'relation.employeename = review.employeename');
+  $query->addField('general', 'type');
+  $query->addField('review', 'rreid');
+  $query->addField('review', 'employeename');
+  $query->addField('general', 'description');
+  $query->condition('relation.counselorname', $counselor);
+  $query->condition('review.rstatus', 2); // 2 Stand for self reivew has finished
+
+  $dataset = $query->execute()->fetchAll();
+
+  $result = array();
+  $index = 0;
+  foreach ($dataset as $node) {
+    $employeeName = $node->employeename;
+    $rreid = $node->rreid;
+    $reviewtype = $node->type;
+    $description = $node->description;
+    $temp = array('employeeName' => $employeeName, 'rreid' => $rreid, 'reviewType' => $reviewtype, 'description' => $description);
+    $result[$index++] = $temp;
+  }
+  return $result;
 }

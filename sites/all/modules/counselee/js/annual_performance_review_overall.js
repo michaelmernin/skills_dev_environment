@@ -11,8 +11,8 @@ core_competencies_id[5] = core_competencies_id_pre + 'teamwork';
 
 var core_competencies_comment_id = new Array();
 core_competencies_comment_id[0] = core_competencies_id_pre + 'ce-comments';
-core_competencies_comment_id[1] = core_competencies_id_pre + 'cs-comments';
-core_competencies_comment_id[2] = core_competencies_id_pre + 'ta-comments';
+core_competencies_comment_id[1] = core_competencies_id_pre + 'ta-comments';
+core_competencies_comment_id[2] = core_competencies_id_pre + 'cs-comments';
 core_competencies_comment_id[3] = core_competencies_id_pre + 'p-comments';
 core_competencies_comment_id[4] = core_competencies_id_pre + 'l-comments';
 core_competencies_comment_id[5] = core_competencies_id_pre + 't-comments';
@@ -31,7 +31,7 @@ internal_contributions_comment_id[0] = internal_contributions_id_pre + 'bd-comme
 internal_contributions_comment_id[1] = internal_contributions_id_pre + 'cc-comments';
 internal_contributions_comment_id[2] = internal_contributions_id_pre + 'ra-comments';
 internal_contributions_comment_id[3] = internal_contributions_id_pre + 'ic-comments';
-internal_contributions_comment_id[4] = internal_contributions_id_pre + 'pc-comments';
+internal_contributions_comment_id[4] = internal_contributions_id_pre + 'pb-comments';
 
 
 
@@ -147,7 +147,7 @@ function calculate_element_value_average(category)
         if (IsNum(value) && value != '0')
         {
             count++;
-            sum += parseInt(value);
+            sum += parseFloat(value);
         }
     }
 

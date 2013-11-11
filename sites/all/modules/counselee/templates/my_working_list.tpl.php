@@ -12,21 +12,6 @@
 
   var workingItemsNum = 0;
 
-  function postwith(to, p) {
-    var myForm = document.create_r_r_rElement_x("form");
-    myForm.method = "post";
-    myForm.action = to;
-    for (var k in p) {
-      var myInput = document.create_r_r_rElement_x("input");
-      myInput.setAttribute("name", k);
-      myInput.setAttribute("value", p[k]);
-      myForm.a(myInput);
-    }
-    document.body.a(myForm);
-    myForm.submit();
-    document.body.removeChild(myForm);
-  }
-
   function reviewName(type)
   {
     if (type === '0')
@@ -80,7 +65,7 @@
    * */
   function showReviewList(items)
   {
-    var obj, name, rpeid, reviewType, description,token, url, li;
+    var obj, name, rpeid, reviewType, description, token, url, li;
     for (var i = 0; i < items.length; i++)
     {
       obj = items[i];
@@ -90,8 +75,8 @@
       description = obj.description;
       token = obj.token;
 
-      basePath = '<?php print $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path();?>';
-      url = basePath+token;
+      basePath = '<?php print $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path(); ?>';
+      url = basePath + token;
       if (name == '<?php print get_current_user_name(); ?>')
       {
         li = " <li> <a href='" + url + "'>" + description + " is started.Please fill up your Self-Review form.(" + reviewName(reviewType) + ")</a> </li>";
@@ -103,6 +88,28 @@
         jQuery('#myWorkForOther').append(li);
       }
     }
+  }
+
+  /**
+   * Show self review finished review list
+   * 
+   * 
+   * */
+  function showSelfReviewFinished(items)
+  {
+    var obj, name, rreid, reviewType, description, token, url, li;
+    for (var i = 0; i < items.length; i++)
+    {
+      obj = items[i];
+      name = obj.employeeName;
+      rreid = obj.rreid;
+      reviewType = obj.reviewType;
+      description = obj.description;
+      url = "./watchstatus/selectpeers/" + rreid;
+      li = " <li> <a href='" + url + "'>[" + name + "] has finished " + description + " self reivew.(" + reviewName(reviewType) + ")</a> </li>";
+      jQuery('#myWorkForOther').append(li);
+    }
+
   }
 
   var peers = '<?php print json_encode($counseleePeers); ?>';
@@ -117,8 +124,11 @@
   var reviewList = eval(review);
   showReviewList(reviewList);
 
+  var self_review_finished_josn = '<?php print json_encode($self_review_finished); ?>';
+  var self_review_finished = eval(self_review_finished_josn);
+  showSelfReviewFinished(self_review_finished);
 
-  var workingItemsNum = counseleePeers.length + counselorPeers.length + reviewList.length;
+  var workingItemsNum = counseleePeers.length + counselorPeers.length + reviewList.length + self_review_finished.length;
   if (workingItemsNum == 0)
   {
     var li = " <li> You have no work to do!</li>";
