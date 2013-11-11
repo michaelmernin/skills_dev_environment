@@ -8,6 +8,15 @@ core_competencies_id[3] = core_competencies_id_pre + 'professionalism';
 core_competencies_id[4] = core_competencies_id_pre + 'leadership';
 core_competencies_id[5] = core_competencies_id_pre + 'teamwork';
 
+
+var core_competencies_comment_id = new Array();
+core_competencies_comment_id[0] = core_competencies_id_pre + 'ce-comments';
+core_competencies_comment_id[1] = core_competencies_id_pre + 'cs-comments';
+core_competencies_comment_id[2] = core_competencies_id_pre + 'ta-comments';
+core_competencies_comment_id[3] = core_competencies_id_pre + 'p-comments';
+core_competencies_comment_id[4] = core_competencies_id_pre + 'l-comments';
+core_competencies_comment_id[5] = core_competencies_id_pre + 't-comments';
+
 //edit-submitted-performance-evaluation-internal-contributions-business-development
 var internal_contributions_id_pre = '#edit-submitted-performance-evaluation-internal-contributions-';
 var internal_contributions_id = new Array();
@@ -16,6 +25,14 @@ internal_contributions_id[1] = internal_contributions_id_pre + 'career-counselin
 internal_contributions_id[2] = internal_contributions_id_pre + 'recruiting-assistance';
 internal_contributions_id[3] = internal_contributions_id_pre + 'internal-contributions';
 internal_contributions_id[4] = internal_contributions_id_pre + 'perficient-basics';
+
+var internal_contributions_comment_id = new Array();
+internal_contributions_comment_id[0] = internal_contributions_id_pre + 'bd-comments';
+internal_contributions_comment_id[1] = internal_contributions_id_pre + 'cc-comments';
+internal_contributions_comment_id[2] = internal_contributions_id_pre + 'ra-comments';
+internal_contributions_comment_id[3] = internal_contributions_id_pre + 'ic-comments';
+internal_contributions_comment_id[4] = internal_contributions_id_pre + 'pc-comments';
+
 
 
 var composite_score_id = new Array();
@@ -99,7 +116,7 @@ function self_review_core_competencies_value_change()
     for (var i = 0; i < core_competencies_id.length; i++)
     {
         value = jQuery(core_competencies_id[i]).find('option:selected').val();
-        if (IsNum(value) && value !='0')
+        if (IsNum(value) && value != '0')
         {
             jQuery(overall_self_composite_scores_id[i]).html(value);
         }
@@ -150,3 +167,36 @@ register_self_form_select_onchange_event(core_competencies_id, self_review_core_
 register_self_form_select_onchange_event(internal_contributions_id, self_review_internal_contributions);
 self_review_core_competencies_value_change();
 self_review_internal_contributions();
+
+
+
+function check_comments(category, comments)
+{
+    var value, comment, len;
+    for (var i = 0; i < category.length; i++)
+    {
+        value = jQuery(category[i]).find('option:selected').val();
+//        alert(value);
+        if (value != '3')
+        {
+            comment = jQuery(comments[i]).val();
+            len = comment.length;
+            if (len < 1) {
+                alert('The socre is not 3 points.Please enter comment!');
+                jQuery(comments[i]).focus();
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+jQuery(document).ready(
+        function() {
+            jQuery("input[name='op']").click(
+                    function() {
+                        return check_comments(core_competencies_id, core_competencies_comment_id)
+                                && check_comments(internal_contributions_id, internal_contributions_comment_id);
+                    });
+        }
+);
