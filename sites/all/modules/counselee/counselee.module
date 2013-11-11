@@ -508,11 +508,17 @@ function _alert_after_submited($node, $submission) {
 //  dd($cur_counselor_name);
           if ($cur_counselor_name != '') {
             $my_counselor_address = select_email_from_prs_reviewers(array($cur_counselor_name));
-            foreach ($my_counselor_address as $counselor_address) {
-              $counselor_address = $my_counselor_address->mail;
+//            dd($my_counselor_address,'$my_counselor_address');
+            foreach ($my_counselor_address as $counseloraddress) {
+              $counselor_address = $counseloraddress->mail;
             }
-            $review = get_basic_review_information($rreid);
-            $counselor_parems = array('username' => format_login_name($cur_counselor_name), 'reviewname' => $review->description, 'url' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selfassessment/' . $rreid, 'counselee' => format_login_name($cur_counselee_name));
+            $reviews = get_basic_review_information($rreid);
+//            dd($review,'$review');
+//            dd($rreid,'$rreid');
+            foreach ($reviews as $review) {
+              $description = $review->description;
+            }
+            $counselor_parems = array('username' => format_login_name($cur_counselor_name), 'reviewname' => $description, 'url' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selfassessment/' . $rreid, 'counselee' => format_login_name($cur_counselee_name));
 
             mail_sender_template_adapter($counselor_address, $counselor_parems, 2);
             //======================================send email end============
