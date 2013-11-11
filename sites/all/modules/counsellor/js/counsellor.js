@@ -57,27 +57,27 @@ function get_review_status_tiplink(status) {
     switch (status) {
         case 1:
             //1 for review in draft;
-            content = "<a href=\"javascript:{void(0)}\" title=\"This review is in draft, reviewer can edit it before submit.\">Review in Draft</a>";
+            content = "<a href=\"javascript:{void(0)}\" title=\"This review is in draft, reviewer can edit it before submit.\" style=\"cursor: default\">Review in Draft</a>";
             break;
         case 2:
             // 2 for review by counsellor;
-            content = "<a href=\"javascript:{void(0)}\" title=\"This review now is review by counselor.\">Review by Counselor</a>";
+            content = "<a href=\"javascript:{void(0)}\" title=\"This review now is review by counselor.\" style=\"cursor: default\">Review by Counselor</a>";
             break;
         case 3:
             // 3 for approved by counsellor;
-            content = "<a href=\"javascript:{void(0)}\" title=\"This review is approved by counselor.\">Approved by Counselor</a>";
+            content = "<a href=\"javascript:{void(0)}\" title=\"This review is approved by counselor.\" style=\"cursor: default\">Approved by Counselor</a>";
             break;
         case 4:
             // 4 for joint review;
-            content = "<a href=\"javascript:{void(0)}\" title=\"Joint review.\">Joint review</a>";
+            content = "<a href=\"javascript:{void(0)}\" title=\"Joint review.\" style=\"cursor: default\">Joint review</a>";
             break;
         case 5:
             // 5 for GM review;
-            content = "<a href=\"javascript:{void(0)}\" title=\"This review is review by GM.\">GM Review</a>";
+            content = "<a href=\"javascript:{void(0)}\" title=\"This review is review by GM.\" style=\"cursor: default\">GM Review</a>";
             break;
         case 6:
             // 6 for GM approved;
-            content = "<a href=\"javascript:{void(0)}\" title=\"This review is approved by GM.\">GM Approve</a>";
+            content = "<a href=\"javascript:{void(0)}\" title=\"This review is approved by GM.\" style=\"cursor: default\">GM Approve</a>";
             break;
     }
     return content;

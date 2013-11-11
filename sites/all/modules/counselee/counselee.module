@@ -32,6 +32,15 @@ function counselee_menu() {
     'file' => 'files/dashboard.pages.inc',
   );
 
+  $items['feedbacksubmitsuccess'] = array(
+    'title' => 'Feedback Submitted Successfully',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'feedbacksubmitsuccess',
+    'page arguments' => array(),
+    'access callback' => TRUE,
+    'file' => 'files/dashboard.pages.inc',
+  );
+
   $items['watchstatus'] = array(
     'title' => 'Watch status',
     'page callback' => 'show_pr_list',

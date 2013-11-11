@@ -35,3 +35,8 @@ function accessdenied() {
     $pageContent = '';
     return $pageContent;
 }
+
+function feedbacksubmitsuccess() {
+    $pageContent = '';
+    return $pageContent;
+}
