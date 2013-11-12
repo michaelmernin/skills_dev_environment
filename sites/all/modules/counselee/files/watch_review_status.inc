@@ -346,7 +346,7 @@ function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments)
       $target_array[$i] = array(
         'count' => $i,
         'header' => $headerInfo[$i],
-        'rating' => '',
+        'rating' => 0,
         'comment' => '',
         );
     }
@@ -365,7 +365,7 @@ function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments)
       $target_array[$i] = array(
         'count' => $i,
         'header' => '',
-        'rating' => '',
+        'rating' => 0,
         'comment' => $comments[$i],
         );
     }
@@ -509,7 +509,7 @@ function _insert_counselor_submittion_data_to_DB($nid, $csiid, &$data_array) {
             'csiid' => $csiid,
             'count' => $data['count'],
             'header' => $data['header'],
-            // 'rating' => $data['rating'],
+            'rating' => $data['rating'],
             'comment' => $data['comment'],
             ))->execute();
     dd($csdid, 'csdid');
