@@ -193,7 +193,7 @@ function check_comments(category, comments)
 
 jQuery(document).ready(
         function() {
-            jQuery("input[name='op']").click(
+            jQuery("input[name='op'][value='Submit']").click(
                     function() {
                         return check_comments(core_competencies_id, core_competencies_comment_id)
                                 && check_comments(internal_contributions_id, internal_contributions_comment_id);

@@ -201,7 +201,7 @@ function check_comments(category)
 
 jQuery(document).ready(
         function() {
-            jQuery("input[name='op']").click(
+            jQuery("input[name='op'][value='Submit']").click(
                     function() {
                         return  check_comments(technical_abilities_id)
                                 && check_comments(consulting_skills_id)
@@ -211,3 +211,5 @@ jQuery(document).ready(
                     });
         }
 );
+
+
