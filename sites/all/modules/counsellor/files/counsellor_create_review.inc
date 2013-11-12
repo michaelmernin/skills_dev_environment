@@ -609,6 +609,6 @@ function create_annual_review_node($employee, $review_basic_info) {
 //  }
 //  dd($title,'$title');
   $title = $employee_name . ' ' . $end_year . ' Annual Performace Review.';
-  $nid_token = create_node($title, ANNUAL_TEMP);
+  $nid_token = create_node($title, ANNUAL_TEMP, 1);
   return $nid_token;
 }

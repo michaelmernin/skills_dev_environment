@@ -81,10 +81,18 @@ function get_my_anniversary_counselor($my_name) {
   $info = array();
   if ($my_name != 'anonymous') {
     $my_counselor_gm_name = my_counselor_gm_name($my_name);
-    $my_counselor_name = $my_counselor_gm_name[0]->counselorName;
-    $my_anniversary_month = my_anniversary_date($my_name);
-    $info['my_counselor_name'] = format_login_name($my_counselor_name);
-    $info['my_anniversary_month'] = $my_anniversary_month;
+    foreach ($my_counselor_gm_name as $counselor_name) {
+      $my_counselor_name = $counselor_name->counselorName;
+    }
+    if (count($my_counselor_name)) {
+      $my_anniversary_month = my_anniversary_date($my_name);
+      $info['my_counselor_name'] = format_login_name($my_counselor_name);
+      $info['my_anniversary_month'] = $my_anniversary_month;
+    }
+    else {
+      $info['my_counselor_name'] = 'N/A';
+      $info['my_anniversary_month'] = 'N/A';
+    }
   }
   else {
     $info['my_counselor_name'] = 'N/A';
@@ -379,12 +387,13 @@ function prs_user_login_role() {
 /* * **********************About login by Mars end**************************************** */
 
 /**
- * common create 
+ * 
  * @param type $title
  * @param type $template_name
+ * @param type $is_selfreview 1 true, 0 false
  * @return type
  */
-function create_node($title, $template_name) {
+function create_node($title, $template_name, $is_selfreview = 0) {
   $node = new stdClass();
   $node->type = "webform";
   $node->title = $title;
@@ -424,7 +433,7 @@ function create_node($title, $template_name) {
     db_insert('webform_component')->fields($field_array)->execute();
   }
 
-  change_redirect_path($node->nid);
+  change_redirect_path($node->nid, $is_selfreview);
   return array($node->nid, $random_string);
 }
 
@@ -440,20 +449,36 @@ function get_temp_node_id($temp_name) {
   return $nid;
 }
 
-function change_redirect_path($nid) {
+function change_redirect_path($nid, $is_selfreview) {
+  dd($is_selfreview, '$is_selfreview');
   $url = 'feedbacksubmitsuccess';
   // you can change here if you want to copy template totally, you can change here to query first
-  $allow_draft = 1;
-  $submit_limit = 1;
-  $query = db_update('webform');
-  $query
-      ->fields(array(
-        'redirect_url' => $url,
-        'allow_draft' => $allow_draft,
-        'submit_limit' => $submit_limit,
-      ))
-      ->condition('nid', $nid)
-      ->execute();
+//  $allow_draft = 1;
+//  $submit_limit = 1;
+  $total_submit_limit = 1; //default -1 change by Mars
+//  dd($nid,'$nid');
+  if ($is_selfreview) {
+    $query = db_update('webform');
+    $query
+        ->fields(array(
+          'redirect_url' => $url,
+//        'allow_draft' => $allow_draft,
+//        'submit_limit' => $submit_limit,
+        ))
+        ->condition('nid', $nid)
+        ->execute();
+  }
+  else {
+    $query = db_update('webform');
+    $query
+        ->fields(array(
+          'redirect_url' => $url,
+//        'allow_draft' => $allow_draft,
+          'total_submit_limit' => $total_submit_limit,
+        ))
+        ->condition('nid', $nid)
+        ->execute();
+  }
 }
 
 function random_string($length = 8) {

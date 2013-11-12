@@ -1498,13 +1498,13 @@ function webform_node_defaults() {
     'confirmation_format' => NULL,
     'redirect_url' => '<confirmation>',
     'block' => '0',
-    'allow_draft' => '0',
-    'auto_save' => '0',
+    'allow_draft' => '1',//default 0 change by Mars
+    'auto_save' => '1',//default 0 change by Mars
     'submit_notice' => '1',
     'submit_text' => '',
-    'submit_limit' => '-1',
+    'submit_limit' => '1',//default -1 change by Mars
     'submit_interval' => '-1',
-    'total_submit_limit' => '-1',
+    'total_submit_limit' => '-1',//default -1 change by Mars
     'total_submit_interval' => '-1',
     'progressbar_page_number' => in_array('progressbar_page_number', $progress_bar_defaults) ? '1' : '0',
     'progressbar_percent' => in_array('progressbar_percent', $progress_bar_defaults) ? '1' : '0',

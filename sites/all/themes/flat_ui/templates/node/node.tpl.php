@@ -74,7 +74,7 @@
  * @see template_process()
  */
 ?>
-<div class="row"> <div id="node-span10" class="span10" style="margin:0">
+<div class="row"> <div id="node-span10" class="span10" style="margin:0;width: 100%">
     <?php if (!$page): ?>
       <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
       <?php endif; ?>
