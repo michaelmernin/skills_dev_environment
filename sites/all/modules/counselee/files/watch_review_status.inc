@@ -83,7 +83,6 @@ function load_self_assessment($rreid=NULL) {
   $provider_info = get_provider_info($rreid, $reviewee);
   $nid = $provider_info[0]->nid;
   $qa_table = get_latest_submitted_data_from_db($nid);
-  dd($qa_table, 'qa_table');
   $qa_table = generate_result_array($qa_table);
   // display_tree_structure($qa_table);
   // $qa_set = _generate_question_answer_set($qa_table);
@@ -455,7 +454,6 @@ function get_latest_submitted_data_from_db($nid) {
   $query->condition('wsd.sid', $sid);
   $query->orderBy('wc.cid');
   $result = $query->execute()->fetchAll();
-  dd($result, 'result');
   return $result;
 }
 
@@ -500,9 +498,6 @@ function _insert_counselor_submittion_info_to_DB($nid) {
 function _insert_counselor_submittion_data_to_DB($nid, $csiid, &$data_array) {
   $csdid_array = array();
   foreach ($data_array as $data) {
-    dd($nid, 'nid');
-    dd($csiid, 'csiid');
-    dd($data, 'data');
     $csdid = db_insert('prs_counselor_submit_data')
           ->fields(array(
             'nid' => $nid,
@@ -512,7 +507,6 @@ function _insert_counselor_submittion_data_to_DB($nid, $csiid, &$data_array) {
             'rating' => $data['rating'],
             'comment' => $data['comment'],
             ))->execute();
-    dd($csdid, 'csdid');
     if ($csdid != -1) {
       array_push($csdid_array, $csdid);
     }
@@ -769,7 +763,7 @@ function generate_result_array($qa_table) {
       ),
     '23' => array(
       'description' => 'Overall Scores',
-      'identifier' => 2,
+      'identifier' => 4,
       'question' => 'Overall Scores',
       'rating' => $qa_table[$target[49]]->data,
       'comment' => '',

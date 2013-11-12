@@ -3,7 +3,8 @@
 <?php
 $counselor = get_counselor($reviewee);
 $cur_user = get_current_user_name();
-if ($cur_user != $counselor) {
+$identity = ($cur_user != $counselor)?'counselee': 'counselor';
+if ($identity == 'counselee') {
   for ($i = 0; $i < count($qa_table); $i++) {
     switch ($qa_table[$i]['identifier']) {
       case '0':
@@ -27,6 +28,12 @@ if ($cur_user != $counselor) {
       case '3':
         display_fillform($i, $qa_table[$i]);
         break;
+
+      case '4':
+        display_questions($i, $qa_table[$i]['question']);
+      	display_overall($i, $qa_table[$i]['rating']);
+      	display_counselor_rating($i);
+      	break;
 
       default:
         break;
@@ -61,12 +68,20 @@ else {
         display_counselor_comment($i);
         break;
 
+	    case '4':
+	    display_questions($i, $qa_table[$i]['question']);
+	  	display_overall($i, $qa_table[$i]['rating']);
+	  	display_counselor_rating($i);
+	  	break;
+
       default:
         break;
     }
   }
 }
 ?>
+<br />
+<div id="draftbutton">
 <a id="modal-912871" href="#modal-container-912871" role="button" class="btn btn-danger" data-toggle="modal">Save as draft</a>
 
 <div class="row-fluid">
@@ -92,7 +107,7 @@ else {
     </div>
   </div>
 </div>
-
+</div>
 
 <div>
   <table class="table">
@@ -179,6 +194,10 @@ else {
       }
       jQuery(this).siblings(".assessmentbubble").css("display", "none");
     });
+    var isCounselor = '<?php print $identity ?>';
+    if (isCounselor == "counselee") {
+		jQuery("#draftbutton").hide();
+    }
   });
 
 </script>
@@ -241,7 +260,7 @@ function display_rating($num, $rating) {
       break;
 
     case '0':
-      $content = '<div id="assessment-content-value-' . $num . '"> No basis / not applicable. </div>';
+      $content = '<div id="assessment-content-value-' . $num . '"> N/A </div>';
       print $content;
       break;
 
@@ -252,6 +271,10 @@ function display_rating($num, $rating) {
   print '</div>';
 }
 
+function display_overall($num, $rating) {
+  $content = '<div id="overall-ratings-' . $num . '" value="' . $rating . '">' . $rating . '</div>';
+  print $content;
+}
 function display_questions($num, $question) {
   $content = '<h6 id="question-' . $num . '" class="survey-question">' . $question . '</h6>';
   print $content;

@@ -197,6 +197,7 @@ function initialize_self_score_rating()
 
 }
 
+initialize_self_score_rating();
 register_self_form_select_onchange_event(counselor_score_id, counselor_core_competencies_value_change);
 register_self_form_select_onchange_event(counselor_internal_score_id, self_review_internal_contributions);
 counselor_core_competencies_value_change();
