@@ -79,12 +79,11 @@ function display_self_assessment($rreid = NULL) {
  * */
 function load_self_assessment($rreid=NULL) {
   access_authen($rreid);
-  // $nid = 3;
-  dd($rreid, 'rreid');
   $reviewee = get_reviewee_from_db($rreid);
   $provider_info = get_provider_info($rreid, $reviewee);
   $nid = $provider_info[0]->nid;
   $qa_table = get_latest_submitted_data_from_db($nid);
+  dd($qa_table, 'qa_table');
   $qa_table = generate_result_array($qa_table);
   // display_tree_structure($qa_table);
   // $qa_set = _generate_question_answer_set($qa_table);
@@ -444,8 +443,8 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag, $r
 
 function get_latest_submitted_data_from_db($nid) {
   $sid = get_last_sid_by_nid($nid);
-  $query = db_select('webform_submitted_data', 'wsd');
-  $query->join('webform_component', 'wc', 'wc.cid=wsd.cid');
+  $query = db_select('webform_component', 'wc');
+  $query->leftjoin('webform_submitted_data', 'wsd', 'wsd.cid=wc.cid');
   $query->addField('wc', 'cid');
   $query->addField('wc', 'pid');
   $query->addField('wc', 'form_key');
@@ -456,6 +455,7 @@ function get_latest_submitted_data_from_db($nid) {
   $query->condition('wsd.sid', $sid);
   $query->orderBy('wc.cid');
   $result = $query->execute()->fetchAll();
+  dd($result, 'result');
   return $result;
 }
 
@@ -611,14 +611,14 @@ function generate_result_array($qa_table) {
       'identifier' => 0,
       'question' => 'Project Roles And Responsibilities',
       'rating' => '',
-      'comment' => $qa_table[$target[3]]->data,
+      'comment' => $qa_table[$target[55]]->data,
       ),
     '1' => array(
       'description' => 'Client(Date)',
       'identifier' => 0,
       'question' => 'Client(Date)',
       'rating' => '',
-      'comment' => $qa_table[$target[2]]->data,
+      'comment' => $qa_table[$target[54]]->data,
       ),
     '2' => array(
       'description' => 'Core competencies',
@@ -752,6 +752,27 @@ function generate_result_array($qa_table) {
       'question' => 'Longer Term Goals',
       'rating' => '',
       'comment' => $qa_table[$target[42]]->data,
+      ),
+    '21' => array(
+      'description' => 'Last Year Goal',
+      'identifier' => 3,
+      'question' => 'Last Year Goal',
+      'rating' => '',
+      'comment' => $qa_table[$target[43]]->data,
+      ),
+    '22' => array(
+      'description' => 'Achievements',
+      'identifier' => 3,
+      'question' => 'Achievements',
+      'rating' => '',
+      'comment' => $qa_table[$target[46]]->data,
+      ),
+    '23' => array(
+      'description' => 'Overall Scores',
+      'identifier' => 2,
+      'question' => 'Overall Scores',
+      'rating' => $qa_table[$target[49]]->data,
+      'comment' => '',
       ),
     );
 }
