@@ -79,11 +79,17 @@ function format_login_name($login_name) {
 
 function get_my_anniversary_counselor($my_name) {
   $info = array();
-  $my_counselor_gm_name = my_counselor_gm_name($my_name);
-  $my_counselor_name = $my_counselor_gm_name[0]->counselorName;
-  $my_anniversary_month = my_anniversary_date($my_name);
-  $info['my_counselor_name'] = format_login_name($my_counselor_name);
-  $info['my_anniversary_month'] = $my_anniversary_month;
+  if ($my_name != 'anonymous') {
+    $my_counselor_gm_name = my_counselor_gm_name($my_name);
+    $my_counselor_name = $my_counselor_gm_name[0]->counselorName;
+    $my_anniversary_month = my_anniversary_date($my_name);
+    $info['my_counselor_name'] = format_login_name($my_counselor_name);
+    $info['my_anniversary_month'] = $my_anniversary_month;
+  }
+  else {
+    $info['my_counselor_name'] = 'N/A';
+    $info['my_anniversary_month'] = 'N/A';
+  }
   return $info;
 }
 
