@@ -149,9 +149,7 @@ function get_counselor($employeeName) {
       ->fields('precg', array('counselorName'))
       ->condition('precg.employeeName', $employeeName, '=');
   $result = $query->execute()->fetchAll();
-  $counselor = generate_array($result, 'counselorName');
-
-  return $counselor[0];
+  return $result['0']->counselorName;
 }
 
 function get_user_identity($rreid) {
@@ -494,8 +492,7 @@ function get_review_status_from_db($rreid) {
           ->fields('prre', array('rstatus'))
           ->condition('prre.rreid', $rreid)
           ->execute()->fetchAll();
-  $result = generate_array($query, 'rstatus');
-  return $result[0];
+  return $query['0']->rstatus;
 }
 
 function get_user_identity_by_nid($nid) {
@@ -559,8 +556,6 @@ function get_last_sid_by_nid($nid) {
   foreach ($result as $value) {
     $sid = $value->sid;
   }
-//  dd($sid,'$sid');
-//  dd($nid,'$nid');
   return $sid;
 }
 

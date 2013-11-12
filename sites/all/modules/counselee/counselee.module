@@ -88,6 +88,14 @@ function counselee_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'files/watch_review_status.inc',
   );
+  $items['watchstatus/submitcounselorsheet'] = array(
+    'title' => 'Submit Counselor Sheet',
+    'page callback' => 'submit_counselor_sheet',
+    'page arguments' => array(),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'files/watch_review_status.inc',
+  );
   return $items;
 }
 
@@ -419,8 +427,7 @@ function get_reviewee_from_db($rreid) {
   $query->fields('prre', array('employeeName'));
   $query->condition('prre.rreid', $rreid, '=');
   $result = $query->execute()->fetchAll();
-  $reviewee = generate_array($result, 'employeeName');
-  return $reviewee[0];
+  return $result['0']->employeeName;
 }
 
 /**
@@ -433,8 +440,7 @@ function get_review_spstatus_from_db($rreid) {
   $query->fields('prre', array('spstatus'));
   $query->condition('prre.rreid', $rreid, '=');
   $result = $query->execute()->fetchAll();
-  $spstatus = generate_array($result, 'spstatus');
-  return $spstatus[0];
+  return $result['0']->spstatus;
 }
 
 /**
@@ -637,5 +643,43 @@ function get_self_review_finished_list($counselor) {
     $temp = array('employeeName' => $employeeName, 'rreid' => $rreid, 'reviewType' => $reviewtype, 'description' => $description);
     $result[$index++] = $temp;
   }
+  return $result;
+}
+function get_review_token_from_db($rreid) {
+  $reviewee = get_reviewee_from_db($rreid);
+  $query = db_select('prs_rel_provider_employee', 'prpe')
+        ->fields('prpe', array('providerName', 'token'))
+        ->condition('prpe.rreid', $rreid)
+        ->condition('prpe.providerName', $reviewee, '!=')
+        ->orderBy('prpe.providerName', 'ASC')
+        ->execute()->fetchAll();
+  $tuple = array();
+  foreach ($query as $item) {
+    $temp = array(
+      $item['providerName'] => $item['token']);
+    array_push($tuple, $temp);
+  }
+  return $query;
+}
+
+function get_counselor_submittion_from_db($rreid) {
+  if (module_exists('common') && module_enable(array('common'))) {
+    $nid = get_provider_info($rreid);
+    $csiid = get_last_sid_by_nid($nid);
+  }
+  $query = db_select('prs_counselor_submit_info', 'pcsi')
+        ->join('prs_counselor_submit_data', 'pcsd', 'pcsd.csiid=pcsi.csiid')
+        ->fields('pcsi', array('pcsi.csiid'))
+        ->addField('pcsi', 'nid')
+        ->addField('pcsi', 'submitTimestamp')
+        ->addField('pcsi', 'isDraft')
+        ->addField('pcsd', 'count')
+        ->addField('pcsd', 'header')
+        ->addField('pcsd', 'rating')
+        ->addField('pcsd', 'comment')
+        ->condition('pcsi.nid', $nid)
+        ->condition('pcsi.csiid', $csiid)
+        ->orderBy('pcsd.count', 'ASC');
+  $result = $query->execute()->fetchAll();
   return $result;
 }

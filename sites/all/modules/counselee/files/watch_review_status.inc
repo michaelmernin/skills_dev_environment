@@ -77,11 +77,23 @@ function display_self_assessment($rreid = NULL) {
  * @file 
  * Page callback function for view assessment.
  * */
-function load_self_assessment($rreid) {
+function load_self_assessment($rreid=NULL) {
   access_authen($rreid);
+  // $nid = 3;
+  dd($rreid, 'rreid');
+  $reviewee = get_reviewee_from_db($rreid);
+  $provider_info = get_provider_info($rreid, $reviewee);
+  $nid = $provider_info[0]->nid;
+  $qa_table = get_latest_submitted_data_from_db($nid);
+  $qa_table = generate_result_array($qa_table);
+  // display_tree_structure($qa_table);
+  // $qa_set = _generate_question_answer_set($qa_table);
   // all the page display, access control and other function will be implemented later!
   $pageContent = theme('view_assessment', array(
-    'rreid' => $rreid
+    'rreid'     => $rreid,
+    'nid'       => $nid,
+    'reviewee'  => $reviewee,
+    'qa_table'  => $qa_table,
   ));
   return $pageContent;
 }
@@ -212,6 +224,7 @@ function _insert_items_to_DB($rreid, $providers, &$email_receivers) {
                 'prid' => $prid,
                 'rreid' => $rreid,
                 'providerName' => $provider,
+                // 'token' => $token,
               ))->execute();
       if ($rpeid != -1) {
         array_push($rpeids_array, $rpeid);
@@ -228,145 +241,6 @@ function _insert_items_to_DB($rreid, $providers, &$email_receivers) {
   }
 }
 
-/*
-  function insert_peer_item_to_DB($rreid, $providers, $spstatus, $userId_flag, &$email_receivers) {
-  if ($userId_flag == -1) {
-  drupal_goto('mydashboard');
-  }
-  $rpeid = '';
-  $rpeids_array = array();
-  $employeeName = _get_provider_employeeName($rreid);
-  $prid = _get_provider_prid($rreid);
-
-  if ($spstatus == 0) {
-  if ($userId_flag == 0) {
-  foreach ($providers as $provider) {
-  $result = db_update('prs_rel_review_employee');
-  $result->fields(array('spstatus' => 1,));
-  $result->condition('rreid', $rreid, '=');
-  $result->execute();
-
-  $rpeid = db_insert('prs_rel_provider_employee')
-  ->fields(array(
-  'employeeName' => $employeeName,
-  'prid' => $prid,
-  'rreid' => $rreid,
-  'providerName' => $provider,
-  ))->execute();
-  dd($rpeid);
-  array_push($email_receivers, $provider);
-  if ($rpeid != -1) {
-  array_push($rpeids_array, $rpeid);
-  }
-  }
-  }
-  else if ($userId_flag == 1) {
-  foreach ($providers as $provider) {
-  /* $rpeid = db_insert('prs_rel_review_provider')
-  ->fields(array(
-  'employeeName' => $employeeName,
-  'prid' => $prid,
-  'provider' => $provider,
-  'spstatus' => 2,
-  ))->execute();
-  array_push($email_receivers, $provider);
-  $result = db_update('prs_rel_review_employee');
-  $result->fields(array('spstatus' => 2,));
-  $result->condition('rreid', $rreid, '=');
-  $result->execute();
-
-  $rpeid = db_insert('prs_rel_provider_employee')
-  ->fields(array(
-  'employeeName' => $employeeName,
-  'prid' => $prid,
-  'rreid' => $rreid,
-  'providerName' => $provider,
-  ))->execute();
-  array_push($email_receivers, $provider);
-
-  }
-  }
-  // else {
-
-  // }
-  }
-  // else if (($spstatus == 1 && $userId_flag == 1) || ($spstatus == 2 && $userId_flag == 0)) {
-  //   foreach ($providers as $provider) {
-  //       $rpeid = db_insert('prs_rel_review_provider')
-  //             ->fields(array(
-  //               'employeeName' => $employeeName,
-  //               'prid' => $prid,
-  //               'provider' => $provider,
-  //               'spstatus' => 3,
-  //               ))->execute();
-  // }
-  // // }
-  // else {
-
-  // }
-  return $rpeids_array;
-  }
-
-  function update_peer_item_to_DB($rreid, $providers, $spstatus, $userId_flag, &$email_receivers) {
-  if ($userId_flag == -1) {
-  drupal_goto('mydashboard');
-  }
-  $rpeid = '';
-  $rpeids_array = array();
-  $employeeName = _get_provider_employeeName($rreid);
-  $prid = _get_provider_prid($rreid);
-
-  if (($spstatus == 1 && $userId_flag == 1) || ($spstatus == 2 && $userId_flag == 0)) {
-  $count = 0;
-  foreach($providers as $provider) {
-  if (!is_provider_item_existing($rreid, $provider)) {
-  $result = db_update('prs_rel_review_employee');
-  $result->fields(array('spstatus' => 3,));
-  $result->condition('rreid', $rreid, '=');
-  $result->execute();
-
-  $rpeid = db_insert('prs_rel_provider_employee')
-  ->fields(array(
-  'employeeName' => $employeeName,
-  'prid' => $prid,
-  'rreid' => $rreid,
-  'providerName' => $provider,
-  ))->execute();
-  array_push($email_receivers, $provider);
-  if ($rpeid != -1) {
-  array_push($rpeids_array, $rpeid);
-  }
-  $count++;
-  }
-  else {
-  continue;
-  }
-  }
-  }
-  else {
-  foreach($providers as $provider) {
-  if (!is_provider_item_existing($rreid, $provider)) {
-  $rpeid = db_insert('prs_rel_provider_employee')
-  ->fields(array(
-  'employeeName' => $employeeName,
-  'prid' => $prid,
-  'rreid' => $rreid,
-  'providerName' => $provider,
-  ))->execute();
-  array_push($email_receivers, $provider);
-  if ($rpeid != -1) {
-  array_push($rpeids_array, $rpeid);
-  }
-  }
-  else {
-  continue;
-  }
-  }
-  }
-
-  return $rpeids_array;
-  }
- */
 
 /**
  * _get_provider_employeeName()
@@ -417,9 +291,9 @@ function submit_peer_update() {
   $spstatus = $_POST['spstatus'];
   $userId_flag = $_POST['userId_flag'];
   $email_receivers = array();
+
   update_review_spstatus_manager($rreid, $userId_flag);
   $rpeids_array = _insert_items_to_DB($rreid, $providers, $email_receivers);
-  // dd('after db insert');
   $count = count($rpeids_array);
   if ($count != 0) {
     $msg = $count . ' peer(s) selection updated successfully!';
@@ -428,6 +302,75 @@ function submit_peer_update() {
   send_peer_email_notification($rreid, $email_receivers, $userId_flag, $rpeids_array);
 
   echo $rval;
+}
+
+/**
+  * Page callback function of submit counselor's rating and comments.
+**/
+function submit_counselor_sheet() {
+  $result_val = '1';
+  $nid = $_POST['nid'];
+  $headerInfo = $_POST['headerInfo'];
+  $ratings = $_POST['ratings'];
+  $comments = $_POST['comments'];
+  // dd($nid, 'nid');
+  // dd($headerInfo, 'headerInfo');
+  // dd($ratings, 'ratings');
+  // dd($comments, 'comments');
+  $headerInfo = _generate_headerInfo($headerInfo);
+  $data_array = _generate_counselor_submition_data($headerInfo, $ratings, $comments);
+  $csiid = _insert_counselor_submittion_info_to_DB($nid);
+  if ($csiid == -1) {
+    $msg = 'Inset submittion info failed!';
+    drupal_set_message($msg, 'error');
+    return;
+  }
+  $csdid_array = _insert_counselor_submittion_data_to_DB($nid, $csiid, $data_array);
+  $count = count($csdid_array);
+  if ($count != 0) {
+    $msg = 'You have submitted your ratings and comments for your conselee.';
+    drupal_set_message($msg, 'status');
+  }
+  // send_counselor_reviewed_notification($nid, $reviewee);
+  echo $rval;
+}
+
+function _generate_headerInfo($headerInfo) {
+  return explode('---', $headerInfo);
+}
+
+function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments) {
+  $target_array = array() ;
+  for($i = 0; $i < 21; $i++) {
+    if ($i == 0 || $i == 1) {
+      $target_array[$i] = array(
+        'count' => $i,
+        'header' => $headerInfo[$i],
+        'rating' => '',
+        'comment' => '',
+        );
+    }
+    else if ($i == 2 || $i == 9) {
+      continue;
+    }
+    else if (in_array($i, range(3, 8)) || in_array($i, range(10, 14))) {
+      $target_array[$i] = array(
+        'count' => $i,
+        'header' => '',
+        'rating' => $ratings[$i],
+        'comment' => $comments[$i],
+        );
+    }
+    else if (in_array($i, range(15, 20))) {
+      $target_array[$i] = array(
+        'count' => $i,
+        'header' => '',
+        'rating' => '',
+        'comment' => $comments[$i],
+        );
+    }
+  }
+  return $target_array;
 }
 
 function get_peers_status($rreid) {
@@ -495,7 +438,320 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag, $r
       'peername' => $email_receiver,
     );
     $email_address = select_email_from_prs_reviewers(array($email_receiver));
-    mail_sender_template_adapter($email_address[0]->mail, $peer_info_params, 1);
+    // mail_sender_template_adapter($email_address[0]->mail, $peer_info_params, 1);
   }
 }
 
+function get_latest_submitted_data_from_db($nid) {
+  $sid = get_last_sid_by_nid($nid);
+  $query = db_select('webform_submitted_data', 'wsd');
+  $query->join('webform_component', 'wc', 'wc.cid=wsd.cid');
+  $query->addField('wc', 'cid');
+  $query->addField('wc', 'pid');
+  $query->addField('wc', 'form_key');
+  $query->addField('wc', 'name');
+  $query->addField('wc', 'type');
+  $query->addField('wsd', 'data');
+  $query->condition('wc.nid', $nid);
+  $query->condition('wsd.sid', $sid);
+  $query->orderBy('wc.cid');
+  $result = $query->execute()->fetchAll();
+  return $result;
+}
+
+/*function _insert_counselor_submition_to_DB($nid, &$data_array) {
+  $csid_array = array();
+  $timestamp = time();
+  foreach ($data_array as $data) {
+    $csid = db_insert('prs_counselor_submit');
+        ->fields(array(
+          'nid' => $nid,
+          'submittedTime' => $timestamp,
+          'count' => $data['count'],
+          'header' => $data['header'],
+          'rating' => $data['rating'],
+          'comment' => $data['comment'],
+          ))->execute();
+    if ($csid != -1) {
+      array_push($csid_array, $csid);
+    }
+  }
+  if (count($csid_array) != 0) {
+    return $csid_array;
+  }
+  else {
+    $msg = 'You did not add any content to DB!';
+    drupal_set_message($msg, 'status');
+  }
+}
+*/
+function _insert_counselor_submittion_info_to_DB($nid) {
+  $csiid = '';
+  $timestamp = time();
+  $csiid = db_insert('prs_counselor_submit_info')
+        ->fields(array(
+          'nid' => $nid,
+          'submitTimestamp' => $timestamp,
+          'isDraft' => 0,
+          ))->execute();
+  return $csiid;
+}
+
+function _insert_counselor_submittion_data_to_DB($nid, $csiid, &$data_array) {
+  $csdid_array = array();
+  foreach ($data_array as $data) {
+    dd($nid, 'nid');
+    dd($csiid, 'csiid');
+    dd($data, 'data');
+    $csdid = db_insert('prs_counselor_submit_data')
+          ->fields(array(
+            'nid' => $nid,
+            'csiid' => $csiid,
+            'count' => $data['count'],
+            'header' => $data['header'],
+            // 'rating' => $data['rating'],
+            'comment' => $data['comment'],
+            ))->execute();
+    dd($csdid, 'csdid');
+    if ($csdid != -1) {
+      array_push($csdid_array, $csdid);
+    }
+  }
+  if (count($csdid_array) != 0) {
+    return $csdid_array;
+  }
+  else {
+    $msg = 'You did not add any content to DB!';
+    drupal_set_message($msg, 'status');
+  }
+}
+  // function match_question_and_answer($qa_table) {
+
+  // }
+/*
+
+// for future dev.
+function display_tree_structure($qa_table) {
+  $count = count($qa_table);
+  $unvisited_array = array();
+  $visited_array = array();
+  $sibling_array = array();
+  $cur_parrent = 0;
+  do {
+    foreach ($qa_table as $item) {
+      if ($item->pid == $cur_parrent) {
+        array_push($unvisited_array, $item);
+      }
+    }
+    $current = array_shift($unvisited_array);
+    $cur_parrent = $current->cid;
+    array_push($visited_array, $current);
+    array_push($sibling_array, $unvisited_array);
+    foreach ($qa_table as $item) {
+      if ($item->pid == $cur_parrent) {
+        array_push($unvisited_array);
+      }
+    }
+    // No element was added to unvisited array, that means this is a leaf node.
+    if (count($unvisited_array) == 0) {
+      $sib_queue = array_pop($sibling_array);
+      while (count($sibling_array) != 0) {
+        if (count($sib_queue) != 0) {
+          $current = array_shift($sib_queue);
+        }
+        else {
+          $sib_queue = array_pop($sibling_array);
+        }
+      }
+    }
+    else {
+      $current = array_shift($unvisited_array);
+    }
+  } while(count($unvisited_array) != 0);
+}
+*/
+// function generate_qa_result($qa_table) {
+//   foreach ($qa_table as $item) {
+//     if ($item->type == 'markup') {
+//       continue;
+//     }
+//     $cid = $item->cid;
+//     $question = $item->name;
+//     $answer = $item->data;
+//     $temp = array();
+//   }
+// }
+// function iteration($qa_table) {
+//   $target = array();
+//   for ($i = 0; $i < count($qa_table); $i++) {
+//     $key = $qa_table[$i]->cid;
+//     $value = $i;
+//     // $temp = array($key, $value);
+//     $target[$key] = $value;
+//   }
+//   dd($target, 'target');
+// }
+
+/**
+  *This func is temporarily used to map the header and its result of the survey by hard code.
+  *It will be replaced later.
+**/
+function generate_result_array($qa_table) {
+  $target = array();
+  for ($i = 0; $i < count($qa_table); $i++) {
+    $key = $qa_table[$i]->cid;
+    $value = $i;
+    $target[$key] = $value;
+  }
+  return array(
+    // header core competencies
+    // The 'identifier' property is for identify the array member, 0 for header, 1 for subtitle, 2 for content, 3 for fillform,
+    '0' => array(
+      'description' => 'Project Roles And Responsibilities',
+      'identifier' => 0,
+      'question' => 'Project Roles And Responsibilities',
+      'rating' => '',
+      'comment' => $qa_table[$target[3]]->data,
+      ),
+    '1' => array(
+      'description' => 'Client(Date)',
+      'identifier' => 0,
+      'question' => 'Client(Date)',
+      'rating' => '',
+      'comment' => $qa_table[$target[2]]->data,
+      ),
+    '2' => array(
+      'description' => 'Core competencies',
+      'identifier' => 1,
+      'question' => 'Core Competencies',
+      'rating' => '',
+      'comment' => '',
+      ),
+    '3' => array(
+      'description' => 'client engagement',
+      'identifier' => 2,
+      'question' => $qa_table[$target[8]]->name,
+      'rating' => $qa_table[$target[8]]->data,
+      'comment' => $qa_table[$target[11]]->data,
+      ),
+    '4' => array(
+      'description' => 'consulting skills',
+      'identifier' => 2,
+      'question' => $qa_table[$target[10]]->name,
+      'rating' => $qa_table[$target[10]]->data,
+      'comment' => $qa_table[$target[12]]->data,
+      ),
+    '5' => array(
+      'description' => 'technical ability',
+      'identifier' => 2,
+      'question' => $qa_table[$target[9]]->name,
+      'rating' => $qa_table[$target[9]]->data,
+      'comment' => $qa_table[$target[13]]->data,
+      ),
+    '6' => array(
+      'description' => 'professionalism',
+      'identifier' => 2,
+      'question' => $qa_table[$target[25]]->name,
+      'rating' => $qa_table[$target[25]]->data,
+      'comment' => $qa_table[$target[26]]->data,
+      ),
+    '7' => array(
+      'description' => 'leadership',
+      'identifier' => 2,
+      'question' => $qa_table[$target[27]]->name,
+      'rating' => $qa_table[$target[27]]->data,
+      'comment' => $qa_table[$target[28]]->data,
+      ),
+    '8' => array(
+      'description' => 'teamwork',
+      'identifier' => 2,
+      'question' => $qa_table[$target[29]]->name,
+      'rating' => $qa_table[$target[29]]->data,
+      'comment' => $qa_table[$target[30]]->data,
+      ),
+    '9' => array(
+      'description' => 'Internal Contributions',
+      'identifier' => 1,
+      'question' => 'Internal Contributions',
+      'rating' => '',
+      'comment' => '',
+      ),
+    '10' => array(
+      'description' => 'business dev',
+      'identifier' => 2,
+      'question' => $qa_table[$target[15]]->name,
+      'rating' => $qa_table[$target[15]]->data,
+      'comment' => $qa_table[$target[16]]->data,
+      ),
+    '11' => array(
+      'description' => 'career counseling',
+      'identifier' => 2,
+      'question' => $qa_table[$target[17]]->name,
+      'rating' => $qa_table[$target[17]]->data,
+      'comment' => $qa_table[$target[18]]->data,
+      ),
+    '12' => array(
+      'description' => 'recruiting assist',
+      'identifier' => 2,
+      'question' => $qa_table[$target[19]]->name,
+      'rating' => $qa_table[$target[19]]->data,
+      'comment' => $qa_table[$target[20]]->data,
+      ),
+    '13' => array(
+      'description' => 'internal contribution',
+      'identifier' => 2,
+      'question' => $qa_table[$target[21]]->name,
+      'rating' => $qa_table[$target[21]]->data,
+      'comment' => $qa_table[$target[22]]->data,
+      ),
+    '14' => array(
+      'description' => 'perficient basis',
+      'identifier' => 2,
+      'question' => $qa_table[$target[23]]->name,
+      'rating' => $qa_table[$target[23]]->data,
+      'comment' => $qa_table[$target[24]]->data,
+      ),
+    '15' => array(
+      'description' => 'Strength',
+      'identifier' => 3,
+      'question' => 'Strength',
+      'rating' => '',
+      'comment' => $qa_table[$target[32]]->data,
+      ),
+    '16' => array(
+      'description' => 'Opportunities For Improvement',
+      'identifier' => 3,
+      'question' => 'Opportunities For Improvement',
+      'rating' => '',
+      'comment' => $qa_table[$target[34]]->data,
+      ),
+    '17' => array(
+      'description' => 'Summary',
+      'identifier' => 3,
+      'question' => 'Summary',
+      'rating' => '',
+      'comment' => $qa_table[$target[36]]->data,
+      ),
+    '18' => array(
+      'description' => 'Goals',
+      'identifier' => 3,
+      'question' => 'Goals',
+      'rating' => '',
+      'comment' => $qa_table[$target[38]]->data,
+      ),
+    '19' => array(
+      'description' => 'Development Opportunities',
+      'identifier' => 3,
+      'question' => 'Development Opportunities',
+      'rating' => '',
+      'comment' => $qa_table[$target[40]]->data,
+      ),
+    '20' => array(
+      'description' => 'Longer Term Goals',
+      'identifier' => 3,
+      'question' => 'Longer Term Goals',
+      'rating' => '',
+      'comment' => $qa_table[$target[42]]->data,
+      ),
+    );
+}

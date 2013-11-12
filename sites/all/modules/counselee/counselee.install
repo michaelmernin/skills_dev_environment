@@ -76,31 +76,6 @@ function counselee_schema() {
     'primary key' => array('rid'),
   );
 
-  /*     $schema['prs_reviewers'] = array(
-    'fields' => array(
-    'rid' => array(
-    'description' => 'Primary Key: Unique id for reviewers.',
-    'type' => 'serial',
-    'unsigned' => TRUE,
-    'not null' => TRUE,
-    ),
-    'code' => array(
-    'description' => 'Unique employee code for reviewers.',
-    'type' => 'varchar',
-    'length' => '20',
-    'not null' => TRUE,
-    'default' => '',
-    ),
-    'login_name' => array(
-    'description' => 'Unique name for reviewer to access ldap server, only for company member.',
-    'type' => 'varchar',
-    'length' => '128',
-    'not null' => TRUE,
-    'default' => '',
-    ),
-    ),
-    );
-   */
   $schema['prs_rel_employee_counselor_gm'] = array(
     'fields' => array(
       'recgid' => array(
@@ -133,6 +108,8 @@ function counselee_schema() {
     ),
     'primary key' => array('recgid'),
       );
+
+ 
   return $schema;
 }
 

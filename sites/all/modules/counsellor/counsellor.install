@@ -177,6 +177,85 @@ function counsellor_schema() {
     'primary key' => array('rreid'),
   );
 
+  $schema['prs_counselor_submit_info'] = array(
+    'fields' => array(
+      'csiid' => array(
+        'description' => 'Primary Key: Unique Sequence ID. The identifer of counselor \'s submittion information.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        ),
+      'nid' => array(
+        'description' => 'Primary Key: Unique Node ID generated along with when a review was created.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        ),
+      'submitTimestamp' => array(
+        'description' => 'A UNIX timestamp of when the evaluation was submitted.',
+        'type' => 'int',
+        'no null' => TRUE,
+        'default' => 0,
+        ),
+      'isDraft' => array(
+        'description' => 'A status bit to identify if counselor\'s submittion is drafted.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'default' => 0,
+        ),
+      ),
+    'primary key' => array('csiid', 'nid'),
+    );
+
+  $schema['prs_counselor_submit_data'] = array(
+    'fields' => array(
+      'csdid' => array(
+        'description' => 'Primary Key: Unique Sequence ID. The identifer of counselor \'s form result.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        ),
+      'nid' => array(
+        'description' => 'Primary Key: Unique ID of node which generated along with a review created.',
+        'type' => 'int',  
+        'not null' => TRUE,
+        'default' => 0,
+        ),
+      'csiid' => array(
+        'description' => 'Unique Sequence ID. The identifer of counselor \'s submittion information.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        ),
+      'count' => array(
+        'description' => 'The serial number of each question in a submitted sheet. Starts with 0.',
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        ),
+      'header' => array(
+        'description' => 'The header of each item, it may be the subtitle of a section, or the question of an survey.',
+        'type' => 'varchar',
+        'length' => 255,
+        ),
+      'rating' => array(
+        'description' => 'The rating that counselor will evaluate the counselee performance.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        ),
+      'comment' => array(
+        'description' => 'The comment corresponds to this header',
+        'type' => 'varchar',
+        'length' => 255,
+        ),
+      ),
+    'primary key' => array('csdid', 'nid' ,'csiid'),
+  );
+
 
   return $schema;
 }
