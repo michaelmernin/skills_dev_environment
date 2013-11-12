@@ -105,7 +105,7 @@
       rreid = obj.rreid;
       reviewType = obj.reviewType;
       description = obj.description;
-      url = "./watchstatus/selectpeers/" + rreid;
+      url = "./watchstatus/viewassessment/" + rreid;
       li = " <li> <a href='" + url + "'>[" + name + "] has finished " + description + " self reivew.(" + reviewName(reviewType) + ")</a> </li>";
       jQuery('#myWorkForOther').append(li);
     }

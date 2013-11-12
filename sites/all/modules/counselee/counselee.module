@@ -294,6 +294,8 @@ function get_status_from_db($employeeName) {
  * @return array Current user to do reviewList
  */
 function counselee_do_peersreview($userName) {
+  
+  $status = Array(1,2,3,4,5,6);
   $peers_query = db_select('prs_rel_provider_employee', 'provider');
   $peers_query->join('prs_general', 'general', 'general.prid = provider.prid');
   $peers_query->join('prs_rel_review_employee', 'review', 'review.rreid = provider.rreid');
@@ -304,7 +306,7 @@ function counselee_do_peersreview($userName) {
   $peers_query->addField('general', 'description');
   $peers_query->condition('provider.providerName', $userName);
   $peers_query->condition('provider.status', 0);
-  $peers_query->condition('review.rstatus', 1);
+  $peers_query->condition('review.rstatus', $status,'in');
   $dataset = $peers_query->execute()->fetchAll();
 
   $result = array();
