@@ -110,9 +110,8 @@ function my_anniversary_date($login_name) {
     return $year . '/' . $month;
   }
   else {
-    return '';
+    return 'N/A';
   }
-  return trim($formated_name);
 }
 
 /**
@@ -450,7 +449,7 @@ function get_temp_node_id($temp_name) {
 }
 
 function change_redirect_path($nid, $is_selfreview) {
-  dd($is_selfreview, '$is_selfreview');
+//  dd($is_selfreview, '$is_selfreview');
   $url = 'feedbacksubmitsuccess';
   // you can change here if you want to copy template totally, you can change here to query first
 //  $allow_draft = 1;
