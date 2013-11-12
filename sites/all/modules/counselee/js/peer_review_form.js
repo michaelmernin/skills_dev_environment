@@ -191,6 +191,7 @@ function check_comments(category)
             if (len < 1) {
                 alert('The socre is not 3 points.Please enter comment!');
                 jQuery(category[i] + "-comment").focus();
+                //jQuery(category[i] + "-comment").addClass('form-textarea required error');
                 return false;
             }
         }
