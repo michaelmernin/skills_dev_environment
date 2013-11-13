@@ -1,9 +1,9 @@
 <?php
+
 /**
  * @file
  * Main module file for Webform Multiple (WFM).
  */
-
 define('WFM_UNLIMITED', -1);
 
 /**
@@ -104,8 +104,8 @@ function wfm_form_webform_client_form_alter(&$form, &$form_state) {
   unset($form['#validate'][$key]);
   $form['#validate'][] = 'wfm_validate';
 
-  if(isset($form['actions']['draft']['#validate'])){
-    $form['actions']['draft']['#validate'] = array('wfm_validate');
+  if (isset($form['actions']['draft']['#validate'])) {
+    $form['actions']['draft']['#validate'] = array('wfm_draft_validate');
   }
 }
 
@@ -355,7 +355,6 @@ function _wfm_process_elements(&$element, &$form_state, $submission, $display = 
     }
 
     $item_number++;
-
   }
 }
 
@@ -424,7 +423,36 @@ function wfm_validate($form, &$form_state) {
   if (form_get_errors() || !empty($form_state['rebuild'])) {
     $form_state['values']['submitted'] = $original_submitted;
   }
+}
 
+/**
+ * Validation callback for the webform, running before Webform draft callbacks.
+ */
+function wfm_draft_validate($form, &$form_state) {
+  $node = $form['#node'];
+  $components = $node->webform['components'];
+
+  // Bypass validation if #limit_validation_errors is an empty array.
+  if (isset($form_state['triggering_element']['#limit_validation_errors']) && !count($form_state['triggering_element']['#limit_validation_errors'])) {
+    return;
+  }
+
+  // Prepare the $form_state so it can be processed by the Webform validator,
+  // and save the values in their original form because they may be needed
+  // later.
+  $original_submitted = $form_state['values']['submitted'];
+  _wfm_values_prepare($form_state, $components);
+
+  // Run the Webform validator.
+  // 
+  // webform_client_form_validate($form, $form_state);
+  // 
+  // If the form needs to be rebuilt, for example if there were validation
+  // errors, then reset the $form_state array to its original structure (the
+  // structure it had before _wfm_values_prepare() was run).
+  if (form_get_errors() || !empty($form_state['rebuild'])) {
+    $form_state['values']['submitted'] = $original_submitted;
+  }
 }
 
 /**
@@ -540,14 +568,11 @@ function _wfm_values_prepare(&$form_state, $components) {
         $sub_value_parents[] = $key;
         drupal_array_set_nested_value($form_state['values']['submitted'], $sub_value_parents, $sub_value, TRUE);
       }
-
     }
-
   }
 
   // Remove empty arrays from $form_state.
   $form_state['values']['submitted'] = _wfm_filter_recursive($form_state['values']['submitted']);
-
 }
 
 /**
