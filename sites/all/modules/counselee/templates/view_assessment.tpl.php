@@ -5,33 +5,33 @@ $counselor = get_counselor($reviewee);
 $cur_user = get_current_user_name();
 $identity = ($cur_user != $counselor)?'counselee': 'counselor';
 if ($identity == 'counselee') {
-  for ($i = 0; $i < count($qa_table); $i++) {
-    switch ($qa_table[$i]['identifier']) {
+  for ($i = 0; $i < count($dataset); $i++) {
+    switch ($dataset[$i]['identifier']) {
       case '0':
-        display_header($i, $qa_table[$i]);
+        display_header($i, $dataset[$i]);
         break;
 
       case '1':
-        display_subtitle($i, $qa_table[$i]['question']);
+        display_subtitle($i, $dataset[$i]['question']);
         break;
 
       case '2':
         print '<div>';
-        display_questions($i, $qa_table[$i]['question']);
-        if (in_array($qa_table[$i]['rating'], array(0, 1, 2, 3, 4, 5))) {
-          display_rating($i, $qa_table[$i]['rating']);
+        display_questions($i, $dataset[$i]['question']);
+        if (in_array($dataset[$i]['rating'], array(0, 1, 2, 3, 4, 5))) {
+          display_rating($i, $dataset[$i]['rating']);
         };
-        display_comment($i, $qa_table[$i]['comment']);
+        display_comment($i, $dataset[$i]['comment']);
         print '</div>';
         break;
 
       case '3':
-        display_fillform($i, $qa_table[$i]);
+        display_fillform($i, $dataset[$i]);
         break;
 
       case '4':
-        display_questions($i, $qa_table[$i]['question']);
-      	display_overall($i, $qa_table[$i]['rating']);
+        display_questions($i, $dataset[$i]['question']);
+      	display_overall($i, $dataset[$i]['rating']);
       	display_counselor_rating_area($i);
       	break;
 
@@ -41,36 +41,36 @@ if ($identity == 'counselee') {
   }
 }
 else {
-  for ($i = 0; $i < count($qa_table); $i++) {
-    switch ($qa_table[$i]['identifier']) {
+  for ($i = 0; $i < count($dataset); $i++) {
+    switch ($dataset[$i]['identifier']) {
       case '0':
-        display_header($i, $qa_table[$i]);
+        display_header($i, $dataset[$i]);
         break;
 
       case '1':
-        display_subtitle($i, $qa_table[$i]['question']);
+        display_subtitle($i, $dataset[$i]['question']);
         break;
 
       case '2':
         print '<div>';
-        display_questions($i, $qa_table[$i]['question']);
-        if (in_array($qa_table[$i]['rating'], array(0, 1, 2, 3, 4, 5))) {
-          display_rating($i, $qa_table[$i]['rating']);
+        display_questions($i, $dataset[$i]['question']);
+        if (in_array($dataset[$i]['rating'], array(0, 1, 2, 3, 4, 5))) {
+          display_rating($i, $dataset[$i]['rating']);
         };
-        display_comment($i, $qa_table[$i]['comment']);
+        display_comment($i, $dataset[$i]['comment']);
         display_counselor_rating_area($i);
         display_counselor_comment_area($i);
         print '</div>';
         break;
 
       case '3':
-        display_fillform($i, $qa_table[$i]);
+        display_fillform($i, $dataset[$i]);
         display_counselor_comment_area($i);
         break;
 
 	    case '4':
-	    display_questions($i, $qa_table[$i]['question']);
-	  	display_overall($i, $qa_table[$i]['rating']);
+	    display_questions($i, $dataset[$i]['question']);
+	  	display_overall($i, $dataset[$i]['rating']);
 	  	display_counselor_rating_area($i);
 	  	break;
 
@@ -81,6 +81,33 @@ else {
 }
 ?>
 <br />
+<div id="draftbutton">
+<a id="modal-912871" href="#modal-container-912871" role="button" class="btn btn-danger" data-toggle="modal">Disapprove</a>
+
+<div class="row-fluid">
+  <div class="span12">
+    <div id="modal-container-912871" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="close_btn" value="0">×</button>
+        <h3 id="myModalLabel">
+          Confirm to Submit sheet.
+        </h3>
+      </div>
+      <div class="modal-body">
+        <p>
+          Do you want to submit this form? <br>
+          When you submit this form, all the contents cannot be revised!
+        </p>
+      </div>
+      <div class="modal-footer">
+        <img class="loading_img" id="status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="submit_button" onclick="disapproveCounseleeResult()">Disapproved</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 <div id="draftbutton">
 <a id="modal-912871" href="#modal-container-912871" role="button" class="btn btn-danger" data-toggle="modal">Save as draft</a>
 
@@ -169,7 +196,7 @@ else {
 
 </script>
 <input type="hidden" id="nid" value="<?php print $nid ?>"/>
-<input type="hidden" id="count" value="<?php print count($qa_table); ?>"/>
+<input type="hidden" id="count" value="<?php print count($dataset); ?>"/>
 
 <script type="text/javascript">
 // function displaySwitch() {

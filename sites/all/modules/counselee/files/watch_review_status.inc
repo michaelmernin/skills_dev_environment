@@ -82,17 +82,13 @@ function load_self_assessment($rreid=NULL) {
   $reviewee = get_reviewee_from_db($rreid);
   $provider_info = get_provider_info($rreid, $reviewee);
   $nid = $provider_info[0]->nid;
-  $qa_table = get_latest_submitted_data_from_db($nid);
-  $qa_table = generate_selfassessment_result_array($qa_table);
-  dd($qa_table, 'qa_table');
-  // display_tree_structure($qa_table);
-  // $qa_set = _generate_question_answer_set($qa_table);
-  // all the page display, access control and other function will be implemented later!
+  $dataset = get_latest_submitted_data_from_db($nid);
+  $dataset = generate_selfassessment_result_array($dataset);
   $pageContent = theme('view_assessment', array(
     'rreid'     => $rreid,
     'nid'       => $nid,
     'reviewee'  => $reviewee,
-    'qa_table'  => $qa_table,
+    'dataset'  => $dataset,
   ));
   return $pageContent;
 }
@@ -338,6 +334,13 @@ function _generate_headerInfo($headerInfo) {
   return explode('---', $headerInfo);
 }
 
+/**
+ * generate couselor submittion data from array $hederInfo, $ratings and $comments
+ * @param array by reference $headerInfo
+ * @param array by reference $ratings
+ * @param array by reference $comments
+ * @return array that migrating above array together.
+**/
 function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments) {
   $target_array = array() ;
   for($i = 0; $i < 21; $i++) {
@@ -441,39 +444,50 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag, $r
   }
 }
 
+/**
+ * get_latest_submitted_data_from_db
+ * @param int $nid
+ * @return array $dataset,data which contains $cid, $sid, $pid, $form_key, $type, $weight, $name, $data.
+ * if you would like to accuire additional data from here, feel free to adjust the db_query statement.
+**/
 function get_latest_submitted_data_from_db($nid) {
   $sid = get_last_sid_by_nid($nid);
-  $result = db_query('SELECT
-webform_component.cid,
- webform_component.form_key,
- webform_component.name,
-webform_component.type,
-webform_component.pid,
-webform_component.weight,
-IF (wd.sid IS NULL, \'NIL\', wd.sid) AS sid,
-IF (wd.DATA IS NULL, \'NIL\', wd.DATA) AS DATA
-FROM
-  webform_component
-LEFT JOIN (
-  SELECT
-    DATA,
-    sid,
-    cid,
-    nid
-  FROM
-    webform_submitted_data
-  WHERE
-    nid = :nid
-  AND sid = :sid
-) wd ON webform_component.cid = wd.cid
-WHERE
-  webform_component.nid = :nid
-ORDER BY
-  webform_component.cid', 
+  $dataset = db_query('SELECT
+        webform_component.cid,
+        webform_component.form_key,
+        webform_component.name,
+        webform_component.type,
+        webform_component.pid,
+        webform_component.weight,
+        IF (wd.sid IS NULL, \'NIL\', wd.sid) AS sid,
+        IF (wd.DATA IS NULL, \'NIL\', wd.DATA) AS DATA
+        FROM
+          webform_component
+        LEFT JOIN (
+          SELECT
+            DATA,
+            sid,
+            cid,
+            nid
+          FROM
+            webform_submitted_data
+          WHERE
+            nid = :nid
+          AND sid = :sid
+        ) wd ON webform_component.cid = wd.cid
+        WHERE
+          webform_component.nid = :nid
+        ORDER BY
+          webform_component.cid', 
     array(':sid'=> $sid, ':nid' => $nid ))->fetchAll();
-  return $result;
+  return $dataset;
 }
 
+/**
+ * insert counselor's submission info to db table prs_counselor_submit_info
+ * @param int $nid
+ * @return int $csiid
+**/
 function _insert_counselor_submittion_info_to_DB($nid) {
   $csiid = '';
   $timestamp = time();
@@ -481,15 +495,21 @@ function _insert_counselor_submittion_info_to_DB($nid) {
         ->fields(array(
           'nid' => $nid,
           'submitTimestamp' => $timestamp,
-          'isDraft' => 0,
+          'isDraft' => 1,
           ))->execute();
   return $csiid;
 }
 
+/**
+ * insert counselor's submission data to db table prs_counselor_submit_data
+ * @param int $nid
+ * @param int $csiid
+ * @param array by reference $data_array
+ * @return array $csdid_array
+**/
 function _insert_counselor_submittion_data_to_DB($nid, $csiid, &$data_array) {
   $csdid_array = array();
   foreach ($data_array as $data) {
-    dd($data, 'data');
     $csdid = db_insert('prs_counselor_submit_data')
           ->fields(array(
             'nid' => $nid,
@@ -762,186 +782,186 @@ function generate_selfassessment_result_array($qa_table) {
     );
 }
 
-function generate_peerassessment_result_array($qa_table) {
-  $target = array();
-  for ($i = 0; $i < count($qa_table); $i++) {
-/*    if ($qa_table[$i]->cid == 'NIL') {
-      continue;
-    }
-*/    $key = $qa_table[$i]->cid;
-    $value = $i;
-    $target[$key] = $value;
-  }
-  return array(
-    // header core competencies
-    // The 'identifier' property is for identify the array member, 0 for header, 1 for subtitle, 2 for content, 3 for fillform,
-    '0' => array(
-      'description' => 'Project Roles And Responsibilities',
-      'identifier' => 0,
-      'question' => 'Project Roles And Responsibilities',
-      'rating' => '',
-      'comment' => $qa_table[$target[55]]->DATA,
-      ),
-    '1' => array(
-      'description' => 'Client(Date)',
-      'identifier' => 0,
-      'question' => 'Client(Date)',
-      'rating' => '',
-      'comment' => $qa_table[$target[54]]->DATA,
-      ),
-    '2' => array(
-      'description' => 'Core competencies',
-      'identifier' => 1,
-      'question' => 'Core Competencies',
-      'rating' => '',
-      'comment' => '',
-      ),
-    '3' => array(
-      'description' => 'client engagement',
-      'identifier' => 2,
-      'question' => $qa_table[$target[8]]->name,
-      'rating' => $qa_table[$target[8]]->DATA,
-      'comment' => $qa_table[$target[11]]->DATA,
-      ),
-    '4' => array(
-      'description' => 'consulting skills',
-      'identifier' => 2,
-      'question' => $qa_table[$target[10]]->name,
-      'rating' => $qa_table[$target[10]]->DATA,
-      'comment' => $qa_table[$target[12]]->DATA,
-      ),
-    '5' => array(
-      'description' => 'technical ability',
-      'identifier' => 2,
-      'question' => $qa_table[$target[9]]->name,
-      'rating' => $qa_table[$target[9]]->DATA,
-      'comment' => $qa_table[$target[13]]->DATA,
-      ),
-    '6' => array(
-      'description' => 'professionalism',
-      'identifier' => 2,
-      'question' => $qa_table[$target[25]]->name,
-      'rating' => $qa_table[$target[25]]->DATA,
-      'comment' => $qa_table[$target[26]]->DATA,
-      ),
-    '7' => array(
-      'description' => 'leadership',
-      'identifier' => 2,
-      'question' => $qa_table[$target[27]]->name,
-      'rating' => $qa_table[$target[27]]->DATA,
-      'comment' => $qa_table[$target[28]]->DATA,
-      ),
-    '8' => array(
-      'description' => 'teamwork',
-      'identifier' => 2,
-      'question' => $qa_table[$target[29]]->name,
-      'rating' => $qa_table[$target[29]]->DATA,
-      'comment' => $qa_table[$target[30]]->DATA,
-      ),
-    '9' => array(
-      'description' => 'Internal Contributions',
-      'identifier' => 1,
-      'question' => 'Internal Contributions',
-      'rating' => '',
-      'comment' => ''
-      ),
-    '10' => array(
-      'description' => 'business dev',
-      'identifier' => 2,
-      'question' => $qa_table[$target[15]]->name,
-      'rating' => $qa_table[$target[15]]->DATA,
-      'comment' => $qa_table[$target[16]]->DATA,
-      ),
-    '11' => array(
-      'description' => 'career counseling',
-      'identifier' => 2,
-      'question' => $qa_table[$target[17]]->name,
-      'rating' => $qa_table[$target[17]]->DATA,
-      'comment' => $qa_table[$target[18]]->DATA,
-      ),
-    '12' => array(
-      'description' => 'recruiting assist',
-      'identifier' => 2,
-      'question' => $qa_table[$target[19]]->name,
-      'rating' => $qa_table[$target[19]]->DATA,
-      'comment' => $qa_table[$target[20]]->DATA,
-      ),
-    '13' => array(
-      'description' => 'internal contribution',
-      'identifier' => 2,
-      'question' => $qa_table[$target[21]]->name,
-      'rating' => $qa_table[$target[21]]->DATA,
-      'comment' => $qa_table[$target[22]]->DATA,
-      ),
-    '14' => array(
-      'description' => 'perficient basis',
-      'identifier' => 2,
-      'question' => $qa_table[$target[23]]->name,
-      'rating' => $qa_table[$target[23]]->DATA,
-      'comment' => $qa_table[$target[24]]->DATA,
-      ),
-    '15' => array(
-      'description' => 'Strength',
-      'identifier' => 3,
-      'question' => 'Strength',
-      'rating' => '',
-      'comment' => $qa_table[$target[32]]->DATA,
-      ),  
-    '16' => array(
-      'description' => 'Opportunities For Improvement',
-      'identifier' => 3,
-      'question' => 'Opportunities For Improvement',
-      'rating' => '',
-      'comment' => $qa_table[$target[34]]->DATA,
-      ),
-    '17' => array(
-      'description' => 'Summary',
-      'identifier' => 3,
-      'question' => 'Summary',
-      'rating' => '',
-      'comment' => $qa_table[$target[36]]->DATA,
-      ),
-    '18' => array(
-      'description' => 'Goals',
-      'identifier' => 3,
-      'question' => 'Goals',
-      'rating' => '',
-      'comment' => $qa_table[$target[38]]->DATA,
-      ),
-    '19' => array(
-      'description' => 'Development Opportunities',
-      'identifier' => 3,
-      'question' => 'Development Opportunities',
-      'rating' => '',
-      'comment' => $qa_table[$target[40]]->DATA,
-      ),
-    '20' => array(
-      'description' => 'Longer Term Goals',
-      'identifier' => 3,
-      'question' => 'Longer Term Goals',
-      'rating' => '',
-      'comment' => $qa_table[$target[42]]->DATA,
-      ),
-    '21' => array(
-      'description' => 'Last Year Goal',
-      'identifier' => 3,
-      'question' => 'Last Year Goal',
-      'rating' => '',
-      'comment' => $qa_table[$target[43]]->DATA,
-      ),
-    '22' => array(
-      'description' => 'Achievements',
-      'identifier' => 3,
-      'question' => 'Achievements',
-      'rating' => '',
-      'comment' => $qa_table[$target[46]]->DATA,
-      ),
-    '23' => array(
-      'description' => 'Overall Scores',
-      'identifier' => 4,
-      'question' => 'Overall Scores',
-      'rating' => '',
-      'comment' => $qa_table[$target[49]]->DATA,
-      ),
-    );
-}
+// function generate_peerassessment_result_array($qa_table) {
+//   $target = array();
+//   for ($i = 0; $i < count($qa_table); $i++) {
+// /*    if ($qa_table[$i]->cid == 'NIL') {
+//       continue;
+//     }
+// */    $key = $qa_table[$i]->cid;
+//     $value = $i;
+//     $target[$key] = $value;
+//   }
+//   return array(
+//     // header core competencies
+//     // The 'identifier' property is for identify the array member, 0 for header, 1 for subtitle, 2 for content, 3 for fillform,
+//     '0' => array(
+//       'description' => 'Project Roles And Responsibilities',
+//       'identifier' => 0,
+//       'question' => 'Project Roles And Responsibilities',
+//       'rating' => '',
+//       'comment' => $qa_table[$target[55]]->DATA,
+//       ),
+//     '1' => array(
+//       'description' => 'Client(Date)',
+//       'identifier' => 0,
+//       'question' => 'Client(Date)',
+//       'rating' => '',
+//       'comment' => $qa_table[$target[54]]->DATA,
+//       ),
+//     '2' => array(
+//       'description' => 'Core competencies',
+//       'identifier' => 1,
+//       'question' => 'Core Competencies',
+//       'rating' => '',
+//       'comment' => '',
+//       ),
+//     '3' => array(
+//       'description' => 'client engagement',
+//       'identifier' => 2,
+//       'question' => $qa_table[$target[8]]->name,
+//       'rating' => $qa_table[$target[8]]->DATA,
+//       'comment' => $qa_table[$target[11]]->DATA,
+//       ),
+//     '4' => array(
+//       'description' => 'consulting skills',
+//       'identifier' => 2,
+//       'question' => $qa_table[$target[10]]->name,
+//       'rating' => $qa_table[$target[10]]->DATA,
+//       'comment' => $qa_table[$target[12]]->DATA,
+//       ),
+//     '5' => array(
+//       'description' => 'technical ability',
+//       'identifier' => 2,
+//       'question' => $qa_table[$target[9]]->name,
+//       'rating' => $qa_table[$target[9]]->DATA,
+//       'comment' => $qa_table[$target[13]]->DATA,
+//       ),
+//     '6' => array(
+//       'description' => 'professionalism',
+//       'identifier' => 2,
+//       'question' => $qa_table[$target[25]]->name,
+//       'rating' => $qa_table[$target[25]]->DATA,
+//       'comment' => $qa_table[$target[26]]->DATA,
+//       ),
+//     '7' => array(
+//       'description' => 'leadership',
+//       'identifier' => 2,
+//       'question' => $qa_table[$target[27]]->name,
+//       'rating' => $qa_table[$target[27]]->DATA,
+//       'comment' => $qa_table[$target[28]]->DATA,
+//       ),
+//     '8' => array(
+//       'description' => 'teamwork',
+//       'identifier' => 2,
+//       'question' => $qa_table[$target[29]]->name,
+//       'rating' => $qa_table[$target[29]]->DATA,
+//       'comment' => $qa_table[$target[30]]->DATA,
+//       ),
+//     '9' => array(
+//       'description' => 'Internal Contributions',
+//       'identifier' => 1,
+//       'question' => 'Internal Contributions',
+//       'rating' => '',
+//       'comment' => ''
+//       ),
+//     '10' => array(
+//       'description' => 'business dev',
+//       'identifier' => 2,
+//       'question' => $qa_table[$target[15]]->name,
+//       'rating' => $qa_table[$target[15]]->DATA,
+//       'comment' => $qa_table[$target[16]]->DATA,
+//       ),
+//     '11' => array(
+//       'description' => 'career counseling',
+//       'identifier' => 2,
+//       'question' => $qa_table[$target[17]]->name,
+//       'rating' => $qa_table[$target[17]]->DATA,
+//       'comment' => $qa_table[$target[18]]->DATA,
+//       ),
+//     '12' => array(
+//       'description' => 'recruiting assist',
+//       'identifier' => 2,
+//       'question' => $qa_table[$target[19]]->name,
+//       'rating' => $qa_table[$target[19]]->DATA,
+//       'comment' => $qa_table[$target[20]]->DATA,
+//       ),
+//     '13' => array(
+//       'description' => 'internal contribution',
+//       'identifier' => 2,
+//       'question' => $qa_table[$target[21]]->name,
+//       'rating' => $qa_table[$target[21]]->DATA,
+//       'comment' => $qa_table[$target[22]]->DATA,
+//       ),
+//     '14' => array(
+//       'description' => 'perficient basis',
+//       'identifier' => 2,
+//       'question' => $qa_table[$target[23]]->name,
+//       'rating' => $qa_table[$target[23]]->DATA,
+//       'comment' => $qa_table[$target[24]]->DATA,
+//       ),
+//     '15' => array(
+//       'description' => 'Strength',
+//       'identifier' => 3,
+//       'question' => 'Strength',
+//       'rating' => '',
+//       'comment' => $qa_table[$target[32]]->DATA,
+//       ),  
+//     '16' => array(
+//       'description' => 'Opportunities For Improvement',
+//       'identifier' => 3,
+//       'question' => 'Opportunities For Improvement',
+//       'rating' => '',
+//       'comment' => $qa_table[$target[34]]->DATA,
+//       ),
+//     '17' => array(
+//       'description' => 'Summary',
+//       'identifier' => 3,
+//       'question' => 'Summary',
+//       'rating' => '',
+//       'comment' => $qa_table[$target[36]]->DATA,
+//       ),
+//     '18' => array(
+//       'description' => 'Goals',
+//       'identifier' => 3,
+//       'question' => 'Goals',
+//       'rating' => '',
+//       'comment' => $qa_table[$target[38]]->DATA,
+//       ),
+//     '19' => array(
+//       'description' => 'Development Opportunities',
+//       'identifier' => 3,
+//       'question' => 'Development Opportunities',
+//       'rating' => '',
+//       'comment' => $qa_table[$target[40]]->DATA,
+//       ),
+//     '20' => array(
+//       'description' => 'Longer Term Goals',
+//       'identifier' => 3,
+//       'question' => 'Longer Term Goals',
+//       'rating' => '',
+//       'comment' => $qa_table[$target[42]]->DATA,
+//       ),
+//     '21' => array(
+//       'description' => 'Last Year Goal',
+//       'identifier' => 3,
+//       'question' => 'Last Year Goal',
+//       'rating' => '',
+//       'comment' => $qa_table[$target[43]]->DATA,
+//       ),
+//     '22' => array(
+//       'description' => 'Achievements',
+//       'identifier' => 3,
+//       'question' => 'Achievements',
+//       'rating' => '',
+//       'comment' => $qa_table[$target[46]]->DATA,
+//       ),
+//     '23' => array(
+//       'description' => 'Overall Scores',
+//       'identifier' => 4,
+//       'question' => 'Overall Scores',
+//       'rating' => '',
+//       'comment' => $qa_table[$target[49]]->DATA,
+//       ),
+//     );
+// }

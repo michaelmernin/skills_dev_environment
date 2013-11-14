@@ -124,6 +124,25 @@ function counsellor_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'isRead' => array(
+        'description' => 'status implies whether counselor has read the lateset update of peer\'s review. 0 for unread, 1 for read.',
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'isCounselorApproved' => array(
+        'description' => 'status that if counselor approved its counselee\'s review. 0 for not submitted, 1 for approved, 2 for denied.',
+        'type' => 'int',
+        'size' =>  'small',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'deniedInfo' => array(
+        'description' => 'If counselor denied the self review result, he or she needs to add reasons. This area will be replaced if review is several denied.',
+        'type' => 'varchar',
+        'length' => 255,
+      ),
     ),
     'primary key' => array('rpeid'),
   );
@@ -237,8 +256,8 @@ function counsellor_schema() {
         'not null' => TRUE,
         'default' => 0,
         ),
-      'header' => array(
-        'description' => 'The header of each item, it may be the subtitle of a section, or the question of an survey.',
+      'title' => array(
+        'description' => 'The title of each item, it may be the subtitle of a section, or the question of an survey.',
         'type' => 'varchar',
         'length' => 255,
         ),
@@ -247,10 +266,15 @@ function counsellor_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         ),
-      'comment' => array(
-        'description' => 'The comment corresponds to this header',
+      'counselor_comment' => array(
+        'description' => 'The comment corresponds to this title.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => '255',
+        ),
+      'peer_comments' => array(
+        'description' => 'The summarized comments of all the peers.',
+        'type' => 'varchar',
+        'length' => '255',
         ),
       ),
     'primary key' => array('csdid', 'nid' ,'csiid'),
