@@ -26,11 +26,11 @@ function mail_sender_cron() {
  */
 function mail_sender_send($address, $subject, $body, $isHtml) {
 
-  $mail_on = variable_get('smtp_on', 1);
-  if ($mail_on == 0) {
-    watchdog('mail sender send', 'phpmailer is off', array(), WATCHDOG_NOTICE);
-    return 'Phpmailer is off.';
-  }
+//  $mail_on = variable_get('smtp_on', 1);
+//  if ($mail_on == 0) {
+//    watchdog('mail sender send', 'phpmailer is off', array(), WATCHDOG_NOTICE);
+//    return 'Phpmailer is off.';
+//  }
 
   try {
     $mail = new PHPMailer(true); //New instance, with exceptions enabled
@@ -44,7 +44,6 @@ function mail_sender_send($address, $subject, $body, $isHtml) {
     $mail->FromName = variable_get('site_name');
     $mail->AddReplyTo($mail->From, $mail->FromName);
     $mail->CharSet = 'iso-8859-1';
-
 
     if (is_array($address))
       foreach ($address as $to)
@@ -76,7 +75,7 @@ function mail_sender_send($address, $subject, $body, $isHtml) {
  * @return string The result of send mail
  *         1 stand for send e-mail success
  */
-function mail_sender_mail_template($address, $subject, $params, $templateName) {
+function mail_sender_mail_template($address, $subject, $params, $templateName, $isImmediately) {
 
   $templatePath = drupal_get_path('module', 'mail_sender') . '/templates/' . $templateName;
   if (file_exists($templatePath))
@@ -104,19 +103,43 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
       $content = $content . $template[$i];
     }
   }
+  $debug_mail = variable_get('debug_mail');
 
-  $mail_insert = db_insert('prs_mail');
+  if ($debug_mail) {
+    $mail_insert = db_insert('prs_mail');
+    $create_time = time(); //Get current unix timestamp;
+    $field = array(
+      'pmid' => 0,
+      'address' => json_encode($address),
+      'subject' => $subject,
+      'body' => $content,
+      'status' => 1,
+      'createtime' => $create_time);
+    $mail_insert->fields($field)->execute();
+  }
 
-  $create_time = time(); //Get current unix timestamp;
-  $field = array(
-    'pmid' => 0,
-    'address' => json_encode($address),
-    'subject' => $subject,
-    'body' => $content,
-    'status' => 0,
-    'createtime' => $create_time);
-  $mail_insert->fields($field)->execute();
-  return mail_sender_send($address, $subject, $content, true);
+
+  $mail_on = variable_get('smtp_on', 1);
+  if ($mail_on == 0) {
+    watchdog('mail sender send', 'phpmailer is off', array(), WATCHDOG_NOTICE);
+    return 'Phpmailer is off.';
+  }
+
+  if ($isImmediately) {
+    return mail_sender_send($address, $subject, $content, true);
+  }
+  else {
+    $mail_insert = db_insert('prs_mail');
+    $create_time = time(); //Get current unix timestamp;
+    $field = array(
+      'pmid' => 0,
+      'address' => json_encode($address),
+      'subject' => $subject,
+      'body' => $content,
+      'status' => 0,
+      'createtime' => $create_time);
+    $mail_insert->fields($field)->execute();
+  }
 }
 
 /**
@@ -131,6 +154,7 @@ function mail_sender_mail_template($address, $subject, $params, $templateName) {
  */
 function mail_sender_template_adapter($address, $params, $type) {
   $subject = 'Enterprise Review Notification';
+  $isImmediately = false;
 
   switch ($type) {
     // 0 stand for new_review_started_notification
@@ -149,14 +173,20 @@ function mail_sender_template_adapter($address, $params, $type) {
       $subject = $params['reviewname'] . " has begun.Please help " . $params['employeeName'] . " fill up peer review form";
       $templateName = 'selectPeers.tpl.php';
       break;
+    //2 stand for notifying counselee has submitted self review
     case 2:
       $templateName = 'counselee_submited.tpl.php';
+      break;
+    //3 stand for reminding peer to provider feedback 
+    case 3:
+      $templateName = 'provider_feedback_remind.tpl.php';
+      $isImmediately = true;
       break;
 
     default:
       break;
   }
-  mail_sender_mail_template($address, $subject, $params, $templateName);
+  mail_sender_mail_template($address, $subject, $params, $templateName, $isImmediately);
 }
 
 /**
@@ -205,4 +235,46 @@ function mail_sander_task() {
   }
 
   return true;
+}
+
+function mail_sender_menu() {
+  $items['mail-notification/provider-feedback-remind'] = array(
+    'title' => 'Provider Peer Review Feedback',
+    'page callback' => 'provider_feedback_remind',
+    'page arguments' => array(),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function provider_feedback_remind($prid) {
+
+  $prid = $_POST['prid'];
+  $query = db_select('prs_rel_provider_employee', 'provider');
+  $query->join('prs_rel_review_employee', 'review', 'provider.prid= review.prid');
+  $query->join('prs_general', 'general', 'general.prid = provider.prid');
+  $query->join('prs_reviewers', 'reviewer', 'reviewer.login_name = provider.providername');
+  $query->addField('provider', 'rpeid');
+  $query->addField('general', 'type');
+  $query->addField('general', 'description');
+  $query->addField('provider', 'employeename');
+  $query->addField('provider', 'providername');
+  $query->addField('reviewer', 'mail');
+  $query->addField('provider', 'token');
+  $query->condition('provider.rpeid', $prid);
+
+  $dataset = $query->execute()->fetchAll();
+  if (count($dataset) == 1) {
+    $address = $dataset[0]->mail;
+    $url = $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() . $dataset[0]->token;
+    $params = array(
+      'reviewname' => $dataset[0]->description,
+      'receiver' => $dataset[0]->providername,
+      'counselee' => $dataset[0]->employeename,
+      'url' => $url,
+    );
+    $template_type = 3;
+    return mail_sender_template_adapter($address, $params, $template_type);
+  }
 }

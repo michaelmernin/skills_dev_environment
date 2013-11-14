@@ -13,9 +13,9 @@
 
 <div style="width:800px;">
 
-<select id="users" class="multiselect" multiple="multiple" name="users[]" style="display: none; width:600px;height:257px;" >  
+  <select id="users" class="multiselect" multiple="multiple" name="users[]" style="display: none; width:600px;height:257px;" >  
 
-<?php    
+    <?php
     if ($all_employee_array != '') {
       display_unselected_peers($all_employee_array);
     }
@@ -24,9 +24,7 @@
       // Temporary disable display peer who have been selected.
       // display_selected_peers($selected_peers_array);
     }
-
- 
-?>
+    ?>
 
 
   </select>
@@ -79,7 +77,7 @@
       }
       print '<td style="vertical-align:middle">' . render($status->providerName) . '</td>';
       print '<td style="text-align:center;vertical-align:middle">' . $content . '</td>';
-      print '<td style="text-align:center;vertical-align:middle"><a href="javascript:{void(0)}" title="Remind peers">Send Email</a></td>';
+      print '<td style="text-align:center;vertical-align:middle"><a href="javascript:{void(0)}" title="Remind peers" onclick="provider_feedback_remind(' . $startid . ')">Send Email</a></td>';
       print '<img class="loading_img" id="status_loading_img_' . $startid . '" title="loading..." style="width: 25px; height: 25px; display: none; text-align:center;" src="' . base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif"></td>';
       print '</tr>';
     }
@@ -124,6 +122,9 @@
     </div>
   </div>
 </div>
+
+
+
 <script type="text/javascript">
           jQuery(function() {
             renderMultiselect();
@@ -139,6 +140,22 @@
               searchable: true,
               dividerLocation: 0.6
             });
+          }
+
+
+          function provider_feedback_remind(id)
+          {
+            var basepath = '<?php print $base_path;?>';
+            alert('ddddddddd');
+            jQuery.ajax({
+              type: "POST",
+              url: basepath + 'mail-notification/provider-feedback-remind',
+              data: {'prid': id},
+              success: function(date) {
+
+              }
+            });
+
           }
 
 
