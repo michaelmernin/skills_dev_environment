@@ -32,7 +32,7 @@ if ($identity == 'counselee') {
       case '4':
         display_questions($i, $qa_table[$i]['question']);
       	display_overall($i, $qa_table[$i]['rating']);
-      	display_counselor_rating($i);
+      	display_counselor_rating_area($i);
       	break;
 
       default:
@@ -58,20 +58,20 @@ else {
           display_rating($i, $qa_table[$i]['rating']);
         };
         display_comment($i, $qa_table[$i]['comment']);
-        display_counselor_rating($i);
-        display_counselor_comment($i);
+        display_counselor_rating_area($i);
+        display_counselor_comment_area($i);
         print '</div>';
         break;
 
       case '3':
         display_fillform($i, $qa_table[$i]);
-        display_counselor_comment($i);
+        display_counselor_comment_area($i);
         break;
 
 	    case '4':
 	    display_questions($i, $qa_table[$i]['question']);
 	  	display_overall($i, $qa_table[$i]['rating']);
-	  	display_counselor_rating($i);
+	  	display_counselor_rating_area($i);
 	  	break;
 
       default:
@@ -282,7 +282,7 @@ function display_questions($num, $question) {
 
 function display_comment($num, $comment) {
   $tab = '<div id="comment-content-' . $num . '" class="commentbubble" style="display: none;">';
-  if ($comment != '') {
+  if ($comment != 'NIL') {
     print $tab . '<div>' . $comment . '</div></div></div>';
   }
   else {
@@ -290,7 +290,7 @@ function display_comment($num, $comment) {
   }
 }
 
-function display_counselor_rating($num) {
+function display_counselor_rating_area($num) {
   $valueMap = array('0' => 'N/A', '1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5',);
   print '<select id="counselor-rating-' . $num . '">';
   for ($i = 0; $i < count($valueMap); $i++) {
@@ -304,7 +304,7 @@ function display_counselor_rating($num) {
   print '</select><br />';
 }
 
-function display_counselor_comment($num) {
+function display_counselor_comment_area($num) {
   $comment = '<textarea id="counselor-comment-' . $num . '" cols="20" rows="5" placeholder="Please write your comments here..."></textarea> ';
   print $comment;
 }
