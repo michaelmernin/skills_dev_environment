@@ -43,8 +43,6 @@
       description = obj.description;
 
       url = "./watchstatus/selectpeers/" + rreid;
-
-
       if (userType == 'counselee') {
         li = " <li> <a href='" + url + "'>" + description + " is started.Please select peers for yourself" + ".(" + reviewName(reviewType) + ") </a> </li>";
         jQuery('#myWorkForMe').append(li);
@@ -75,7 +73,7 @@
       description = obj.description;
       token = obj.token;
 
-      basePath = '<?php print $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path(); ?>';
+      basePath = '<?php print $base_path = get_curPage_base_url(); ?>';
       url = basePath + token;
       if (name == '<?php print get_current_user_name(); ?>')
       {

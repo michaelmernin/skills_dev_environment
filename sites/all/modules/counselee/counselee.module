@@ -96,6 +96,7 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'files/watch_review_status.inc',
   );
+
   $items['watchstatus/rejectcounseleeassessment'] = array(
     'title' => 'Rejct Counselee\'s Assessment',
     'page callback' => 'reject_counselee_assessment',
@@ -112,6 +113,18 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'file/watch_review_status.inc',
   );
+
+
+  $items['counseleeconfirmresult/%'] = array(
+    'title' => 'Counselee Confirm Review Result',
+    'page callback' => 'counselee_confirm_review_result',
+    'type' => MENU_LOCAL_TASK,
+    'page arguments' => array(1),
+    'access arguments' => array('access to my dashboard'),
+    'file' => 'files/dashboard.pages.inc',
+  );
+
+
   return $items;
 }
 
@@ -156,12 +169,11 @@ function counselee_block_view($delta = '') {
       $counselorPeers = counselee_select_peers('counselor', get_current_user_name());
       $reviewList = counselee_do_peersreview(get_current_user_name());
       $self_review_finished = get_self_review_finished_list(get_current_user_name());
-      $block['content'] = theme('my_working_list_view', 
-              array('counseleePeers' => $counseleePeers,
-            'counselorPeers' => $counselorPeers, 
-                'reviewList' => $reviewList,
-                'self_review_finished' =>$self_review_finished,
-                ));
+      $block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers,
+        'counselorPeers' => $counselorPeers,
+        'reviewList' => $reviewList,
+        'self_review_finished' => $self_review_finished,
+      ));
       break;
   }
   return $block;
@@ -177,8 +189,8 @@ function counselee_theme() {
       'variables' => array('counseleePeers' => NULL,
         'counselorPeers' => NULL,
         'reviewList' => NULL,
-        'self_review_finished'=>NULL,
-        ),
+        'self_review_finished' => NULL,
+      ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'my_working_list',),
     'select_peers' => array(
@@ -197,6 +209,13 @@ function counselee_theme() {
       'variables' => array('rreid' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'view_assessment',),
+    
+     'component_select' => array(
+      'variables' => array(),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'select_comment',),
+    
+    
   );
 }
 
@@ -318,8 +337,8 @@ function get_status_from_db($employeeName) {
  * @return array Current user to do reviewList
  */
 function counselee_do_peersreview($userName) {
-  
-  $status = Array(1,2,3,4,5,6);
+
+  $status = Array(1, 2, 3, 4, 5, 6);
   $peers_query = db_select('prs_rel_provider_employee', 'provider');
   $peers_query->join('prs_general', 'general', 'general.prid = provider.prid');
   $peers_query->join('prs_rel_review_employee', 'review', 'review.rreid = provider.rreid');
@@ -330,7 +349,7 @@ function counselee_do_peersreview($userName) {
   $peers_query->addField('general', 'description');
   $peers_query->condition('provider.providerName', $userName);
   $peers_query->condition('provider.status', 0);
-  $peers_query->condition('review.rstatus', $status,'in');
+  $peers_query->condition('review.rstatus', $status, 'in');
   $dataset = $peers_query->execute()->fetchAll();
 
   $result = array();
@@ -631,7 +650,7 @@ function modify_review_status($nid, &$rreid_rev) {
     return FALSE;
   }
 }
-  
+
 /**
  * Get finished self review list
  * 
@@ -661,14 +680,15 @@ function get_self_review_finished_list($counselor) {
   }
   return $result;
 }
+
 function get_review_token_from_db($rreid) {
   $reviewee = get_reviewee_from_db($rreid);
   $query = db_select('prs_rel_provider_employee', 'prpe')
-        ->fields('prpe', array('providerName', 'token'))
-        ->condition('prpe.rreid', $rreid)
-        ->condition('prpe.providerName', $reviewee, '!=')
-        ->orderBy('prpe.providerName', 'ASC')
-        ->execute()->fetchAll();
+          ->fields('prpe', array('providerName', 'token'))
+          ->condition('prpe.rreid', $rreid)
+          ->condition('prpe.providerName', $reviewee, '!=')
+          ->orderBy('prpe.providerName', 'ASC')
+          ->execute()->fetchAll();
   $tuple = array();
   foreach ($query as $item) {
     $temp = array(
@@ -684,18 +704,18 @@ function get_counselor_submittion_from_db($rreid) {
     $csiid = get_last_sid_by_nid($nid);
   }
   $query = db_select('prs_counselor_submit_info', 'pcsi')
-        ->join('prs_counselor_submit_data', 'pcsd', 'pcsd.csiid=pcsi.csiid')
-        ->fields('pcsi', array('pcsi.csiid'))
-        ->addField('pcsi', 'nid')
-        ->addField('pcsi', 'submitTimestamp')
-        ->addField('pcsi', 'isDraft')
-        ->addField('pcsd', 'count')
-        ->addField('pcsd', 'header')
-        ->addField('pcsd', 'rating')
-        ->addField('pcsd', 'comment')
-        ->condition('pcsi.nid', $nid)
-        ->condition('pcsi.csiid', $csiid)
-        ->orderBy('pcsd.count', 'ASC');
+      ->join('prs_counselor_submit_data', 'pcsd', 'pcsd.csiid=pcsi.csiid')
+      ->fields('pcsi', array('pcsi.csiid'))
+      ->addField('pcsi', 'nid')
+      ->addField('pcsi', 'submitTimestamp')
+      ->addField('pcsi', 'isDraft')
+      ->addField('pcsd', 'count')
+      ->addField('pcsd', 'header')
+      ->addField('pcsd', 'rating')
+      ->addField('pcsd', 'comment')
+      ->condition('pcsi.nid', $nid)
+      ->condition('pcsi.csiid', $csiid)
+      ->orderBy('pcsd.count', 'ASC');
   $result = $query->execute()->fetchAll();
   return $result;
 }
