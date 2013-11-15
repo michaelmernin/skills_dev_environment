@@ -1,5 +1,5 @@
-  <?php $module_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() . '/' . drupal_get_path('module', 'counsellor') ?>
-<?php $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() ?>
+  <?php $module_path = get_curPage_base_url() . drupal_get_path('module', 'counsellor') ?>
+<?php $base_path = get_curPage_base_url() ?>
 <script type="text/javascript" src="<?php echo $module_path ?>/js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="<?php echo $module_path ?>/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<?php echo $module_path ?>/js/ui.multiselect.js"></script>

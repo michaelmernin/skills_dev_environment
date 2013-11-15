@@ -267,7 +267,7 @@ function provider_feedback_remind($prid) {
   $dataset = $query->execute()->fetchAll();
   if (count($dataset) == 1) {
     $address = $dataset[0]->mail;
-    $url = $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() . $dataset[0]->token;
+    $url = get_curPage_base_url(). $dataset[0]->token;
     $params = array(
       'reviewname' => $dataset[0]->description,
       'receiver' => $dataset[0]->providername,

@@ -1,4 +1,4 @@
-<?php $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() ?>
+<?php $base_path = get_curPage_base_url() ?>
 <p>&nbsp;</p>
 <hr />
 <script>

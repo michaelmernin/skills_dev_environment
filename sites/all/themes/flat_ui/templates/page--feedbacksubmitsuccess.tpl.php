@@ -1,5 +1,5 @@
-<?php $theme_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() . drupal_get_path('theme', 'flat_ui') ?>
-<?php $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() ?>
+<?php $theme_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui') ?>
+<?php $base_path = get_curPage_base_url(); ?>
 <div id="wrap" style="min-height: 480px; padding-top: 20px;">
     <?php if ($title): ?><h1 class="page-title" style="margin-top: 20px;"><?php print $title; ?></h1><?php endif; ?>
     <div style="float: left; margin-left: 100px; margin-top: 120px;"><img src="<?php echo $theme_path ?>/assets/images/submitsuccess.png" /></div>

@@ -190,7 +190,7 @@ else {
 
 
 <script type="text/javascript">
-          var basePath = '<?php print $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path(); ?>';
+          var basePath = '<?php print get_curPage_base_url() ?>';
           var js_path = basePath + "sites/all/modules/counselee/js/annual_review_approve_overall.js";
           var new_element = document.createElement("script");
           new_element.setAttribute("type", "text/javascript");

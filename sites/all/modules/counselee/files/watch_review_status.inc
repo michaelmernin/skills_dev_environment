@@ -437,7 +437,7 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag, $r
 
     $review_end_date = unixTimestampToDateArray($info[0]->period_end);
     $date = date_to_format($review_end_date);
-    $base_path = $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path();
+    $base_path = get_curPage_base_url();
     $peer_select_url = $base_path.$node_msg[1];
     $peer_info_params = array(
       'employeeName' => $employeeName,
