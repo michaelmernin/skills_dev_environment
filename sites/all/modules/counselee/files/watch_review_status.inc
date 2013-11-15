@@ -84,6 +84,7 @@ function load_self_assessment($rreid=NULL) {
   $nid = $provider_info[0]->nid;
   $dataset = get_latest_submitted_data_from_db($nid);
   $dataset = generate_selfassessment_result_array($dataset);
+  dd($dataset, 'dataset');
   $pageContent = theme('view_assessment', array(
     'rreid'     => $rreid,
     'nid'       => $nid,
@@ -302,7 +303,7 @@ function submit_peer_update() {
 /**
   * Page callback function of submit counselor's rating and comments.
 **/
-function submit_counselor_sheet() {
+function submit_counselor_assessment() {
   $result_val = '1';
   $nid = $_POST['nid'];
   $headerInfo = $_POST['headerInfo'];
@@ -343,7 +344,7 @@ function _generate_headerInfo($headerInfo) {
 **/
 function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments) {
   $target_array = array() ;
-  for($i = 0; $i < 21; $i++) {
+  for($i = 0; $i < 24; $i++) {
     if ($i == 0 || $i == 1) {
       $target_array[$i] = array(
         'count' => $i,
@@ -369,6 +370,14 @@ function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments)
         'header' => '',
         'rating' => 0,
         'comment' => $comments[$i],
+        );
+    }
+    else if ($i == 23) {
+      $target_array[$i] = array(
+        'count' => $i,
+        'header' => '',
+        'rating' => $ratings[$i],
+        'comments' => '',
         );
     }
   }

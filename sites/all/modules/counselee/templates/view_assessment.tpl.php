@@ -31,8 +31,7 @@ if ($identity == 'counselee') {
 
       case '4':
         display_questions($i, $dataset[$i]['question']);
-      	display_overall($i, $dataset[$i]['rating']);
-      	display_counselor_rating_area($i);
+      	display_overall($i, $dataset[$i]['comment']);
       	break;
 
       default:
@@ -41,6 +40,7 @@ if ($identity == 'counselee') {
   }
 }
 else {
+  // counselor
   for ($i = 0; $i < count($dataset); $i++) {
     switch ($dataset[$i]['identifier']) {
       case '0':
@@ -70,7 +70,7 @@ else {
 
 	    case '4':
 	    display_questions($i, $dataset[$i]['question']);
-	  	display_overall($i, $dataset[$i]['rating']);
+	  	display_overall($i, $dataset[$i]['comment']);
 	  	display_counselor_rating_area($i);
 	  	break;
 
@@ -81,10 +81,39 @@ else {
 }
 ?>
 <br />
-<div id="draftbutton">
-<a id="modal-912871" href="#modal-container-912871" role="button" class="btn btn-danger" data-toggle="modal">Disapprove</a>
-
+<div>
+<div class="draftbutton" style="float: left; margin-right: 15px;">
+<!-- <a id="modal-912872" href="#modal-container-912872" >Disapprove</a> -->
+<a id="modal-912872" href="#modal-container-912872" role="button" data-toggle="modal"><input formnovalidate="formnovalidate" class="webform-draft form-submit btn btn-large" type="submit" name="op" value="Disapprove"></a>
 <div class="row-fluid">
+  <div class="span12">
+    <div id="modal-container-912872" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="close_btn" value="0">×</button>
+        <h3 id="myModalLabel">
+          Confirm to Disapprove.
+        </h3>
+      </div>
+      <div class="modal-body">
+        <p>
+          Do you want to disapprove this self assessment? <br>
+          Please write down reason below.
+        </p>
+        <textarea id="counselor_reject_reason" cols="30" rows="5" style="width: 500px" placeholder="Please write reasons here..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <img class="loading_img" id="status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="counselor_disapprove_btn" onclick="disapproveCounseleeSelfAssessment()">Disapprove</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="draftbutton" style="float: left; margin-right: 15px;">
+<!-- <a id="modal-912871" href="#modal-container-912871" role="button" class="btn btn-danger" data-toggle="modal">Save as draft</a> -->
+<a id="modal-912871" href="#modal-container-912871" role="button" data-toggle="modal"><input class="webform-submit button-primary form-submit btn btn-large btn-primary" type="submit" name="op" value="Submit"></a>
+  <div class="row-fluid">
   <div class="span12">
     <div id="modal-container-912871" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-header">
@@ -101,38 +130,12 @@ else {
       </div>
       <div class="modal-footer">
         <img class="loading_img" id="status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="submit_button" onclick="disapproveCounseleeResult()">Disapproved</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="counselor_submit_btn" onclick="submitcounselorassessment()">SAVE AS DRAFT</button>
 
       </div>
     </div>
   </div>
 </div>
-</div>
-<div id="draftbutton">
-<a id="modal-912871" href="#modal-container-912871" role="button" class="btn btn-danger" data-toggle="modal">Save as draft</a>
-
-<div class="row-fluid">
-  <div class="span12">
-    <div id="modal-container-912871" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="close_btn" value="0">×</button>
-        <h3 id="myModalLabel">
-          Confirm to Submit sheet.
-        </h3>
-      </div>
-      <div class="modal-body">
-        <p>
-          Do you want to submit this form? <br>
-          When you submit this form, all the contents cannot be revised!
-        </p>
-      </div>
-      <div class="modal-footer">
-        <img class="loading_img" id="status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="submit_button" onclick="submitCounselorSheet()">SAVE AS DRAFT</button>
-
-      </div>
-    </div>
-  </div>
 </div>
 </div>
 
@@ -223,7 +226,7 @@ else {
     });
     var isCounselor = '<?php print $identity ?>';
     if (isCounselor == "counselee") {
-		jQuery("#draftbutton").hide();
+		jQuery(".draftbutton").hide();
     }
   });
 
@@ -249,7 +252,7 @@ function display_fillform($num, $fillform) {
   $content = '<div id="fillform-content-' . $num . '" class="assessment-fillform-content">';
   if ($fillform['comment'] != '') {
     print $title . $content . '<div>' . $fillform['comment'] . '</div></<div></div>';
-  }
+ }
   else {
     print $title . $content . '<div></div></div> <br />';
   }
@@ -299,6 +302,8 @@ function display_rating($num, $rating) {
 }
 
 function display_overall($num, $rating) {
+  dd($num, 'num');
+  dd($rating, 'rating');  
   $content = '<div id="overall-ratings-' . $num . '" value="' . $rating . '">' . $rating . '</div>';
   print $content;
 }

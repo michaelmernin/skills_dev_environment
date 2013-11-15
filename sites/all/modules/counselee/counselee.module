@@ -88,13 +88,29 @@ function counselee_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'files/watch_review_status.inc',
   );
-  $items['watchstatus/submitcounselorsheet'] = array(
+  $items['watchstatus/submitcounselorassessment'] = array(
     'title' => 'Submit Counselor Sheet',
-    'page callback' => 'submit_counselor_sheet',
+    'page callback' => 'submit_counselor_assessment',
     'page arguments' => array(),
     'access arguments' => array('access to my dashboard'),
     'type' => MENU_CALLBACK,
     'file' => 'files/watch_review_status.inc',
+  );
+  $items['watchstatus/rejectcounseleeassessment'] = array(
+    'title' => 'Rejct Counselee\'s Assessment',
+    'page callback' => 'reject_counselee_assessment',
+    'page arguments' => array(),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'file/watch_review_status.inc',
+  );
+  $items['watchstatus/approvecounseleeassessment'] = array(
+    'title' => 'Approve Counselee\'s Assessment',
+    'page callback' => 'approve_counselee_assessment',
+    'page arguments' => array(),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'file/watch_review_status.inc',
   );
   return $items;
 }

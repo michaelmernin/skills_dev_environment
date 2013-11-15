@@ -1,6 +1,6 @@
 <?php $base_path = 'http://' . $_SERVER['HTTP_HOST'] . base_path() ?>
 <script type="text/javascript">
-  function submitCounselorSheet() {
+  function submitcounselorassessment() {
     clickSubmitButton();
 
     // var area
@@ -16,7 +16,7 @@
       jQuery.ajax({
         type: "POST",
         data: {'nid': nid, 'headerInfo': headerInfo, 'ratings': ratings, 'comments': comments},
-        url: '<?php echo $base_path ?>watchstatus/submitcounselorsheet/',
+        url: '<?php echo $base_path ?>watchstatus/submitcounselorassessment/',
         success: function(text) {
           // window.location.href = "<?php print base_path() . 'mydashboard' ?>";
           location.reload();
@@ -31,6 +31,35 @@
     }
     else {
       hideConfirmdialog();
+      return;
+    }
+  }
+
+  function disapproveCounseleeSelfAssessment() {
+    // clickSubmitButton();
+
+    //variables
+    var nid = getNid();
+    var count = getCount();
+    var headerInfo = getHeaderInfo();
+    var ratings = new Array();
+    ratings = generateRatingArray(ratings, count);
+    var comments = new Array();
+    comments = generateCommentArray(comments, count);
+    var rejectComments = getCounselorRejectComment();
+
+    if ((ratings!=false) && (comments!=false) &&(rejectComments!= false)) {
+      jQuery.ajax({
+        type: "POST",
+        data: {'nid': nid, 'headerInfo': headerInfo, 'ratings': ratings, 'comments': comments, 'rejectComments': rejectComments},
+        url: '<?php echo $base_path ?>watchstatus/rejectcounseleeassessment/',
+        success: function(text) {
+          location.reload();
+        }
+      });
+    }
+    else {
+      // hideConfirmdialog();
       return;
     }
   }
@@ -65,6 +94,9 @@
     return comments;
   }
 
+  function getCounselorRejectComment() {
+    return jQuery("#counselor_reject_reason").val();
+  }
 </script>
 <?php require_once 'header.tpl.php'; ?>
 <div class="minheight">

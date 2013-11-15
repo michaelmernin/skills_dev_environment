@@ -232,6 +232,19 @@ jQuery(document).ready(
 //                        return check_comments(core_competencies_id, core_competencies_comment_id)
 //                                && check_comments(internal_contributions_id, internal_contributions_comment_id);
 //                    });
-
+            jQuery("#counselor_disapprove_btn").click(function(){
+                return check_reject_reasons();
+            })
         }
 );
+
+function check_reject_reasons() {
+    var comment = jQuery("#counselor_reject_reason").val();
+    var len = comment.length;
+    if (len < 1) {
+        alert('Please write down reason. If you are going to reject, this area cannot be blank!');
+        jQuery("#counselor_reject_reason").focus();
+        return false;
+    }
+    return true;
+}
