@@ -302,8 +302,6 @@ function display_rating($num, $rating) {
 }
 
 function display_overall($num, $rating) {
-  dd($num, 'num');
-  dd($rating, 'rating');  
   $content = '<div id="overall-ratings-' . $num . '" value="' . $rating . '">' . $rating . '</div>';
   print $content;
 }

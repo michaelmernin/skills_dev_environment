@@ -84,7 +84,6 @@ function load_self_assessment($rreid=NULL) {
   $nid = $provider_info[0]->nid;
   $dataset = get_latest_submitted_data_from_db($nid);
   $dataset = generate_selfassessment_result_array($dataset);
-  dd($dataset, 'dataset');
   $pageContent = theme('view_assessment', array(
     'rreid'     => $rreid,
     'nid'       => $nid,
