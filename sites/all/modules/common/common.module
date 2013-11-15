@@ -9,7 +9,8 @@
  */
 defined('ANNUAL_TEMP') or define('ANNUAL_TEMP', 'Annual Performace Review Tempate');
 defined('GOAL_STRING') or define('GOAL_STRING', 'goals_text');
-
+defined('NO_COMMENT') or define('NO_COMMENT', 'No comment.');
+defined('NO_ANSWER') or define('NO_ANSWER', 'No answer.');
 /**
  * return my counselor and gm name
  * @param type $my_name

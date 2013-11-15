@@ -52,7 +52,8 @@
     foreach ($peers_status as $status) {
       $count++;
       $startid = $status->rpeid;
-      $url = base_path() . 'watchstatus/basicinfo/' . $startid;
+      $nid = $status->nid;
+      $url = base_path() . 'watchpeerreview/' . $nid;
       switch ($status->status) {
         case 0:
           //0 not finish
@@ -67,8 +68,8 @@
                      </a>';
           break;
       }
-
-      if ($status->status == 1) {
+      //only counselor can access this url
+      if ($status->status == 1 && $userId_flag == 1) {
         print '<tr title="Click to watch this review\'s status." onclick="watch_reveiw_status(\'' . $url . '\')" name="' . $status->rreid . '" style="cursor:pointer">';
       }
       else {

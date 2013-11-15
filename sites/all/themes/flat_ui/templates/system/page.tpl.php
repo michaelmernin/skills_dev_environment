@@ -32,7 +32,6 @@
       <a id="main-content"></a>
       <?php print render($page['content']); ?>
      
-page template
           
       
       

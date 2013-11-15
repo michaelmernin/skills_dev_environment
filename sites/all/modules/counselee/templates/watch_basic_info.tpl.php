@@ -2,17 +2,17 @@
   <tbody>
 <!--    <tr>
       <td>
-        <h6>Review Name<span class="form-required" title="This field is required.">*</span>:</h6>
+        <h6>Review Name:</h6>
       </td>
       <td colspan="3"><input type="text" value="" id="review_from_description" style="color:#34495E;background-color:#ffffff"></td>
     </tr>-->
     <tr>
-       <td><h6>Type<span class="form-required" title="This field is required.">*</span>:</h6></td>
+       <td><h6>Type:</h6></td>
       <td style="text-align:left;vertical-align:middle" id="watch_review_type"> 
       </td>
       <?php if ($basic_info->type == 1): ?>
         <td>
-          <h6 id="Project_Name_Lable">Project Name<span class="form-required" title="This field is required.">*</span>:</h6>
+          <h6 id="Project_Name_Lable">Project Name:</h6>
         </td>
         <td style="text-align:left;vertical-align:middle"><?php print render($basic_info->project_name) ?></td>
       <?php else: ?>
@@ -29,7 +29,7 @@
         print render($Login_name)
         ?></td>
       <td>
-        <h6>Status<span class="form-required" title="This field is required.">*</span>:</h6>
+        <h6>Status:</h6>
       </td>
       <td id='watch_review_status' style="text-align:left;vertical-align:middle"></td>
     </tr>
@@ -41,7 +41,7 @@
     </tr>
     <tr>
       <td>
-        <h6>Start Date<span class="form-required" title="This field is required.">*</span>:</h6>
+        <h6>Start Date:</h6>
       </td>
       <td style="text-align:left;vertical-align:middle"> 
         <?php
@@ -50,7 +50,7 @@
         print render($watch_format_start_date);
         ?>
       </td>
-      <td><h6>End Date<span class="form-required" title="This field is required.">*</span>:</h6></td>
+      <td><h6>End Date:</h6></td>
       <td style="text-align:left;vertical-align:middle"> 
         <?php
         $watch_end_date = unixTimestampToDateArray($basic_info->period_end);
@@ -61,7 +61,7 @@
     </tr>
     <tr>
       <td>
-        <h6>Period From<span class="form-required" title="This field is required.">*</span>:</h6>
+        <h6>Period From:</h6>
       </td>
       <td style="text-align:left;vertical-align:middle"> 
         <?php
@@ -70,7 +70,7 @@
         print render($watch_format_from_date);
         ?>
       </td>
-      <td><h6>Period To<span class="form-required" title="This field is required.">*</span>:</h6></td>
+      <td><h6>Period To:</h6></td>
       <td style="text-align:left;vertical-align:middle"> 
         <?php
         $watch_to_date = unixTimestampToDateArray($basic_info->time_frame_to);

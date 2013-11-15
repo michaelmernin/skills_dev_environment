@@ -23,6 +23,14 @@ function counsellor_menu() {
     'file' => 'files/performance_review_dashboard.pages.inc',
     'weight' => 5,
   );
+  $items['watchpeerreview/%'] = array(
+    'title' => 'Watch peer\'s review',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'watch_peer_review',
+    'page arguments' => array(1),
+    'access arguments' => array('Manage Performance Review List'),
+    'file' => 'files/watch_review.inc',
+  );
   $items['newreview/submitreview/%/%'] = array(
     'title' => 'Submit A New Review',
     'type' => MENU_CALLBACK,
