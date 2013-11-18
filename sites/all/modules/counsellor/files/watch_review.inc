@@ -14,12 +14,24 @@ function watch_peer_review($nid) {
   $webform_data = get_webform_data($nid);
   $answer_array = get_answer($nid);
   $cid_array = array();
-//  $basic_info = get_webform_basic_info($nid);
+  //====================Get source from database=========================================
+  $basic_info = get_webform_basic_info($nid);
+//  dd($basic_info, '$basic_info');
   $render_data = _manage_webform_data($webform_data, $nid, $answer_array, $cid_array);
-
-  return '';
+//  dd($render_data, '$render_data');
+  //===================Theme it==========================================================
+  $pagecontent = get_watchpeerreview_page_content($basic_info, $render_data);
+  return $pagecontent;
 }
 
+/**
+ * 
+ * @param type $webform_datas
+ * @param type $nid
+ * @param type $answer_array
+ * @param type $cid_array
+ * @return array
+ */
 function _manage_webform_data($webform_datas, $nid, &$answer_array, &$cid_array) {
   $QandA = array();
   foreach ($webform_datas as $webform_data) {
@@ -30,7 +42,7 @@ function _manage_webform_data($webform_datas, $nid, &$answer_array, &$cid_array)
         array_push($cid_array, $cid);
         $chilren_data = get_webform_children_data($nid, $cid);
         $QandA_date = _manage_webform_data($chilren_data, $nid, $answer_array, $cid_array);
-        $QandA_std_data = get_QandA_std_data($webform_data->type, $cid, $webform_data->nid, $webform_data->name, NULL, $QandA_date, $webform_data->form_key, $webform_data->weight);
+        $QandA_std_data = get_QandA_std_data($webform_data->type, $cid, $webform_data->nid, $webform_data->name, NULL, $QandA_date, $webform_data->form_key, $webform_data->weight, $webform_data->pid);
         array_push($QandA, $QandA_std_data);
       }
       else {
@@ -46,7 +58,7 @@ function _manage_webform_data($webform_datas, $nid, &$answer_array, &$cid_array)
               default :
                 break;
             }
-            $QandA_std_data = get_QandA_std_data($webform_data->type, $cid, $webform_data->nid, $webform_data->name, $answer, NULL, $webform_data->form_key, $webform_data->weight);
+            $QandA_std_data = get_QandA_std_data($webform_data->type, $cid, $webform_data->nid, $webform_data->name, $answer, NULL, $webform_data->form_key, $webform_data->weight, $webform_data->pid);
             array_push($QandA, $QandA_std_data);
             break;
           case 'select':
@@ -62,7 +74,7 @@ function _manage_webform_data($webform_datas, $nid, &$answer_array, &$cid_array)
               default :
                 break;
             }
-            $QandA_std_data = get_QandA_std_data($webform_data->type, $cid, $webform_data->nid, $webform_data->name, $answer, NULL, $webform_data->form_key, $webform_data->weight, $select_comment);
+            $QandA_std_data = get_QandA_std_data($webform_data->type, $cid, $webform_data->nid, $webform_data->name, $answer, NULL, $webform_data->form_key, $webform_data->weight, $webform_data->pid, $select_comment);
             array_push($QandA, $QandA_std_data);
             break;
           case 'textarea':
@@ -70,12 +82,12 @@ function _manage_webform_data($webform_datas, $nid, &$answer_array, &$cid_array)
               $answer = find_answer($nid, $cid, $answer_array);
               switch ($answer) {
                 case 'NO_ANSWER':
-                  $answer = NO_ANSWER;
+                  $answer = NO_COMMENT;
                   break;
                 default :
                   break;
               }
-              $QandA_std_data = get_QandA_std_data($webform_data->type, $cid, $webform_data->nid, $webform_data->name, $answer, NULL, $webform_data->form_key, $webform_data->weight);
+              $QandA_std_data = get_QandA_std_data($webform_data->type, $cid, $webform_data->nid, $webform_data->name, $answer, NULL, $webform_data->form_key, $webform_data->weight, $webform_data->pid);
               array_push($QandA, $QandA_std_data);
             }
             break;
@@ -176,7 +188,7 @@ function find_answer($nid, $cid, &$answer_array) {
  * @return \stdClass
  * @author Mars
  */
-function get_QandA_std_data($type, $cid, $nid, $name, $answer, $children, $form_key, $weight, $select_comment = NULL) {
+function get_QandA_std_data($type, $cid, $nid, $name, $answer, $children, $form_key, $weight, $pid, $select_comment = NULL) {
   $QandA_std_data = new stdClass();
   $QandA_std_data->type = $type;
   $QandA_std_data->cid = $cid;
@@ -187,6 +199,7 @@ function get_QandA_std_data($type, $cid, $nid, $name, $answer, $children, $form_
   $QandA_std_data->form_key = $form_key;
   $QandA_std_data->weight = $weight;
   $QandA_std_data->comment = $select_comment;
+  $QandA_std_data->pid = $pid;
   return $QandA_std_data;
 }
 
@@ -221,6 +234,11 @@ function find_select_comment($nid, $webform_component, $form_key, $subfix, &$ans
   return $return_comment;
 }
 
+/**
+ * 
+ * @param type $nid
+ * @return type
+ */
 function get_webform_basic_info($nid) {
   $query = db_select('webform_submissions', 'ws');
   $query->fields('ws');
@@ -231,16 +249,79 @@ function get_webform_basic_info($nid) {
     $result = $one_result;
   }
   $return_val = get_std_webform_basic_info($result);
+  return $return_val;
 }
 
 function get_std_webform_basic_info($result) {
   $basic_info = new stdClass();
   if (count($result)) {
+    $node = node_load($result->nid);
+    $basic_info->title = $node->title;
     $basic_info->sid = $result->sid;
     $basic_info->nid = $result->nid;
     $basic_info->user = format_login_name(user_load($result->uid)->name);
-    $basic_info->creatdate=  format_date($result->submitted);
-    $basic_info->ip=$result->remote_addr;
+    $basic_info->creatdate = format_date($result->submitted, 'custom', 'Y-m-d');
+    $basic_info->ip = $result->remote_addr;
   }
-  
+  return $basic_info;
+}
+
+/**
+ * 
+ * @param type $basic_info
+ * @param type $content
+ * @return type
+ */
+function get_watchpeerreview_page_content($basic_info, $content) {
+  $html_content = get_watchpeerreview_basic_info_html($basic_info);
+  $html_content.=get_get_watchpeerreview_content_html($content);
+
+//  dd($html_content,'$html_content');
+  return $html_content;
+}
+
+/**
+ * return html with template watch_peer_review_basic_info.tpl.php
+ * @param type $basic_info
+ * @return type
+ */
+function get_watchpeerreview_basic_info_html($basic_info) {
+  return theme('watch_peer_review_basic_info', array('basic_info' => $basic_info));
+}
+
+function get_get_watchpeerreview_content_html($contents) {
+//  $html_value
+//  dd($contents,'$contents');
+  $html_value = _get_watchpeerreview_component_html($contents);
+  $html_value.='<button id="btnPeerReviewGoBack" onclick="window.history.back();" role="button" class="btn btn-danger" >Go Back</button>';
+  return $html_value;
+}
+
+function _get_watchpeerreview_component_html($contents) {
+  $html_text = '';
+  foreach ($contents as $one_content) {
+    if ($one_content->type == 'fieldset') {
+      if ($one_content->pid == 0) {
+        $html_text.='<div class="peerfieldset">';
+        $html_text.='<legend>' . $one_content->name . '</legend>';
+        $html_text.=_get_watchpeerreview_component_html($one_content->children);
+        $html_text.='</div>';
+      }
+      else {
+        $html_text.='<div class="sec-peerfieldset">';
+        $html_text.=$one_content->name;
+        $html_text.='</div>';
+        $html_text.=_get_watchpeerreview_component_html($one_content->children);
+      }
+    }
+    else {
+      if ($one_content->type != 'select') {
+        $html_text.=theme('watch_peer_review_component', array('component_content' => $one_content));
+      }
+      else {
+        $html_text.=theme('watch_peer_review_component_select', array('component_content' => $one_content));
+      }
+    }
+  }
+  return $html_text;
 }

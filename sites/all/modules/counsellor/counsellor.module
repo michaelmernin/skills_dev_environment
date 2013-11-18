@@ -149,6 +149,21 @@ function counsellor_theme() {
       'path' => drupal_get_path('module', 'counsellor') . '/templates',
       'template' => 'select_participates',
     ),
+    'watch_peer_review_basic_info' => array(
+      'variables' => array('basic_info'),
+      'path' => drupal_get_path('module', 'counsellor') . '/templates',
+      'template' => 'watch_peer_review_basic_info',
+    ),
+    'watch_peer_review_component' => array(
+      'variables' => array('component_content'),
+      'path' => drupal_get_path('module', 'counsellor') . '/templates',
+      'template' => 'watch_peer_review_component',
+    ),
+    'watch_peer_review_component_select' => array(
+      'variables' => array('component_content'),
+      'path' => drupal_get_path('module', 'counsellor') . '/templates',
+      'template' => 'watch_peer_review_component_select',
+    ),
   );
 }
 

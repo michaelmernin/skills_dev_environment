@@ -57,15 +57,17 @@
       switch ($status->status) {
         case 0:
           //0 not finish
-          $content = '<a href="javascript:{void(0)}" title="This review not finished!">
+          $content = '<a href="javascript:{void(0)}" style="cursor: default" title="This review not finished!">
                      Not Finish
                      </a>';
+          $need_email = '<span class="fui-mail-16" style="padding: 0 5px 0 0"></span><a href="javascript:{void(0)}" title="Remind peers" onclick="provider_feedback_remind(' . $startid . ',\'' . $status->providerName . '\')">Send Email</a>';
           break;
         case 1:
           //1 finish
           $content = '<a href="javascript:{void(0)}" title="This review have finished!">
                      Finish
                      </a>';
+          $need_email = '<span class="fui-checkmark-16"></span>';
           break;
       }
       //only counselor can access this url
@@ -78,7 +80,7 @@
       }
       print '<td style="vertical-align:middle">' . render($status->providerName) . '</td>';
       print '<td style="text-align:center;vertical-align:middle">' . $content . '</td>';
-      print '<td style="text-align:center;vertical-align:middle"><a href="javascript:{void(0)}" title="Remind peers" onclick="provider_feedback_remind(' . $startid . ',\'' . $status->providerName . '\')">Send Email</a></td>';
+      print '<td style="text-align:center;vertical-align:middle">' . $need_email . '</td>';
       print '<img class="loading_img" id="status_loading_img_' . $startid . '" title="loading..." style="width: 25px; height: 25px; display: none; text-align:center;" src="' . base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif"></td>';
       print '</tr>';
     }
@@ -155,7 +157,6 @@
             var bln = window.confirm("Are you sure to remind " + name + " to finish the peer review?");
             if (bln != true)
               return;
-
             jQuery.ajax({
               type: "POST",
               url: basepath + 'mail-notification/provider-feedback-remind',

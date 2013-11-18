@@ -553,6 +553,7 @@ function get_last_sid_by_nid($nid) {
   $query->fields('ws', array('sid'));
   $query->condition('ws.nid', $nid);
   $query->condition('ws.is_draft', 0);
+  $query->orderBy('ws.sid');
   $result = $query->execute()->fetchAll();
   foreach ($result as $value) {
     $sid = $value->sid;
