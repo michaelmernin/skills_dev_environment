@@ -78,7 +78,7 @@
       }
       print '<td style="vertical-align:middle">' . render($status->providerName) . '</td>';
       print '<td style="text-align:center;vertical-align:middle">' . $content . '</td>';
-      print '<td style="text-align:center;vertical-align:middle"><a href="javascript:{void(0)}" title="Remind peers" onclick="provider_feedback_remind(' . $startid . ')">Send Email</a></td>';
+      print '<td style="text-align:center;vertical-align:middle"><a href="javascript:{void(0)}" title="Remind peers" onclick="provider_feedback_remind(' . $startid . ',\'' . $status->providerName . '\')">Send Email</a></td>';
       print '<img class="loading_img" id="status_loading_img_' . $startid . '" title="loading..." style="width: 25px; height: 25px; display: none; text-align:center;" src="' . base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif"></td>';
       print '</tr>';
     }
@@ -143,11 +143,19 @@
             });
           }
 
-
-          function provider_feedback_remind(id)
+          /**
+           * To notifying peer to provider feedback 
+           * 
+           * @type id
+           * @type name
+           * */
+          function provider_feedback_remind(id, name)
           {
-            var basepath = '<?php print $base_path;?>';
-            alert('ddddddddd');
+            var basepath = '<?php print $base_path; ?>';
+            var bln = window.confirm("Are you sure to remind " + name + " to finish the peer review?");
+            if (bln != true)
+              return;
+
             jQuery.ajax({
               type: "POST",
               url: basepath + 'mail-notification/provider-feedback-remind',

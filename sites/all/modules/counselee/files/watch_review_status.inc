@@ -424,8 +424,10 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag, $r
     $email_receiver = $email_receivers[$i];
     $employeeName = $info[0]->employeeName;
 
-    //Generate peer review form for each peer
-    $form_title = "Annual Performace Peer Review $email_receiver for $employeeName";
+    //Generate peer review form for each peer  --function format_login_name($login_name) {
+    $receiver =  format_login_name($email_receiver);
+    $counselee =  format_login_name($employeeName);
+    $form_title = "Annual Performace Peer Review $receiver for $counselee";
     $peer_review_template_name = 'For Demo Peer Review Form Template';
     $node_msg = create_node($form_title, $peer_review_template_name);
     db_update('prs_rel_provider_employee')
