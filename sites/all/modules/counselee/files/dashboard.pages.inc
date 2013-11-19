@@ -54,8 +54,10 @@ function counselee_confirm_review_result($rpeid) {
   $nid = 21;
   get_self_review_comment($nid);
   get_counselor_review_comment($nid);
-  
+
   $pageContent = theme('component_select', array());
+  $pageContent = $pageContent . theme('component_select', array());
+
   //dd($pageContent);
   return $pageContent;
 }
@@ -78,23 +80,18 @@ WHERE
   //dd($result);
   //Array to Map
   $annual_review_map = Array();
-  foreach ($result as $node)
-  {
+  foreach ($result as $node) {
     $key = $node->form_key;
     $annual_review_map[$key] = $node;
   }
   //dd($annual_review_map,'$annual_review_map');
 }
 
-
-
-
 /**
  * Get counselor review comment
  * 
  * 
  */
-function get_counselor_review_comment()
-{
+function get_counselor_review_comment() {
   
 }
