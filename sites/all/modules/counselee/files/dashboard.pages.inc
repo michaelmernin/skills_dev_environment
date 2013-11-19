@@ -52,11 +52,23 @@ function feedbacksubmitsuccess() {
  */
 function counselee_confirm_review_result($rpeid) {
   $nid = 21;
-  get_self_review_comment($nid);
-  get_counselor_review_comment($nid);
+  $self_review = get_self_review_comment($nid);
+  $counselor_review = get_counselor_review_comment($nid);
 
-  $pageContent = theme('component_select', array());
-  $pageContent = $pageContent . theme('component_select', array());
+  //Define One Problem Structure
+  $node = array(
+    'description' => 'Jack',
+    'self_rating' => null,
+    'counselor_rating' => null,
+    'peer_rating' => null,
+    'self_comment' => 'It is hard',
+    'counselor_comment' => 'Very nice',
+    'peer_comment' => 'No comment',
+  );
+
+  $content = theme('component_select', array('node' => $node));
+  dd($content);
+  $pageContent = $content;
 
   //dd($pageContent);
   return $pageContent;
@@ -79,12 +91,14 @@ WHERE
   $result = db_query($sql)->fetchAll();
   //dd($result);
   //Array to Map
-  $annual_review_map = Array();
+  $self_review_map = Array();
   foreach ($result as $node) {
     $key = $node->form_key;
-    $annual_review_map[$key] = $node;
+    $self_review_map[$key] = $node;
   }
   //dd($annual_review_map,'$annual_review_map');
+
+  return $self_review_map;
 }
 
 /**
@@ -92,6 +106,21 @@ WHERE
  * 
  * 
  */
-function get_counselor_review_comment() {
-  
+function get_counselor_review_comment($nid) {
+
+  $sql = "SELECT
+    data.csdid ,
+    data.rating ,
+    data.title,
+    data.counselor_comment,
+    data.peer_comments
+FROM
+    prs_counselor_submit_data data ,
+    prs_counselor_submit_info info
+WHERE
+    info.nid = data.nid
+    AND info.csiid = data.csiid
+    AND data.nid = $nid";
+
+  $result = db_query($sql)->fetchAll();
 }

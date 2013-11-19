@@ -213,7 +213,9 @@ function counselee_theme() {
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'view_assessment',),
     'component_select' => array(
-      'variables' => array(),
+      'variables' => array(
+        'node' =>NULL,
+      ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'select_comment',),
   );

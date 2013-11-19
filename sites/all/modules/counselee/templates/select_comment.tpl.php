@@ -57,6 +57,9 @@
 
 
 <script>
-
+  
+  var node_json = "[ " + '<?php print json_encode($node);?>'+ "]" ;
+  var node = eval(node_json);
+  alert(node);
 </script>
 
