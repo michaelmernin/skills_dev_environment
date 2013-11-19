@@ -11,14 +11,17 @@
  * @param type $nid
  */
 function watch_peer_review($nid) {
+  //==================access control====================================================
+  $user_id=get_user_identity_by_nid($nid);
+  if($user_id!=1){
+    drupal_goto('mydashboard');
+  }
+  //====================Get source from database=========================================
   $webform_data = get_webform_data($nid);
   $answer_array = get_answer($nid);
   $cid_array = array();
-  //====================Get source from database=========================================
   $basic_info = get_webform_basic_info($nid);
-//  dd($basic_info, '$basic_info');
   $render_data = _manage_webform_data($webform_data, $nid, $answer_array, $cid_array);
-//  dd($render_data, '$render_data');
   //===================Theme it==========================================================
   $pagecontent = get_watchpeerreview_page_content($basic_info, $render_data);
   return $pagecontent;
@@ -274,7 +277,7 @@ function get_std_webform_basic_info($result) {
  */
 function get_watchpeerreview_page_content($basic_info, $content) {
   $html_content = get_watchpeerreview_basic_info_html($basic_info);
-  $html_content.=get_get_watchpeerreview_content_html($content);
+  $html_content.=get_watchpeerreview_content_html($content);
 
 //  dd($html_content,'$html_content');
   return $html_content;
@@ -289,10 +292,17 @@ function get_watchpeerreview_basic_info_html($basic_info) {
   return theme('watch_peer_review_basic_info', array('basic_info' => $basic_info));
 }
 
-function get_get_watchpeerreview_content_html($contents) {
+/**
+ * generate html codes with theme method
+ * @param type $contents
+ * @return string
+ */
+function get_watchpeerreview_content_html($contents) {
 //  $html_value
 //  dd($contents,'$contents');
+  //=================================html contents====================================================
   $html_value = _get_watchpeerreview_component_html($contents);
+  //=================================add go back button===============================================
   $html_value.='<button id="btnPeerReviewGoBack" onclick="window.history.back();" role="button" class="btn btn-danger" >Go Back</button>';
   return $html_value;
 }
@@ -301,6 +311,7 @@ function _get_watchpeerreview_component_html($contents) {
   $html_text = '';
   foreach ($contents as $one_content) {
     if ($one_content->type == 'fieldset') {
+      //=================================is fieldset===================================================
       if ($one_content->pid == 0) {
         $html_text.='<div class="peerfieldset">';
         $html_text.='<legend>' . $one_content->name . '</legend>';
@@ -315,6 +326,7 @@ function _get_watchpeerreview_component_html($contents) {
       }
     }
     else {
+      //=================================normal component===============================================
       if ($one_content->type != 'select') {
         $html_text.=theme('watch_peer_review_component', array('component_content' => $one_content));
       }
