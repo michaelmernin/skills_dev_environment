@@ -19,14 +19,7 @@
       </div>
       <div id="pr_mywokingstage_content_right" class="span9">
         <div class="pr_workingstage_connent">
-          <div id="pr_right_content">
-            <?php if ($messages): ?>
-              <div id="messages">
-                <div class="container">
-                  <?php print $messages; ?>
-                </div>
-              </div>
-            <?php endif; ?>
+          <div id="pr_right_content">           
             <?php print render($page['content']); ?>
           </div>
         </div>

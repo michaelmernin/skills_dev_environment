@@ -124,6 +124,23 @@ function counselee_menu() {
     'file' => 'files/dashboard.pages.inc',
   );
 
+  $items['audit-review/approve-review-result'] = array(
+    'title' => 'Counselee Approve Review Result',
+    'page callback' => 'approve_review_result',
+    'page arguments' => array(),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'files/dashboard.pages.inc',
+  );
+  
+    $items['audit-review/disapprove-review-result'] = array(
+    'title' => 'Counselee Disapprove Review Result',
+    'page callback' => 'disapprove_review_result',
+    'page arguments' => array(),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'files/dashboard.pages.inc',
+  );
 
   return $items;
 }
@@ -174,7 +191,7 @@ function counselee_block_view($delta = '') {
         'counselorPeers' => $counselorPeers,
         'reviewList' => $reviewList,
         'self_review_finished' => $self_review_finished,
-        'counselee_confirm_review'=>$counselee_confirm_review,
+        'counselee_confirm_review' => $counselee_confirm_review,
       ));
       break;
   }
@@ -192,7 +209,7 @@ function counselee_theme() {
         'counselorPeers' => NULL,
         'reviewList' => NULL,
         'self_review_finished' => NULL,
-        'counselee_confirm_review'=>NULL,
+        'counselee_confirm_review' => NULL,
       ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'my_working_list',),
@@ -212,12 +229,21 @@ function counselee_theme() {
       'variables' => array('rreid' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'view_assessment',),
-    'component_select' => array(
+    'page_audit_review_question' => array(
       'variables' => array(
-        'node' =>NULL,
-      ),
+        'node' => NULL,),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'select_comment',),
+      'template' => 'page_audit_review_question',),
+    'page_audit_review_summay_description' => array(
+      'variables' => array(
+        'node' => NULL,),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'page_audit_review_summay_description',),
+    'page_audit_review_btn' => array(
+      'variables' => array(
+        'rreid' => NULL,),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'page_audit_review_btn',),
   );
 }
 
@@ -727,7 +753,7 @@ function get_counselor_submittion_from_db($rreid) {
  * 
  */
 function get_confirm_review_result($username) {
-  
+
   $query = db_select('prs_rel_review_employee', 'review');
   $query->join('prs_general', 'general', 'general.prid = review.prid');
   $query->addField('review', 'prid');

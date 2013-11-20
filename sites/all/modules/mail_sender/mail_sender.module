@@ -161,28 +161,29 @@ function mail_sender_template_adapter($address, $params, $type) {
     case 0:
       if ($params['type'] == 'counselee') {
         $subject = $params['reviewname'] . " has begun.Please select peers for yourself";
-        $templateName = 'new_review_started_counselee.tpl.php';
+        $templateName = 'counselee_new_review_started.tpl.php';
       }
       else if ($params['type'] == 'counselor') {
         $subject = $params['reviewname'] . " has begun.Please select peers for " . $params['username'];
-        $templateName = 'new_review_started_counselor.tpl.php';
+        $templateName = 'counselor_new_review_started.tpl.php';
       }
       break;
     //1 stand for notifying user to fill up peers-review form
     case 1:
       $subject = $params['reviewname'] . " has begun.Please help " . $params['employeeName'] . " fill up peer review form";
-      $templateName = 'selectPeers.tpl.php';
+      $templateName = 'peer_select_peer.tpl.php';
       break;
     //2 stand for notifying counselee has submitted self review
     case 2:
-      $templateName = 'counselee_submited.tpl.php';
+      $templateName = 'counselor_counselee_submit_self_review.tpl.php';
       break;
     //3 stand for reminding peer to provider feedback 
     case 3:
-      $templateName = 'provider_feedback_remind.tpl.php';
+      $templateName = 'peer_provider_feedback_remind.tpl.php';
       $isImmediately = true;
       break;
-
+    case 4;
+      $templateName = 'counselor_ccounselee_aduit_review_result.tpl.php';
     default:
       break;
   }
@@ -248,6 +249,11 @@ function mail_sender_menu() {
   return $items;
 }
 
+/**
+ * Counselee or counselee remind peer to provider feedback
+ * @param int $prid prs_rel_provider_employee id
+ * 
+ */
 function provider_feedback_remind($prid) {
 
   $prid = $_POST['prid'];
@@ -267,14 +273,54 @@ function provider_feedback_remind($prid) {
   $dataset = $query->execute()->fetchAll();
   if (count($dataset) == 1) {
     $address = $dataset[0]->mail;
-    $url = get_curPage_base_url(). $dataset[0]->token;
+    $url = get_curPage_base_url() . $dataset[0]->token;
     $params = array(
       'reviewname' => $dataset[0]->description,
       'receiver' => $dataset[0]->providername,
       'counselee' => $dataset[0]->employeename,
       'url' => $url,
     );
+
+    //3 stand for the template type
     $template_type = 3;
+    return mail_sender_template_adapter($address, $params, $template_type);
+  }
+}
+
+/**
+ * Remind the counselor that counselor disapprove the review result.
+ * 
+ * @param int $rreid  the prs_rel_review_employee rreid
+ */
+function counselee_aduit_review_result_remind($rreid, $is_approve) {
+  $query = db_select('prs_rel_review_employee', 'review');
+  $query->join('prs_general', 'general', 'general.prid = review.prid');
+  $query->join('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName= review.employeeName');
+  $query->join('prs_reviewers', 'reviewer', 'reviewer.login_name = relation.counselorName');
+  $query->addField('review', 'employeeName');
+  $query->addField('general', 'description');
+  $query->addField('relation', 'counselorName');
+  $query->addField('reviewer', 'mail');
+  $query->condition('review.rreid', $rreid);
+
+  $dataset = $query->execute()->fetchAll();
+
+  if ($is_approve == true)
+    $operator = 'approve';
+  else
+    $operator = 'disapprove';
+  
+  
+  if (count($dataset) == 1) {
+    $address = $dataset[0]->mail;
+    $params = array(
+      'counselor' => $dataset[0]->counselorName,
+      'counselee' => $dataset[0]->employeeName,
+      'aduit' => $operator,
+      'reviewname' => $dataset[0]->description,
+      'url' => get_curPage_base_url() . 'watchstatus/viewassessment/' . $rreid,
+    );
+    $template_type = 4;
     return mail_sender_template_adapter($address, $params, $template_type);
   }
 }
