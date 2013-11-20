@@ -51,7 +51,6 @@ function feedbacksubmitsuccess() {
  * 
  */
 function counselee_confirm_review_result($rpeid) {
-  
   $rreid = 1;
   $nid = 21;
   $pageContent = '';
