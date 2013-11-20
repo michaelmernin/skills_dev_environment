@@ -183,7 +183,7 @@ function mail_sender_template_adapter($address, $params, $type) {
       $isImmediately = true;
       break;
     case 4;
-      $templateName = 'counselor_ccounselee_aduit_review_result.tpl.php';
+      $templateName = 'counselor_counselee_aduit_review_result.tpl.php';
     default:
       break;
   }
