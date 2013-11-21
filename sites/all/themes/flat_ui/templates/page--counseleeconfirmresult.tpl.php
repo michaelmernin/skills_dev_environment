@@ -18,9 +18,10 @@
 
       </div>
       <div id="pr_mywokingstage_content_right" class="span9">
+          <?php print render($page['content']); ?>
         <div class="pr_workingstage_connent">
           <div id="pr_right_content">           
-            <?php print render($page['content']); ?>
+          
           </div>
         </div>
       </div>

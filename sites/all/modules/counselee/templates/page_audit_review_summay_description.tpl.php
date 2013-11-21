@@ -1,29 +1,19 @@
-<div class="well sidebar-nav">
-  <table >
-    <caption>
-      <h3></h3>
-    </caption>
-    <tbody>
-      <tr>
-        <td colspan="3">
-          <?php print $node['description']; ?>
-        </td>
-      </tr>
-
-      <tr>
-        <td colspan="3">
-        Self Comment:   <?php print $node['self_description']; ?>
-        </td>
-      </tr>
-
-      <tr>
-        <td colspan="3">
-        Counselor Comment:  <?php print $node['counselor_description']; ?>
-        </td>
-      </tr>
+<hr>
 
 
-    </tbody>
-  </table>
-</div>
 
+<fieldset class="webform-component-fieldset webform-catalogue ">
+  <legend>
+    <span class="fieldset-legend"> <?php print $node['description']; ?>
+    </span>
+  </legend>
+
+  <div class="webform-submission-info clearfix">
+    <div class="wellwarp">
+      Self Description:   <?php print $node['self_description']; ?>
+    </div>
+    <div class="wellwarp">  
+      Counselor Description:  <?php print $node['counselor_description']; ?>
+    </div>
+  </div>
+</fieldset>

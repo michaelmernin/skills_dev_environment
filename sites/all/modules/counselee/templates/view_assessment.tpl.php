@@ -243,12 +243,20 @@ function display_header($num, $header) {
 }
 
 function display_subtitle($num, $subtitle) {
-  $content = '<h6 id="subtitle-' . $num . '" class="assessment-subtitle" value="' . $subtitle . '">' . $subtitle . '</h6>';
-  print $content;
+  $content = '<div id="subtitle-' . $num . '" class="assessment-subtitle" value="' . $subtitle . '">' . $subtitle . '</div>';
+  
+  $fieldset = "<hr><fieldset class=\"webform-component-fieldset webform-catalogue \">
+    <legend><span class=\"fieldset-legend\">$content</span></legend></fieldset>";
+  //print $content;
+  print $fieldset;
 }
 
 function display_fillform($num, $fillform) {
-  $title = '<h6 a id="fillform-' . $num . '" class="assessment-fillform">' . $fillform['question'] . '</h6>';
+  $title = '<div a id="fillform-' . $num . '" class="assessment-fillform">' . $fillform['question'] . '</div>';
+  
+  $title = "<hr><fieldset class=\"webform-component-fieldset webform-catalogue \">
+    <legend><span class=\"fieldset-legend\">$title</span></legend></fieldset>";
+  
   $content = '<div id="fillform-content-' . $num . '" class="assessment-fillform-content">';
   if ($fillform['comment'] != '') {
     print $title . $content . '<div>' . $fillform['comment'] . '</div></<div></div>';
@@ -306,7 +314,10 @@ function display_overall($num, $rating) {
   print $content;
 }
 function display_questions($num, $question) {
-  $content = '<h6 id="question-' . $num . '" class="survey-question">' . $question . '</h6>';
+  $content = '<div id="question-' . $num . '" class="survey-question">' . $question . '</div>';
+  if($num !=3 &&  $num !=10)
+    $content = '<hr>' .$content;
+    
   print $content;
 }
 
@@ -316,7 +327,7 @@ function display_comment($num, $comment) {
     print $tab . '<div>' . $comment . '</div></div></div>';
   }
   else {
-    print $tab . '<div>' . 'No comments!' . '</div></div></div> <br />';
+    print $tab . '<div>' . 'No comments!' . '</div></div></div>';
   }
 }
 

@@ -121,7 +121,7 @@ function counselee_menu() {
     'type' => MENU_LOCAL_TASK,
     'page arguments' => array(1),
     'access arguments' => array('access to my dashboard'),
-    'file' => 'files/dashboard.pages.inc',
+    'file' => 'files/page_audit_review.inc',
   );
 
   $items['audit-review/approve-review-result'] = array(
@@ -130,16 +130,16 @@ function counselee_menu() {
     'page arguments' => array(),
     'access arguments' => array('access to my dashboard'),
     'type' => MENU_CALLBACK,
-    'file' => 'files/dashboard.pages.inc',
+    'file' => 'files/page_audit_review.inc',
   );
-  
-    $items['audit-review/disapprove-review-result'] = array(
+
+  $items['audit-review/disapprove-review-result'] = array(
     'title' => 'Counselee Disapprove Review Result',
     'page callback' => 'disapprove_review_result',
     'page arguments' => array(),
     'access arguments' => array('access to my dashboard'),
     'type' => MENU_CALLBACK,
-    'file' => 'files/dashboard.pages.inc',
+    'file' => 'files/page_audit_review.inc',
   );
 
   return $items;
