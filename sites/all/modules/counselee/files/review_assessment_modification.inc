@@ -225,10 +225,10 @@ function _fetch_cid_formkey_from_dataset($data_src) {
 
 function reorder_form_contents($pr_data_array) {
   $cid_formkey_type_array = _fetch_cid_formkey_from_dataset($pr_data_array);
-  dd($cid_formkey_type_array, 'cid_formkey_type_array');
   $adj_list = generate_adjacent_list($cid_formkey_type_array);
   $count = count($cid_formkey_type_array);
-  dfs_travel_all_node($adj_list);
+  $sequential_list = dfs_travel_all_node($adj_list);
+  // dd($sequential_list, 'sequential_list');
   // $adj_list = range(0, $count-1);
 }
 
@@ -269,8 +269,8 @@ function dfs_travel_all_node($adj_list) {
 
     // if ()
     array_push($visited_array, $current);
-    dd($current, 'current');
   }
+  return $visited_array;
 }
 
 function dfs_push(&$target, $source) {

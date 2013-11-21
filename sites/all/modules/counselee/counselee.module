@@ -777,17 +777,3 @@ function get_confirm_review_result($username) {
   }
   return $result;
 }
-
-function get_all_providers_info_from_db($rreid) {
-  $query = db_query('SELECT
-  *
-FROM
-  `prs_rel_provider_employee` a
-WHERE
-  a.rreid = :rreid
-AND a.providerName != a.employeeName
-ORDER BY
-  a.nid;', array(':rreid' => $rreid))
-        ->fetchAll();
-  return $query;
-}
