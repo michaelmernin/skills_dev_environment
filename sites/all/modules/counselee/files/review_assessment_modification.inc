@@ -278,12 +278,12 @@ function synthesize_all_peer_review_ratings_and_comments($rreid, &$nid_pname_arr
 function _generate_provider_syn_ratings_array($pr_data_array, $count) {
 	$rating_array = range(0, $count-1);
 	for($i = 0; $i < $count; $i++) {
-		$rating_array[$i] = array('0' => array(), '1' => array(), '2' => array(), '3' => array(), '4' => array(), '5' => array());
+		$rating_array[$i] = array();
 	}
 	foreach($pr_data_array as $item) {
 		for($i = 0; $i < $count; $i++) {
 			if ($item->dataset[$i]->type == 'select' && $item->dataset[$i]->DATA != 'NIL') {
-				array_push($rating_array[$item->dataset[$i]->cid][$item->dataset[$i]->DATA], $item->providerName);
+				$rating_array[$item->dataset[$i]->cid][$item->providerName] = $item->dataset[$i]->DATA;
 			}
 			else {
 				continue;
