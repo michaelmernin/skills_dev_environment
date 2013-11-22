@@ -14,10 +14,20 @@ function load_self_assessment($rreid = NULL) {
   // Item below is for self assessment
   ////////////////////////////////////////////////////////
   $self_dataset = get_latest_submitted_data_from_db($nid, $sid);
+  $cid_indexed_dataset = _indexed_by_cid($self_dataset);
   $item_count = count($self_dataset);
-  $self_dataset = generate_selfassessment_result_array($self_dataset);
-  $rating_qa_sheet = _generate_rating_qa_sheet($self_dataset);
-  $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments();
+  // dd($self_dataset, 'self_dataset');
+  $self_cid_formkey_type_array = _generate_self_cid_formkey_type($self_dataset);
+  // dd($cid_formkey_type_array, 'cid_formkey_type_array');
+  $self_adj_list = dfs_generate_adjacent_list($self_cid_formkey_type_array);
+  $self_sequential_list = dfs_travel_all_node($self_adj_list);
+  $mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
+  // $self_dataset = generate_selfassessment_result_array($self_dataset);
+  // $rating_qa_sheet = _generate_rating_qa_sheet($self_dataset);
+  $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($cid_indexed_dataset, $mapping_table);
+  // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
+  $self_question_rating_comment_result = _resort_item_by_weight($self_question_rating_comment_result);
+  // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
   ////////////////////////////////////////////////////////
   // Item below is for peers
   ////////////////////////////////////////////////////////
@@ -29,21 +39,21 @@ function load_self_assessment($rreid = NULL) {
   $mapping_table = reorder_form_contents($pr_data_array, $cid_formkey_type_array, $adj_list);
   // dd($cid_formkey_type_array, 'cid_formkey_type_array');
   // dd($adj_list, 'adj_list');
-  $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($rreid, $nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
+  $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
   ////////////////////////////////////////////////////////
   // Just for display
   // dd($peer_question_rating_comment_result, 'q_r_c result');
   // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
   $pageContent = '';
   foreach ($self_question_rating_comment_result as $key => $value) {
-    $temp = theme('view_assessment', array(
-      'item_num' => $value->item_num,
-      'rreid' => $value->rreid,
-      'nid' => $value->nid,
-      'reviewee' => $value->reviewee,
-      'self_dataset' => $value->self_dataset,
+    $content = theme('view_assessment', array(
+      'item_num' => $key,
+      'rreid'     => $rreid,
+      'nid'       => $nid,
+      'reviewee'  => $reviewee,
+      'self_dataset'  => $value,
     ));
-    $pageContent .= $temp;
+    $pageContent .= $content;
   }
   return $pageContent;
 }
@@ -133,18 +143,20 @@ function display_rating_qa_sheet($qa_sheet) {
  * */
 function _fetch_provider_nodeID_and_submissionID($data_src) {
   $nid_pName_sid_array = array();
-  foreach ($data_src as $item) {
-    $providerName = $item->providerName;
-    $nid = $item->nid;
-    $sid = get_last_sid_by_nid($nid);
-    $temp = array(
-      'providerName' => $providerName,
-      'nid' => $nid,
-      'sid' => $sid,
-    );
-    array_push($nid_pName_sid_array, $temp);
-  }
-  return $nid_pName_sid_array;
+	foreach ($data_src as $item) {
+		$providerName = $item->providerName;
+		$nid = $item->nid;
+    $isRead = _get_provider_isRead_status_from_db($nid);
+		$sid = get_last_sid_by_nid($nid); 
+		$temp = array(
+			'providerName' => $providerName,
+			'nid' => $nid,
+			'sid' => $sid,
+      'isRead' => $isRead,
+			);
+		array_push($nid_pName_sid_array, $temp);
+	}
+	return $nid_pName_sid_array;
 }
 
 /**
@@ -155,19 +167,20 @@ function _fetch_provider_nodeID_and_submissionID($data_src) {
  * */
 function _get_provider_review_content($nid_sid_array) {
   $provider_submission_data_set = array();
-  foreach ($nid_sid_array as $nid_sid_pair) {
-    $objInstance = new stdClass();
-    $nid = $nid_sid_pair['nid'];
-    $sid = $nid_sid_pair['sid'];
-    $providerName = $nid_sid_pair['providerName'];
-    $dataset = get_latest_submitted_data_from_db($nid, $sid);
-    $objInstance->nid = $nid;
-    $objInstance->sid = $sid;
-    $objInstance->providerName = $providerName;
-    $objInstance->dataset = $dataset;
-    $provider_submission_data_set[$providerName] = $objInstance;
-  }
-  return $provider_submission_data_set;
+	foreach ($nid_sid_array as $nid_sid_pair) {
+		$objInstance = new stdClass();
+		$nid = $nid_sid_pair['nid'];
+		$sid = $nid_sid_pair['sid'];
+		$providerName = $nid_sid_pair['providerName'];
+		$dataset = get_latest_submitted_data_from_db($nid, $sid);
+		$objInstance->nid = $nid;
+		$objInstance->sid = $sid;
+		$objInstance->providerName = $providerName;
+		$objInstance->dataset = $dataset;
+    $objInstance->isRead = $nid_sid_pair['isRead'];
+		$provider_submission_data_set[$providerName] = $objInstance;
+	}
+	return $provider_submission_data_set;
 }
 
 /**
@@ -200,52 +213,82 @@ function get_synthesized_provider_comment_from_db($nid, $csiid) {
   return $query;
 }
 
-/**
- * synthesize_self_review_ratings_and_comments
- * @param
- * @return 
- * */
-function synthesize_self_review_ratings_and_comments() {
+function _indexed_by_cid($self_dataset) {
+  $index_array = array();
+  foreach ($self_dataset as $key => $value) {
+    $cid = $value->cid;
+    if (!array_key_exists($cid, $index_array)) {
+      $index_array[$cid] = '';
+    }
+    $index_array[$cid] = $value;
+  }
+  return $index_array;
+}
+
+function _resort_item_by_weight(&$self_question_rating_comment_result) {
+  $temp_array = array();
+  foreach ($self_question_rating_comment_result as $key => $value) {
+    $val = $value->weight;
+    $temp_array[$key] = $val;
+  }
+  asort($temp_array);
   $result = array();
-  for ($i = 0; $i < 12; $i++) {
-    $temp = new stdClass();
-    $temp->item_num = 'num';
-    $temp->rreid = 'rreid';
-    $temp->nid = 'nid';
-    $temp->reviewee = 'reviewee';
-    $temp->self_dataset = 'dataset';
-    array_push($result, $temp);
-    // 'item_num' => $value->$i,
-    //   'rreid'     => $value->rreid,
-    //   'nid'       => $value->nid,
-    //   'reviewee'  => $value->reviewee,
-    //   'self_dataset'  => $value->self_dataset
+  foreach ($temp_array as $key => $value) {
+    array_push($result, $self_question_rating_comment_result[$key]);
   }
   return $result;
 }
 
 /**
+ * synthesize_self_review_ratings_and_comments
+  * @param
+  * @return 
+**/
+function synthesize_self_review_ratings_and_comments($self_dataset, $mapping_table) {
+  $self_review_content = array();
+  $temp_idx = 0;
+  for($i = 0; $i < count($self_dataset); $i++) {
+    if (!array_key_exists($i, $self_dataset)) {
+      continue;
+    }
+    if ($self_dataset[$i]->type != 'select' || $self_dataset[$i]->form_key == 'rating') {
+      continue;
+    }
+    $obj = new stdClass();
+    $obj->cid = $self_dataset[$i]->cid;
+    $obj->form_key = $self_dataset[$mapping_table[$temp_idx]['rating_idx']]->form_key;
+    $obj->question = $self_dataset[$mapping_table[$temp_idx]['rating_idx']]->name;
+
+    $obj->rating = $self_dataset[$mapping_table[$temp_idx]['rating_idx']]->DATA;
+    $obj->comment = $self_dataset[$mapping_table[$temp_idx]['comment_idx']]->DATA;
+    $obj->weight = $self_dataset[$mapping_table[$temp_idx]['rating_idx']]->weight;
+    $temp_idx++;
+    array_push($self_review_content, $obj);
+  }
+  return $self_review_content;
+}
+
+/**
  * synthesize_all_peer_review_ratings_and_comments
- * @param int $rreid
  * @param array by reference $nid_pname_array
  * @param array by reference $pr_data_array
  * @param array by reference $mapping_table
  * @param int $item_count
  * @return array 
- * */
-function synthesize_all_peer_review_ratings_and_comments($rreid, &$nid_pname_array, &$pr_data_array, &$mapping_table, $item_count) {
-  $all_peer_review_content = array();
-  $count = count($nid_pname_array);
-  if (count($nid_pname_array) != 0) {
-    $providerName = $nid_pname_array[0]['providerName'];
-  }
-  else {
-    $msg = 'No new provider comments was added.';
-    drupal_set_message($msg, 'status');
-    return;
-  }
-  $rating_array = _generate_provider_syn_ratings_array($pr_data_array, $item_count);
-  $comment_array = _generate_provider_syn_comments_array($pr_data_array, $item_count);
+ **/
+function synthesize_all_peer_review_ratings_and_comments(&$nid_pname_array, &$pr_data_array, &$mapping_table, $item_count) {
+	$all_peer_review_content = array();
+	$count = count($nid_pname_array);
+	if (count($nid_pname_array) != 0) {
+		$providerName = $nid_pname_array[0]['providerName'];
+	}
+	else {
+		$msg = 'No new provider comments was added.';
+		drupal_set_message($msg, 'status');
+		return;
+	}
+	$rating_array = _generate_provider_syn_ratings_array($pr_data_array, $item_count);
+	$comment_array = _generate_provider_syn_comments_array($pr_data_array, $item_count);
 
   // We should iterate the content according to the adjusted sequence as mapping table!.
   $temp_idx = 0;
@@ -254,10 +297,9 @@ function synthesize_all_peer_review_ratings_and_comments($rreid, &$nid_pname_arr
       continue;
     }
     $obj = new stdClass();
-    $obj->question = array();
     $obj->cid = $pr_data_array[$providerName]->dataset[$i]->cid;
     $obj->form_key = $pr_data_array[$providerName]->dataset[$i]->form_key;
-    $obj->question['title'] = $pr_data_array[$providerName]->dataset[$i]->name;
+    $obj->question = $pr_data_array[$providerName]->dataset[$i]->name;
 
     $obj->ratings = $rating_array[$mapping_table[$temp_idx]['rating_idx']];
     $obj->comments = $comment_array[$mapping_table[$temp_idx]['comment_idx']];
@@ -291,6 +333,13 @@ function _generate_provider_syn_ratings_array($pr_data_array, $count) {
 	return $rating_array;
 }
 
+function _get_provider_isRead_status_from_db($nid) {
+  $query = db_select('prs_rel_provider_employee', 'prpe')
+        ->fields('prpe', array('isRead'))
+        ->condition('prpe.nid', $nid)
+        ->execute()->fetchAll();
+  return $query[0]->isRead;
+}
 /**
  * _generate_provider_syn_comments_array
  * @param array $pr_data_array
@@ -305,7 +354,9 @@ function _generate_provider_syn_comments_array($pr_data_array, $count) {
   foreach ($pr_data_array as $item) {
     for ($i = 0; $i < $count; $i++) {
       if ($item->dataset[$i]->type == 'textarea' && $item->dataset[$i]->DATA != 'NIL') {
-        $comment_array[$item->dataset[$i]->cid][$item->providerName] = $item->dataset[$i]->DATA;
+        $comment_array[$item->dataset[$i]->cid][$item->providerName] = new stdClass();
+        $comment_array[$item->dataset[$i]->cid][$item->providerName]->comment = $item->dataset[$i]->DATA;
+        $comment_array[$item->dataset[$i]->cid][$item->providerName]->isRead = $item->isRead;
       }
       else {
         continue;
@@ -321,6 +372,9 @@ function _generate_provider_syn_comments_array($pr_data_array, $count) {
  * @rerturn array
  * */
 function _fetch_cid_formkey_from_dataset($data_src) {
+  if (count($data_src) == 0) {
+    return;
+  }
   $index = array_keys($data_src);
   $cid_formkey_type_array = array();
   foreach ($data_src[$index[0]]->dataset as $item) {
@@ -344,19 +398,31 @@ function reorder_form_contents($pr_data_array, &$cid_formkey_type_array, &$adj_l
   // $cid_formkey_type mapping ralations
   /////////////////////////////////////
   $cid_formkey_type_array = _fetch_cid_formkey_from_dataset($pr_data_array);
-  // dd($cid_formkey_type_array, 'cid_formkey_type_array');
   /////////////////////////////////////
   // $adj_list adjacent list
   /////////////////////////////////////
   $adj_list = dfs_generate_adjacent_list($cid_formkey_type_array);
-  // dd($adj_list, 'adj_list');
   $sequential_list = dfs_travel_all_node($adj_list);
   $mapping_table = adjust_question_and_answer($cid_formkey_type_array, $sequential_list);
-  // for($i = 0; $i < count($sequential_list); $i++) {
-  // }
+
   return $mapping_table;
 }
 
+function _generate_self_cid_formkey_type($self_dataset) {
+  $cid_formkey_type_array = array();
+  $count = count($self_dataset);
+  // dd($self_dataset, 'self_dataset');
+  foreach ($self_dataset as $value) {
+    if(!array_key_exists($value->cid, $cid_formkey_type_array)) {
+      $cid_formkey_type_array[$value->cid] = array();
+      $cid_formkey_type_array[$value->cid]['form_key'] = $value->form_key;
+      $cid_formkey_type_array[$value->cid]['type'] = $value->type;
+      $cid_formkey_type_array[$value->cid]['pid'] = $value->pid;
+    }
+  }
+
+  return $cid_formkey_type_array;
+}
 /**
  * adjust_question_and_answer
  * matching questions, ratings and answers
@@ -365,10 +431,20 @@ function reorder_form_contents($pr_data_array, &$cid_formkey_type_array, &$adj_l
  * @return array $qa_array
  * */
 function adjust_question_and_answer($src_array, $dfs_tree) {
+  if (count($src_array) == 0 || count($dfs_tree) == 0) {
+    return;
+  }
   $qa_array = array();
   $comment_array = array();
   $count = count($src_array);
-  for ($i = 0; $i < $count; $i++) {
+
+  if (count($src_array) != 0) {
+    $max = max(array_keys($src_array));
+  }
+  else {
+    $max = count($dfs_tree);
+  }
+  for($i = 0; $i < $count; $i++) {
     if (!array_key_exists($i, $src_array)) {
       continue;
     }
@@ -380,8 +456,13 @@ function adjust_question_and_answer($src_array, $dfs_tree) {
       unset($src_array[$i]);
     }
   }
-  for ($i = 0; $i < count($dfs_tree); $i++) {
-    if (!array_key_exists($dfs_tree[$i], $src_array)) {
+  // dd($src_array, 'src_array');
+  // dd($comment_array, 'comment_array');
+  // dd(count($comment_array), 'count');
+  // dd(count($dfs_tree), 'count_dfs');
+  // dd($dfs_tree, 'dfs_tree');
+  for($i = 0; $i < $max; $i++) {
+    if (!array_key_exists($i, $dfs_tree) || !array_key_exists($dfs_tree[$i], $src_array)) {
       continue;
     }
     if ($src_array[$dfs_tree[$i]]['type'] == 'select') {
@@ -412,6 +493,9 @@ function adjust_question_and_answer($src_array, $dfs_tree) {
  * @return array $adj_list
  * */
 function dfs_generate_adjacent_list($cid_formkey_type_array) {
+  if (count($cid_formkey_type_array) == 0) {
+    return;
+  }
   $cid_index = array_keys($cid_formkey_type_array);
   $adj_list = array();
   foreach ($cid_index as $item) {
