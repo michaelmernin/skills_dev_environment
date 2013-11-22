@@ -32,8 +32,12 @@ function show_pr_list() {
 }
 
 function accessdenied() {
-  $pageContent = '';
-  return $pageContent;
+  if (!user_is_anonymous()) {
+    drupal_goto('mydashboard');
+  }
+  else {
+    drupal_goto('login');
+  }
 }
 
 function feedbacksubmitsuccess() {

@@ -14,7 +14,7 @@ function watch_peer_review($nid) {
   //==================access control====================================================
   $user_id=get_user_identity_by_nid($nid);
   if($user_id!=1){
-    drupal_goto('mydashboard');
+    drupal_goto('accessdenied');
   }
   //====================Get source from database=========================================
   $webform_data = get_webform_data($nid);

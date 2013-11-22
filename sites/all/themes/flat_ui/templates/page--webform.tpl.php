@@ -24,7 +24,7 @@
   if (is_selfreview($node->nid) && get_user_identity_by_nid($node->nid) != 0) {
 //  dd($type,'$type');
 //  dd(get_user_identity_by_nid($node->nid));
-      drupal_goto('mydashboard');
+      drupal_goto('accessdenied');
   }
 //dd($page['content']['system_main']['nodes'][3]['webform']['#node']->webform['components']);
 //print render($page['content']['system_main']['nodes'][3]['webform']['#node']->webform['components']);

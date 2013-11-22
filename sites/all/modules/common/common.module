@@ -177,7 +177,7 @@ function get_user_identity($rreid) {
 function access_authen($rreid) {
   $id = get_user_identity($rreid);
   if ($id == -1) {
-    drupal_goto('mydashboard');
+    drupal_goto('accessdenied');
   }
 }
 
@@ -362,6 +362,7 @@ function delete_gm_role($role) {
  */
 function prs_user_login_role() {
   $roles = array('counselor', 'GM');
+  dd($roles,'$roles');
   $rids = get_role_id($roles);
   $is_exist_counselor = is_exist_counselor($rids);
   $is_exist_gm = is_exist_gm($rids);

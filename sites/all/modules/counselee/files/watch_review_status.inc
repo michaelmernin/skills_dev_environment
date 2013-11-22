@@ -57,7 +57,7 @@ function display_self_assessment($rreid = NULL) {
 //  dd($type,'$type');
 //  dd(get_user_identity_by_nid($node->nid));
   if ($type == 0 && get_user_identity($rreid) != 0) {
-    drupal_goto('mydashboard');
+    drupal_goto('accessdenied');
   }
   $result = get_provider_info($rreid);
   if (count($result)) {

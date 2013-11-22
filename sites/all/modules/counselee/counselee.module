@@ -150,9 +150,9 @@ function counselee_permission() {
     'access to my dashboard' => array(
       'title' => t('Access to my dashboard'),
     ),
-    'access to peer review' => array(
-      'title' => t('Access to peer review form'),
-    ),
+//    'access to peer review' => array(
+//      'title' => t('Access to peer review form'),
+//    ),
   );
 }
 
