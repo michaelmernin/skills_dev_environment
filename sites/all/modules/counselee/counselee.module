@@ -86,7 +86,7 @@ function counselee_menu() {
     'page arguments' => array(2),
     'access arguments' => array('access to my dashboard'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'files/watch_review_status.inc',
+    'file' => 'files/review_assessment_modification.inc',
   );
   $items['watchstatus/submitcounselorassessment'] = array(
     'title' => 'Submit Counselor Sheet',
@@ -228,7 +228,7 @@ function counselee_theme() {
     'view_assessment' => array(
       'variables' => array('rreid' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'view_assessment',),
+      'template' => 'view_assessment_item',),
     'page_audit_review_question' => array(
       'variables' => array(
         'node' => NULL,),
