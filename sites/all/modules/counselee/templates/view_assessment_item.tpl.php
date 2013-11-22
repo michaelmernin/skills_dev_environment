@@ -1,18 +1,15 @@
 <?php
-/*
-  This template is for each survey item. All arguments this template needs are:
-  $item_num -- the item number
-  $item_question -- the item question
-  $item_rating -- the item self rating
-  $item_comment -- the item self comment
-  $item_peer_comments -- the synthesized peer comments
- */
+	// dd($item_num, 'item_num: ');
+	// dd($rreid, 'rreid');
+	// dd($nid, 'nid');
+	// dd($reviewee, 'reviewee');
+	// dd($self_dataset, 'self_dataset');
 ?>
 <div class="webform-submission-info clearfix">
   <!--Self comment-->
   <div class="webform-submission-info clearfix">
     <div id="header-<?php print $item_num; ?>" >
-      <?php print $item_question; ?> 
+      <?php print $self_dataset->question; ?> 
     </div>
     <br>
 
@@ -25,7 +22,7 @@
       <div style="font-weight: 600;float: left">· Self Comment | </div>
       <div id="assessment-content-value-<?php print $item_num; ?>" 
            style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">· Self Rating:
-        <font color="red"> <?php print $item_rating; ?>
+        <font color="red"> <?php print $self_dataset->rating; ?>
         </font>
       </div>
 
@@ -36,7 +33,7 @@
 
           <div id="comment-content-value-<?php print $item_num; ?>" 
                style="margin: 4px 0px 0px; height: 112px; width: 96%;overflow-y:auto;">
-                 <?php print $item_comment ?>
+                 <?php print $self_dataset->comment ?>
           </div>
         </div>
       </div>
@@ -70,6 +67,9 @@
     </div>
   </div>
   <br>
+<input type="hidden" id="rreid" value="<?php print $rreid ?>"/>
+<input type="hidden" id="nid" value="<?php print $nid ?>"/>
+
   <!--Display the peer comment message-->
   <div class="webform-submission-info clearfix">
 

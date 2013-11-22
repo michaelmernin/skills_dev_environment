@@ -63,6 +63,7 @@ function load_self_assessment($rreid = NULL) {
  * */
 function submit_counselor_assessment() {
   $result_val = '1';
+  $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
   $headerInfo = $_POST['headerInfo'];
   $ratings = $_POST['ratings'];
@@ -92,6 +93,7 @@ function submit_counselor_assessment() {
  * */
 function reject_counselee_assessment() {
   $result_val = 1;
+  $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
   $count = $_POST['count'];
   $headerInfo = $_POST['headerInfo'];
@@ -99,7 +101,9 @@ function reject_counselee_assessment() {
   $comments = $_POST['comments'];
   $reject_comments = $_POST['rejectComments'];
 
-  $result = _append_counselor_reject_info_to_DB($nid, $reject_comments);
+  $result = _append_counselor_reject_info_to_DB($rreid, $nid, $reject_comments);
+  // email notification
+  echo $result_val;
 }
 
 function display_questions_ratings_and_comments($peer_question_rating_comment_result) {
@@ -639,13 +643,14 @@ function _insert_counselor_submittion_data_to_DB($nid, $csiid, &$data_array) {
 
 /**
  * _append_counselor_reject_info_to_DB 
+ * @param int $rreid
  * @param int $nid
  * @param string by referen $reject_comments
  * @return bool 
  * */
-function _append_counselor_reject_info_to_DB($nid, &$reject_comments) {
+function _append_counselor_reject_info_to_DB($rreid, $nid, &$reject_comments) {
   $sid = get_last_sid_by_nid($nid);
-  $result1 = db_update('prs_rel_provider_employee')
+  $provider_table = db_update('prs_rel_provider_employee')
       ->fields(array(
         'status' => 0,
         'isRead' => 1,
@@ -654,13 +659,18 @@ function _append_counselor_reject_info_to_DB($nid, &$reject_comments) {
       ))
       ->condition('nid', $nid)
       ->execute();
-  $result2 = db_update('webform_submissions')
+  $webform_table = db_update('webform_submissions')
       ->fields(array(
         'is_draft' => 1,))
       ->condition('nid', $nid)
       ->condition('sid', $sid)
       ->execute();
-  if (($result1 != 0) && ($result2 != 0)) {
+  $review_table = db_update('prs_rel_review_employee')
+                ->fields(array(
+                  'rstatus' => 1,))
+                ->condition('rreid', $rreid)
+                ->execute();
+  if (($provider_table != 0) && ($webform_table != 0) && ($review_table != 0)) {
     return TRUE;
   }
   else {

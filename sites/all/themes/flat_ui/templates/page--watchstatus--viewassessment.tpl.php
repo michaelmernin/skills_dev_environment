@@ -1,9 +1,10 @@
-<?php $base_path = get_curPage_base_url()  ?>
+<?php $base_path = get_curPage_base_url() ?>
 <script type="text/javascript">
   function submitcounselorassessment() {
     clickSubmitButton();
 
     // var area
+    var rreid = getRreid();
     var nid = getNid();
     var count = getCount();
     var headerInfo = getHeaderInfo();
@@ -15,7 +16,7 @@
     if ((ratings!=false) && (comments != false)) {
       jQuery.ajax({
         type: "POST",
-        data: {'nid': nid, 'headerInfo': headerInfo, 'ratings': ratings, 'comments': comments},
+        data: {'rreid': rreid, 'nid': nid, 'headerInfo': headerInfo, 'ratings': ratings, 'comments': comments},
         url: '<?php echo $base_path ?>watchstatus/submitcounselorassessment/',
         success: function(text) {
           // window.location.href = "<?php print base_path() . 'mydashboard' ?>";
@@ -39,6 +40,7 @@
     // clickSubmitButton();
 
     //variables
+    var rreid = getRreid();
     var nid = getNid();
     var count = getCount();
     var headerInfo = getHeaderInfo();
@@ -62,6 +64,10 @@
       // hideConfirmdialog();
       return;
     }
+  }
+
+  function getRreid() {
+    return jQuery("#rreid").val();
   }
 
   function getNid() {
