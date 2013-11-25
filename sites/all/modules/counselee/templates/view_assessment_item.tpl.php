@@ -15,7 +15,74 @@
 
     <!--PieChart-->
     <div style="float:right; margin: 4px 0px 0px; height: 200px; width: 50%;">
+      <div id="pie-chart-<?php print $pie_data->id ?>" style="height: 200px; width: 100%;"></div>
+      <?php print $pie_data->hiddenvalue ?>
+      <script>
+        // Build the chart
+        jQuery('#pie-chart-<?php print $pie_data->id ?>').highcharts({
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+          },
+//            title: {
+//                text: 'Browser market shares at a specific website, 2010'
+//            },
+          tooltip: {
+            formatter: function() {
+              var val = jQuery("#" + this.point.name+"_<?php print $pie_data->id ?>").val();
+              // alert(this.point.name);
+              var title = this.point.name;
 
+              var textval = title + '<br/>' + val;
+              return textval;
+            },
+            shared: true
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: false
+              },
+              showInLegend: true
+            }
+          },
+          series: [{
+              type: 'pie',
+              name: 'Browser share',
+              data: [
+                {name: '0-1',
+                  y:<?php print $pie_data->avg['avg0_1'] ?>,
+                  color: '#CC0000'
+
+                },
+                {name: '1-2',
+                  y:<?php print $pie_data->avg['avg1_1_2'] ?>,
+                     color:'#FF6600'
+
+                },
+                {name: '2-3',
+                  y:<?php print $pie_data->avg['avg2_1_3'] ?>,
+                     color:'#FFCC00'
+
+                },
+                {name: '3-4',
+                  y:<?php print $pie_data->avg['avg3_1_4'] ?>,
+                     color:'#CCCC00'
+
+                },
+                {name: '4-5',
+                  y:<?php print $pie_data->avg['avg4_1_5'] ?>,
+                     color:'#99FF00'
+
+                }
+              ]
+            }]
+        });
+
+      </script>
     </div>
 
     <div style="margin: 4px 0px 0px; height: 17px; width: 350px;">

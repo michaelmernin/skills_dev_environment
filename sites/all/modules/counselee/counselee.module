@@ -226,7 +226,14 @@ function counselee_theme() {
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'self_assessment',),
     'view_assessment' => array(
-      'variables' => array('rreid' => NULL),
+      'variables' => array(
+        'item_num' => NULL,
+        'rreid' => NULL,
+        'nid' => NULL,
+        'reviewee' => NULL,
+        'self_dataset' => NULL,
+        'pie_data' => NULL,
+      ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'view_assessment_item',),
     'page_audit_review_question' => array(

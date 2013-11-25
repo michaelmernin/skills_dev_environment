@@ -1,57 +1,57 @@
 <?php $base_path = get_curPage_base_url() ?>
 <?php $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui') ?>
-<script src="<?php echo $module_path ?>/assets/javascripts/highcharts/highcharts.js"></script>
-<script src="<?php echo $module_path ?>/assets/javascripts/highcharts/modules/exporting.js"></script>
+<!--<script src="<?php // echo $module_path ?>/assets/javascripts/highcharts/highcharts.js"></script>
+<script src="<?php // echo $module_path ?>/assets/javascripts/highcharts/modules/exporting.js"></script>-->
 <script type="text/javascript">
-jQuery(function () {
-    var chart;
-    
-    jQuery(document).ready(function () {
-    	
-    	// Build the chart
-        jQuery('#containertest').highcharts({
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false
-            },
-            title: {
-                text: 'Browser market shares at a specific website, 2010'
-            },
-            tooltip: {
-        	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: false
-                    },
-                    showInLegend: true
-                }
-            },
-            series: [{
-                type: 'pie',
-                name: 'Browser share',
-                data: [
-                    ['Firefox',   45.0],
-                    ['IE',       26.8],
-                    {
-                        name: 'Chrome',
-                        y: 12.8,
-                        sliced: true,
-                        selected: true
-                    },
-                    ['Safari',    8.5],
-                    ['Opera',     6.2],
-                    ['Others',   0.7]
-                ]
-            }]
-        });
-    });
-    
-});
+//jQuery(function () {
+//    var chart;
+//    
+//    jQuery(document).ready(function () {
+//    	
+//    	// Build the chart
+//        jQuery('#containertest').highcharts({
+//            chart: {
+//                plotBackgroundColor: null,
+//                plotBorderWidth: null,
+//                plotShadow: false
+//            },
+//            title: {
+//                text: 'Browser market shares at a specific website, 2010'
+//            },
+//            tooltip: {
+//        	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+//            },
+//            plotOptions: {
+//                pie: {
+//                    allowPointSelect: true,
+//                    cursor: 'pointer',
+//                    dataLabels: {
+//                        enabled: false
+//                    },
+//                    showInLegend: true
+//                }
+//            },
+//            series: [{
+//                type: 'pie',
+//                name: 'Browser share',
+//                data: [
+//                    ['Firefox',   45.0],
+//                    ['IE',       26.8],
+//                    {
+//                        name: 'Chrome',
+//                        y: 12.8,
+//                        sliced: true,
+//                        selected: true
+//                    },
+//                    ['Safari',    8.5],
+//                    ['Opera',     6.2],
+//                    ['Others',   0.7]
+//                ]
+//            }]
+//        });
+//    });
+//    
+//});
 
 </script>
 <?php require_once 'header.tpl.php'; ?>
@@ -101,7 +101,7 @@ jQuery(function () {
             <?php print render($page['my_working_stage']); ?>
             <?php print render($page['user_status']) ?>
 
-        <div id="containertest" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        <!--<div id="containertest" style="min-width: 310px; height: 400px; margin: 0 auto"></div>-->
 
           </div>
         </div>

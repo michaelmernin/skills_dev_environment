@@ -1,4 +1,7 @@
-<?php $base_path = get_curPage_base_url() ?>
+<?php $base_path = get_curPage_base_url()  ?>
+<?php $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui') ?>
+<script src="<?php echo $module_path ?>/assets/javascripts/highcharts/highcharts.js"></script>
+<script src="<?php echo $module_path ?>/assets/javascripts/highcharts/modules/exporting.js"></script>
 <script type="text/javascript">
   function submitcounselorassessment() {
     clickSubmitButton();
