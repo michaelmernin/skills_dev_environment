@@ -24,7 +24,7 @@
  */
 function counselee_confirm_review_result($rpeid) {
   $rreid = 1;
-  $nid = 30;
+  $nid = 33;
   $pageContent = '';
 
   $self_review = get_self_review_comment($nid);
