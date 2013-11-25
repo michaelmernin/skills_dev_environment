@@ -16,7 +16,7 @@ consulting_skills_id[3] = consulting_skills_id_pre + 'core-consuling-skills';
 
 
 // edit-submitted-performance-evaluation-professionalism-category-attitude
-var professionalism_id_pre = '#edit-submitted-performance-evaluation-professionalism-category-category-category-';
+var professionalism_id_pre = '#edit-submitted-performance-evaluation-professionalism-category-';
 var professionalism_id = new Array();
 professionalism_id[0] = professionalism_id_pre + 'attitude';
 professionalism_id[1] = professionalism_id_pre + 'dependability';
