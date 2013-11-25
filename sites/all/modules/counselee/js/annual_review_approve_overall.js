@@ -206,7 +206,7 @@ self_review_internal_contributions();
 
 function check_comments(category, comments)
 {
-    var value, comment, len;
+    var value, comment, len, isRight = true;
     for (var i = 0; i < category.length; i++)
     {
         value = jQuery(category[i]).find('option:selected').val();
@@ -218,13 +218,18 @@ function check_comments(category, comments)
             if (len < 1) {
                 alert('The socre is not 3 points.Please enter comment!');
                 jQuery(comments[i]).focus();
-                return false;
+                jQuery(comments[i]).removeClass().addClass("form-textarea required error");
+                isRight = false;
+                return isRight
+            }
+            else
+            {
+                jQuery(comments[i]).removeClass().addClass("form-textarea");
             }
         }
     }
-    return true;
+    return isRight;
 }
-
 jQuery(document).ready(
         function() {
 //            jQuery("input[name='op'][value='Submit']").click(
