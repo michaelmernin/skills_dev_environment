@@ -14034,7 +14034,7 @@ div.error {
 
 .peerfieldset legend{
     border-style: none;
-    width: auto;
+   /* width: auto;*/
     font-size: 19px;
     font-weight: 600;
     margin-bottom: 10px;
@@ -14198,44 +14198,4 @@ div.error {
 }
 .wfm-add.form-submit.btn.btn-large.ajax-processed {
     padding: 5px 4px;
-}
-/*Peer review warp*/
-.wellwarp {
-    min-height: 20px;
-    padding: 10px;
-    margin-bottom: 20px;
-    margin:10px;
-    background-color: #F7F7F7;
-    border: 1px solid #e3e3e3;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    /*box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);*/
-}
-
-
-.additionalbubbleP {
-    background: none repeat scroll 0 0 #E6E6FF;
-    border-radius: 5px;
-    box-shadow: -1px -1px 0 rgba(0, 0, 0, 0.2) inset;
-    margin-top: 10px;
-    float: left; 
-    width: 350px;
-}
-
-.additionalbubbleP:before {
-    content: "";
-    width: 0;
-    height: 0;
-    font-size: 0;
-    position: relative; /* 定位，也可以使用 absolute，看具体定位需求 */
-    border: 10px solid transparent; /* 箭头大小 */
-    border-bottom-color: #e6e6ff; /* 箭头颜色 */
-    border-top: 0; /* 箭头指向相对应的 border 为 0 */
-    overflow: hidden;
-    top: -10px;
-    left: 25px;
-    display: block;
 }

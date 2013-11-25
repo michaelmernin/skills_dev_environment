@@ -50,8 +50,8 @@ function load_self_assessment($rreid = NULL) {
   foreach ($self_question_rating_comment_result as $key => $value) {
 //=====================the question which have pie chart ============CONST===============================
     $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
-//    dd($value, '$value');
     if (in_array($value->form_key, $pie_form_key_array)) {
+//      dd($value, '$value');
       $form_key = $value->form_key . '_category';
 //      dd($cid_formkey_type_array, '$cid_formkey_type_array');
       $fieldset_cid = get_fieldset_key_in_peer_table($form_key, $cid_formkey_type_array);
@@ -75,6 +75,7 @@ function load_self_assessment($rreid = NULL) {
         'self_dataset' => $value,
         'pie_data' => $pie_data,
       ));
+      $pageContent .= $content;
     }
 //    else {
 //      $content = theme('view_assessment', array(
@@ -85,8 +86,6 @@ function load_self_assessment($rreid = NULL) {
 //        'self_dataset' => $value,
 //      ));
 //    }
-
-    $pageContent .= $content;
   }
   return $pageContent;
 }

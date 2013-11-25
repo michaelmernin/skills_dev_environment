@@ -25,9 +25,9 @@
             plotBorderWidth: null,
             plotShadow: false
           },
-//            title: {
-//                text: 'Browser market shares at a specific website, 2010'
-//            },
+            title: {
+                text: 'Peers rating pie chart'
+            },
           tooltip: {
             formatter: function() {
               var val = jQuery("#" + this.point.name+"_<?php print $pie_data->id ?>").val();
@@ -51,11 +51,11 @@
           },
           series: [{
               type: 'pie',
-              name: 'Browser share',
+              name: 'Rating Pie Chart',
               data: [
                 {name: '0-1',
                   y:<?php print $pie_data->avg['avg0_1'] ?>,
-                  color: '#CC0000'
+                  color: '#990000'
 
                 },
                 {name: '1-2',
@@ -70,12 +70,12 @@
                 },
                 {name: '3-4',
                   y:<?php print $pie_data->avg['avg3_1_4'] ?>,
-                     color:'#CCCC00'
+                     color:'#99CC33'
 
                 },
                 {name: '4-5',
                   y:<?php print $pie_data->avg['avg4_1_5'] ?>,
-                     color:'#99FF00'
+                     color:'#009900'
 
                 }
               ]
