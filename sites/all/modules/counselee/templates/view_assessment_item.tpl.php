@@ -1,9 +1,9 @@
 <?php
-	// dd($item_num, 'item_num: ');
-	// dd($rreid, 'rreid');
-	// dd($nid, 'nid');
-	// dd($reviewee, 'reviewee');
-	// dd($self_dataset, 'self_dataset');
+// dd($item_num, 'item_num: ');
+// dd($rreid, 'rreid');
+// dd($nid, 'nid');
+// dd($reviewee, 'reviewee');
+// dd($self_dataset, 'self_dataset');
 ?>
 <div class="webform-submission-info clearfix">
   <!--Self comment-->
@@ -14,76 +14,146 @@
     <br>
 
     <!--PieChart-->
-    <div style="float:right; margin: 4px 0px 0px; height: 200px; width: 50%;">
-      <div id="pie-chart-<?php print $pie_data->id ?>" style="height: 200px; width: 100%;"></div>
-      <?php print $pie_data->hiddenvalue ?>
-      <script>
-        // Build the chart
-        jQuery('#pie-chart-<?php print $pie_data->id ?>').highcharts({
-          chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-          },
+    <?php if ($pie_data->have_peer_data): ?>
+
+      <div style="float:right; margin: 4px 0px 0px; height: 200px; width: 50%;">
+        <div id="pie-chart-<?php print $pie_data->id ?>" style="height: 200px; width: 100%;"></div>
+        <?php print $pie_data->hiddenvalue ?>
+        <script>
+          // Build the chart
+          jQuery('#pie-chart-<?php print $pie_data->id ?>').highcharts({
+            chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false
+            },
             title: {
-                text: 'Peers rating pie chart'
+              text: null
             },
-          tooltip: {
-            formatter: function() {
-              var val = jQuery("#" + this.point.name+"_<?php print $pie_data->id ?>").val();
-              // alert(this.point.name);
-              var title = this.point.name;
+            tooltip: {
+              formatter: function() {
+                var val = jQuery("#" + this.point.name + "_<?php print $pie_data->id ?>").val();
+                // alert(this.point.name);
+                var title = this.point.name;
 
-              var textval = title + '<br/>' + val;
-              return textval;
-            },
-            shared: true
-          },
-          plotOptions: {
-            pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              dataLabels: {
-                enabled: false
+                var textval = title + '<br/>' + val;
+                return textval;
               },
-              showInLegend: true
-            }
-          },
-          series: [{
-              type: 'pie',
-              name: 'Rating Pie Chart',
-              data: [
-                {name: '0-1',
-                  y:<?php print $pie_data->avg['avg0_1'] ?>,
-                  color: '#990000'
-
+              shared: true
+            },
+            exporting: {
+              //true for exporting
+              enabled: false
+            },
+            plotOptions: {
+              pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                  enabled: false
                 },
-                {name: '1-2',
-                  y:<?php print $pie_data->avg['avg1_1_2'] ?>,
-                     color:'#FF6600'
+                showInLegend: true
+              }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Rating Pie Chart',
+                data: [
+                  {name: '0-1',
+                    y:<?php print $pie_data->avg['avg0_1'] ?>,
+                    color: '#990000'
 
+                  },
+                  {name: '1-2',
+                    y:<?php print $pie_data->avg['avg1_1_2'] ?>,
+                    color: '#FF6600'
+
+                  },
+                  {name: '2-3',
+                    y:<?php print $pie_data->avg['avg2_1_3'] ?>,
+                    color: '#FFCC00'
+
+                  },
+                  {name: '3-4',
+                    y:<?php print $pie_data->avg['avg3_1_4'] ?>,
+                    color: '#99CC33'
+
+                  },
+                  {name: '4-5',
+                    y:<?php print $pie_data->avg['avg4_1_5'] ?>,
+                    color: '#009900'
+
+                  }
+                ]
+              }]
+          });
+
+        </script>
+      </div>
+    <?php else: ?>
+      <div style="float:right; margin: 4px 0px 0px; height: 200px; width: 50%;">
+        <div id="pie-chart-no-data-<?php print $pie_data->id ?>" style="height: 200px; width: 100%;"></div>
+
+        <script>
+          // Build the no data chart
+          jQuery('#pie-chart-no-data-<?php print $pie_data->id ?>').highcharts({
+            chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false
+            },
+            title: {
+              text: null
+            },
+            exporting: {
+              //true for exporting
+              enabled: false
+            },
+            series: [{
+                type: 'pie',
+                name: 'no data',
+                data: []
+              }],
+            lang: {
+              // Custom language option            
+              //noData: "Nichts zu anzeigen"    
+            },
+            /* Custom options */
+            noData: {
+              // Custom positioning/aligning options
+              position: {
+                //align: 'right',
+                //verticalAlign: 'bottom'
+              },
+              // Custom svg attributes
+              attr: {
+                //'stroke-width': 1,
+                //stroke: '#cccccc'
+              },
+              // Custom css
+              style: {
+                //fontWeight: 'bold',     
+                //fontSize: '15px',
+                //color: '#202030'        
+              }
+            },
+            plotOptions: {
+              pie: {
+                allowPointSelect: false,
+                cursor: 'pointer',
+                dataLabels: {
+                  enabled: false
                 },
-                {name: '2-3',
-                  y:<?php print $pie_data->avg['avg2_1_3'] ?>,
-                     color:'#FFCC00'
+                showInLegend: true
+              }
+            },
+          });
 
-                },
-                {name: '3-4',
-                  y:<?php print $pie_data->avg['avg3_1_4'] ?>,
-                     color:'#99CC33'
+        </script>
 
-                },
-                {name: '4-5',
-                  y:<?php print $pie_data->avg['avg4_1_5'] ?>,
-                     color:'#009900'
+      </div>
 
-                }
-              ]
-            }]
-        });
-
-      </script>
-    </div>
+    <?php endif ?>
 
     <div style="margin: 4px 0px 0px; height: 17px; width: 350px;">
       <div style="font-weight: 600;float: left">· Self Comment | </div>
@@ -134,8 +204,8 @@
     </div>
   </div>
   <br>
-<input type="hidden" id="rreid" value="<?php print $rreid ?>"/>
-<input type="hidden" id="nid" value="<?php print $nid ?>"/>
+  <input type="hidden" id="rreid" value="<?php print $rreid ?>"/>
+  <input type="hidden" id="nid" value="<?php print $nid ?>"/>
 
   <!--Display the peer comment message-->
   <div class="webform-submission-info clearfix">

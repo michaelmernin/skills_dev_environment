@@ -32,16 +32,27 @@ function load_self_assessment($rreid = NULL) {
 ////////////////////////////////////////////////////////
 // Item below is for peers
 ////////////////////////////////////////////////////////
-  $providerInfo_table = get_all_providers_info_from_db($rreid);
-  $nid_pname_sid_array = _fetch_provider_nodeID_and_submissionID($providerInfo_table);
-  $pr_data_array = _get_provider_review_content($nid_pname_sid_array);
   $cid_formkey_type_array = array();
   $adj_list = array();
-  $mapping_table = reorder_form_contents($pr_data_array, $cid_formkey_type_array, $adj_list);
+  $have_peer_data = TRUE;
+  $providerInfo_table = get_all_providers_info_from_db($rreid);
+//  dd($providerInfo_table,'$providerInfo_table');
+  if (count($providerInfo_table)) {
+    //selected peers
+    $nid_pname_sid_array = _fetch_provider_nodeID_and_submissionID($providerInfo_table);
+//    dd($nid_pname_sid_array,'$nid_pname_sid_array');
+    $pr_data_array = _get_provider_review_content($nid_pname_sid_array);
+//    dd($pr_data_array,'$pr_data_array');
+    $mapping_table = reorder_form_contents($pr_data_array, $cid_formkey_type_array, $adj_list);
 //  dd($mapping_table,'$mapping_table');
 // dd($cid_formkey_type_array, 'cid_formkey_type_array');
 // dd($adj_list, 'adj_list');
-  $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
+    $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
+  }
+  else {
+    // no peer
+    $have_peer_data = FALSE;
+  }
 ////////////////////////////////////////////////////////
 // Just for display
 // dd($peer_question_rating_comment_result, 'q_r_c result');
@@ -51,19 +62,26 @@ function load_self_assessment($rreid = NULL) {
 //=====================the question which have pie chart ============CONST===============================
     $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
     if (in_array($value->form_key, $pie_form_key_array)) {
-//      dd($value, '$value');
       $form_key = $value->form_key . '_category';
+      if ($have_peer_data) {
+//      dd($value, '$value');
 //      dd($cid_formkey_type_array, '$cid_formkey_type_array');
-      $fieldset_cid = get_fieldset_key_in_peer_table($form_key, $cid_formkey_type_array);
-      $children_array = get_children_array_by_cid($fieldset_cid, $adj_list);
+        $fieldset_cid = get_fieldset_key_in_peer_table($form_key, $cid_formkey_type_array);
+        $children_array = get_children_array_by_cid($fieldset_cid, $adj_list);
 //      dd($value->form_key, '$value->form_key');
 //      dd($children_array, '$children_array');
 //      dd($peer_question_rating_comment_result,'$peer_question_rating_comment_result');
-      $peer_name = array();
-      $comment_name = array();
-      $unread_comment = array();
-      _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, $peer_name, $comment_name, $unread_comment);
-      $pie_data = _manage_pie_chart($peer_name, $comment_name, $form_key);
+        $peer_name = array();
+        $comment_name = array();
+        $unread_comment = array();
+        _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, $peer_name, $comment_name, $unread_comment);
+        $pie_data = _manage_pie_chart($peer_name, $comment_name, $form_key);
+      }
+      else {
+        $pie_data = new stdClass();
+        $pie_data->id = $form_key;
+        $pie_data->have_peer_data = FALSE;
+      }
 //=====================pie chart end=====================================================================
 //      dd($peer_name,'$peer_name');
 //      dd($comment_name,'$comment_name');
@@ -132,15 +150,23 @@ function _manage_pie_chart($peer_name, $comment_name, $form_key) {
   $texth3_1_4 = '<input type="hidden" id="3-4_' . $form_key . '" value="' . $tooltiphtml3_1_4 . '" />';
   $texth4_1_5 = '<input type="hidden" id="4-5_' . $form_key . '" value="' . $tooltiphtml4_1_5 . '" />';
   $pie_data = new stdClass();
-  $pie_data->avg = array(
-    'avg0_1' => $count0_1 / $allcount,
-    'avg1_1_2' => $count1_1_2 / $allcount,
-    'avg2_1_3' => $count2_1_3 / $allcount,
-    'avg3_1_4' => $count3_1_4 / $allcount,
-    'avg4_1_5' => $count4_1_5 / $allcount,
-  );
-  $pie_data->hiddenvalue = $texth0_1 . $texth1_1_2 . $texth2_1_3 . $texth3_1_4 . $texth4_1_5;
-  $pie_data->id = $form_key;
+  if ($allcount != 0) {
+    $pie_data->avg = array(
+      'avg0_1' => $count0_1 / $allcount,
+      'avg1_1_2' => $count1_1_2 / $allcount,
+      'avg2_1_3' => $count2_1_3 / $allcount,
+      'avg3_1_4' => $count3_1_4 / $allcount,
+      'avg4_1_5' => $count4_1_5 / $allcount,
+    );
+    $pie_data->hiddenvalue = $texth0_1 . $texth1_1_2 . $texth2_1_3 . $texth3_1_4 . $texth4_1_5;
+    $pie_data->id = $form_key;
+    $pie_data->have_peer_data = TRUE;
+  }
+  else {
+
+    $pie_data->id = $form_key;
+    $pie_data->have_peer_data = FALSE;
+  }
 
   return $pie_data;
 }

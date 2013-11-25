@@ -1,8 +1,14 @@
-<?php $base_path = get_curPage_base_url()  ?>
+<?php $base_path = get_curPage_base_url() ?>
 <?php $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui') ?>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/highcharts.js"></script>
+<script src="<?php echo $module_path ?>/assets/javascripts/highcharts/hightchart-no-data.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/modules/exporting.js"></script>
 <script type="text/javascript">
+  jQuery(document).ready(function() {
+    //add a attr to hightchart tooltip for hide a rect
+    jQuery(".highcharts-tooltip").attr("visibility","hidden");
+  });
+
   function submitcounselorassessment() {
     clickSubmitButton();
 
@@ -16,7 +22,7 @@
     var comments = new Array();
     comments = generateCommentArray(comments, count);
 
-    if ((ratings!=false) && (comments != false)) {
+    if ((ratings != false) && (comments != false)) {
       jQuery.ajax({
         type: "POST",
         data: {'rreid': rreid, 'nid': nid, 'headerInfo': headerInfo, 'ratings': ratings, 'comments': comments},
@@ -53,7 +59,7 @@
     comments = generateCommentArray(comments, count);
     var rejectComments = getCounselorRejectComment();
 
-    if ((ratings!=false) && (comments!=false) &&(rejectComments!= false)) {
+    if ((ratings != false) && (comments != false) && (rejectComments != false)) {
       jQuery.ajax({
         type: "POST",
         data: {'nid': nid, 'headerInfo': headerInfo, 'ratings': ratings, 'comments': comments, 'rejectComments': rejectComments},
@@ -88,7 +94,7 @@
     val += jQuery("#header-1").attr("value");
     return val;
   }
-   
+
   function generateRatingArray(ratings, count) {
     for (var i = 3; i < count; i++) {
       ratings[i] = jQuery("#counselor-rating-" + i + " option:selected").val();
