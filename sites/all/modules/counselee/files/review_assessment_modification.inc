@@ -13,21 +13,27 @@ function load_self_assessment($rreid = NULL) {
 ////////////////////////////////////////////////////////
 // Item below is for self assessment
 ////////////////////////////////////////////////////////
+
   $self_dataset = get_latest_submitted_data_from_db($nid, $sid);
   $cid_indexed_dataset = _indexed_by_cid($self_dataset);
   $item_count = count($self_dataset);
 // dd($self_dataset, 'self_dataset');
   $self_cid_formkey_type_array = _generate_self_cid_formkey_type($self_dataset);
-//  dd($self_cid_formkey_type_array,'$self_cid_formkey_type_array');
-// dd($cid_formkey_type_array, 'cid_formkey_type_array');
+
+  // dd($self_cid_formkey_type_array, 'self_cid_formkey_type_array');
   $self_adj_list = dfs_generate_adjacent_list($self_cid_formkey_type_array);
   $self_sequential_list = dfs_travel_all_node($self_adj_list);
-  $mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
-// $self_dataset = generate_selfassessment_result_array($self_dataset);
-// $rating_qa_sheet = _generate_rating_qa_sheet($self_dataset);
-  $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($cid_indexed_dataset, $mapping_table);
-// dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
+  $self_mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
+
+  // dd($self_mapping_table, 'self_mapping_table');
+  // dd($self_sequential_list, 'self_sequential_list');
+  $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
+  // $self_dataset = generate_selfassessment_result_array($self_dataset);
+  // $rating_qa_sheet = _generate_rating_qa_sheet($self_dataset);
+  $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($cid_indexed_dataset, $self_mapping_table);
+  // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
   $self_question_rating_comment_result = _resort_item_by_weight($self_question_rating_comment_result);
+  $self_item_count = count($self_question_rating_comment_result);
 // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
 ////////////////////////////////////////////////////////
 // Item below is for peers
@@ -48,6 +54,12 @@ function load_self_assessment($rreid = NULL) {
 // dd($cid_formkey_type_array, 'cid_formkey_type_array');
 // dd($adj_list, 'adj_list');
     $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
+    /////////////////////////////////
+    // Need To be tested if provider does not exist!!!
+    //////////////////////////////////////
+    $csiid = get_counselor_latest_submissionID($nid);
+    $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
+    $revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
   }
   else {
     // no peer
@@ -57,6 +69,7 @@ function load_self_assessment($rreid = NULL) {
 // Just for display
 // dd($peer_question_rating_comment_result, 'q_r_c result');
 // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
+
   $pageContent = '';
   foreach ($self_question_rating_comment_result as $key => $value) {
 //=====================the question which have pie chart ============CONST===============================
@@ -71,6 +84,7 @@ function load_self_assessment($rreid = NULL) {
 //      dd($value->form_key, '$value->form_key');
 //      dd($children_array, '$children_array');
 //      dd($peer_question_rating_comment_result,'$peer_question_rating_comment_result');
+
         $peer_name = array();
         $comment_name = array();
         $unread_comment = array();
@@ -92,18 +106,24 @@ function load_self_assessment($rreid = NULL) {
         'reviewee' => $reviewee,
         'self_dataset' => $value,
         'pie_data' => $pie_data,
+        'unread_comment' => $unread_comment,
+        'self_item_count' => $self_item_count,
       ));
       $pageContent .= $content;
     }
-//    else {
-//      $content = theme('view_assessment', array(
-//        'item_num' => $key,
-//        'rreid' => $rreid,
-//        'nid' => $nid,
-//        'reviewee' => $reviewee,
-//        'self_dataset' => $value,
-//      ));
-//    }
+
+   else {
+     $content = theme('view_assessment_without_chart', array(
+       'item_num' => $key,
+       'rreid' => $rreid,
+       'nid' => $nid,
+       'reviewee' => $reviewee,
+       'self_dataset' => $value,
+       'self_item_count' => $self_item_count,
+     ));
+      $pageContent .= $content;
+   }
+
   }
   return $pageContent;
 }
@@ -243,6 +263,33 @@ function get_children_array_by_cid($fieldset_cid, $adj_list) {
   return $adj_list[$fieldset_cid];
 }
 
+function generate_synthesized_peer_comment($nid, $form_key, &$unread_comment, $revised_comments) {
+  // $csiid = get_counselor_latest_submissionID($nid);
+  // $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
+  // $revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
+  foreach ($unread_comment as $key => $value) {
+    foreach ($revised_comments as $comment) {
+      if ($comment->form_key == $form_key) {
+        $value['revised'] = $comment->peer_comments;
+      }
+    }
+  }
+}
+
+function _fetch_counselor_revised_comments($counselor_submit_data) {
+  $revised_comments = array();
+  foreach ($counselor_submit_data as $key => $value) {
+    $comment_item = new stdClass();
+    $comment_item->count = $value->count;
+    $comment_item->form_key = $value->form_key;
+    $comment_item->rating = $value->rating;
+    $comment_item->clor_comment = $value->clor_comment;
+    $comment_item->peer_comments = $value->peer_comments;
+
+    array_push($revised_comments, $comment_item);
+  }
+  return $revised_comments;
+}
 /**
  * Page callback function of submit counselor's rating and comments.
  * */
@@ -277,14 +324,16 @@ function submit_counselor_assessment() {
  * Page callback function for reject counselee assessment
  * */
 function reject_counselee_assessment() {
+  dd('callback');
   $result_val = 1;
   $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
-  $count = $_POST['count'];
-  $headerInfo = $_POST['headerInfo'];
-  $ratings = $_POST['ratings'];
-  $comments = $_POST['comments'];
+  $items = $_POST['items'];
   $reject_comments = $_POST['rejectComments'];
+  dd($rreid, 'rreid');
+  dd($nid, 'nid');
+  dd($items, 'items');
+  dd($reject_comments, 'reject_comments');
 
   $result = _append_counselor_reject_info_to_DB($rreid, $nid, $reject_comments);
 // email notification
@@ -394,7 +443,7 @@ function get_counselor_latest_submissionID($nid) {
  * */
 function get_synthesized_provider_comment_from_db($nid, $csiid) {
   $query = db_select('prs_counselor_submit_data', 'pcsd')
-          ->fields('pcsd', array('count', 'title', 'peer_comments'))
+          ->fields('pcsd')
           ->condition('pcsd.nid', $nid)
           ->condition('pcsd.csiid', $csiid)
           ->orderBy('pcsd.count')
@@ -426,6 +475,20 @@ function _resort_item_by_weight(&$self_question_rating_comment_result) {
     array_push($result, $self_question_rating_comment_result[$key]);
   }
   return $result;
+}
+
+function _fetch_all_none_selection_items($self_cid_formkey_type_array) {
+  $survey_item_question = array();
+  $survey_item_count = 0;
+  foreach ($self_cid_formkey_type_array as $key => $value) {
+    if ($value['pid'] == 0 && $value['type'] == 'fieldset') {
+      if(!array_key_exists($key, $survey_item_question)) {
+        $survey_item_question[$key] = array();
+        $survey_item_question[$key] = $value;
+      }
+    }
+  }
+  // dd($survey_item_question, 'survey_item_question');
 }
 
 /**
@@ -549,6 +612,11 @@ function _generate_provider_syn_comments_array($pr_data_array, $count) {
         $comment_array[$item->dataset[$i]->cid][$item->providerName] = new stdClass();
         $comment_array[$item->dataset[$i]->cid][$item->providerName]->comment = $item->dataset[$i]->DATA;
         $comment_array[$item->dataset[$i]->cid][$item->providerName]->isRead = $item->isRead;
+      }
+      else if ($item->dataset[$i]->type == 'textarea' && $item->dataset[$i]->DATA == '') {
+        $comment_array[$item->dataset[$i]->cid][$item->providerName]->comment = 'NO_COMMENT';
+        $comment_array[$item->dataset[$i]->cid][$item->providerName]->isRead = $item->isRead;
+
       }
       else {
         continue;

@@ -8,7 +8,7 @@
 <div class="webform-submission-info clearfix">
   <!--Self comment-->
   <div class="webform-submission-info clearfix">
-    <div id="header-<?php print $item_num; ?>" >
+    <div id="header-<?php print $item_num; ?>" value="<?php print $self_dataset->form_key; ?>">
       <?php print $self_dataset->question; ?> 
     </div>
     <br>
@@ -195,17 +195,16 @@
 
       <div class="additionalbubble">
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-          <textarea id="counselor-comment-<?php print $item_num; ?>" 
-                    cols="20" rows="5" 
-                    style="margin: 4px 0px 0px; height: 112px; width: 98%;">
-          </textarea>
+          <textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"></textarea>
         </div>
       </div>
     </div>
   </div>
   <br>
-  <input type="hidden" id="rreid" value="<?php print $rreid ?>"/>
-  <input type="hidden" id="nid" value="<?php print $nid ?>"/>
+
+<input type="hidden" id="rreid-<?php print $item_num; ?>" value="<?php print $rreid ?>"/>
+<input type="hidden" id="nid-<?php print $item_num; ?>" value="<?php print $nid ?>"/>
+<input type="hidden" id="self_item_count-<?php print $item_num; ?>" value="<?php print $self_item_count ?>"/>
 
   <!--Display the peer comment message-->
   <div class="webform-submission-info clearfix">
@@ -216,11 +215,7 @@
 
       <div class="additionalbubble">
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-          <textarea id="peer-comment-<?php print $item_num ?>" 
-                    cols="20" rows="5" 
-                    style="margin: 4px 0px 0px; height: 112px; width: 98%;">
-
-          </textarea>
+          <textarea id="peer-comment-<?php print $item_num ?>"  cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"></textarea>
         </div>
       </div>
     </div>

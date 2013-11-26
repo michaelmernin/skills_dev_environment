@@ -299,37 +299,6 @@ function submit_peer_update() {
   echo $rval;
 }
 
-/**
-  * Page callback function of submit counselor's rating and comments.
-**/
-function submit_counselor_assessment() {
-  $result_val = '1';
-  $nid = $_POST['nid'];
-  $headerInfo = $_POST['headerInfo'];
-  $ratings = $_POST['ratings'];
-  $comments = $_POST['comments'];
-  // dd($nid, 'nid');
-  // dd($headerInfo, 'headerInfo');
-  // dd($ratings, 'ratings');
-  // dd($comments, 'comments');
-  $headerInfo = _generate_headerInfo($headerInfo);
-  $data_array = _generate_counselor_submition_data($headerInfo, $ratings, $comments);
-  $csiid = _insert_counselor_submittion_info_to_DB($nid);
-  if ($csiid == -1) {
-    $msg = 'Inset submittion info failed!';
-    drupal_set_message($msg, 'error');
-    return;
-  }
-  $csdid_array = _insert_counselor_submittion_data_to_DB($nid, $csiid, $data_array);
-  $count = count($csdid_array);
-  if ($count != 0) {
-    $msg = 'You have submitted your ratings and comments for your conselee.';
-    drupal_set_message($msg, 'status');
-  }
-  // send_counselor_reviewed_notification($nid, $reviewee);
-  echo $rval;
-}
-
 function _generate_headerInfo($headerInfo) {
   return explode('---', $headerInfo);
 }
@@ -542,67 +511,6 @@ function _insert_counselor_submittion_data_to_DB($nid, $csiid, &$data_array) {
   }
 }
 
-// // for future dev.
-// function display_tree_structure($qa_table) {
-//   $count = count($qa_table);
-//   $unvisited_array = array();
-//   $visited_array = array();
-//   $sibling_array = array();
-//   $cur_parrent = 0;
-//   do {
-//     foreach ($qa_table as $item) {
-//       if ($item->pid == $cur_parrent) {
-//         array_push($unvisited_array, $item);
-//       }
-//     }
-//     $current = array_shift($unvisited_array);
-//     $cur_parrent = $current->cid;
-//     array_push($visited_array, $current);
-//     array_push($sibling_array, $unvisited_array);
-//     foreach ($qa_table as $item) {
-//       if ($item->pid == $cur_parrent) {
-//         array_push($unvisited_array);
-//       }
-//     }
-//     // No element was added to unvisited array, that means this is a leaf node.
-//     if (count($unvisited_array) == 0) {
-//       $sib_queue = array_pop($sibling_array);
-//       while (count($sibling_array) != 0) {
-//         if (count($sib_queue) != 0) {
-//           $current = array_shift($sib_queue);
-//         }
-//         else {
-//           $sib_queue = array_pop($sibling_array);
-//         }
-//       }
-//     }
-//     else {
-//       $current = array_shift($unvisited_array);
-//     }
-//   } while(count($unvisited_array) != 0);
-// }
-
-// function generate_qa_result($qa_table) {
-//   foreach ($qa_table as $item) {
-//     if ($item->type == 'markup') {
-//       continue;
-//     }
-//     $cid = $item->cid;
-//     $question = $item->name;
-//     $answer = $item->data;
-//     $temp = array();
-//   }
-// }
-// function iteration($qa_table) {
-//   $target = array();
-//   for ($i = 0; $i < count($qa_table); $i++) {
-//     $key = $qa_table[$i]->cid;
-//     $value = $i;
-//     // $temp = array($key, $value);
-//     $target[$key] = $value;
-//   }
-//   dd($target, 'target');
-// }
 
 /**
   *This func is temporarily used to map the header and its result of the survey by hard code.
