@@ -59,6 +59,7 @@ function load_self_assessment($rreid = NULL) {
 // dd($cid_formkey_type_array, 'cid_formkey_type_array');
 // dd($adj_list, 'adj_list');
     $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
+    dd($peer_question_rating_comment_result, 'peer_question_rating_comment_result');
   }
   else {
     // no peer
@@ -81,7 +82,6 @@ function load_self_assessment($rreid = NULL) {
 // dd($peer_question_rating_comment_result, 'q_r_c result');
 // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
 
-  dd($revised_comments, 'revised_comments');
   $pageContent = '';
   $total_item_count = $self_item_count + count($self_comments_array);
   foreach ($self_question_rating_comment_result as $key => $value) {
@@ -276,8 +276,11 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
               $peer_name_temp[$key]['count'] = $peer_name_temp[$key]['count'] + 1;
             }
             ///want to test again/////////////////TEST/////////////////////////////
+            if (!array_key_exists($key, $peer_name)) {
+              $peer_name[$key] = '';  
+            }
             $peer_name[$key] = $peer_name[$key] + $one_ratings;
-//            dd($one_ratings,'$peer_name[$key]');
+           // dd($one_ratings,'$peer_name[$key]');
 //            dd($one_question_answer,'dd($one_question_answer);');
             $comment_name[$key] .=$one_question_answer->comments[$key]->comment . '; <br/>';
             if ($one_question_answer->comments[$key]->isRead == 0) {
@@ -676,8 +679,8 @@ function _generate_provider_syn_ratings_array($pr_data_array, $count) {
       if ($item->dataset[$i]->type == 'select' && $item->dataset[$i]->DATA != 'NIL') {
         $rating_array[$item->dataset[$i]->cid][$item->providerName] = $item->dataset[$i]->DATA;
       }
-      else {
-        continue;
+      else if ($item->dataset[$i]->type == 'select' && $item->dataset[$i]->DATA == 'NIL'){
+        $rating_array[$item->dataset[$i]->cid][$item->providerName] = 'No ratings';      
       }
     }
   }
@@ -703,6 +706,7 @@ function _generate_provider_syn_comments_array($pr_data_array, $count) {
   for ($i = 0; $i < $count; $i++) {
     $comment_array[$i] = array();
   }
+  dd($pr_data_array, 'pr_data_array');
   foreach ($pr_data_array as $item) {
     for ($i = 0; $i < $count; $i++) {
       if ($item->dataset[$i]->type == 'textarea' && $item->dataset[$i]->DATA != 'NIL') {
@@ -710,7 +714,7 @@ function _generate_provider_syn_comments_array($pr_data_array, $count) {
         $comment_array[$item->dataset[$i]->cid][$item->providerName]->comment = $item->dataset[$i]->DATA;
         $comment_array[$item->dataset[$i]->cid][$item->providerName]->isRead = $item->isRead;
       }
-      else if ($item->dataset[$i]->type == 'textarea' && $item->dataset[$i]->DATA == '') {
+      else if ($item->dataset[$i]->type == 'textarea' && $item->dataset[$i]->DATA == 'NIL') {
         $comment_array[$item->dataset[$i]->cid][$item->providerName] = new stdClass();
         $comment_array[$item->dataset[$i]->cid][$item->providerName]->comment = 'NO_COMMENT';
         $comment_array[$item->dataset[$i]->cid][$item->providerName]->isRead = $item->isRead;
