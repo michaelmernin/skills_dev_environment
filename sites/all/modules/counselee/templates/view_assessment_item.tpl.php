@@ -4,6 +4,7 @@
 // dd($nid, 'nid');
 // dd($reviewee, 'reviewee');
 // dd($self_dataset, 'self_dataset');
+dd($unread_comment, 'unread_comment');
 ?>
 <div class="webform-submission-info clearfix">
   <!--Self comment-->
@@ -215,7 +216,8 @@
 
       <div class="additionalbubble">
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-          <textarea id="peer-comment-<?php print $item_num ?>"  cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"></textarea>
+          <textarea id="peer-comment-<?php print $item_num ?>"  cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php foreach ($unread_comment as $item) {
+          	print $item; } ?></textarea>
         </div>
       </div>
     </div>

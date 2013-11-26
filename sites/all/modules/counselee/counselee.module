@@ -234,6 +234,7 @@ function counselee_theme() {
         'self_dataset' => NULL,
         'pie_data' => NULL,
         'unread_comment' => NULL,
+        'self_item_count' => NULL,
       ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'view_assessment_item',),
@@ -244,19 +245,21 @@ function counselee_theme() {
        'nid' => NULL,
        'reviewee' => NULL,
        'self_dataset' => NULL,
+       'self_item_count' => NULL,
        ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'view_assessment_without_chart',),
-    'view_assessment_comment' => array(
+    'view_assessment_comment_only' => array(
       'variables' => array(
        'item_num' => NULL,
        'rreid' => NULL,
        'nid' => NULL,
        'reviewee' => NULL,
        'self_dataset' => NULL,
+      'self_item_count' => NULL,
        ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'view_assessment_comment',),
+      'template' => 'view_assessment_comment_only',),
     'page_audit_review_question' => array(
       'variables' => array(
         'node' => NULL,),

@@ -89,6 +89,8 @@ function load_self_assessment($rreid = NULL) {
         $comment_name = array();
         $unread_comment = array();
         _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, $peer_name, $comment_name, $unread_comment);
+        // dd($unread_comment, 'unread_comment');
+        generate_synthesized_peer_comment($value->form_key, $unread_comment, $revised_comments);
         $pie_data = _manage_pie_chart($peer_name, $comment_name, $form_key);
       }
       else {
@@ -125,6 +127,8 @@ function load_self_assessment($rreid = NULL) {
    }
 
   }
+
+  // generate comment only content here.
   return $pageContent;
 }
 
@@ -263,14 +267,14 @@ function get_children_array_by_cid($fieldset_cid, $adj_list) {
   return $adj_list[$fieldset_cid];
 }
 
-function generate_synthesized_peer_comment($nid, $form_key, &$unread_comment, $revised_comments) {
+function generate_synthesized_peer_comment($form_key, &$unread_comment, $revised_comments) {
   // $csiid = get_counselor_latest_submissionID($nid);
   // $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
   // $revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
-  foreach ($unread_comment as $key => $value) {
-    foreach ($revised_comments as $comment) {
-      if ($comment->form_key == $form_key) {
-        $value['revised'] = $comment->peer_comments;
+  foreach ($revised_comments as $comment) {
+    if ($comment->form_key == $form_key) {
+      if (!array_key_exists('revised', $unread_comment)) {
+        $unread_comment['revised'] = $comment->peer_comments;
       }
     }
   }
@@ -281,9 +285,9 @@ function _fetch_counselor_revised_comments($counselor_submit_data) {
   foreach ($counselor_submit_data as $key => $value) {
     $comment_item = new stdClass();
     $comment_item->count = $value->count;
-    $comment_item->form_key = $value->form_key;
+    $comment_item->form_key = $value->title;
     $comment_item->rating = $value->rating;
-    $comment_item->clor_comment = $value->clor_comment;
+    $comment_item->clor_comment = $value->counselor_comment;
     $comment_item->peer_comments = $value->peer_comments;
 
     array_push($revised_comments, $comment_item);
@@ -297,24 +301,16 @@ function submit_counselor_assessment() {
   $result_val = '1';
   $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
-  $headerInfo = $_POST['headerInfo'];
-  $ratings = $_POST['ratings'];
-  $comments = $_POST['comments'];
-  $headerInfo = _generate_headerInfo($headerInfo);
-  $data_array = _generate_counselor_submition_data($headerInfo, $ratings, $comments);
-  $csiid = _insert_counselor_submittion_info_to_DB($nid);
-  if ($csiid == -1) {
-    $msg = 'Inset submittion info failed!';
-    drupal_set_message($msg, 'error');
-    return;
+  $items = $_POST['items'];
+
+  $decoded_items = array();
+  foreach($items as $item) {
+    $temp = json_decode($item);
+    array_push($decoded_items, $temp);
   }
-  $csdid_array = _insert_counselor_submittion_data_to_DB($nid, $csiid, $data_array);
-  $count = count($csdid_array);
-  if ($count != 0) {
-    $msg = 'You have submitted your ratings and comments for your conselee.';
-    drupal_set_message($msg, 'status');
-  }
-// send_counselor_reviewed_notification($nid, $reviewee);
+
+  $result = _submit_counselor_approve_info_to_DB($rreid, $nid, $decoded_items);
+  // send_counselor_reviewed_notification($nid, $reviewee);
   echo $rval;
 }
 
@@ -324,20 +320,20 @@ function submit_counselor_assessment() {
  * Page callback function for reject counselee assessment
  * */
 function reject_counselee_assessment() {
-  dd('callback');
-  $result_val = 1;
   $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
   $items = $_POST['items'];
   $reject_comments = $_POST['rejectComments'];
-  dd($rreid, 'rreid');
-  dd($nid, 'nid');
-  dd($items, 'items');
-  dd($reject_comments, 'reject_comments');
 
-  $result = _append_counselor_reject_info_to_DB($rreid, $nid, $reject_comments);
+  $decoded_items = array();
+  foreach($items as $item) {
+    $temp = json_decode($item);
+    array_push($decoded_items, $temp);
+  }
+
+  $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments);
 // email notification
-  echo $result_val;
+  echo $result;
 }
 
 function display_questions_ratings_and_comments($peer_question_rating_comment_result) {
@@ -361,7 +357,7 @@ function display_rating_qa_sheet($qa_sheet) {
   $content = '';
   for ($i = 0; $i < count($qa_sheet); $i++) {
     $temp_content = theme(
-        'view_assessment_item', array(
+      'view_assessment_item', array(
       'item_num' => $i,
       'item_question' => $item[$i]['question'],
       'item_rating' => $item[$i]['rating'],
@@ -432,7 +428,7 @@ function get_counselor_latest_submissionID($nid) {
           ->condition('pcsi.nid', $nid)
           ->orderBy('pcsi.submitTimestamp', 'DESC')
           ->execute()->fetchAll();
-  return $query[0]->csiid;
+  return $query['0']->csiid;
 }
 
 /**
@@ -872,17 +868,18 @@ function _insert_counselor_submittion_info_to_DB($nid) {
  * @param array by reference $data_array
  * @return array $csdid_array
  * */
-function _insert_counselor_submittion_data_to_DB($nid, $csiid, &$data_array) {
+function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_items) {
   $csdid_array = array();
-  foreach ($data_array as $data) {
+  foreach ($clor_items as $key => $value) {
     $csdid = db_insert('prs_counselor_submit_data')
-            ->fields(array(
-              'nid' => $nid,
-              'csiid' => $csiid,
-              'count' => $data['count'],
-              'header' => $data['header'],
-              'rating' => $data['rating'],
-              'comment' => $data['comment'],
+          ->fields(array(
+            'nid' => $nid,
+            'csiid' => $csiid,
+            'count' => $key,
+            'title' => $value->header,
+            'rating' => $value->rating,
+            'counselor_comment' => $value->comment,
+            'peer_comments' => $value->revisedComment,
             ))->execute();
     if ($csdid != -1) {
       array_push($csdid_array, $csdid);
@@ -897,15 +894,46 @@ function _insert_counselor_submittion_data_to_DB($nid, $csiid, &$data_array) {
   }
 }
 
+function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items) {
+  $sid = get_last_sid_by_nid($nid);
+  $csiid = _insert_counselor_submittion_info_to_DB($nid);
+  $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items);
+
+  $provider_table = db_update('prs_rel_provider_employee')
+      ->fields(array(
+        'isRead' => 1,
+        'isCounselorApproved' => 1,
+        'deniedInfo' => 'Approved',
+      ))
+      ->condition('nid', $nid)
+      ->execute();
+ 
+  $review_table = db_update('prs_rel_review_employee')
+      ->fields(array(
+        'rstatus' => 3,))
+      ->condition('rreid', $rreid)
+      ->execute();
+
+  if (($provider_table != 0) && ($review_table != 0)) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
 /**
  * _append_counselor_reject_info_to_DB 
  * @param int $rreid
  * @param int $nid
+ * @param array of stdClass Object $clor_items
  * @param string by referen $reject_comments
  * @return bool 
  * */
-function _append_counselor_reject_info_to_DB($rreid, $nid, &$reject_comments) {
+function _append_counselor_reject_info_to_DB($rreid, $nid, &$clor_items, &$reject_comments) {
   $sid = get_last_sid_by_nid($nid);
+  $csiid = _insert_counselor_submittion_info_to_DB($nid);
+  $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items);
+
   $provider_table = db_update('prs_rel_provider_employee')
       ->fields(array(
         'status' => 0,
@@ -915,7 +943,6 @@ function _append_counselor_reject_info_to_DB($rreid, $nid, &$reject_comments) {
       ))
       ->condition('nid', $nid)
       ->execute();
-
   $webform_table = db_update('webform_submissions')
       ->fields(array(
         'is_draft' => 1,))
@@ -927,6 +954,7 @@ function _append_counselor_reject_info_to_DB($rreid, $nid, &$reject_comments) {
         'rstatus' => 1,))
       ->condition('rreid', $rreid)
       ->execute();
+
   if (($provider_table != 0) && ($webform_table != 0) && ($review_table != 0)) {
     return TRUE;
   }

@@ -26,7 +26,7 @@
     if (items != false) {
       jQuery.ajax({
         type: "POST",
-        data: {'rreid': rreid, 'nid': nid},
+        data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items},
         url: '<?php echo $base_path ?>watchstatus/submitcounselorassessment/',
         success: function(text) {
           // window.location.href = "<?php print base_path() . 'mydashboard' ?>";
@@ -88,18 +88,20 @@
       }
       var comment = getCounselorComment(i);
       if (comment == '') {
-        comment = "No comments";
+        comment = "No_comments";
       }
 
       var revisedComment = getCounselorRevisedComment(i);
+      if (revisedComment == '') {
+        revisedComment = "No_comments";
+      }
 
-      var jsonString = new String();
-      jsonString.header = header;
-      jsonString.rating = rating;
-      jsonString.comment = comment;
-      jsonString.revisedComment = revisedComment;
+      var string = new String();
+      // ex = '{"a":1,"b":2,"c":3,"d":4,"e":5}';
+      string = '{"header":"' + header + '","rating":"' + rating + '","comment":"' + comment + '","revisedComment":"' + revisedComment + '"}';
+      // var jsonString = JSON.stringify(string);
 
-      items[i] = JSON.stringify(jsonString);
+      items[i] = string;
     };
     return items;
   }
@@ -134,25 +136,10 @@
     return jQuery("#peer-comment-" + num).val();
   }
 
-
-  /////////////////////////////////////////
-  // function generateRatingArray(ratings, count) {
-  //   for (var i = 3; i < count; i++) {
-  //     ratings[i] = jQuery("#counselor-rating-" + i + " option:selected").val();
-  //   }
-  //   return ratings;
-  // }
-
-  // function generateCommentArray(comments, count) {
-  //   for (var i = 3; i < count; i++) {
-  //     comments[i] = jQuery("#counselor-comment-" + i).val();
-  //   }
-  //   return comments;
-  // }
-
   function getCounselorRejectComment() {
     return jQuery("#counselor_reject_reason").val();
   }
+  
 </script>
 <?php require_once 'header.tpl.php'; ?>
 <div class="minheight">
