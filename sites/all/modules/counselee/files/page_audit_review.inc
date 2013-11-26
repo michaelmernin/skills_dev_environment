@@ -22,19 +22,16 @@
  * 3,theme content
  * 
  */
-function counselee_confirm_review_result($rpeid) {
-  $rreid = 8;
-  $nid = 33;
+function counselee_confirm_review_result($rreid) {
+  $nid = get_nid_by_rreid($rreid);
   $pageContent = '';
-
   $self_review = get_self_review_comment($nid);
-  $counselor_review = get_counselor_review_comment($nid_counserlor = 1);
+  $counselor_review = get_counselor_review_comment($nid);
   dd($counselor_review, '$counselor_review');
 
   $pageContent .= get_performance_evaluation($self_review, $counselor_review);
   $pageContent .= get_extend_description_part($self_review);
   $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
-  $pageContent .=$button;
 
   return $pageContent;
 }
@@ -54,6 +51,7 @@ FROM
 WHERE
     component.nid = '$nid'";
   $result = db_query($sql)->fetchAll();
+
   $self_review_map = Array();
   foreach ($result as $node) {
     $key = $node->form_key;
@@ -85,74 +83,80 @@ WHERE
 
   $result = db_query($sql)->fetchAll();
 
-  return $result;
+  $counselor_review = Array();
+  foreach ($result as $node) {
+    $key = $node->title;
+    $counselor_review[$key] = $node;
+  }
+
+  return $counselor_review;
 }
 
 function get_question_select_comment_map() {
   $self_counselor_map = array(
     array(
       'selfkey' => 'client_engagements',
-      'commentkey' => 'ce-comments',
+      'commentkey' => 'client_engagements_comments',
       'exist_peer' => 0,
       'counselorkey' => 1,
     ),
     array(
-      'selfkey' => 'consulting_skill',
-      'commentkey' => 'cs-comments',
+      'selfkey' => 'consulting_skills',
+      'commentkey' => 'consulting_skills_comments',
       'exist_peer' => 1,
       'counselorkey' => 2,
     ),
     array(
       'selfkey' => 'technical_abilities',
-      'commentkey' => 'ta-comments',
+      'commentkey' => 'technical_abilities_comments',
       'exist_peer' => 1,
       'counselorkey' => 3,
     ),
     array(
       'selfkey' => 'professionalism',
-      'commentkey' => 'p-comments',
+      'commentkey' => 'professionalism_comments',
       'exist_peer' => 1,
       'counselorkey' => 4,
     ),
     array(
       'selfkey' => 'leadership',
-      'commentkey' => 'l-comments',
+      'commentkey' => 'leadership_comments',
       'exist_peer' => 1,
       'counselorkey' => 5,
     ),
     array(
       'selfkey' => 'teamwork',
-      'commentkey' => 't-comments',
+      'commentkey' => 'teamwork_comments',
       'exist_peer' => 1,
       'counselorkey' => 6,
     ),
     array(
       'selfkey' => 'business_development',
-      'commentkey' => 'bd-comments',
+      'commentkey' => 'business_development_comments',
       'exist_peer' => 0,
       'counselorkey' => 6,
     ),
     array(
       'selfkey' => 'career_counseling',
-      'commentkey' => 'cc-comments',
+      'commentkey' => 'career_counseling_comments',
       'exist_peer' => 0,
       'counselorkey' => 7,
     ),
     array(
       'selfkey' => 'recruiting_assistance',
-      'commentkey' => 'ra-comments',
+      'commentkey' => 'recruiting_assistance_comments',
       'exist_peer' => 0,
       'counselorkey' => 8,
     ),
     array(
       'selfkey' => 'internal_contributions',
-      'commentkey' => 'ic-comments',
+      'commentkey' => 'internal_contributions_comments',
       'exist_peer' => 0,
       'counselorkey' => 9,
     ),
     array(
       'selfkey' => 'perficient_basics',
-      'commentkey' => 'pb-comments',
+      'commentkey' => 'perficient_basics_comments',
       'exist_peer' => 0,
       'counselorkey' => 10,
     ),
@@ -251,6 +255,7 @@ function get_performance_evaluation($self_review, $counselor_review) {
   $self_review_select_map = get_question_select_comment_map();
 
   $problem_node = array(
+    'key' => null,
     'description' => null,
     'self_rating' => null,
     'counselor_rating' => null,
@@ -265,14 +270,16 @@ function get_performance_evaluation($self_review, $counselor_review) {
   $core_competencies_content = '';
   for ($i = 0; $i < count($self_review_select_map) && $i < 6; $i++) {
     $review = $self_review_select_map[$i];
+    $problem_node['key'] = $review['selfkey'];
     $problem_node['description'] = $self_review[$review['selfkey']]->name;
     $problem_node['self_rating'] = $self_review[$review['selfkey']]->data;
     $problem_node['self_comment'] = $self_review[$review['commentkey']]->data;
     $problem_node['exist_peer'] = $review['exist_peer'];
 
-    $problem_node['counselor_rating'] = $counselor_review[$review['counselorkey']]->rating;
-    $problem_node['counselor_comment'] = $counselor_review[$review['counselorkey']]->counselor_comment;
+    $problem_node['counselor_rating'] = $counselor_review[$review['selfkey']]->rating;
+    $problem_node['counselor_comment'] = $counselor_review[$review['selfkey']]->counselor_comment;
 
+    dd($problem_node, '$problem_node');
     $core_competencies_content .= theme('page_audit_review_question', array('node' => $problem_node));
   }
   $core_competencies_content = add_fieldset(1, 'CORE COMPETENCIES', $core_competencies_content);
@@ -281,10 +288,14 @@ function get_performance_evaluation($self_review, $counselor_review) {
   $internal_contributions_content = '';
   for ($i = 6; $i < count($self_review_select_map); $i++) {
     $review = $self_review_select_map[$i];
+    $problem_node['key'] = $review['selfkey'];
     $problem_node['description'] = $self_review[$review['selfkey']]->name;
     $problem_node['self_rating'] = $self_review[$review['selfkey']]->data;
     $problem_node['self_comment'] = $self_review[$review['commentkey']]->data;
     $problem_node['exist_peer'] = $review['exist_peer'];
+
+    $problem_node['counselor_rating'] = $counselor_review[$review['selfkey']]->rating;
+    $problem_node['counselor_comment'] = $counselor_review[$review['selfkey']]->counselor_comment;
 
     $internal_contributions_content .= theme('page_audit_review_question', array('node' => $problem_node));
   }
@@ -326,5 +337,14 @@ function add_fieldset($style_type, $name, $content) {
     default :
       return '';
       ;
+  }
+}
+
+function get_nid_by_rreid($rreid) {
+  $sql = "select provider.nid from {prs_rel_provider_employee} provider where provider.employeename = provider.providername and provider.rreid=$rreid";
+  $result = db_query($sql)->fetchAll();
+
+  if (count($result) == 1) {
+    return $result[0]->nid;
   }
 }

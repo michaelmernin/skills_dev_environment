@@ -350,7 +350,7 @@ function counselee_audit_review_result_remind($rreid, $is_approve) {
 function counselor_audit_review_remind($address, $counselee_name, $counselor_name, $token, $rreid, $is_approve) {
 
   if ($is_approve) {
-    $url = get_curPage_base_url() . 'counseleeconfirmresult/' . $rreid;
+    $url = get_curPage_base_url() . 'watchstatus/counseleeconfirmresult/' . $rreid;
   }
   else {
     $url = get_curPage_base_url() . $token;

@@ -115,11 +115,11 @@ function counselee_menu() {
   );
 
 
-  $items['counseleeconfirmresult/%'] = array(
-    'title' => 'Counselee Confirm Review Result',
+  $items['watchstatus/counseleeconfirmresult/%'] = array(
+    'title' => 'Confirm Review Result',
     'page callback' => 'counselee_confirm_review_result',
     'type' => MENU_LOCAL_TASK,
-    'page arguments' => array(1),
+    'page arguments' => array(2),
     'access arguments' => array('access to my dashboard'),
     'file' => 'files/page_audit_review.inc',
   );
@@ -832,10 +832,10 @@ function get_counselor_submit_result($username) {
   $query->addField('general', 'type');
   $query->addField('review', 'employeeName');
   $query->condition('relation.counselorName', $username);
-  $query->condition('review.rstatus', 5); // 5 stand for counselor should submit the review
+  $query->condition('review.rstatus', 4); // 5 stand for counselor should submit the review
 
   $dataset = $query->execute()->fetchAll();
-
+  
   $result = array();
   $index = 0;
   foreach ($dataset as $node) {

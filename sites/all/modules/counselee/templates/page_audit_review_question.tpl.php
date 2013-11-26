@@ -7,13 +7,17 @@
   <div class="wellwarp">
     <b style="font-weight: 700"> Self Rating:</b>
     <font color="red">
-    <?php print $node['self_rating']; ?> 
+    <span id="<?php print 'src_self_' . $node['key']; ?>" >
+      <?php print $node['self_rating']; ?>
+    </span>
     </font>  
 
     <b style="font-weight: 700">
       | ·Counselor Rating: </b>
     <font color="red">
-    <?php print $node['counselor_rating']; ?>
+    <span id="<?php print 'src_counselor_' . $node['key']; ?>" >
+      <?php print $node['counselor_rating']; ?>
+    </span>
     </font>
 
 

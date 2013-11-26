@@ -27,12 +27,13 @@ function IsNum(str)
  * */
 function calculate_average_score(category, elementType)
 {
+    return 'dddddd';
     var i = 0, count = 0, sum = 0, value, averageScore;
     for (i = 0; i < category.length; i++)
     {
         if (elementType == 'select')
             value = jQuery(category[i]).find('option:selected').val();
-        else if (elementType == 'td')
+        else if (elementType == 'html')
             value = jQuery(category[i]).html();
 
         if (IsNum(value) && value != '0')
@@ -107,5 +108,5 @@ function modifyElementValue(category, value)
  * */
 function registerValueChangeEvent()
 {
-    
+
 }
