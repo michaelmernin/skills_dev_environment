@@ -14247,3 +14247,26 @@ div.error {
 .highcharts-container svg {
     overflow: visible;
 }
+/*.highcharts-tooltip{
+	word-wrap:break-word;
+	max-width: 600px;
+}*/
+
+.highcharts-tooltip span {
+    max-width: 600px;
+	white-space: normal !important;
+	min-width: 300px;
+	max-height:800px;
+    overflow: auto;
+}
+/*
+.tooltipbox{
+	max-width: 600px;
+	word-wrap:break-word;
+
+}
+.tooldiv{
+    max-width: 600px;
+    word-wrap: break-word; 
+	word-break: normal;
+}*/
