@@ -122,6 +122,7 @@ function counselee_menu() {
     'page arguments' => array(2),
     'access arguments' => array('access to my dashboard'),
     'file' => 'files/page_audit_review.inc',
+    'weight' => '15',
   );
 
   $items['audit-review/approve-review-result'] = array(
@@ -600,7 +601,7 @@ function _is_assessment_editable($userId_flag, $rstatus) {
  * REVIEW_IN_DRAFT, the result is no
  * */
 function _is_assessment_visible_for_counselor($rstatus) {
-  if ($rstatus > 1 && $rstatus <= 6) {
+  if ($rstatus > 1 && $rstatus < 3) {
     return TRUE;
   }
   else {

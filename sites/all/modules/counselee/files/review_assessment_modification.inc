@@ -81,6 +81,7 @@ function load_self_assessment($rreid = NULL) {
 // dd($peer_question_rating_comment_result, 'q_r_c result');
 // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
 
+  dd($revised_comments, 'revised_comments');
   $pageContent = '';
   $total_item_count = $self_item_count + count($self_comments_array);
   foreach ($self_question_rating_comment_result as $key => $value) {
@@ -333,6 +334,7 @@ function _fetch_counselor_revised_comments($counselor_submit_data) {
     $comment_item->count = $value->count;
     $comment_item->form_key = $value->title;
     $comment_item->rating = $value->rating;
+    $comment_item->peer_avg_rating = $value->peer_avg_rating;
     $comment_item->clor_comment = $value->counselor_comment;
     $comment_item->peer_comments = $value->peer_comments;
 
@@ -979,7 +981,7 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
                 'count' => $key,
                 'title' => $value->header,
                 'rating' => $value->rating,
-                'peer_avg_rating' = $value->peerAvgRating,
+                'peer_avg_rating' => $value->peerAvgRating,
                 'counselor_comment' => $value->comment,
                 'peer_comments' => $value->revisedComment,
               ))->execute();
