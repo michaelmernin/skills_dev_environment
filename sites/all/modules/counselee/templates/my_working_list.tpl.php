@@ -123,12 +123,28 @@
       rreid = obj.rreid;
       reviewType = obj.reviewType;
       description = obj.description;
-      url = "./counseleeconfirmresult/" + rreid;
+      url = "./watchstatus/counseleeconfirmresult/" + rreid;
       li = " <li> <a href='" + url + "'>" + description + " has approved by your counselor.Please check the review.(" + reviewName(reviewType) + ")</a> </li>";
       jQuery('#myWorkForMe').append(li);
     }
   }
 
+  function showCounselorSubmitReview(items)
+  {
+    var obj, name, rreid, reviewType, description, url, li;
+    for (var i = 0; i < items.length; i++)
+    {
+      obj = items[i];
+      name = obj.counselee;
+      rreid = obj.rreid;
+      reviewType = obj.reviewType;
+      description = obj.description;
+      url = "./watchstatus/viewassessment/" + rreid;
+      li = " <li> <a href='" + url + "'>[" + name + "] has agreed " + description + ".Please submit the review.(" + reviewName(reviewType) + ")</a> </li>";
+      jQuery('#myWorkForOther').append(li);
+    }
+
+  }
 
   var peers = '<?php print json_encode($counseleePeers); ?>';
   var counseleePeers = eval(peers);
@@ -150,12 +166,19 @@
   var counselee_confirm_review = eval(counselee_confirm_review_json);
   showConfirmReviewList(counselee_confirm_review);
 
+  var counselor_submit_review_json = '<?php print json_encode($counselor_submit_review); ?>';
+  var counselor_submit_review = eval(counselor_submit_review_json);
+  showCounselorSubmitReview(counselor_submit_review);
+
+
+
 
   var workingItemsNum = counseleePeers.length
           + counselorPeers.length
           + reviewList.length
           + self_review_finished.length
-          + counselee_confirm_review.length;
+          + counselee_confirm_review.length
+          + counselor_submit_review.length;
   if (workingItemsNum == 0)
   {
     var li = " <li> You have no work to do!</li>";

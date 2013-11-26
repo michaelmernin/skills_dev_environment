@@ -1,3 +1,54 @@
+
+<div>
+  <table class="table">
+
+    <thead id="peer-review-form-overall-thead">
+      <tr><th>Reviewer Composite Scores</th>
+        <th>Self</th>
+        <th>Counselor</th>
+      </tr></thead>
+
+    <tbody id="peer-review-form-overall-tbody">
+      <tr><td>Client Engagements</td>
+        <td id="rating_client_engagements"></td>
+        <td id="counselor_rating_client_engagements"></td>
+      </tr>
+      <tr><td>Technical Abilities</td>
+        <td id="rating_technical_abilities"></td>
+        <td id="counselor_rating_technical_abilities"></td>
+
+      </tr>
+      <tr><td>Consulting Skills</td>
+        <td id="rating_consulting_skills"></td>
+        <td id="counselor_rating_consulting_skills"></td>
+      </tr>
+      <tr><td>Professionalism</td>
+        <td id="rating_professionalism">3</td>
+        <td id="counselor_rating_professionalism">3</td>
+      </tr>
+      <tr><td>Leadership</td>
+        <td id="rating_leadership"></td>
+        <td id="counselor_rating_leadership"></td>
+      </tr>
+      <tr><td>Teamwork</td>
+        <td id="rating_teamwork"></td>
+        <td id="counselor_rating_teamwork"></td>
+      </tr>
+      <tr><td>Internal Contributions</td>
+        <td id="rating_internal_contributions"></td>
+        <td id="counselor_rating_internal_contributions"></td>
+      </tr>
+      <tr><td>All</td>
+        <td id="rating_all"></td>
+        <td id="counselor_rating_all"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+
 <div class="form-actions">
   <a id="modal-89759" href="#modal-container-89759" role="button" 
      class="btn btn-large" data-toggle="modal">
@@ -85,7 +136,8 @@
   </div>
 </div>
 
-<script>
+<script type="text/javascript">
+
               function disapprove_review_result(id)
               {
                 jQuery('#status_loading_img_89759').css('display', 'inline');
@@ -127,4 +179,32 @@
                   }
                 });
               }
+
+
+              function initialOverScore()
+              {
+                var category = new Array();
+                category[0] = 'client_engagements';
+                category[1] = 'technical_abilities';
+                category[2] = 'consulting_skills';
+                category[3] = 'professionalism';
+                category[4] = 'leadership';
+                category[5] = 'teamwork';
+
+                for (var i = 0; i < category.length; i++)
+                {
+                  jQuery('#rating_' + category[i]).html(jQuery('#src_self_' + category[i]).html());
+                  jQuery('#counselor_rating_' + category[i]).html(jQuery('#src_counselor_' + category[i]).html());
+                }
+
+                var selfPre = '#src_self_';
+                var internal = new Array();
+                internal [0] = selfPre + 'business-development';
+                internal [1] = selfPre + 'career-counseling';
+                internal [2] = selfPre + 'recruiting-assistance';
+                internal [3] = selfPre + 'internal-contributions';
+                internal [4] = selfPre + 'perficient-basics';
+              }
+              initialOverScore();
+              
 </script>
