@@ -23,17 +23,17 @@
  * 
  */
 function counselee_confirm_review_result($rpeid) {
-  $rreid = 1;
+  $rreid = 8;
   $nid = 33;
   $pageContent = '';
 
   $self_review = get_self_review_comment($nid);
-  $counselor_review = get_counselor_review_comment($nid);
+  $counselor_review = get_counselor_review_comment($nid_counserlor = 1);
+  dd($counselor_review, '$counselor_review');
 
-  $pageContent .= get_performance_evaluation($self_review);
+  $pageContent .= get_performance_evaluation($self_review, $counselor_review);
   $pageContent .= get_extend_description_part($self_review);
-
-  $pageContent .= theme('page_audit_review_btn', array('rreid' => $rreid));
+  $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
   $pageContent .=$button;
 
   return $pageContent;
@@ -59,7 +59,6 @@ WHERE
     $key = $node->form_key;
     $self_review_map[$key] = $node;
   }
-  //dd($annual_review_map,'$annual_review_map');
 
   return $self_review_map;
 }
@@ -77,8 +76,8 @@ function get_counselor_review_comment($nid) {
     data.counselor_comment,
     data.peer_comments
 FROM
-    prs_counselor_submit_data data ,
-    prs_counselor_submit_info info
+    {prs_counselor_submit_data} data ,
+    {prs_counselor_submit_info} info
 WHERE
     info.nid = data.nid
     AND info.csiid = data.csiid
@@ -86,7 +85,7 @@ WHERE
 
   $result = db_query($sql)->fetchAll();
 
-  //dd($result, 'Annual Performance');
+  return $result;
 }
 
 function get_question_select_comment_map() {
@@ -94,57 +93,68 @@ function get_question_select_comment_map() {
     array(
       'selfkey' => 'client_engagements',
       'commentkey' => 'ce-comments',
-      'counselorkey' => '2',
+      'exist_peer' => 0,
+      'counselorkey' => 1,
     ),
     array(
       'selfkey' => 'consulting_skill',
       'commentkey' => 'cs-comments',
-      'counselorkey' => '',
+      'exist_peer' => 1,
+      'counselorkey' => 2,
     ),
     array(
       'selfkey' => 'technical_abilities',
       'commentkey' => 'ta-comments',
-      'counselorkey' => '1',
+      'exist_peer' => 1,
+      'counselorkey' => 3,
     ),
     array(
       'selfkey' => 'professionalism',
       'commentkey' => 'p-comments',
-      'counselorkey' => '1',
+      'exist_peer' => 1,
+      'counselorkey' => 4,
     ),
     array(
       'selfkey' => 'leadership',
       'commentkey' => 'l-comments',
-      'counselorkey' => '1',
+      'exist_peer' => 1,
+      'counselorkey' => 5,
     ),
     array(
       'selfkey' => 'teamwork',
       'commentkey' => 't-comments',
-      'counselorkey' => '1',
+      'exist_peer' => 1,
+      'counselorkey' => 6,
     ),
     array(
       'selfkey' => 'business_development',
       'commentkey' => 'bd-comments',
-      'counselorkey' => '1',
+      'exist_peer' => 0,
+      'counselorkey' => 6,
     ),
     array(
       'selfkey' => 'career_counseling',
       'commentkey' => 'cc-comments',
-      'counselorkey' => '1',
+      'exist_peer' => 0,
+      'counselorkey' => 7,
     ),
     array(
       'selfkey' => 'recruiting_assistance',
       'commentkey' => 'ra-comments',
-      'counselorkey' => '1',
+      'exist_peer' => 0,
+      'counselorkey' => 8,
     ),
     array(
       'selfkey' => 'internal_contributions',
       'commentkey' => 'ic-comments',
-      'counselorkey' => '1',
+      'exist_peer' => 0,
+      'counselorkey' => 9,
     ),
     array(
       'selfkey' => 'perficient_basics',
       'commentkey' => 'pb-comments',
-      'counselorkey' => '1',
+      'exist_peer' => 0,
+      'counselorkey' => 10,
     ),
   );
 
@@ -183,7 +193,6 @@ function get_extend_description_map() {
  */
 function approve_review_result() {
   $rreid = $_POST['rreid'];
-  dd($rreid, 'rreid');
   audit_review_result_update($rreid, 4);
   return true;
 }
@@ -194,8 +203,14 @@ function disapprove_review_result() {
   return true;
 }
 
+function submit_review_result() {
+  $rreid = $_POST['rreid'];
+  audit_review_result_update($rreid, 5);
+  return true;
+}
+
 /**
- * 
+ * Modify the prs_rel_review_employee rstatus
  * 
  */
 function audit_review_result_update($rreid, $rstatus) {
@@ -207,12 +222,16 @@ function audit_review_result_update($rreid, $rstatus) {
       ->execute();
 
   if ($num_updated == 1) {
+
     //rstatus == 4 stand for that counselee disapprove the result
     if ($rstatus == 4) {
-      counselee_aduit_review_result_remind($rreid, TRUE);
+      counselee_audit_review_result_remind($rreid, TRUE);
     }
     else if ($rstatus == 2) {
-      counselee_aduit_review_result_remind($rreid, FALSE);
+      counselee_audit_review_result_remind($rreid, FALSE);
+    }
+    else if ($rstatus == 5) {
+      counselor_submit_review_result_remind($rreid);
     }
     return 'success';
   }
@@ -223,17 +242,11 @@ function get_project_message_part() {
   
 }
 
-function get_last_year_goal() {
-  
-}
-
 function get_achievements() {
   
 }
 
-function get_performance_evaluation($self_review) {
-
-  // <fieldset class="webform-component-fieldset collapsible webform-component--achievements form-wrapper collapse-processed
+function get_performance_evaluation($self_review, $counselor_review) {
   $content = '';
   $self_review_select_map = get_question_select_comment_map();
 
@@ -245,6 +258,7 @@ function get_performance_evaluation($self_review) {
     'self_comment' => null,
     'counselor_comment' => null,
     'peer_comment' => null,
+    'exist_peer' => null,
   );
 
   //CORE COMPETENCIES
@@ -254,6 +268,10 @@ function get_performance_evaluation($self_review) {
     $problem_node['description'] = $self_review[$review['selfkey']]->name;
     $problem_node['self_rating'] = $self_review[$review['selfkey']]->data;
     $problem_node['self_comment'] = $self_review[$review['commentkey']]->data;
+    $problem_node['exist_peer'] = $review['exist_peer'];
+
+    $problem_node['counselor_rating'] = $counselor_review[$review['counselorkey']]->rating;
+    $problem_node['counselor_comment'] = $counselor_review[$review['counselorkey']]->counselor_comment;
 
     $core_competencies_content .= theme('page_audit_review_question', array('node' => $problem_node));
   }
@@ -266,20 +284,12 @@ function get_performance_evaluation($self_review) {
     $problem_node['description'] = $self_review[$review['selfkey']]->name;
     $problem_node['self_rating'] = $self_review[$review['selfkey']]->data;
     $problem_node['self_comment'] = $self_review[$review['commentkey']]->data;
+    $problem_node['exist_peer'] = $review['exist_peer'];
+
     $internal_contributions_content .= theme('page_audit_review_question', array('node' => $problem_node));
   }
   $internal_contributions_content = add_fieldset(1, 'INTERNAL CONTRIBUTIONS', $internal_contributions_content);
 
-
-//  foreach ($self_review_select_map as $review) {
-//    $problem_node['description'] = $self_review[$review['selfkey']]->name;
-//    $problem_node['self_rating'] = $self_review[$review['selfkey']]->data;
-//    $problem_node['self_comment'] = $self_review[$review['commentkey']]->data;
-//
-//    $content .= theme('page_audit_review_question', array('node' => $problem_node)) . '<hr>';
-//  }
-  //return $content;
-  // return add_fieldset(0,"Performance Evaluation",$content);
   return add_fieldset(0, "Performance Evaluation", $core_competencies_content . $internal_contributions_content);
 }
 

@@ -142,6 +142,15 @@ function counselee_menu() {
     'file' => 'files/page_audit_review.inc',
   );
 
+
+  $items['audit-review/submit-review-result'] = array(
+    'title' => 'Counselor Submit Review Result',
+    'page callback' => 'submit_review_result',
+    'page arguments' => array(),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'files/page_audit_review.inc',
+  );
   return $items;
 }
 
@@ -187,11 +196,13 @@ function counselee_block_view($delta = '') {
       $reviewList = counselee_do_peersreview(get_current_user_name());
       $self_review_finished = get_self_review_finished_list(get_current_user_name());
       $counselee_confirm_review = get_confirm_review_result(get_current_user_name());
+      $counselor_submit_review = get_counselor_submit_result(get_current_user_name());
       $block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers,
         'counselorPeers' => $counselorPeers,
         'reviewList' => $reviewList,
         'self_review_finished' => $self_review_finished,
         'counselee_confirm_review' => $counselee_confirm_review,
+        'counselor_submit_review' => $counselor_submit_review,
       ));
       break;
   }
@@ -210,6 +221,7 @@ function counselee_theme() {
         'reviewList' => NULL,
         'self_review_finished' => NULL,
         'counselee_confirm_review' => NULL,
+        'counselor_submit_review' => NULL,
       ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'my_working_list',),
@@ -270,11 +282,11 @@ function counselee_theme() {
         'node' => NULL,),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'page_audit_review_summay_description',),
-    'page_audit_review_btn' => array(
+    'page_audit_review_btn_approve' => array(
       'variables' => array(
         'rreid' => NULL,),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'page_audit_review_btn',),
+      'template' => 'page_audit_review_btn_approve',),
   );
 }
 
@@ -804,6 +816,40 @@ function get_confirm_review_result($username) {
     $reviewtype = $node->type;
     $description = $node->description;
     $temp = array('prid' => $prid, 'rreid' => $rreid, 'reviewType' => $reviewtype, 'description' => $description);
+    $result[$index++] = $temp;
+  }
+  return $result;
+}
+
+function get_counselor_submit_result($username) {
+
+  $query = db_select('prs_rel_review_employee', 'review');
+  $query->innerJoin('prs_general', 'general', 'general.prid = review.prid');
+  $query->innerJoin('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName == review.employeeName');
+  $query->addField('review', 'prid');
+  $query->addField('review', 'rreid');
+  $query->addField('general', 'description');
+  $query->addField('general', 'type');
+  $query->addField('review', 'employeeName');
+  $query->condition('relation.counselorName', $username);
+  $query->condition('review.rstatus', 5); // 5 stand for counselor should submit the review
+
+  $dataset = $query->execute()->fetchAll();
+
+  $result = array();
+  $index = 0;
+  foreach ($dataset as $node) {
+    $prid = $node->prid;
+    $rreid = $node->rreid;
+    $reviewtype = $node->type;
+    $description = $node->description;
+    $counselee = $node->employeeName;
+    $temp = array('prid' => $prid,
+      'rreid' => $rreid,
+      'reviewType' => $reviewtype,
+      'description' => $description,
+      'counselee' => $counselee,
+    );
     $result[$index++] = $temp;
   }
   return $result;
