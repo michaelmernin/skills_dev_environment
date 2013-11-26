@@ -12,6 +12,67 @@
       <?php print $self_dataset->question; ?> 
     </div>
     <br>
+    <div style="float:right; margin: 4px 0px 0px; height: 200px; width: 50%;">
+        <div id="withoupie-chart-no-data-<?php print $item_num; ?>" style="height: 200px; width: 100%;"></div>
+
+        <script>
+          // Build the no data chart
+          jQuery('#withoupie-chart-no-data-<?php print $item_num; ?>').highcharts({
+            chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false
+            },
+            title: {
+              text: null
+            },
+            exporting: {
+              //true for exporting
+              enabled: false
+            },
+            series: [{
+                type: 'pie',
+                name: 'no data',
+                data: []
+              }],
+            lang: {
+              // Custom language option            
+              //noData: "Nichts zu anzeigen"    
+            },
+            /* Custom options */
+            noData: {
+              // Custom positioning/aligning options
+              position: {
+                //align: 'right',
+                //verticalAlign: 'bottom'
+              },
+              // Custom svg attributes
+              attr: {
+                //'stroke-width': 1,
+                //stroke: '#cccccc'
+              },
+              // Custom css
+              style: {
+                //fontWeight: 'bold',     
+                //fontSize: '15px',
+                //color: '#202030'        
+              }
+            },
+            plotOptions: {
+              pie: {
+                allowPointSelect: false,
+                cursor: 'pointer',
+                dataLabels: {
+                  enabled: false
+                },
+                showInLegend: true
+              }
+            },
+          });
+
+        </script>
+
+      </div>
 
     <div style="margin: 4px 0px 0px; height: 17px; width: 350px;">
       <div style="font-weight: 600;float: left">· Self Comment | </div>

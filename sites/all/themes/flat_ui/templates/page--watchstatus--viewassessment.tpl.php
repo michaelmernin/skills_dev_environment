@@ -6,7 +6,24 @@
 <script type="text/javascript">
   jQuery(document).ready(function() {
     //add a attr to hightchart tooltip for hide a rect
-    jQuery(".highcharts-tooltip").attr("visibility","hidden");
+    jQuery(".highcharts-tooltip").attr("visibility", "hidden");
+//    var highChartsTooltipJqueryObj;
+//    jQuery(".highcharts-tooltip span").hover(
+//            function() {
+//              jQuery(this).mousemove(function(e) {
+//
+//
+////                jQuery(this).parent(".highcharts-tooltip").css("visibility", "visible");
+//                jQuery(this).parentsUntil(".highcharts-container > g").find(".highcharts-tooltip").attr("visibility", "visiable");
+//
+//              });
+////              jQuery(this).addClass("hover");
+//            },
+//            function() {
+////              jQuery(this).removeClass("hover");
+//            }
+//    );
+
   });
 
   function submitcounselorassessment() {
@@ -230,7 +247,7 @@
   document.body.appendChild(new_element);
 
   // jQuery(document).ready(function() {
-  //   var isCounselor = '<?php print $identity ?>';
+  //   var isCounselor = '<?php // print $identity ?>';
   //   if (isCounselor == "counselee") {
   //     jQuery(".draftbutton").hide();
   //   }
