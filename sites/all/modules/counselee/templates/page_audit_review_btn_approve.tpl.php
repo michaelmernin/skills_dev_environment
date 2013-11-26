@@ -138,6 +138,15 @@
 
 <script type="text/javascript">
 
+              function IsNum(str)
+              {
+                if (str != null && str != "" && str != ' ')
+                {
+                  return !isNaN(str);
+                }
+                return false;
+              }
+
               function disapprove_review_result(id)
               {
                 jQuery('#status_loading_img_89759').css('display', 'inline');
@@ -181,6 +190,33 @@
               }
 
 
+              function calculate_average_score(category, elementType)
+              {
+                var i = 0, count = 0, sum = 0, value, averageScore;
+
+                for (i = 0; i < category.length; i++)
+                {
+                  if (elementType == 'select')
+                    value = jQuery(category[i]).find('option:selected').val();
+                  else if (elementType == 'html')
+                    value = jQuery(category[i]).html();
+
+                  if (IsNum(value) && value != '0')
+                  {
+                    count++;
+                    sum += parseInt(value);
+                  }
+                }
+
+                var averageScore = '';
+                if (count != 0)
+                {
+                  averageScore = (sum / count).toFixed(2);
+                }
+                return averageScore;
+              }
+
+
               function initialOverScore()
               {
                 var category = new Array();
@@ -198,13 +234,33 @@
                 }
 
                 var selfPre = '#src_self_';
-                var internal = new Array();
-                internal [0] = selfPre + 'business-development';
-                internal [1] = selfPre + 'career-counseling';
-                internal [2] = selfPre + 'recruiting-assistance';
-                internal [3] = selfPre + 'internal-contributions';
-                internal [4] = selfPre + 'perficient-basics';
+                var self_internal = new Array();
+                self_internal[0] = selfPre + 'business_development';
+                self_internal[1] = selfPre + 'career_counseling';
+                self_internal[2] = selfPre + 'recruiting_assistance';
+                self_internal[3] = selfPre + 'internal_contributions';
+                self_internal[4] = selfPre + 'perficient_basics';
+
+                var self_internal = calculate_average_score(self_internal, 'html');
+                //rating_internal_contributions
+                jQuery('#rating_internal_contributions').html(self_internal);
+                
+                
+                
+                var counselorPre = '#src_counselor_'; 
+                var counselor_internal = new Array();
+                counselor_internal[0] = counselorPre + 'business_development';
+                counselor_internal[1] = counselorPre + 'career_counseling';
+                counselor_internal[2] = counselorPre + 'recruiting_assistance';
+                counselor_internal[3] = counselorPre + 'internal_contributions';
+                counselor_internal[4] = counselorPre + 'perficient_basics';
+                
+                
+                var counselor_internal = calculate_average_score(counselor_internal, 'html');
+                jQuery('#counselor_rating_internal_contributions').html(counselor_internal);
+
               }
               initialOverScore();
-              
+
+
 </script>
