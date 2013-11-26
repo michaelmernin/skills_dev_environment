@@ -147,15 +147,14 @@ function load_self_assessment($rreid = NULL) {
     }
   }
   foreach ($self_comments_array as $key => $value) {
-    $content = theme('view_assessment_comment_only', 
-      array(
+    $content = theme('view_assessment_comment_only', array(
         'item_num' => $self_item_count + $key,
-        'review_info' => $review_info,
         'rreid' => $rreid,
         'nid' => $nid,
         'reviewee' => $reviewee,
         'self_comment' => $value,
         'total_item_count' => $total_item_count,
+        'review_info' => $review_info,
         ));
     $pageContent .= $content;
   }
@@ -1033,6 +1032,7 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
 }
 
 function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items) {
+  dd($clor_items, 'clor_items');
   $sid = get_last_sid_by_nid($nid);
   $csiid = _insert_counselor_submittion_info_to_DB($nid);
   $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items);
