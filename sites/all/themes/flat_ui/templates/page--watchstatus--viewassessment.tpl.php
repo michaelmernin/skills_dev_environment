@@ -103,6 +103,12 @@
       if (rating == '') {
         rating = NIL;
       }
+
+      var peerAvgRating = getPeerAvgRating(i);
+      if (peerAvgRating == '') {
+        peerAvgRating = NIL;
+      }
+      
       var comment = getCounselorComment(i);
       if (comment == '') {
         comment = "No_comments";
@@ -124,7 +130,7 @@
   }
 
   function getCount() {
-    return jQuery("#self_item_count-0").val();
+    return jQuery("#total_item_count-0").val();
   }
 
   function getRreid() {
@@ -143,6 +149,10 @@
   
   function getCounselorRating(num) {
     return jQuery("#counselor-rating-" + num + " option:selected").val();
+  }
+
+  function getPeerAvgRating(num) {
+    return jQuery("#pie-chart-all-avg-" + num).val();
   }
 
   function getCounselorComment(num) {

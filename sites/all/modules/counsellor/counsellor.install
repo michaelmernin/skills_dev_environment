@@ -271,6 +271,11 @@ function counsellor_schema() {
         'type' => 'varchar',
         'length' => '255',
         ),
+      'peer_avg_rating' => array(
+        'description' => 'The average peer rating that calculated by systhesizing certain items.',
+        'type' => 'varchar',
+        'length' => '16',
+        ),
       'peer_comments' => array(
         'description' => 'The summarized comments of all the peers.',
         'type' => 'varchar',

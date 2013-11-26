@@ -122,7 +122,7 @@
   <br>
 <input type="hidden" id="rreid-<?php print $item_num; ?>" value="<?php print $rreid ?>"/>
 <input type="hidden" id="nid-<?php print $item_num; ?>" value="<?php print $nid ?>"/>
-<input type="hidden" id="self_item_count-<?php print $item_num; ?>" value="<?php print $self_item_count ?>"/>
+<input type="hidden" id="total_item_count-<?php print $item_num; ?>" value="<?php print $total_item_count ?>"/>
 
 
   <!--Display the peer comment message-->
