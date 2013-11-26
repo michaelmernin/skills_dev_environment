@@ -27,7 +27,6 @@ function IsNum(str)
  * */
 function calculate_average_score(category, elementType)
 {
-    return 'dddddd';
     var i = 0, count = 0, sum = 0, value, averageScore;
     for (i = 0; i < category.length; i++)
     {
@@ -39,7 +38,7 @@ function calculate_average_score(category, elementType)
         if (IsNum(value) && value != '0')
         {
             count++;
-            sum += parseInt(value);
+            sum += parseFloat(value);
         }
     }
 

@@ -27,12 +27,11 @@ function counselee_confirm_review_result($rreid) {
   $pageContent = '';
   $self_review = get_self_review_comment($nid);
   $counselor_review = get_counselor_review_comment($nid);
-  dd($counselor_review, '$counselor_review');
 
   $pageContent .= get_performance_evaluation($self_review, $counselor_review);
   $pageContent .= get_extend_description_part($self_review);
+  $pageContent .= theme('page_audit_review_score', array());
   $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
-
   return $pageContent;
 }
 
@@ -197,19 +196,27 @@ function get_extend_description_map() {
  */
 function approve_review_result() {
   $rreid = $_POST['rreid'];
-  audit_review_result_update($rreid, 4);
+  audit_review_result_update($rreid, 4,null);
+  $msg = 'You had approved the review result.';
+  drupal_set_message($msg, 'status');
   return true;
 }
 
 function disapprove_review_result() {
   $rreid = $_POST['rreid'];
-  audit_review_result_update($rreid, 2);
+  $disapprove_reason = $_POST['disapproveReason'];
+  audit_review_result_update($rreid, 2, $disapprove_reason);
+
+  $msg = 'You had disapproved the review result.';
+  drupal_set_message($msg, 'status');
   return true;
 }
 
 function submit_review_result() {
   $rreid = $_POST['rreid'];
-  audit_review_result_update($rreid, 5);
+  audit_review_result_update($rreid, 5,null);
+  $msg = 'You had submitted the review result.';
+  drupal_set_message($msg, 'status');
   return true;
 }
 
@@ -217,7 +224,7 @@ function submit_review_result() {
  * Modify the prs_rel_review_employee rstatus
  * 
  */
-function audit_review_result_update($rreid, $rstatus) {
+function audit_review_result_update($rreid, $rstatus, $reason) {
   $num_updated = db_update('prs_rel_review_employee')
       ->fields(array(
         'rstatus' => $rstatus,
@@ -232,7 +239,7 @@ function audit_review_result_update($rreid, $rstatus) {
       counselee_audit_review_result_remind($rreid, TRUE);
     }
     else if ($rstatus == 2) {
-      counselee_audit_review_result_remind($rreid, FALSE);
+      counselee_audit_review_result_remind($rreid, FALSE, $reason);
     }
     else if ($rstatus == 5) {
       counselor_submit_review_result_remind($rreid);
@@ -279,7 +286,7 @@ function get_performance_evaluation($self_review, $counselor_review) {
     $problem_node['counselor_rating'] = $counselor_review[$review['selfkey']]->rating;
     $problem_node['counselor_comment'] = $counselor_review[$review['selfkey']]->counselor_comment;
 
-    dd($problem_node, '$problem_node');
+    //dd($problem_node, '$problem_node');
     $core_competencies_content .= theme('page_audit_review_question', array('node' => $problem_node));
   }
   $core_competencies_content = add_fieldset(1, 'CORE COMPETENCIES', $core_competencies_content);
@@ -347,4 +354,19 @@ function get_nid_by_rreid($rreid) {
   if (count($result) == 1) {
     return $result[0]->nid;
   }
+}
+
+
+function counselor_submit_review_result($rreid)
+{
+  $nid = get_nid_by_rreid($rreid);
+  $pageContent = '';
+  $self_review = get_self_review_comment($nid);
+  $counselor_review = get_counselor_review_comment($nid);
+  $pageContent .= get_performance_evaluation($self_review, $counselor_review);
+  $pageContent .= get_extend_description_part($self_review);
+  $pageContent .= theme('page_audit_review_score', array());
+  $pageContent .= theme('page_audit_review_btn_submit', array('rreid' => $rreid)); 
+  
+  return $pageContent;
 }

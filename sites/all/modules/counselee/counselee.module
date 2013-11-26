@@ -119,11 +119,23 @@ function counselee_menu() {
     'title' => 'Confirm Review Result',
     'page callback' => 'counselee_confirm_review_result',
     'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
     'page arguments' => array(2),
     'access arguments' => array('access to my dashboard'),
     'file' => 'files/page_audit_review.inc',
     'weight' => '15',
   );
+  
+  //counselor_submit_review_result
+  $items['watchstatus/submitreview/%'] = array(
+    'title' => 'Submit Review Result',
+    'page callback' => 'counselor_submit_review_result',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 11,
+    'page arguments' => array(2),
+    'access arguments' => array('access to my dashboard'),
+    'file' => 'files/page_audit_review.inc',
+    );
 
   $items['audit-review/approve-review-result'] = array(
     'title' => 'Counselee Approve Review Result',
@@ -151,7 +163,7 @@ function counselee_menu() {
     'access arguments' => array('access to my dashboard'),
     'type' => MENU_CALLBACK,
     'file' => 'files/page_audit_review.inc',
-  );
+  );  
   return $items;
 }
 
@@ -288,6 +300,15 @@ function counselee_theme() {
         'rreid' => NULL,),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'page_audit_review_btn_approve',),
+    'page_audit_review_btn_submit' => array(
+      'variables' => array(
+        'rreid' => NULL,),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'page_audit_review_btn_submit',),
+    'page_audit_review_score' => array(
+      'variables' => array(),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'page_audit_review_score',),
   );
 }
 
@@ -836,7 +857,7 @@ function get_counselor_submit_result($username) {
   $query->condition('review.rstatus', 4); // 5 stand for counselor should submit the review
 
   $dataset = $query->execute()->fetchAll();
-  
+
   $result = array();
   $index = 0;
   foreach ($dataset as $node) {

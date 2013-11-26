@@ -184,7 +184,17 @@ function mail_sender_template_adapter($address, $params, $type) {
       break;
     //4 stand for counselee audit the review result
     case 4:
-      $templateName = 'counselor_counselee_audit_review_result.tpl.php';
+      if ($params['is_approve'] == false) {
+        $subject = $params['counselee'] . " has disapproved the " . $params['reviewname'] . "'s result.";
+        $templateName = 'counselor_counselee_disapprove_review_result.tpl.php';
+      }
+      else if ($params['is_approve'] == true) {
+        $subject = $params['counselee'] . " has approved the " . $params['reviewname'] . "'s result.";
+        $templateName = 'counselor_counselee_approve_review_result.tpl.php';
+      }
+//      else
+//        $templateName = 'counselor_counselee_audit_review_result.tpl.php';
+
       break;
     //5 stand for counselor audit the review result,notify counselee the review result
     case 5:
@@ -303,7 +313,7 @@ function provider_feedback_remind($prid) {
  * 
  * @param int $rreid  the prs_rel_review_employee rreid
  */
-function counselee_audit_review_result_remind($rreid, $is_approve) {
+function counselee_audit_review_result_remind($rreid, $is_approve, $reason) {
   $query = db_select('prs_rel_review_employee', 'review');
   $query->join('prs_general', 'general', 'general.prid = review.prid');
   $query->join('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName= review.employeeName');
@@ -315,21 +325,14 @@ function counselee_audit_review_result_remind($rreid, $is_approve) {
   $query->condition('review.rreid', $rreid);
 
   $dataset = $query->execute()->fetchAll();
-  
-  dd($dataset);
-
-  if ($is_approve == true)
-    $audit = 'approve';
-  else
-    $audit = 'disapprove';
-
 
   if (count($dataset) == 1) {
     $address = $dataset[0]->mail;
     $params = array(
       'counselor' => $dataset[0]->counselorName,
       'counselee' => $dataset[0]->employeeName,
-      'aduit' => $audit,
+      'is_approve' => $is_approve,
+      'reason' => $reason,
       'reviewname' => $dataset[0]->description,
       'url' => get_curPage_base_url() . 'watchstatus/viewassessment/' . $rreid,
     );
@@ -377,7 +380,7 @@ function counselor_submit_review_result_remind($rreid) {
   $query->condition('review.rreid', $rreid);
 
   $dataset = $query->execute()->fetchAll();
- 
+
 
   if (count($dataset) == 1) {
     $address = $dataset[0]->mail;
@@ -386,7 +389,7 @@ function counselor_submit_review_result_remind($rreid) {
       'counselee' => $dataset[0]->employeeName,
       'gm' => $dataset[0]->gmName,
       'reviewname' => $dataset[0]->description,
-      'url' => get_curPage_base_url() . 'watchstatus/viewassessment/' . $rreid,
+      'url' => get_curPage_base_url() . 'watchstatus/submitreview/' . $rreid,
     );
     $template_type = 6;
     return mail_sender_template_adapter($address, $params, $template_type);

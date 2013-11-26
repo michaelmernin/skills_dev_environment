@@ -139,7 +139,7 @@
       rreid = obj.rreid;
       reviewType = obj.reviewType;
       description = obj.description;
-      url = "./watchstatus/viewassessment/" + rreid;
+      url = "./watchstatus/submitreview/" + rreid;
       li = " <li> <a href='" + url + "'>[" + name + "] has agreed " + description + ".Please submit the review.(" + reviewName(reviewType) + ")</a> </li>";
       jQuery('#myWorkForOther').append(li);
     }
@@ -169,9 +169,6 @@
   var counselor_submit_review_json = '<?php print json_encode($counselor_submit_review); ?>';
   var counselor_submit_review = eval(counselor_submit_review_json);
   showCounselorSubmitReview(counselor_submit_review);
-
-
-
 
   var workingItemsNum = counseleePeers.length
           + counselorPeers.length
