@@ -24,10 +24,12 @@ function load_self_assessment($rreid = NULL) {
   $self_adj_list = dfs_generate_adjacent_list($self_cid_formkey_type_array);
   $self_sequential_list = dfs_travel_all_node($self_adj_list);
   $self_mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
+  // dd($self_adj_list, 'self_adj_list');
 
   // dd($self_mapping_table, 'self_mapping_table');
   // dd($self_sequential_list, 'self_sequential_list');
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
+  // dd($none_selection_item, 'none_selection_item');
   // $self_dataset = generate_selfassessment_result_array($self_dataset);
   // $rating_qa_sheet = _generate_rating_qa_sheet($self_dataset);
   $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($cid_indexed_dataset, $self_mapping_table);
@@ -268,9 +270,6 @@ function get_children_array_by_cid($fieldset_cid, $adj_list) {
 }
 
 function generate_synthesized_peer_comment($form_key, &$unread_comment, $revised_comments) {
-  // $csiid = get_counselor_latest_submissionID($nid);
-  // $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
-  // $revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
   foreach ($revised_comments as $comment) {
     if ($comment->form_key == $form_key) {
       if (!array_key_exists('revised', $unread_comment)) {
@@ -311,7 +310,7 @@ function submit_counselor_assessment() {
 
   $result = _submit_counselor_approve_info_to_DB($rreid, $nid, $decoded_items);
   // send_counselor_reviewed_notification($nid, $reviewee);
-  echo $rval;
+  echo $result_val;
 }
 
 /**
@@ -484,7 +483,7 @@ function _fetch_all_none_selection_items($self_cid_formkey_type_array) {
       }
     }
   }
-  // dd($survey_item_question, 'survey_item_question');
+  return $survey_item_question;
 }
 
 /**

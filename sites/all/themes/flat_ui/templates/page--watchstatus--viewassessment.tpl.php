@@ -29,8 +29,8 @@
         data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items},
         url: '<?php echo $base_path ?>watchstatus/submitcounselorassessment/',
         success: function(text) {
-          // window.location.href = "<?php print base_path() . 'mydashboard' ?>";
-          location.reload();
+          window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
+          // location.reload();
           // if(typeof(jQuery("#submit_button").attr("disabled"))!="undefined") {
           // jQuery('#submit_button').removeAttr("disabled");
         }
@@ -68,7 +68,7 @@
         data: {'rreid': rreid, 'nid': nid, 'items': items, 'rejectComments': rejectComments},
         url: '<?php echo $base_path ?>watchstatus/rejectcounseleeassessment/',
         success: function(text) {
-          location.reload();
+          window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
         }
       });
     }
@@ -268,7 +268,7 @@
               </div>
               <div class="draftbutton" style="float: left; margin-right: 15px;">
                 <!-- <a id="modal-912871" href="#modal-container-912871" role="button" class="btn btn-danger" data-toggle="modal">Save as draft</a> -->
-                <a id="modal-912871" href="#modal-container-912871" role="button" data-toggle="modal"><input class="webform-submit button-primary form-submit btn btn-large btn-primary" type="submit" name="op" value="Submit"></a>
+                <a id="modal-912871" href="#modal-container-912871" role="button" data-toggle="modal"><input class="webform-submit button-primary form-submit btn btn-large btn-primary" type="submit" name="op" value="Approve"></a>
                 <div class="row-fluid">
                   <div class="span12">
                     <div id="modal-container-912871" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -286,7 +286,7 @@
                       </div>
                       <div class="modal-footer">
                         <img class="loading_img" id="status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
-                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="counselor_submit_btn" onclick="submitcounselorassessment()">SAVE AS DRAFT</button>
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="counselor_submit_btn" onclick="submitcounselorassessment()">APPROVE</button>
 
                       </div>
                     </div>
