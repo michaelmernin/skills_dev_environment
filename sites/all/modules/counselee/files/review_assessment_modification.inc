@@ -150,12 +150,12 @@ function load_self_assessment($rreid = NULL) {
     $content = theme('view_assessment_comment_only', 
       array(
         'item_num' => $self_item_count + $key,
-        'total_item_count' => $total_item_count,
         'review_info' => $review_info,
         'rreid' => $rreid,
         'nid' => $nid,
         'reviewee' => $reviewee,
         'self_comment' => $value,
+        'total_item_count' => $total_item_count,
         ));
     $pageContent .= $content;
   }
