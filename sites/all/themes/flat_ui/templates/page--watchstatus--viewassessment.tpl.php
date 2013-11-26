@@ -121,7 +121,7 @@
 
       var string = new String();
       // ex = '{"a":1,"b":2,"c":3,"d":4,"e":5}';
-      string = '{"header":"' + header + '","rating":"' + rating + '","comment":"' + comment + '","revisedComment":"' + revisedComment + '"}';
+      string = '{"header":"' + header + '","rating":"' + rating + '","comment":"' + comment + '","peerAvgRating":"' + peerAvgRating + '","revisedComment":"' + revisedComment + '"}';
       // var jsonString = JSON.stringify(string);
 
       items[i] = string;

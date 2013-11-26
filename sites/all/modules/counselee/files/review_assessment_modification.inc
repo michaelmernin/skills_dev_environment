@@ -1033,7 +1033,6 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
 }
 
 function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items) {
-  dd($clor_items, 'clor_items');
   $sid = get_last_sid_by_nid($nid);
   $csiid = _insert_counselor_submittion_info_to_DB($nid);
   $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items);

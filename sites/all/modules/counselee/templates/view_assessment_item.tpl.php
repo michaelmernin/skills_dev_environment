@@ -160,10 +160,12 @@ ssion-info clearfix">
 
     <div style="margin: 4px 0px 0px; height: 17px; width: 350px;">
       <div style="font-weight: 600;float: left">· Self Comment | </div>
-      <div id="assessment-content-value-<?php print $item_num; ?>" 
+      <div 
            style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">· Self Rating:
         <font color="red"> <?php if ($self_dataset->rating != 0) {
+          print '<span id="assessment-content-value-<?php print $item_num; ?>" >';
       print $self_dataset->rating;
+      print '</span>';
     }
     else if ($self_dataset->rating == 0) {
       print 'N/A';
