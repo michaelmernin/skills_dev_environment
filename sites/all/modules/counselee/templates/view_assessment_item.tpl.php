@@ -161,7 +161,12 @@
       <div style="font-weight: 600;float: left">· Self Comment | </div>
       <div id="assessment-content-value-<?php print $item_num; ?>" 
            style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">· Self Rating:
-        <font color="red"> <?php if($self_dataset->rating != 0) { print $self_dataset->rating; } else if($self_dataset->rating == 0){ print 'N/A';}?>
+        <font color="red"> <?php if ($self_dataset->rating != 0) {
+      print $self_dataset->rating;
+    }
+    else if ($self_dataset->rating == 0) {
+      print 'N/A';
+    } ?>
         </font>
       </div>
 
@@ -172,7 +177,7 @@
 
           <div id="comment-content-value-<?php print $item_num; ?>" 
                style="margin: 4px 0px 0px; height: 112px; width: 96%;overflow-y:auto;">
-                 <?php print $self_dataset->comment ?>
+<?php print $self_dataset->comment ?>
           </div>
         </div>
       </div>
@@ -195,7 +200,8 @@
         </select>
       </div>
 
-      <div class="additionalbubble">
+      <!--<div class="additionalbubble">-->
+      <div>
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
           <textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"></textarea>
         </div>
@@ -215,12 +221,14 @@
       <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Peer Comment | ·Peer Rating:
       </div>
 
-      <div class="additionalbubble">
+      <!--<div class="additionalbubble">-->
+      <div>
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-          <textarea id="peer-comment-<?php print $item_num ?>"  cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php foreach ($unread_comment as $item) {
-                   print $item;
-                 }
-                 ?></textarea>
+          <textarea id="peer-comment-<?php print $item_num ?>"  cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
+foreach ($unread_comment as $item) {
+  print $item;
+}
+?></textarea>
         </div>
       </div>
     </div>
