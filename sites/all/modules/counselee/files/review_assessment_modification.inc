@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file 
+ * @file
  * Page callback function for view assessment.
  * */
 function load_self_assessment($rreid = NULL) {
@@ -25,7 +25,6 @@ function load_self_assessment($rreid = NULL) {
   $self_sequential_list = dfs_travel_all_node($self_adj_list);
   $self_mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
   // dd($self_adj_list, 'self_adj_list');
-
   // dd($self_mapping_table, 'self_mapping_table');
   // dd($self_sequential_list, 'self_sequential_list');
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
@@ -33,8 +32,8 @@ function load_self_assessment($rreid = NULL) {
   $review_info = new stdClass();
   $self_comments_array = array();
   _matching_none_selection_items($none_selection_item, $self_cid_formkey_type_array, $cid_indexed_dataset, $review_info, $self_comments_array);
-  dd($review_info, 'review_info');
-  dd($self_comments_array, 'self_comments_array');
+//  dd($review_info, 'review_info');
+//  dd($self_comments_array, 'self_comments_array');
   // $self_dataset = generate_selfassessment_result_array($self_dataset);
   // $rating_qa_sheet = _generate_rating_qa_sheet($self_dataset);
   $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($cid_indexed_dataset, $self_mapping_table);
@@ -220,19 +219,28 @@ function _manage_pie_chart($peer_name, $comment_name, $form_key) {
  * @param type $children_array children array
  * @param type $peer_question_rating_comment_result answer array
  * @param type $peer_name empty array return avg rating for each peer
- * @param type $comment_name return all comment for each peer 
+ * @param type $comment_name return all comment for each peer
  * @param type $unread_comment return unread comment for each peer
  */
 function _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, &$peer_name, &$comment_name, &$unread_comment) {
 
   $is_first = TRUE;
-  $count = 0;
   foreach ($children_array as $one_child) {
     foreach ($peer_question_rating_comment_result as $one_question_answer) {
       if ($one_child == $one_question_answer->cid) {
         if ($is_first) {
           foreach ($one_question_answer->ratings as $key => $one_ratings) {
-            $peer_name[$key] = $one_ratings;
+            ///want to test again/////////////////TEST/////////////////////////////
+            if ($one_ratings != 0) {
+
+              $peer_name_temp[$key]['rating'] = $one_ratings;
+              $peer_name_temp[$key]['count'] = 1;
+            }
+            else {
+              $peer_name_temp[$key]['rating'] = 0;
+              $peer_name_temp[$key]['count'] = 0;
+            }
+            ///want to test again/////////////////TEST/////////////////////////////
 //            dd($one_ratings,'$peer_name[$key]_first');
 //            dd($one_question_answer, '$one_question_answer');
             $comment_name[$key] = $one_question_answer->comments[$key]->comment . '; <br/>';
@@ -242,10 +250,17 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
           }
           $is_first = FALSE;
 //          dd($one_question_answer);
-          $count++;
         }
         else {
           foreach ($one_question_answer->ratings as $key => $one_ratings) {
+            ///want to test again/////////////////TEST/////////////////////////////
+            if ($one_ratings != 0) {
+
+              $peer_name_temp[$key]['rating'] = $peer_name_temp[$key]['rating'] + $one_ratings;
+              $peer_name_temp[$key]['count'] = $peer_name_temp[$key]['count'] + 1;
+            }
+            ///want to test again/////////////////TEST/////////////////////////////
+
             $peer_name[$key] = $peer_name[$key] + $one_ratings;
 //            dd($one_ratings,'$peer_name[$key]');
 //            dd($one_question_answer,'dd($one_question_answer);');
@@ -254,15 +269,14 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
               $unread_comment[$key].=$one_question_answer->comments[$key]->comment . '; ';
             }
           }
-          $count++;
         }
         break;
       }
     }
   }
-//  dd($peer_name, '$peer_name_f');
-  foreach ($peer_name as $key => $peer_avg) {
-    $peer_name[$key] = $peer_avg / $count;
+//  dd($peer_name_temp, '$peer_name_f');
+  foreach ($peer_name_temp as $key => $peer_avg) {
+    $peer_name[$key] = $peer_avg['rating'] / $peer_avg['count'];
   }
 //  dd($peer_name, '$peer_name');
 //  dd($comment_name, '$comment_name');
@@ -413,7 +427,7 @@ function _fetch_provider_nodeID_and_submissionID($data_src) {
 }
 
 /**
- * _get_provider_review_content 
+ * _get_provider_review_content
  * get all the review contents whose provider node id is in $nid_sid_array
  * @param array $nid_sid_array
  * @return array $provider_submission_data_set
@@ -438,7 +452,7 @@ function _get_provider_review_content($nid_sid_array) {
 
 /**
  * get_counselor_latest_submissionID
- * @param int $nid 
+ * @param int $nid
  * @return int $csiid
  * */
 function get_counselor_latest_submissionID($nid) {
@@ -457,9 +471,9 @@ function get_counselor_latest_submissionID($nid) {
 
 /**
  * get_synthesized_provider_comment_from_db
- * @param int $nid 
+ * @param int $nid
  * @param int $csiid
- * @return array 
+ * @return array
  * */
 function get_synthesized_provider_comment_from_db($nid, $csiid) {
   $query = db_select('prs_counselor_submit_data', 'pcsd')
@@ -523,7 +537,7 @@ function _matching_none_selection_items($none_selection_item, $self_cid_formkey_
       if ($value['form_key'] == 'project_roles_and_responsibilities') {
         continue;
       }
-      if (strpos($value['form_key'], $item['form_key']) !== FALSE && $value['type'] == 'textarea'){
+      if (strpos($value['form_key'], $item['form_key']) !== FALSE && $value['type'] == 'textarea') {
         if (!array_key_exists($key, $self_comments_array)) {
           $temp = new stdClass();
           $temp->form_key = $cid_indexed_dataset[$key]->form_key;
@@ -538,7 +552,7 @@ function _matching_none_selection_items($none_selection_item, $self_cid_formkey_
 /**
  * synthesize_self_review_ratings_and_comments
  * @param
- * @return 
+ * @return
  * */
 function synthesize_self_review_ratings_and_comments($self_dataset, $mapping_table) {
 //  dd($self_dataset,'$self_dataset');
@@ -572,7 +586,7 @@ function synthesize_self_review_ratings_and_comments($self_dataset, $mapping_tab
  * @param array by reference $pr_data_array
  * @param array by reference $mapping_table
  * @param int $item_count
- * @return array 
+ * @return array
  * */
 function synthesize_all_peer_review_ratings_and_comments(&$nid_pname_array, &$pr_data_array, &$mapping_table, $item_count) {
   $all_peer_review_content = array();
@@ -611,7 +625,7 @@ function synthesize_all_peer_review_ratings_and_comments(&$nid_pname_array, &$pr
  * _generate_provider_syn_ratings_array
  * @param array $pr_data_array
  * @param int $count
- * @return array 
+ * @return array
  * */
 function _generate_provider_syn_ratings_array($pr_data_array, $count) {
   $rating_array = range(0, $count - 1);
@@ -643,7 +657,7 @@ function _get_provider_isRead_status_from_db($nid) {
  * _generate_provider_syn_comments_array
  * @param array $pr_data_array
  * @param int $count
- * @return array 
+ * @return array
  * */
 function _generate_provider_syn_comments_array($pr_data_array, $count) {
   $comment_array = range(0, $count - 1);
@@ -817,7 +831,7 @@ function dfs_generate_adjacent_list($cid_formkey_type_array) {
 
 /**
  * dfs_travel_all_node
- * travel all the node by Depth First 
+ * travel all the node by Depth First
  * @param array $adj_list
  * @return array $visited_array
  * */
@@ -971,12 +985,12 @@ function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items) {
 }
 
 /**
- * _append_counselor_reject_info_to_DB 
+ * _append_counselor_reject_info_to_DB
  * @param int $rreid
  * @param int $nid
  * @param array of stdClass Object $clor_items
  * @param string by referen $reject_comments
- * @return bool 
+ * @return bool
  * */
 function _append_counselor_reject_info_to_DB($rreid, $nid, &$clor_items, &$reject_comments) {
   $sid = get_last_sid_by_nid($nid);
