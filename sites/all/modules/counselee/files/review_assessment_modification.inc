@@ -713,7 +713,7 @@ function _generate_provider_syn_comments_array($pr_data_array, $count) {
       }
       else if ($item->dataset[$i]->type == 'textarea' && $item->dataset[$i]->DATA == 'NIL') {
         $comment_array[$item->dataset[$i]->cid][$item->providerName] = new stdClass();
-        $comment_array[$item->dataset[$i]->cid][$item->providerName]->comment = 'NO_COMMENT';
+        $comment_array[$item->dataset[$i]->cid][$item->providerName]->comment = 'N/A';
         $comment_array[$item->dataset[$i]->cid][$item->providerName]->isRead = $item->isRead;
       }
       else {
