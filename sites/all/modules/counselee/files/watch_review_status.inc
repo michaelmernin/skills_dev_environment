@@ -77,21 +77,21 @@ function display_self_assessment($rreid = NULL) {
  * @file 
  * Page callback function for view assessment.
  * */
-function load_self_assessment($rreid=NULL) {
-  access_authen($rreid);
-  $reviewee = get_reviewee_from_db($rreid);
-  $provider_info = get_provider_info($rreid, $reviewee);
-  $nid = $provider_info[0]->nid;
-  $dataset = get_latest_submitted_data_from_db($nid);
-  $dataset = generate_selfassessment_result_array($dataset);
-  $pageContent = theme('view_assessment', array(
-    'rreid'     => $rreid,
-    'nid'       => $nid,
-    'reviewee'  => $reviewee,
-    'dataset'  => $dataset,
-  ));
-  return $pageContent;
-}
+//function load_self_assessment($rreid=NULL) {
+//  access_authen($rreid);
+//  $reviewee = get_reviewee_from_db($rreid);
+//  $provider_info = get_provider_info($rreid, $reviewee);
+//  $nid = $provider_info[0]->nid;
+//  $dataset = get_latest_submitted_data_from_db($nid);
+//  $dataset = generate_selfassessment_result_array($dataset);
+//  $pageContent = theme('view_assessment', array(
+//    'rreid'     => $rreid,
+//    'nid'       => $nid,
+//    'reviewee'  => $reviewee,
+//    'dataset'  => $dataset,
+//  ));
+//  return $pageContent;
+//}
 
 /**
  * display_firsttime_select

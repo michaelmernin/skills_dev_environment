@@ -32,6 +32,7 @@ function load_self_assessment($rreid = NULL) {
   $review_info = new stdClass();
   $self_comments_array = array();
   _matching_none_selection_items($none_selection_item, $self_cid_formkey_type_array, $cid_indexed_dataset, $review_info, $self_comments_array);
+  dd($self_comments_array,'$self_comments_array');
 
   // $self_dataset = generate_selfassessment_result_array($self_dataset);
   // $rating_qa_sheet = _generate_rating_qa_sheet($self_dataset);
@@ -566,6 +567,7 @@ function _fetch_all_none_selection_items($self_cid_formkey_type_array) {
 }
 
 function _matching_none_selection_items($none_selection_item, $self_cid_formkey_type_array, $cid_indexed_dataset, &$review_info, &$self_comments_array) {
+  dd($self_cid_formkey_type_array, 'self_cid_formkey');
   foreach ($self_cid_formkey_type_array as $key => $value) {
     if ($value['form_key'] == 'project_roles_and_responsibilities' && $value['type'] == 'textarea') {
       $review_info->project_roles_and_responsibilities = $cid_indexed_dataset[$key]->DATA;
