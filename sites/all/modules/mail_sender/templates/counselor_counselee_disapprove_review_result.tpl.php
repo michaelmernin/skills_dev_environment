@@ -1,7 +1,7 @@
 <div>
   Dear [counselor],<br>
   <br>
-  [counselee] has disapprove the [reviewname]'s result.<br>
+  [counselee] has disapproved the [reviewname]'s result.<br>
   The disapprove reason:<br>
   [reason]
   

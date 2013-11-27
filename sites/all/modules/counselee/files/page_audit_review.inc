@@ -71,7 +71,8 @@ function get_counselor_review_comment($nid) {
     data.rating ,
     data.title,
     data.counselor_comment,
-    data.peer_comments
+    data.peer_comments,
+    data.peer_avg_rating
 FROM
     {prs_counselor_submit_data} data ,
     {prs_counselor_submit_info} info
@@ -196,7 +197,7 @@ function get_extend_description_map() {
  */
 function approve_review_result() {
   $rreid = $_POST['rreid'];
-  audit_review_result_update($rreid, 4,'');
+  audit_review_result_update($rreid, 4, '');
   $msg = 'You had approved the review result.';
   drupal_set_message($msg, 'status');
   return true;
@@ -214,7 +215,7 @@ function disapprove_review_result() {
 
 function submit_review_result() {
   $rreid = $_POST['rreid'];
-  audit_review_result_update($rreid, 5,'');
+  audit_review_result_update($rreid, 5, '');
   $msg = 'You had submitted the review result.';
   drupal_set_message($msg, 'status');
   return true;
@@ -236,7 +237,7 @@ function audit_review_result_update($rreid, $rstatus, $reason) {
 
     //rstatus == 4 stand for that counselee disapprove the result
     if ($rstatus == 4) {
-      counselee_audit_review_result_remind($rreid, TRUE,$reason);
+      counselee_audit_review_result_remind($rreid, TRUE, $reason);
     }
     else if ($rstatus == 2) {
       counselee_audit_review_result_remind($rreid, FALSE, $reason);
@@ -285,6 +286,8 @@ function get_performance_evaluation($self_review, $counselor_review) {
 
     $problem_node['counselor_rating'] = $counselor_review[$review['selfkey']]->rating;
     $problem_node['counselor_comment'] = $counselor_review[$review['selfkey']]->counselor_comment;
+    $problem_node['peer_comment'] = $counselor_review[$review['selfkey']]->peer_comments;
+    $problem_node['peer_rating'] = $counselor_review[$review['selfkey']]->peer_avg_rating;
 
     //dd($problem_node, '$problem_node');
     $core_competencies_content .= theme('page_audit_review_question', array('node' => $problem_node));
@@ -303,6 +306,7 @@ function get_performance_evaluation($self_review, $counselor_review) {
 
     $problem_node['counselor_rating'] = $counselor_review[$review['selfkey']]->rating;
     $problem_node['counselor_comment'] = $counselor_review[$review['selfkey']]->counselor_comment;
+
 
     $internal_contributions_content .= theme('page_audit_review_question', array('node' => $problem_node));
   }
@@ -356,9 +360,7 @@ function get_nid_by_rreid($rreid) {
   }
 }
 
-
-function counselor_submit_review_result($rreid)
-{
+function counselor_submit_review_result($rreid) {
   $nid = get_nid_by_rreid($rreid);
   $pageContent = '';
   $self_review = get_self_review_comment($nid);
@@ -366,7 +368,7 @@ function counselor_submit_review_result($rreid)
   $pageContent .= get_performance_evaluation($self_review, $counselor_review);
   $pageContent .= get_extend_description_part($self_review);
   $pageContent .= theme('page_audit_review_score', array());
-  $pageContent .= theme('page_audit_review_btn_submit', array('rreid' => $rreid)); 
-  
+  $pageContent .= theme('page_audit_review_btn_submit', array('rreid' => $rreid));
+
   return $pageContent;
 }
