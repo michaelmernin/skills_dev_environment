@@ -59,7 +59,6 @@ function load_self_assessment($rreid = NULL) {
 // dd($cid_formkey_type_array, 'cid_formkey_type_array');
 // dd($adj_list, 'adj_list');
     $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
-    dd($peer_question_rating_comment_result, 'peer_question_rating_comment_result');
   }
   else {
     // no peer
@@ -705,7 +704,6 @@ function _generate_provider_syn_comments_array($pr_data_array, $count) {
   for ($i = 0; $i < $count; $i++) {
     $comment_array[$i] = array();
   }
-  dd($pr_data_array, 'pr_data_array');
   foreach ($pr_data_array as $item) {
     for ($i = 0; $i < $count; $i++) {
       if ($item->dataset[$i]->type == 'textarea' && $item->dataset[$i]->DATA != 'NIL') {
@@ -1032,7 +1030,6 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
 }
 
 function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items) {
-  dd($clor_items, 'clor_items');
   $sid = get_last_sid_by_nid($nid);
   $csiid = _insert_counselor_submittion_info_to_DB($nid);
   $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items);
