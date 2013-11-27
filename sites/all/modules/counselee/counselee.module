@@ -595,7 +595,7 @@ function print_render_tabs($tabs) {
   if (_is_assessment_editable($userId_flag, $rstatus)) {
     print render($tabs['tabs']['output']['2']);
   }
-  else if (_is_assessment_visible_for_counselor($rstatus)) {
+  else if (_is_assessment_visible_for_counselor($userId_flag, $rstatus)) {
     print render($tabs['tabs']['output']['3']);
   }
   else if ($userId_flag == 0 && $rstatus == 3) {
@@ -627,8 +627,8 @@ function _is_assessment_editable($userId_flag, $rstatus) {
  * this func is to identify whether the self assessment is visible for counselor. When the status is 
  * REVIEW_IN_DRAFT, the result is no
  * */
-function _is_assessment_visible_for_counselor($rstatus) {
-  if ($rstatus > 1 && $rstatus < 3) {
+function _is_assessment_visible_for_counselor($userId_flag, $rstatus) {
+  if (($rstatus > 1 && $rstatus < 3) && ($userId_flag == 1)) {
     return TRUE;
   }
   else {
