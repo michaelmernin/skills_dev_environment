@@ -29,7 +29,7 @@ function counselee_confirm_review_result($rreid) {
   $counselor_review = get_counselor_review_comment($nid);
 
   $pageContent .= get_performance_evaluation($self_review, $counselor_review);
-  $pageContent .= get_extend_description_part($self_review);
+  $pageContent .= get_extend_description_part($self_review, $counselor_review);
   $pageContent .= theme('page_audit_review_score', array());
   $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
   return $pageContent;
@@ -169,7 +169,7 @@ function get_question_select_comment_map() {
  * Get textarea
  * 
  */
-function get_extend_description_map() {
+function get_extend_description_map() { 
   $textarea_map = array(
     array(
       'selfkey' => 'strengths_text',
@@ -315,7 +315,7 @@ function get_performance_evaluation($self_review, $counselor_review) {
   return add_fieldset(0, "Performance Evaluation", $core_competencies_content . $internal_contributions_content);
 }
 
-function get_extend_description_part($self_review) {
+function get_extend_description_part($self_review, $counselor_review) {
   $content = '';
   $self_review_comment_map = get_extend_description_map();
   $extend_description = array(
@@ -326,6 +326,8 @@ function get_extend_description_part($self_review) {
   foreach ($self_review_comment_map as $review) {
     $extend_description['description'] = $self_review[$review['selfkey']]->name;
     $extend_description['self_description'] = $self_review[$review['selfkey']]->data;
+    $extend_description['counselor_description'] = $counselor_review[$review['selfkey']]->counselor_comment;
+
     $content .= theme('page_audit_review_summay_description', array('node' => $extend_description));
   }
   return $content;
@@ -366,7 +368,7 @@ function counselor_submit_review_result($rreid) {
   $self_review = get_self_review_comment($nid);
   $counselor_review = get_counselor_review_comment($nid);
   $pageContent .= get_performance_evaluation($self_review, $counselor_review);
-  $pageContent .= get_extend_description_part($self_review);
+  $pageContent .= get_extend_description_part($self_review, $counselor_review);
   $pageContent .= theme('page_audit_review_score', array());
   $pageContent .= theme('page_audit_review_btn_submit', array('rreid' => $rreid));
 

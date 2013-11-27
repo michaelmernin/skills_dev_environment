@@ -11,7 +11,7 @@
     </div>
     <div class="wellwarp">  
       <b style="font-weight: 700">Counselor Description:  </b>
-      Counselor Description:  <?php print $node['counselor_description']; ?>
+      <?php print $node['counselor_description']; ?>
     </div>
   </div>
 </fieldset>
