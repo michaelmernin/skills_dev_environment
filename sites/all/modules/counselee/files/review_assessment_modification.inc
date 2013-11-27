@@ -145,16 +145,17 @@ function load_self_assessment($rreid = NULL) {
       $pageContent .= $content;
     }
   }
+  dd($self_comments_array,'$self_comments_array');
   foreach ($self_comments_array as $key => $value) {
     $content = theme('view_assessment_comment_only', array(
-        'item_num' => $self_item_count + $key,
-        'rreid' => $rreid,
-        'nid' => $nid,
-        'reviewee' => $reviewee,
-        'self_comment' => $value,
-        'total_item_count' => $total_item_count,
-        'review_info' => $review_info,
-        ));
+      'item_num' => $self_item_count + $key,
+      'rreid' => $rreid,
+      'nid' => $nid,
+      'reviewee' => $reviewee,
+      'self_comment' => $value,
+      'total_item_count' => $total_item_count,
+      'review_info' => $review_info,
+    ));
     $pageContent .= $content;
   }
   // generate comment only content here.
@@ -243,22 +244,28 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
       if ($one_child == $one_question_answer->cid) {
         if ($is_first) {
           foreach ($one_question_answer->ratings as $key => $one_ratings) {
-            ///want to test again/////////////////TEST/////////////////////////////
-            if ($one_ratings != 0) {
-
-              $peer_name_temp[$key]['rating'] = $one_ratings;
-              $peer_name_temp[$key]['count'] = 1;
-            }
-            else {
-              $peer_name_temp[$key]['rating'] = 0;
-              $peer_name_temp[$key]['count'] = 0;
-            }
-            ///want to test again/////////////////TEST/////////////////////////////
+            $peer_name_temp[$key]['flag'] = TRUE;
+            if ($one_ratings != 'N/A') {
+              ///want to test again/////////////////TEST/////////////////////////////
+              if ($one_ratings != 0) {
+                $peer_name_temp[$key]['rating'] = $one_ratings;
+                $peer_name_temp[$key]['count'] = 1;
+              }
+              else {
+                $peer_name_temp[$key]['rating'] = 0;
+                $peer_name_temp[$key]['count'] = 0;
+              }
+              ///want to test again/////////////////TEST/////////////////////////////
 //            dd($one_ratings,'$peer_name[$key]_first');
 //            dd($one_question_answer, '$one_question_answer');
-            $comment_name[$key] = $one_question_answer->comments[$key]->comment . '; <br/>';
-            if ($one_question_answer->comments[$key]->isRead == 0) {
-              $unread_comment[$key] = $one_question_answer->comments[$key]->comment . '; ';
+              $comment_name[$key] = $one_question_answer->comments[$key]->comment . ' <br/>';
+              if ($one_question_answer->comments[$key]->isRead == 0) {
+                $unread_comment[$key] = $one_question_answer->comments[$key]->comment . ' ';
+              }
+            }
+            else {
+
+              $peer_name_temp[$key]['flag'] = FALSE;
             }
           }
           $is_first = FALSE;
@@ -267,22 +274,24 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
         else {
           // dd($one_question_answer, 'one_question_answer');
           foreach ($one_question_answer->ratings as $key => $one_ratings) {
-            ///want to test again/////////////////TEST/////////////////////////////
-            if ($one_ratings != 0) {
+            if ($peer_name_temp[$key]['flag']) {
+              ///want to test again/////////////////TEST/////////////////////////////
+              if ($one_ratings != 0) {
 
-              $peer_name_temp[$key]['rating'] = $peer_name_temp[$key]['rating'] + $one_ratings;
-              $peer_name_temp[$key]['count'] = $peer_name_temp[$key]['count'] + 1;
-            }
-            ///want to test again/////////////////TEST/////////////////////////////
-            if (!array_key_exists($key, $peer_name)) {
-              $peer_name[$key] = '';  
-            }
-            $peer_name[$key] = $peer_name[$key] + $one_ratings;
-           // dd($one_ratings,'$peer_name[$key]');
+                $peer_name_temp[$key]['rating'] = $peer_name_temp[$key]['rating'] + $one_ratings;
+                $peer_name_temp[$key]['count'] = $peer_name_temp[$key]['count'] + 1;
+              }
+              ///want to test again/////////////////TEST/////////////////////////////
+//            if (!array_key_exists($key, $peer_name)) {
+//              $peer_name[$key] = '';  
+//            }
+//            $peer_name[$key] = $peer_name[$key] + $one_ratings;
+              // dd($one_ratings,'$peer_name[$key]');
 //            dd($one_question_answer,'dd($one_question_answer);');
-            $comment_name[$key] .=$one_question_answer->comments[$key]->comment . '; <br/>';
-            if ($one_question_answer->comments[$key]->isRead == 0) {
-              $unread_comment[$key].=$one_question_answer->comments[$key]->comment . '; ';
+              $comment_name[$key] .=$one_question_answer->comments[$key]->comment . ' <br/>';
+              if ($one_question_answer->comments[$key]->isRead == 0) {
+                $unread_comment[$key].=$one_question_answer->comments[$key]->comment . ' ';
+              }
             }
           }
         }
@@ -292,7 +301,9 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
   }
 //  dd($peer_name_temp, '$peer_name_f');
   foreach ($peer_name_temp as $key => $peer_avg) {
-    $peer_name[$key] = $peer_avg['rating'] / $peer_avg['count'];
+    if ($peer_avg['flag']) {
+      $peer_name[$key] = $peer_avg['rating'] / $peer_avg['count'];
+    }
   }
 //  dd($peer_name, '$peer_name');
 //  dd($comment_name, '$comment_name');
@@ -400,7 +411,6 @@ function reject_counselee_assessment() {
       $temp->revisedComment = 'No need';
     }
     array_push($decoded_items, $temp);
-
   }
 
   $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments);
@@ -677,8 +687,8 @@ function _generate_provider_syn_ratings_array($pr_data_array, $count) {
       if ($item->dataset[$i]->type == 'select' && $item->dataset[$i]->DATA != 'NIL') {
         $rating_array[$item->dataset[$i]->cid][$item->providerName] = $item->dataset[$i]->DATA;
       }
-      else if ($item->dataset[$i]->type == 'select' && $item->dataset[$i]->DATA == 'NIL'){
-        $rating_array[$item->dataset[$i]->cid][$item->providerName] = 'N/A';      
+      else if ($item->dataset[$i]->type == 'select' && $item->dataset[$i]->DATA == 'NIL') {
+        $rating_array[$item->dataset[$i]->cid][$item->providerName] = 'N/A';
       }
     }
   }
@@ -975,7 +985,7 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
   $csdid_array = array();
   foreach ($clor_items as $key => $value) {
     if (in_array($value->rating, $range) && ($value->peerAvgRating >= 0 && $value->peerAvgRating <= 5)) {
-        $csdid = db_insert('prs_counselor_submit_data')
+      $csdid = db_insert('prs_counselor_submit_data')
               ->fields(array(
                 'nid' => $nid,
                 'csiid' => $csiid,
@@ -990,7 +1000,7 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
         array_push($csdid_array, $csdid);
       }
     }
-    else if (in_array($value->rating, $range) && $value->peerAvgRating == -1){
+    else if (in_array($value->rating, $range) && $value->peerAvgRating == -1) {
       $csdid = db_insert('prs_counselor_submit_data')
               ->fields(array(
                 'nid' => $nid,
