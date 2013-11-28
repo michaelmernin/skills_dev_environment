@@ -102,7 +102,7 @@
                 }
 
                 jQuery('#status_loading_img_89759').css('display', 'inline');
-                var bathpath = '<?php print get_curPage_base_url(); ?>';
+                var bathpath = '<?php print base_path(); ?>';
                 jQuery.ajax({
                   type: "POST",
                   url: bathpath + 'audit-review/disapprove-review-result',
@@ -116,7 +116,7 @@
               function approve_review_result(id)
               {
                 jQuery('#status_loading_img_89758').css('display', 'inline');
-                var bathpath = '<?php print get_curPage_base_url(); ?>';
+                var bathpath = '<?php print base_path(); ?>';
                 jQuery.ajax({
                   type: "POST",
                   url: bathpath + 'audit-review/approve-review-result',

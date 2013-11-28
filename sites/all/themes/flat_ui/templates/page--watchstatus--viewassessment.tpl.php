@@ -1,4 +1,5 @@
 <?php $base_path = get_curPage_base_url() ?>
+<?php $base_relatively_path = base_path() ?>
 <?php $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui') ?>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/highcharts.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/hightchart-no-data.js"></script>
@@ -44,7 +45,7 @@
       jQuery.ajax({
         type: "POST",
         data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items},
-        url: '<?php echo $base_path ?>watchstatus/submitcounselorassessment/',
+        url: '<?php echo $base_relatively_path ?>watchstatus/submitcounselorassessment',
         success: function(text) {
           window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
           // location.reload();
@@ -52,7 +53,7 @@
           // jQuery('#submit_button').removeAttr("disabled");
         }
         // else {
-        //   window.location.href = "<?php print base_path() . 'viewassessment' ?>";
+        //   window.location.href = "<?php // print base_path() . 'viewassessment' ?>";
         //   return;
         // }
       });
@@ -83,7 +84,7 @@
       jQuery.ajax({
         type: "POST",
         data: {'rreid': rreid, 'nid': nid, 'items': items, 'rejectComments': rejectComments},
-        url: '<?php echo $base_path ?>watchstatus/rejectcounseleeassessment/',
+        url: '<?php echo $base_relatively_path ?>watchstatus/rejectcounseleeassessment',
         success: function(text) {
           window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
         }

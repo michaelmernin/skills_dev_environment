@@ -37,7 +37,7 @@
               function submit_review_result(id)
               {
                 jQuery('#status_loading_img_89757').css('display', 'inline');
-                var bathpath = '<?php print get_curPage_base_url(); ?>';
+                var bathpath = '<?php print base_path(); ?>';
                 jQuery.ajax({
                   type: "POST",
                   url: bathpath + 'audit-review/submit-review-result',

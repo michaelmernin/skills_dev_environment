@@ -381,6 +381,7 @@ function submit_counselor_assessment() {
  * Page callback function for reject counselee assessment
  * */
 function reject_counselee_assessment() {
+  dd($_POST,'$_POST');
   $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
   $items = $_POST['items'];
