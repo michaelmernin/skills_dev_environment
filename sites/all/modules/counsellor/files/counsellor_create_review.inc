@@ -50,7 +50,7 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
             foreach ($review_ids as $review) {
               $counselee_address = select_email_from_prs_reviewers(array($review->employeeName));
               $address = $counselee_address[0]->mail;
-              $counselee_parems = array('username' => $review->employeeName, 'reviewname' => return_review_name($_POST), 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selectpeers/' . $review->rreid, 'reviewurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . $review->reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
+              $counselee_parems = array('username' => $review->employeeName, 'reviewname' => return_review_name($_POST), 'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $review->rreid, 'reviewurl' => get_curPage_base_url() . $review->reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
 //              dd('$counselee_parems');
 //              dd($counselee_parems);
               mail_sender_template_adapter($address, $counselee_parems, 0);
@@ -139,7 +139,7 @@ function submit_new_self_review() {
           $address = $my_address[0]->mail;
 //            dd('$address');
 //            dd($address);
-          $counselee_parems = array('username' => $cur_counselee_name, 'reviewname' => return_review_name($_POST), 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selectpeers/' . $review_ids[0]->rreid, 'reviewurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . $review_ids[0]->reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
+          $counselee_parems = array('username' => $cur_counselee_name, 'reviewname' => return_review_name($_POST), 'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $review_ids[0]->rreid, 'reviewurl' => get_curPage_base_url() . $review_ids[0]->reviewurl, 'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
 //            dd('$counselee_parems');
 //            dd($counselee_parems);
           mail_sender_template_adapter($address, $counselee_parems, 0);
@@ -150,7 +150,7 @@ function submit_new_self_review() {
 //            dd('$counselor_address');
 //            dd($counselor_address);
 
-          $counselor_parems = array('username' => $cur_counselee_name, 'reviewname' => return_review_name($_POST), 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selectpeers/' . $review_ids[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $_POST['review_end_date'], 'type' => 'counselor');
+          $counselor_parems = array('username' => $cur_counselee_name, 'reviewname' => return_review_name($_POST), 'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $review_ids[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $_POST['review_end_date'], 'type' => 'counselor');
 //            dd('$counselor_parems');
 //          dd($counselor_parems);
           mail_sender_template_adapter($counselor_address, $counselor_parems, 0);
@@ -200,7 +200,7 @@ function start_new_review() {
         $address = $my_address[0]->mail;
         $datetime = $datetime_timestamp['month'] . '/' . $datetime_timestamp['day'] . '/' . $datetime_timestamp['year'];
         $reviewurl = '';
-        $counselee_parems = array('username' => $basic_info[0]->employeeName, 'reviewname' => $basic_info[0]->description, 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selectpeers/' . $basic_info[0]->rreid, 'reviewurl' => $reviewurl, 'datetime' => $datetime, 'type' => 'counselee');
+        $counselee_parems = array('username' => $basic_info[0]->employeeName, 'reviewname' => $basic_info[0]->description, 'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $basic_info[0]->rreid, 'reviewurl' => $reviewurl, 'datetime' => $datetime, 'type' => 'counselee');
         mail_sender_template_adapter($address, $counselee_parems, 0);
         //counselor email
         $counselor_name = my_counselor_gm_name($basic_info[0]->employeeName);
@@ -213,7 +213,7 @@ function start_new_review() {
           $counselor_address = $my_counselor_address[0]->mail;
 //            dd('$counselor_address');
 //            dd($counselor_address);
-          $counselor_parems = array('username' => $basic_info[0]->employeeName, 'reviewname' => $basic_info[0]->description, 'peersurl' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/selectpeers/' . $basic_info[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $datetime, 'type' => 'counselor');
+          $counselor_parems = array('username' => $basic_info[0]->employeeName, 'reviewname' => $basic_info[0]->description, 'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $basic_info[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $datetime, 'type' => 'counselor');
 //            dd('$counselor_parems');
 //            dd($counselor_parems);
           mail_sender_template_adapter($counselor_address, $counselor_parems, 0);

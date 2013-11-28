@@ -43,8 +43,8 @@
                   url: bathpath + 'audit-review/submit-review-result',
                   data: {'rreid': id},
                   success: function(date) {
-//                  
-                    window.location.href = "<?php print get_curPage_base_url() . 'mydashboard' ?>";
+                    window.location.href = "<?php print get_curPage_base_url() . 'watchstatus/basicinfo/' ?>" + id;
+          
                   }
                 });
               }

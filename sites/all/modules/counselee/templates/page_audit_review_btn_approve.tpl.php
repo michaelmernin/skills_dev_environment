@@ -10,7 +10,6 @@
   </a>
 </div>
 
-
 <div id="modal-container-89759" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="close_btn" value="0">×</button>
@@ -123,11 +122,8 @@
                   url: bathpath + 'audit-review/approve-review-result',
                   data: {'rreid': id},
                   success: function(date) {
-//                    location.reload();
                     window.location.href = "<?php print get_curPage_base_url() . 'watchstatus/basicinfo/' ?>" + id;
                   }
                 });
               }
-
-
 </script>

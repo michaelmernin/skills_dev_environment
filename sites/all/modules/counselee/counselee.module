@@ -678,7 +678,7 @@ function _alert_after_submited($node, $submission) {
             foreach ($reviews as $review) {
               $description = $review->description;
             }
-            $counselor_parems = array('username' => format_login_name($cur_counselor_name), 'reviewname' => $description, 'url' => 'http://' . $_SERVER['HTTP_HOST'] . base_path() . 'watchstatus/viewassessment/' . $rreid, 'counselee' => format_login_name($cur_counselee_name));
+            $counselor_parems = array('username' => format_login_name($cur_counselor_name), 'reviewname' => $description, 'url' => get_curPage_base_url() . 'watchstatus/viewassessment/' . $rreid, 'counselee' => format_login_name($cur_counselee_name));
 
             mail_sender_template_adapter($counselor_address, $counselor_parems, 2);
             //======================================send email end============

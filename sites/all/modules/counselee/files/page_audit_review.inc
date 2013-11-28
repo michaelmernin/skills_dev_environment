@@ -200,7 +200,7 @@ function approve_review_result() {
   audit_review_result_update($rreid, 4, '');
   $msg = 'You had approved the review result.';
   drupal_set_message($msg, 'status');
-  return true;
+  print true;
 }
 
 function disapprove_review_result() {
@@ -210,7 +210,7 @@ function disapprove_review_result() {
 
   $msg = 'You had disapproved the review result.';
   drupal_set_message($msg, 'status');
-  return true;
+  print true;
 }
 
 function submit_review_result() {
@@ -218,7 +218,7 @@ function submit_review_result() {
   audit_review_result_update($rreid, 5, '');
   $msg = 'You had submitted the review result.';
   drupal_set_message($msg, 'status');
-  return true;
+  print TRUE;
 }
 
 /**
@@ -326,7 +326,7 @@ function get_extend_description_part($self_review, $counselor_review) {
   foreach ($self_review_comment_map as $review) {
     $extend_description['description'] = $self_review[$review['selfkey']]->name;
     $extend_description['self_description'] = $self_review[$review['selfkey']]->data;
-    $extend_description['counselor_description'] = $counselor_review[$review['selfkey']]->counselor_comment;
+    //$extend_description['counselor_description'] = $counselor_review[$review['selfkey']]->counselor_comment;
 
     $content .= theme('page_audit_review_summay_description', array('node' => $extend_description));
   }

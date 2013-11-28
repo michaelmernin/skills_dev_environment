@@ -82,7 +82,7 @@
       }
       else
       {
-        li = " <li> <a href='" + url + "'>" + description + " is started.Please fill up Peer Review form for [" + name + " ].(" + reviewName(reviewType) + ")</a> </li>";
+        li = " <li> <a href='" + url + "'>" + description + " is started.Please fill up Peer Review form for [" + name + "].(" + reviewName(reviewType) + ")</a> </li>";
         jQuery('#myWorkForOther').append(li);
       }
     }
