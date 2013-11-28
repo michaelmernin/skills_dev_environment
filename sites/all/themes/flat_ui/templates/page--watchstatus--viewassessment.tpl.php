@@ -101,24 +101,24 @@
     for (var i = 0; i < count; i++) {
       var header = getHeaderInfo(i);
       var rating = getCounselorRating(i);
-      if (rating == '') {
-        rating = NIL;
-      }
+      // if (rating == '') {
+      //   rating = NIL;
+      // }
 
       var peerAvgRating = getPeerAvgRating(i);
-      if (peerAvgRating == '') {
-        peerAvgRating = NIL;
-      }
+      // if (peerAvgRating == '') {
+      //   peerAvgRating = NIL;
+      // }
       
       var comment = getCounselorComment(i);
-      if (comment == '') {
-        comment = "No_comments";
-      }
+      // if (comment == '') {
+      //   comment = "";
+      // }
 
       var revisedComment = getCounselorRevisedComment(i);
-      if (revisedComment == '') {
-        revisedComment = "No_comments";
-      }
+      // if (revisedComment == '') {
+      //   revisedComment = "No_comments";
+      // }
 
       var string = new String();
       // ex = '{"a":1,"b":2,"c":3,"d":4,"e":5}';

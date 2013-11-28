@@ -140,8 +140,8 @@ function counsellor_schema() {
       ),
       'deniedInfo' => array(
         'description' => 'If counselor denied the self review result, he or she needs to add reasons. This area will be replaced if review is several denied.',
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'text',
+        'size' => 'medium',
       ),
     ),
     'primary key' => array('rpeid'),
@@ -268,8 +268,8 @@ function counsellor_schema() {
         ),
       'counselor_comment' => array(
         'description' => 'The comment corresponds to this title.',
-        'type' => 'varchar',
-        'length' => '255',
+        'type' => 'text',
+        'size' => 'medium',
         ),
       'peer_avg_rating' => array(
         'description' => 'The average peer rating that calculated by systhesizing certain items.',
@@ -278,8 +278,8 @@ function counsellor_schema() {
         ),
       'peer_comments' => array(
         'description' => 'The summarized comments of all the peers.',
-        'type' => 'varchar',
-        'length' => '255',
+        'type' => 'text',
+        'size' => 'medium',
         ),
       ),
     'primary key' => array('csdid', 'nid' ,'csiid'),
