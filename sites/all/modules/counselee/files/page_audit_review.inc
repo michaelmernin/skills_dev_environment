@@ -23,6 +23,14 @@
  * 
  */
 function counselee_confirm_review_result($rreid) {
+
+  $identity = get_user_identity($rreid);
+  if ($identity != 0) {
+    drupal_set_message('You have no right to access!');
+    drupal_goto('accessdenied');
+  }
+
+
   $nid = get_nid_by_rreid($rreid);
   $pageContent = '';
   $self_review = get_self_review_comment($nid);
@@ -169,7 +177,7 @@ function get_question_select_comment_map() {
  * Get textarea
  * 
  */
-function get_extend_description_map() { 
+function get_extend_description_map() {
   $textarea_map = array(
     array(
       'selfkey' => 'strengths_text',
@@ -363,6 +371,14 @@ function get_nid_by_rreid($rreid) {
 }
 
 function counselor_submit_review_result($rreid) {
+
+  $identity = get_user_identity($rreid);
+  if ($identity != 1) {
+    drupal_set_message('You have no right to access!');
+    drupal_goto('accessdenied');
+  }
+
+
   $nid = get_nid_by_rreid($rreid);
   $pageContent = '';
   $self_review = get_self_review_comment($nid);
