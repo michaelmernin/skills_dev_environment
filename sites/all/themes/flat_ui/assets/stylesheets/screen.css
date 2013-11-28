@@ -14221,7 +14221,7 @@ div.error {
     box-shadow: -1px -1px 0 rgba(0, 0, 0, 0.2) inset;
     margin-top: 10px;
     float: left; 
-    width: 350px;
+    width: 100%;
 }
 
 .additionalbubbleP:before {
@@ -14253,10 +14253,10 @@ div.error {
 }*/
 
 .highcharts-tooltip span {
-    max-width: 600px;
+    max-width: 650px;
 	white-space: normal !important;
-	min-width: 300px;
-	max-height:800px;
+	min-width: 400px;
+	max-height:600px;
     overflow: auto;
 }
 /*
@@ -14270,3 +14270,27 @@ div.error {
     word-wrap: break-word; 
 	word-break: normal;
 }*/
+
+/**********view assessment******************/
+.view-self-comment-title{
+	margin: 4px 0px 0px;
+	height: 17px;
+	width: 100%;
+}
+.view-self-comment{
+	font-family: inherit;
+	height:160px;
+	width: 100%;
+}
+.view-self-comment-bubble{
+	margin: 4px 0px 0px;
+	height: 150px;
+	width: 100%;
+
+}
+
+.view-self-comment-chart {
+    font-family: inherit;
+    height: 200px;
+    width: 100%;
+}

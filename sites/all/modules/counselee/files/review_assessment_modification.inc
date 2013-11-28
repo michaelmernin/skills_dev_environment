@@ -76,10 +76,6 @@ function load_self_assessment($rreid = NULL) {
   else {
     $have_counselor_data = FALSE;
   }
-////////////////////////////////////////////////////////
-// Just for display
-// dd($peer_question_rating_comment_result, 'q_r_c result');
-// dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
 
   $pageContent = '';
   $total_item_count = $self_item_count + count($self_comments_array);
@@ -90,35 +86,23 @@ function load_self_assessment($rreid = NULL) {
     if (in_array($value->form_key, $pie_form_key_array)) {
       $form_key = $value->form_key . '_category';
       if ($have_peer_data) {
-//        dd($have_peer_data, '$have_peer_data');
-//      dd($value, '$value');
-//      dd($cid_formkey_type_array, '$cid_formkey_type_array');
         $fieldset_cid = get_fieldset_key_in_peer_table($form_key, $cid_formkey_type_array);
         $children_array = get_children_array_by_cid($fieldset_cid, $adj_list);
-//      dd($value->form_key, '$value->form_key');
-//      dd($children_array, '$children_array');
-//      dd($peer_question_rating_comment_result,'$peer_question_rating_comment_result');
-
         $peer_name = array();
         $comment_name = array();
         _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, $peer_name, $comment_name, $unread_comment);
-        // dd($unread_comment, 'unread_comment');
         $pie_data = _manage_pie_chart($peer_name, $comment_name, $form_key);
       }
       else {
         $pie_data = new stdClass();
         $pie_data->id = $form_key;
-        $pie_data->all_avg = 'N/A';
+        $pie_data->all_avg = 'No Data.';
         $pie_data->have_peer_data = FALSE;
       }
 //=====================pie chart end=====================================================================
-//      dd($unread_comment,'$unread_comment');
-//      dd($revised_comments,'$revised_comments');
       if ($have_counselor_data) {
         generate_synthesized_peer_comment($value->form_key, $unread_comment, $revised_comments);
       }
-//      dd($peer_name,'$peer_name');
-//      dd($comment_name,'$comment_name');
       $content = theme('view_assessment', array(
         'item_num' => $key,
         'rreid' => $rreid,
@@ -145,7 +129,6 @@ function load_self_assessment($rreid = NULL) {
       $pageContent .= $content;
     }
   }
-  dd($self_comments_array,'$self_comments_array');
   foreach ($self_comments_array as $key => $value) {
     $content = theme('view_assessment_comment_only', array(
       'item_num' => $self_item_count + $key,
@@ -164,20 +147,24 @@ function load_self_assessment($rreid = NULL) {
 
 function _manage_pie_chart($peer_name, $comment_name, $form_key) {
   $count0_1 = 0;
+  $countNA = 0;
   $count1_1_2 = 0;
   $count2_1_3 = 0;
   $count3_1_4 = 0;
   $count4_1_5 = 0;
+
   $allcount = 0;
   $all_avg = 0;
+  $allusefulcount = 0;
 
+  $tooltiphtmlNA = '';
   $tooltiphtml0_1 = '';
   $tooltiphtml1_1_2 = '';
   $tooltiphtml2_1_3 = '';
   $tooltiphtml3_1_4 = '';
   $tooltiphtml4_1_5 = '';
   foreach ($peer_name as $key => $one_peer) {
-    if ($one_peer >= 0 && $one_peer <= 1) {
+    if ($one_peer > 0 && $one_peer <= 1) {
       $tooltiphtml0_1.=$key . ':<br/>' . $comment_name[$key] . '<br/>';
       $count0_1++;
     }
@@ -197,9 +184,17 @@ function _manage_pie_chart($peer_name, $comment_name, $form_key) {
       $tooltiphtml4_1_5.=$key . ':<br/>' . $comment_name[$key] . '<br/>';
       $count4_1_5++;
     }
+    elseif ($one_peer == 0) {
+      $tooltiphtmlNA.=$key . ':<br/>' . $comment_name[$key] . '<br/>';
+      $countNA++;
+    }
     $all_avg = $all_avg + $one_peer;
+    if ($one_peer != 0) {
+      $allusefulcount++;
+    }
     $allcount++;
   }
+  $textNA = '<input type="hidden" id="NA_' . $form_key . '" value="' . $tooltiphtmlNA . '" />';
   $texth0_1 = '<input type="hidden" id="0-1_' . $form_key . '" value="' . $tooltiphtml0_1 . '" />';
   $texth1_1_2 = '<input type="hidden" id="1-2_' . $form_key . '" value="' . $tooltiphtml1_1_2 . '" />';
   $texth2_1_3 = '<input type="hidden" id="2-3_' . $form_key . '" value="' . $tooltiphtml2_1_3 . '" />';
@@ -208,19 +203,25 @@ function _manage_pie_chart($peer_name, $comment_name, $form_key) {
   $pie_data = new stdClass();
   if ($allcount != 0) {
     $pie_data->avg = array(
+      'avgNA' => $countNA / $allcount,
       'avg0_1' => $count0_1 / $allcount,
       'avg1_1_2' => $count1_1_2 / $allcount,
       'avg2_1_3' => $count2_1_3 / $allcount,
       'avg3_1_4' => $count3_1_4 / $allcount,
       'avg4_1_5' => $count4_1_5 / $allcount,
     );
-    $pie_data->hiddenvalue = $texth0_1 . $texth1_1_2 . $texth2_1_3 . $texth3_1_4 . $texth4_1_5;
+    $pie_data->hiddenvalue = $texth0_1 . $texth1_1_2 . $texth2_1_3 . $texth3_1_4 . $texth4_1_5 . $textNA;
     $pie_data->id = $form_key;
     $pie_data->have_peer_data = TRUE;
-    $pie_data->all_avg = $all_avg / $allcount;
+    if ($allusefulcount != 0) {
+      $pie_data->all_avg = round($all_avg / $allusefulcount, 2);
+    }
+    else {
+      $pie_data->all_avg = 'N/A';
+    }
   }
   else {
-    $pie_data->all_avg = 'N/A';
+    $pie_data->all_avg = 'No Data.';
     $pie_data->id = $form_key;
     $pie_data->have_peer_data = FALSE;
   }
@@ -246,7 +247,6 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
           foreach ($one_question_answer->ratings as $key => $one_ratings) {
             $peer_name_temp[$key]['flag'] = TRUE;
             if ($one_ratings != 'N/A') {
-              ///want to test again/////////////////TEST/////////////////////////////
               if ($one_ratings != 0) {
                 $peer_name_temp[$key]['rating'] = $one_ratings;
                 $peer_name_temp[$key]['count'] = 1;
@@ -255,9 +255,6 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
                 $peer_name_temp[$key]['rating'] = 0;
                 $peer_name_temp[$key]['count'] = 0;
               }
-              ///want to test again/////////////////TEST/////////////////////////////
-//            dd($one_ratings,'$peer_name[$key]_first');
-//            dd($one_question_answer, '$one_question_answer');
               $comment_name[$key] = $one_question_answer->comments[$key]->comment . ' <br/>';
               if ($one_question_answer->comments[$key]->isRead == 0) {
                 $unread_comment[$key] = $one_question_answer->comments[$key]->comment . ' ';
@@ -269,25 +266,15 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
             }
           }
           $is_first = FALSE;
-//          dd($one_question_answer);
         }
         else {
-          // dd($one_question_answer, 'one_question_answer');
           foreach ($one_question_answer->ratings as $key => $one_ratings) {
             if ($peer_name_temp[$key]['flag']) {
-              ///want to test again/////////////////TEST/////////////////////////////
               if ($one_ratings != 0) {
 
                 $peer_name_temp[$key]['rating'] = $peer_name_temp[$key]['rating'] + $one_ratings;
                 $peer_name_temp[$key]['count'] = $peer_name_temp[$key]['count'] + 1;
               }
-              ///want to test again/////////////////TEST/////////////////////////////
-//            if (!array_key_exists($key, $peer_name)) {
-//              $peer_name[$key] = '';  
-//            }
-//            $peer_name[$key] = $peer_name[$key] + $one_ratings;
-              // dd($one_ratings,'$peer_name[$key]');
-//            dd($one_question_answer,'dd($one_question_answer);');
               $comment_name[$key] .=$one_question_answer->comments[$key]->comment . ' <br/>';
               if ($one_question_answer->comments[$key]->isRead == 0) {
                 $unread_comment[$key].=$one_question_answer->comments[$key]->comment . ' ';
@@ -299,15 +286,18 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
       }
     }
   }
-//  dd($peer_name_temp, '$peer_name_f');
   foreach ($peer_name_temp as $key => $peer_avg) {
     if ($peer_avg['flag']) {
-      $peer_name[$key] = $peer_avg['rating'] / $peer_avg['count'];
+      //peer submit feedback
+      if ($peer_avg['count'] != 0) {
+        $peer_name[$key] = $peer_avg['rating'] / $peer_avg['count'];
+      }
+      else {
+        //peer select all NA
+        $peer_name[$key] = 0;
+      }
     }
   }
-//  dd($peer_name, '$peer_name');
-//  dd($comment_name, '$comment_name');
-//  dd($count, '$count');
 }
 
 function get_fieldset_key_in_peer_table($form_key, $cid_formkey_type_array) {
