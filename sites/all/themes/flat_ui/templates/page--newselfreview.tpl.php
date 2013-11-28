@@ -1,66 +1,11 @@
-<?php $base_path = get_curPage_base_url()  ?>
+<?php $base_path = get_curPage_base_url() ?>
+<?php $base_relatively_path = base_path() ?>
 <script type="text/javascript">
-//
-//  function submitSelfReview(flag) {
-//    clickSubmitButton();
-//    var review_type = jQuery('#review_type').val();
-//    var Project_Name_Text = jQuery('#Project_Name_Text').val().trim();
-//    var review_start_date = jQuery('#review_start_date').val();
-//    var review_end_date = jQuery('#review_end_date').val();
-//    var review_from_date = jQuery('#review_from_date').val();
-//    var review_to_date = jQuery('#review_to_date').val();
-//    var review_from_description = jQuery('#review_from_description').val().trim();
-//    if (review_type == '1') {
-//      if (Project_Name_Text == '') {
-//        alert('please enter a project name!');
-//        hideConfirmdialog();
-//        return;
-//      }
-//    }
-//    if (review_from_description == '') {
-//      if (Project_Name_Text == '') {
-//        alert('please enter a review name!');
-//        hideConfirmdialog();
-//        return;
-//      }
-//    }
-//    var nstime = review_start_date.split('/');
-//    var real_nstime = parseInt(nstime[2] + nstime[0] + nstime[1]);
-//    var netime = review_end_date.split('/');
-//    var real_netime = parseInt(netime[2] + netime[0] + netime[1]);
-//    if (real_nstime >= real_netime) {
-//      alert('start date must early than end date!');
-//      hideConfirmdialog();
-//      return;
-//    }
-//    var nrstime = review_from_date.split('/');
-//    var real_nrstime = parseInt(nrstime[2] + nrstime[0] + nrstime[1]);
-//    var nretime = review_to_date.split('/');
-//    var real_nretime = parseInt(nretime[2] + nretime[0] + nretime[1]);
-//    if (real_nrstime >= real_nretime) {
-//      alert('start date must early than end date!');
-//      hideConfirmdialog();
-//      return;
-//    }
-//    jQuery.ajax({
-//      type: "POST",
-//      data:{'review_type':review_type,'review_start_date':review_start_date,'review_end_date':review_end_date,'review_from_date':review_from_date,'review_to_date':review_to_date,'Project_Name_Text':Project_Name_Text,'review_from_description':review_from_description,'self_draft_flag':flag},
-//      url: '<?php echo $base_path ?>newreview/submitselfreview',
-//      success: function(text) {
-//        if (text != '-1') {
-//          window.location.href = "<?php print base_path() . 'mydashboard' ?>";
-//        } else {
-//          window.location.href = "<?php print base_path() . 'newreview' ?>";
-//          return;
-//        }
-//      }
-//    });
-//
-//  }
   function submitSelfReview(flag) {
     clickSubmitButton();
     var review_type = jQuery('#review_type').val();
-    var Project_Name_Text = jQuery('#Project_Name_Text').val().trim();
+    var Project_Name_Text_Not_Trim = jQuery('#Project_Name_Text').val();
+    var Project_Name_Text = jQuery.trim(Project_Name_Text_Not_Trim);
     var review_start_date = jQuery('#review_start_date').val();
     var review_end_date = jQuery('#review_end_date').val();
     var review_from_date = jQuery('#review_from_date').val();
@@ -107,18 +52,20 @@
 //      }
 //    }
     var nstime = review_start_date.split('/');
-    var real_nstime = parseInt(nstime[2] + nstime[0] + nstime[1]);
+    var start_date_string = nstime[2] + nstime[0] + nstime[1];
+    var real_nstime = parseInt(start_date_string, 10);
     var netime = review_end_date.split('/');
-    var real_netime = parseInt(netime[2] + netime[0] + netime[1]);
+    var end_date_string = netime[2] + netime[0] + netime[1];
+    var real_netime = parseInt(end_date_string, 10);
     if (real_nstime >= real_netime) {
       alert('Start Date must early than End Date!!');
       hideConfirmdialog();
       return;
     }
     var nrstime = review_from_date.split('/');
-    var real_nrstime = parseInt(nrstime[2] + nrstime[0] + nrstime[1]);
+    var real_nrstime = parseInt(nrstime[2] + nrstime[0] + nrstime[1], 10);
     var nretime = review_to_date.split('/');
-    var real_nretime = parseInt(nretime[2] + nretime[0] + nretime[1]);
+    var real_nretime = parseInt(nretime[2] + nretime[0] + nretime[1], 10);
     if (real_nrstime >= real_nretime) {
       alert('Period From date must early than Period To date!');
       hideConfirmdialog();
@@ -128,7 +75,7 @@
     jQuery.ajax({
       type: "POST",
       data: {'review_type': review_type, 'review_start_date': review_start_date, 'review_end_date': review_end_date, 'review_from_date': review_from_date, 'review_to_date': review_to_date, 'Project_Name_Text': Project_Name_Text, 'self_draft_flag': flag},
-      url: '<?php echo $base_path ?>newreview/submitselfreview',
+      url: '<?php echo $base_relatively_path ?>newreview/submitselfreview',
       success: function(text) {
         if (text != '-1') {
           window.location.href = "<?php print base_path() . 'mydashboard' ?>";
@@ -136,6 +83,10 @@
           window.location.href = "<?php print base_path() . 'newselfreview' ?>";
           return;
         }
+      },
+      error: function(text) {
+        window.location.href = "<?php print base_path() . 'newselfreview' ?>";
+        return;
       }
     });
   }
