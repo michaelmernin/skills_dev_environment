@@ -35,16 +35,12 @@
     var nid = getNid();
     var count = getCount();
     var items = iterateItems(count);
-    // var headerInfo = getHeaderInfo();
-    // var ratings = new Array();
-    // ratings = generateRatingArray(ratings, count);
-    // var comments = new Array();
-    // comments = generateCommentArray(comments, count);
+    var overallRating = getOverallRating();
 
     if (items != false) {
       jQuery.ajax({
         type: "POST",
-        data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items},
+        data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items, 'overallRating': overallRating},
         url: '<?php echo $base_relatively_path ?>watchstatus/submitcounselorassessment',
         success: function(text) {
           window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
@@ -65,25 +61,20 @@
   }
 
   function disapproveCounseleeSelfAssessment() {
-    // clickSubmitButton();
 
     //variables
     var rreid = getRreid();
     var nid = getNid();
     var count = getCount();
     var items = iterateItems(count);
+    var overallRating = getOverallRating();
 
-    // var headerInfo = getHeaderInfo();
-    // var ratings = new Array();
-    // ratings = generateRatingArray(ratings, count);
-    // var comments = new Array();
-    // comments = generateCommentArray(comments, count);
     var rejectComments = getCounselorRejectComment();
 
     if (rejectComments != false) {
       jQuery.ajax({
         type: "POST",
-        data: {'rreid': rreid, 'nid': nid, 'items': items, 'rejectComments': rejectComments},
+        data: {'rreid': rreid, 'nid': nid, 'items': items, 'rejectComments': rejectComments, 'overallRating': overallRating},
         url: '<?php echo $base_relatively_path ?>watchstatus/rejectcounseleeassessment',
         success: function(text) {
           window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
@@ -101,31 +92,18 @@
     for (var i = 0; i < count; i++) {
       var header = getHeaderInfo(i);
       var rating = getCounselorRating(i);
-      // if (rating == '') {
-      //   rating = NIL;
-      // }
-
       var peerAvgRating = getPeerAvgRating(i);
-      // if (peerAvgRating == '') {
-      //   peerAvgRating = NIL;
-      // }
-      
       var comment = getCounselorComment(i);
-      // if (comment == '') {
-      //   comment = "";
-      // }
-
       var revisedComment = getCounselorRevisedComment(i);
-      // if (revisedComment == '') {
-      //   revisedComment = "No_comments";
-      // }
-
-      var string = new String();
-      // ex = '{"a":1,"b":2,"c":3,"d":4,"e":5}';
-      string = '{"header":"' + header + '","rating":"' + rating + '","comment":"' + comment + '","peerAvgRating":"' + peerAvgRating + '","revisedComment":"' + revisedComment + '"}';
-      // var jsonString = JSON.stringify(string);
-
-      items[i] = string;
+      var content = {
+        "header": header, 
+        "rating": rating,
+        "comment": comment,
+        "peerAvgRating": peerAvgRating,
+        "revisedComment": revisedComment,
+      }
+      var jsonString = JSON.stringify(content);
+      items[i] = jsonString;
     };
     return items;
   }
@@ -167,7 +145,11 @@
   function getCounselorRejectComment() {
     return jQuery("#counselor_reject_reason").val();
   }
-  
+
+  function getOverallRating() {
+    return jQuery("#counselor-overall_rating-content").val();
+  }
+
 </script>
 <?php require_once 'header.tpl.php'; ?>
 <div class="minheight">
@@ -198,6 +180,18 @@
               ?></ul></div><?php endif; ?>
 
             <?php print render($page['content']) ?>
+
+            <div class="view-self-comment-title">
+              <div style="font-weight: 600;float: left">·Overall Rating : | </div>
+              <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Self Overall Rating : </div>
+              <div class="color-rating-box" id="counselee-overall_rating-content"></div>
+              <br />
+              <br />
+              <div class="color-rating-box" id="counselor-overall_rating"><input id="counselor-overall_rating-content" type="text" maxlength="10" size="60">
+              </div>
+            </div>
+            <br />
+            <br />
 
             <div>
               <table class="table">
@@ -263,7 +257,22 @@
   //     jQuery(".draftbutton").hide();
   //   }
   // });
+  setCounselorOverallRating();
+  setCounseleeOverallRating();
 
+  function setCounselorOverallRating() {
+    var overallRating = jQuery("#counselor-overall_rating-0").val();
+    if (overallRating != "undefined") {
+      jQuery("#counselor-overall_rating-content").val(overallRating);
+    }
+  }
+
+  function setCounseleeOverallRating() {
+    var overallRating = jQuery("#counselee-overall_rating-0").val();
+    if (overallRating != "undefined") {
+      jQuery("#counselee-overall_rating-content").append(overallRating);
+    }
+  }
 </script>
             <div>
               <div class="draftbutton" style="float: left; margin-right: 15px;">

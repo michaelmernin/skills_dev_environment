@@ -97,7 +97,7 @@
                   ]
                 }]
             });
-
+	
           </script>
         </div>
       <?php else: ?>
@@ -207,16 +207,18 @@
           <option value="0">N/A</option>
           <option value="1">1</option>
           <option value="2">2</option>
-          <option value="3" selected="selected">3</option>
+          <option value="3">3</option>
           <option value="4">4</option>
           <option value="5">5</option>
         </select>
       </div>
-
+		
       <!--<div class="additionalbubble">-->
       <div>
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-          <textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"></textarea>
+          <textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
+          print $clor_rating_comment->clor_comment;
+          ?></textarea>
         </div>
       </div>
     </div>
@@ -231,7 +233,7 @@
   <div class="webform-submission-info clearfix">
 
     <div class="webform-submission-info-text">
-      <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Peer Comment | ·Peer Rating:
+      <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Peer Comment | ·Peer Rating:  <?php print $clor_rating_comment->peer_avg_rating; ?>
       </div>
 
       <!--<div class="additionalbubble">-->
@@ -248,4 +250,28 @@
   </div>
 </div>
 <hr>
+<script>
+		checkValue();	
+		function checkValue() {
+			var range = [0, 1, 2, 3, 4, 5];
+			var rating = <?php print $clor_rating_comment->rating; ?>;
+			if (inArray(rating, range)) {
+				jQuery("#counselor-rating-<?php print $item_num; ?>").val(rating);
+			}
+			else if (rating == ""){
+				jQuery("#counselor-rating-<?php print $item_num; ?>").val(3);
+			}
+		}
+		
+
+		function inArray(needle, haystack) {
+			var length = haystack.length;
+			for (var i = 0; i < length; ++i) {
+				if (haystack[i] == needle) {
+					return true;
+				}
+			}
+			return false;
+		}
+</script>
 

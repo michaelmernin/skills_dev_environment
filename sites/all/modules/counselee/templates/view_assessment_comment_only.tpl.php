@@ -12,20 +12,17 @@
       <?php print $self_comment->question; ?> 
     </div>
     <br>
-
-    <div style="margin: 4px 0px 0px; height: 17px; width: 350px;">
-      <div style="font-weight: 600;float: left">· Self Comment:</div>
-    </div>
-    <div style="margin: 4px 0px 0px; height: 112px; width: 200px;">
-      <div class="additionalbubbleP">
-        <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-
-          <div id="comment-content-value-<?php print $item_num; ?>" 
-               style="margin: 4px 0px 0px; height: 112px; width: 96%;overflow-y:auto;">
-                 <?php if ($self_comment->comment == '') { print 'No comment!'; } else { print $self_comment->comment;} ?>
+    
+    <div style="font-weight: 600;float: left">·Self Comment : </div>
+    <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;"></div>
+    <div class="view-self-comment-bubble">
+        <div class="additionalbubble">
+          <div style="padding: 0 5px 5px;margin-bottom: 5px;">
+            <div id="comment-content-value-<?php print $item_num; ?>" style="margin: 5px; height: 140px; width: 98%;overflow-y:auto;">
+              <?php print $self_comment->comment ?>
+            </div>
           </div>
         </div>
-      </div>
     </div>
 
   </div>
@@ -39,7 +36,9 @@
 
       <div class="additionalbubble">
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-            <textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"></textarea>
+            <textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
+          print $clor_rating_comment->clor_comment;
+          ?></textarea>
         </div>
       </div>
     </div>

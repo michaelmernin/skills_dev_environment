@@ -32,8 +32,9 @@ function load_self_assessment($rreid = NULL) {
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
   $review_info = new stdClass();
   $self_comments_array = array();
-  _matching_none_selection_items($none_selection_item, $self_cid_formkey_type_array, $cid_indexed_dataset, $review_info, $self_comments_array);
-
+  $overall_rating = new stdClass();
+  // dd($cid_indexed_dataset, 'cid_indexed_dataset');
+  _matching_none_selection_items($none_selection_item, $self_cid_formkey_type_array, $cid_indexed_dataset, $review_info, $self_comments_array, $overall_rating);
   // $self_dataset = generate_selfassessment_result_array($self_dataset);
   // $rating_qa_sheet = _generate_rating_qa_sheet($self_dataset);
   $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($cid_indexed_dataset, $self_mapping_table);
@@ -73,6 +74,7 @@ function load_self_assessment($rreid = NULL) {
   if ($csiid != -1) {
     $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
     $revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
+    $overall_rating->counselor_rating = _fetch_counselor_overall_rating($revised_comments);
   }
   else {
     $have_counselor_data = FALSE;
@@ -112,6 +114,7 @@ function load_self_assessment($rreid = NULL) {
         'self_dataset' => $value,
         'pie_data' => $pie_data,
         'unread_comment' => $unread_comment,
+        'clor_rating_comment' => $revised_comments[$key],
         'total_item_count' => $total_item_count,
         'review_info' => $review_info,
       ));
@@ -124,8 +127,10 @@ function load_self_assessment($rreid = NULL) {
         'nid' => $nid,
         'reviewee' => $reviewee,
         'self_dataset' => $value,
+        'clor_rating_comment' => $revised_comments[$key],
         'total_item_count' => $total_item_count,
         'review_info' => $review_info,
+        'overall_rating' => $overall_rating,
       ));
       $pageContent .= $content;
     }
@@ -137,6 +142,7 @@ function load_self_assessment($rreid = NULL) {
       'nid' => $nid,
       'reviewee' => $reviewee,
       'self_comment' => $value,
+      'clor_rating_comment' => $revised_comments[$self_item_count + $key],
       'total_item_count' => $total_item_count,
       'review_info' => $review_info,
     ));
@@ -350,10 +356,11 @@ function _fetch_counselor_revised_comments($counselor_submit_data) {
  * Page callback function of submit counselor's rating and comments.
  * */
 function submit_counselor_assessment() {
-  $result_val = '1';
   $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
   $items = $_POST['items'];
+  $overall_rating = $_POST['overallRating'];
+  dd($overallRating, 'overallRating');
 
   $decoded_items = array();
   foreach ($items as $item) {
@@ -364,17 +371,18 @@ function submit_counselor_assessment() {
     }
 
     if ($temp->peerAvgRating == 'undefined') {
-      $temp->peerAvgRating = -1;
+      $temp->peerAvgRating = 'N/A';
     }
     if ($temp->revisedComment == 'undefined') {
-      $temp->revisedComment = 'No need';
+      $temp->revisedComment = 'N/A';
     }
     array_push($decoded_items, $temp);
   }
 
-  $result = _submit_counselor_approve_info_to_DB($rreid, $nid, $decoded_items);
-  // send_counselor_reviewed_notification($nid, $reviewee);
-  echo $result_val;
+  $result = _submit_counselor_approve_info_to_DB($rreid, $nid, $decoded_items, $overall_rating);
+  $is_approved = TRUE;
+  send_approval_email_notification($rreid, $is_approved);
+  echo $result;
 }
 
 /**
@@ -383,67 +391,33 @@ function submit_counselor_assessment() {
  * Page callback function for reject counselee assessment
  * */
 function reject_counselee_assessment() {
-  dd($_POST,'$_POST');
   $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
   $items = $_POST['items'];
   $reject_comments = $_POST['rejectComments'];
-
+  $overall_rating = $_POST['overallRating'];
   $decoded_items = array();
   foreach ($items as $item) {
     $temp = json_decode($item);
-      $msg = json_last_error();
 
     if ($temp->rating == 'undefined') {
       $temp->rating = -1;
     }
 
     if ($temp->peerAvgRating == 'undefined') {
-      $temp->peerAvgRating = -1;
+      $temp->peerAvgRating = "N/A";
     }
     if ($temp->revisedComment == 'undefined') {
-      $temp->revisedComment = 'No need';
+      $temp->revisedComment = 'N/A';
     }
     array_push($decoded_items, $temp);
   }
-
-
-  $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments);
-// email notification
+  $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments, $overall_rating)
+  ;
+  dd('before email');
+  $is_approved = FALSE;
+  send_approval_email_notification($rreid, $is_approved, $reject_comments);
   echo $result;
-}
-
-function display_questions_ratings_and_comments($peer_question_rating_comment_result) {
-  foreach ($peer_question_rating_comment_result as $key => $value) {
-    $content = theme('view_assessment_item', array(
-      'item_num' => $key + 1,
-      'item_question' => $value->question['title'],
-      'item_rating' => $item_rating,
-      'item_peer_rating' => $value->ratings,
-      'item_comment' => $comments,
-      'item_peer_comments' => $value->comments
-    ));
-  }
-}
-
-function _append_content($src, $tail) {
-  return $src . $tail;
-}
-
-function display_rating_qa_sheet($qa_sheet) {
-  $content = '';
-  for ($i = 0; $i < count($qa_sheet); $i++) {
-    $temp_content = theme(
-        'view_assessment_item', array(
-      'item_num' => $i,
-      'item_question' => $item[$i]['question'],
-      'item_rating' => $item[$i]['rating'],
-      'item_comment' => $item[$i]['comment'],
-      'item_peer_comments' => $item[$i]['peer_comments'],
-    ));
-    $content .= $temp_content;
-  }
-  return $content;
 }
 
 /**
@@ -569,16 +543,18 @@ function _fetch_all_none_selection_items($self_cid_formkey_type_array) {
   return $survey_item_question;
 }
 
-function _matching_none_selection_items($none_selection_item, $self_cid_formkey_type_array, $cid_indexed_dataset, &$review_info, &$self_comments_array) {
-  // dd($none_selection_item, 'none_selection_item');
+function _matching_none_selection_items($none_selection_item, $self_cid_formkey_type_array, $cid_indexed_dataset, &$review_info, &$self_comments_array, &$overall_rating) {
   foreach ($self_cid_formkey_type_array as $key => $value) {
     if ($value['form_key'] == 'project_roles_and_responsibilities' && $value['type'] == 'textarea') {
       $review_info->project_roles_and_responsibilities = $cid_indexed_dataset[$key]->DATA;
-      return;
+      continue;
     }
     else if ($value['form_key'] == 'clientdate' && $value['type'] == 'textfield') {
       $review_info->clientdate = $cid_indexed_dataset[$key]->DATA;
-      return;
+      continue;
+    }
+    else if ($value['form_key'] == 'overall_rating' && $value['type'] == 'textfield') {
+      $overall_rating->counselee_rating = $cid_indexed_dataset[$key]->DATA;
     }
     foreach ($none_selection_item as $item) {
       if ($value['form_key'] == 'project_roles_and_responsibilities_category') {
@@ -760,6 +736,15 @@ function _fetch_cid_formkey_from_dataset($data_src) {
   return $cid_formkey_type_array;
 }
 
+function _fetch_counselor_overall_rating($data_src) {
+  foreach ($data_src as $key => $value) {
+    if ($value->form_key == 'overall_rating' && isset($value->clor_comment)) {
+      return $value->clor_comment;
+    }
+  }
+  return NULL;
+}
+
 /**
  * reorder_form_contents
  * @param array $pr_data_array
@@ -781,8 +766,6 @@ function reorder_form_contents($pr_data_array, &$cid_formkey_type_array, &$adj_l
 
 function _generate_self_cid_formkey_type($self_dataset) {
   $cid_formkey_type_array = array();
-  $count = count($self_dataset);
-// dd($self_dataset, 'self_dataset');
   foreach ($self_dataset as $value) {
     if (!array_key_exists($value->cid, $cid_formkey_type_array)) {
       $cid_formkey_type_array[$value->cid] = array();
@@ -984,7 +967,7 @@ function _insert_counselor_submittion_info_to_DB($nid) {
  * @param array by reference $data_array
  * @return array $csdid_array
  * */
-function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_items) {
+function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_items, $overall_rating) {
   $range = array(0, 1, 2, 3, 4, 5);
   $csdid_array = array();
   foreach ($clor_items as $key => $value) {
@@ -1034,7 +1017,16 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
       }
     }
   }
-  if (count($csdid_array) != 0) {
+  $overall_rating_csdid = db_insert('prs_counselor_submit_data')
+                        -> fields(array(
+                          'nid' => $nid,
+                          'csiid' => $csiid,
+                          'count' => count($csdid_array),
+                          'title' => 'overall_rating',
+                          'counselor_comment' => $overall_rating,
+                          ))->execute();
+
+  if (count($csdid_array) != 0 && $overall_rating_csdid != -1) {
     return $csdid_array;
   }
   else {
@@ -1043,7 +1035,7 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
   }
 }
 
-function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items) {
+function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items, $overall_rating) {
   $sid = get_last_sid_by_nid($nid);
   $csiid = _insert_counselor_submittion_info_to_DB($nid);
   $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items);
@@ -1079,10 +1071,10 @@ function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items) {
  * @param string by referen $reject_comments
  * @return bool
  * */
-function _append_counselor_reject_info_to_DB($rreid, $nid, &$clor_items, &$reject_comments) {
+function _append_counselor_reject_info_to_DB($rreid, $nid, &$clor_items, &$reject_comments, $overall_rating) {
   $sid = get_last_sid_by_nid($nid);
   $csiid = _insert_counselor_submittion_info_to_DB($nid);
-  $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items);
+  $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items, $overall_rating);
 
   $provider_table = db_update('prs_rel_provider_employee')
       ->fields(array(
@@ -1110,5 +1102,26 @@ function _append_counselor_reject_info_to_DB($rreid, $nid, &$clor_items, &$rejec
   }
   else {
     return FALSE;
+  }
+}
+
+function send_approval_email_notification($rreid, $is_approved, $reject_comments=NULL) {
+  $provider_info = get_provider_info($rreid);
+  if (isset($provider_info)) {
+    $counselee_name = $provider_info[0]->employeeName;
+    $counselor_name = get_counelor($counselee_name);
+    $token = $provider_info[0]->token;
+    $mail_receiver_array = array();
+    array_push($mail_receiver_array, $counselee_name);
+    $email_addr = select_email_from_prs_reviewers($mail_receiver_array);
+  }
+  if (isset($email_addr)) {
+    $address = $email_addr[0];
+  }
+  if ($reject_comments != NULL) {
+    counselor_audit_review_remind($address, $counselee_name, $counselor_name, $token, $rreid, $is_approved, $reject_comments);
+  }
+  else {
+    counselor_audit_review_remind($address, $counselee_name, $counselor_name, $token, $rreid, $is_approved);
   }
 }
