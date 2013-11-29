@@ -360,7 +360,7 @@ function submit_counselor_assessment() {
   $nid = $_POST['nid'];
   $items = $_POST['items'];
   $overall_rating = $_POST['overallRating'];
-  dd($overallRating, 'overallRating');
+  dd($overall_rating, 'overallRating');
 
   $decoded_items = array();
   foreach ($items as $item) {
@@ -1038,7 +1038,7 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
 function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items, $overall_rating) {
   $sid = get_last_sid_by_nid($nid);
   $csiid = _insert_counselor_submittion_info_to_DB($nid);
-  $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items);
+  $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items, $overall_rating);
 
   $provider_table = db_update('prs_rel_provider_employee')
       ->fields(array(
