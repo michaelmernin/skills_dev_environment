@@ -360,7 +360,6 @@ function submit_counselor_assessment() {
   $nid = $_POST['nid'];
   $items = $_POST['items'];
   $overall_rating = $_POST['overallRating'];
-  dd($overall_rating, 'overallRating');
 
   $decoded_items = array();
   foreach ($items as $item) {
