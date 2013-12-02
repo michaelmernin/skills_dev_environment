@@ -191,6 +191,7 @@ function getElementContentLength(ele)
 
 function addErrorMessageArea()
 {
+    //.page-title
     var errorArea = jQuery(".messages.error");
     if (errorArea.length == 0)
     {
