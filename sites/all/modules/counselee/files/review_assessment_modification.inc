@@ -366,6 +366,7 @@ function _fetch_counselor_revised_comments($counselor_submit_data) {
  * Page callback function of submit counselor's rating and comments.
  * */
 function submit_counselor_assessment() {
+  $result_val = 1;
   $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
   $items = $_POST['items'];
@@ -380,7 +381,7 @@ function submit_counselor_assessment() {
   $result = _submit_counselor_approve_info_to_DB($rreid, $nid, $decoded_items, $overall_rating);
   $is_approved = TRUE;
   send_approval_email_notification($rreid, $is_approved);
-  echo $result;
+  echo $result_val;
 }
 
 /**
@@ -389,6 +390,7 @@ function submit_counselor_assessment() {
  * Page callback function for reject counselee assessment
  * */
 function reject_counselee_assessment() {
+  $result_val = 1;
   $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
   $items = $_POST['items'];
@@ -402,7 +404,7 @@ function reject_counselee_assessment() {
   $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments, $overall_rating);
   $is_approved = FALSE;
   send_approval_email_notification($rreid, $is_approved, $reject_comments);
-  echo $result;
+  echo $result_val;
 }
 
 /**
