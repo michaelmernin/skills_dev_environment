@@ -5,11 +5,12 @@
  * Page callback function for view assessment.
  * */
 function load_self_assessment($rreid = NULL) {
+  access_authen($rreid);
   $cur_user_name = get_current_user_name();
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counelor($reviewee);
   $review_status = get_review_status_from_db($rreid);
-  identify_accessibility($rreid, $cur_user_name, $reviewee, $counselor, $tgr_status, $cur_status);
+  // identify_accessibility($rreid, $cur_user_name, $reviewee, $counselor, $tgr_status, $cur_status);
 
   $provider_info = get_provider_info($rreid, $reviewee);
   $nid = $provider_info[0]->nid;
