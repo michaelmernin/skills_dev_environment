@@ -661,3 +661,28 @@ ORDER BY
         ->fetchAll();
   return $query;
 }
+
+function identify_accessibility($current_user_name, $reviewee, $counselor, $current_status=NULL, $target_status_array=NULL) {
+  $user_id_flag = '';
+  $status_flag = '';
+  if ($current_user_name == $reviewee) {
+    $user_id_flag = 0;
+  }
+  else if ($current_user_name == $counselor) {
+    $user_id_flag = 1;
+  }
+  else {
+    $user_id_flag = -1;
+    drupal_goto('accessdenied');
+    return -1;
+  }
+
+  if (!is_null($current_status) && (!(is_null($target_status_array)))) {
+    if (in_array($current_status, $target_status_array)) {
+      $status_flag = 1;
+    }
+    else {
+      $status_flag = 0
+    }
+  }
+}

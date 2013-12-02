@@ -5,8 +5,12 @@
  * Page callback function for view assessment.
  * */
 function load_self_assessment($rreid = NULL) {
-  access_authen($rreid);
+  $cur_user_name = get_current_user_name();
   $reviewee = get_reviewee_from_db($rreid);
+  $counselor = get_counelor($reviewee);
+  $review_status = get_review_status_from_db($rreid);
+  identify_accessibility($rreid, $cur_user_name, $reviewee, $counselor, $tgr_status, $cur_status);
+
   $provider_info = get_provider_info($rreid, $reviewee);
   $nid = $provider_info[0]->nid;
   $sid = get_last_sid_by_nid($nid);
@@ -413,7 +417,6 @@ function reject_counselee_assessment() {
   }
   $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments, $overall_rating)
   ;
-  dd('before email');
   $is_approved = FALSE;
   send_approval_email_notification($rreid, $is_approved, $reject_comments);
   echo $result;
