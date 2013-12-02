@@ -12,8 +12,8 @@
  */
 function watch_peer_review($nid) {
   //==================access control====================================================
-  $user_id=get_user_identity_by_nid($nid);
-  if($user_id!=1){
+  $user_id = get_user_identity_by_nid($nid);
+  if ($user_id != 1) {
     drupal_goto('accessdenied');
   }
   //====================Get source from database=========================================
@@ -221,13 +221,8 @@ function find_select_comment($nid, $webform_component, $form_key, $subfix, &$ans
   $webform_form_key = $form_key . $subfix;
   foreach ($webform_component as $componenet) {
     if ($componenet->form_key == $webform_form_key) {
-//      dd($webform_form_key,'$webform_form_key');
       $cid = $componenet->cid;
-//      dd($answer_array,'$answer_array');
       $return_comment = find_answer($nid, $cid, $answer_array);
-//      dd($nid,'$nid');
-//      dd($cid,'$cid');
-//      dd($return_comment,'$return_comment');
       if ($return_comment == 'NO_ANSWER') {
         $return_comment = NO_COMMENT;
       }
@@ -238,9 +233,10 @@ function find_select_comment($nid, $webform_component, $form_key, $subfix, &$ans
 }
 
 /**
- * 
+ * get webform basic information from database
  * @param type $nid
  * @return type
+ * @author Mars
  */
 function get_webform_basic_info($nid) {
   $query = db_select('webform_submissions', 'ws');
@@ -255,6 +251,12 @@ function get_webform_basic_info($nid) {
   return $return_val;
 }
 
+/**
+ * 
+ * @param type $result
+ * @return \stdClass
+ * @author Mars
+ */
 function get_std_webform_basic_info($result) {
   $basic_info = new stdClass();
   if (count($result)) {
@@ -262,7 +264,7 @@ function get_std_webform_basic_info($result) {
     $basic_info->title = $node->title;
     $basic_info->sid = $result->sid;
     $basic_info->nid = $result->nid;
-    $basic_info->user = format_login_name(user_load($result->uid)->name);
+    $basic_info->user = ($result->uid != 0) ? format_login_name(user_load($result->uid)->name) : 'Anonymous';
     $basic_info->creatdate = format_date($result->submitted, 'custom', 'Y-m-d');
     $basic_info->ip = $result->remote_addr;
   }
@@ -278,8 +280,6 @@ function get_std_webform_basic_info($result) {
 function get_watchpeerreview_page_content($basic_info, $content) {
   $html_content = get_watchpeerreview_basic_info_html($basic_info);
   $html_content.=get_watchpeerreview_content_html($content);
-
-//  dd($html_content,'$html_content');
   return $html_content;
 }
 
@@ -299,7 +299,6 @@ function get_watchpeerreview_basic_info_html($basic_info) {
  */
 function get_watchpeerreview_content_html($contents) {
 //  $html_value
-//  dd($contents,'$contents');
   //=================================html contents====================================================
   $html_value = _get_watchpeerreview_component_html($contents);
   //=================================add go back button===============================================
@@ -307,6 +306,11 @@ function get_watchpeerreview_content_html($contents) {
   return $html_value;
 }
 
+/**
+ * 
+ * @param type $contents
+ * @return type
+ */
 function _get_watchpeerreview_component_html($contents) {
   $html_text = '';
   foreach ($contents as $one_content) {
