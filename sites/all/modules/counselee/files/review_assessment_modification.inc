@@ -397,21 +397,9 @@ function reject_counselee_assessment() {
   $decoded_items = array();
   foreach ($items as $item) {
     $temp = json_decode($item);
-
-    if ($temp->rating == 'undefined') {
-      $temp->rating = -1;
-    }
-
-    if ($temp->peerAvgRating == 'undefined') {
-      $temp->peerAvgRating = "N/A";
-    }
-    if ($temp->revisedComment == 'undefined') {
-      $temp->revisedComment = 'N/A';
-    }
     array_push($decoded_items, $temp);
   }
-  $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments, $overall_rating)
-  ;
+  $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments, $overall_rating);
   $is_approved = FALSE;
   send_approval_email_notification($rreid, $is_approved, $reject_comments);
   echo $result;
@@ -1103,6 +1091,7 @@ function _append_counselor_reject_info_to_DB($rreid, $nid, &$clor_items, &$rejec
 
 function send_approval_email_notification($rreid, $is_approved, $reject_comments=NULL) {
   $provider_info = get_provider_info($rreid);
+  // dd($provider_info, 'provider_info');
   if (isset($provider_info)) {
     $counselee_name = $provider_info[0]->employeeName;
     $counselor_name = get_counelor($counselee_name);
@@ -1111,6 +1100,11 @@ function send_approval_email_notification($rreid, $is_approved, $reject_comments
     array_push($mail_receiver_array, $counselee_name);
     $email_addr = select_email_from_prs_reviewers($mail_receiver_array);
   }
+  // dd($counselee_name, 'counselee_name');
+  // dd($counselor_name, 'counselor_name');
+  // dd($token, 'token');
+  // dd($mail_receiver_array, 'mail_receiver_array');
+  // dd($email_addr, 'email_addr');
   if (isset($email_addr)) {
     $address = $email_addr[0];
   }
