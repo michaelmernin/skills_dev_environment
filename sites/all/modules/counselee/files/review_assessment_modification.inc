@@ -85,7 +85,7 @@ function load_self_assessment($rreid = NULL) {
   else {
     $have_counselor_data = FALSE;
     $revised_comments = array();
-    for($i = 0; $i < $total_item_count; $i++) {
+    for($i = 0; $i < $total_item_count+1; $i++) {
       $revised_comments[$i] = new stdClass();
     }
     $overall_rating->counselor_rating = 0;
@@ -374,17 +374,6 @@ function submit_counselor_assessment() {
   $decoded_items = array();
   foreach ($items as $item) {
     $temp = json_decode($item);
-  
-    if ($temp->rating == 'undefined') {
-      $temp->rating = -1;
-    }
-
-    if ($temp->peerAvgRating == 'undefined') {
-      $temp->peerAvgRating = 'N/A';
-    }
-    if ($temp->revisedComment == 'undefined') {
-      $temp->revisedComment = 'N/A';
-    }
     array_push($decoded_items, $temp);
   }
 
@@ -978,8 +967,9 @@ function _insert_counselor_submittion_info_to_DB($nid) {
 function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_items, $overall_rating) {
   $range = array(0, 1, 2, 3, 4, 5);
   $csdid_array = array();
+  // dd($clor_items, 'clor_items');
   foreach ($clor_items as $key => $value) {
-    if (in_array($value->rating, $range) && ($value->peerAvgRating >= 0 && $value->peerAvgRating <= 5)) {
+    if (isset($value->rating) && in_array($value->rating, $range) && (isset($value->peerAvgRating))) {
       $csdid = db_insert('prs_counselor_submit_data')
               ->fields(array(
                 'nid' => $nid,
@@ -995,7 +985,7 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
         array_push($csdid_array, $csdid);
       }
     }
-    else if (in_array($value->rating, $range) && $value->peerAvgRating == -1) {
+    else if (isset($value->rating) && in_array($value->rating, $range) && (!isset($value->peerAvgRating))) {
       $csdid = db_insert('prs_counselor_submit_data')
               ->fields(array(
                 'nid' => $nid,
@@ -1004,7 +994,6 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
                 'title' => $value->header,
                 'rating' => $value->rating,
                 'counselor_comment' => $value->comment,
-                'peer_comments' => $value->revisedComment,
               ))->execute();
       if ($csdid != -1) {
         array_push($csdid_array, $csdid);
@@ -1018,7 +1007,6 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
                 'count' => $key,
                 'title' => $value->header,
                 'counselor_comment' => $value->comment,
-                'peer_comments' => $value->revisedComment,
               ))->execute();
       if ($csdid != -1) {
         array_push($csdid_array, $csdid);
