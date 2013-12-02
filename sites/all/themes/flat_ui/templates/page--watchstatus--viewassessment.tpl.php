@@ -37,13 +37,12 @@
     var items = iterateItems(count);
     var overallRating = getOverallRating();
 
-    if (items != false && overallRating != false) {
+    if (items != false) {
       jQuery.ajax({
         type: "POST",
         data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items, 'overallRating': overallRating},
         url: '<?php echo $base_relatively_path ?>watchstatus/submitcounselorassessment',
         success: function(text) {
-          alert(overallRating);
           window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
           // location.reload();
           // if(typeof(jQuery("#submit_button").attr("disabled"))!="undefined") {

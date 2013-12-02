@@ -270,7 +270,7 @@
         print $clor_rating_comment->rating;
       }
       else {
-        print '';
+        print -1;
       } ?>;
 			if (inArray(rating, range)) {
 				jQuery("#counselor-rating-<?php print $item_num; ?>").val(rating);
