@@ -47,6 +47,7 @@ function load_self_assessment($rreid = NULL) {
   $self_question_rating_comment_result = _resort_item_by_weight($self_question_rating_comment_result);
   $self_item_count = count($self_question_rating_comment_result);
 // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
+  $total_item_count = $self_item_count + count($self_comments_array);
 ////////////////////////////////////////////////////////
 // Item below is for peers
 ////////////////////////////////////////////////////////
@@ -75,7 +76,7 @@ function load_self_assessment($rreid = NULL) {
   //Item below is for counselor
   ///////////////////////////////////////////////////////
   $csiid = get_counselor_latest_submissionID($nid);
-//    dd($csiid,'$csiid');
+   // dd($csiid,'$csiid');
   if ($csiid != -1) {
     $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
     $revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
@@ -83,10 +84,14 @@ function load_self_assessment($rreid = NULL) {
   }
   else {
     $have_counselor_data = FALSE;
+    $revised_comments = array();
+    for($i = 0; $i < $total_item_count; $i++) {
+      $revised_comments[$i] = new stdClass();
+    }
+    $overall_rating->counselor_rating = 0;
   }
 
   $pageContent = '';
-  $total_item_count = $self_item_count + count($self_comments_array);
   foreach ($self_question_rating_comment_result as $key => $value) {
 //=====================the question which have pie chart ============CONST===============================
     $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');

@@ -217,7 +217,12 @@
       <div>
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
           <textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
-          print $clor_rating_comment->clor_comment;
+          if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
+            print $clor_rating_comment->clor_comment; 
+          }
+          else {
+            print '';
+          }
           ?></textarea>
         </div>
       </div>
@@ -233,7 +238,13 @@
   <div class="webform-submission-info clearfix">
 
     <div class="webform-submission-info-text">
-      <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Peer Comment | ·Peer Rating:  <?php print $clor_rating_comment->peer_avg_rating; ?>
+      <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Peer Comment | ·Peer Rating:  <?php 
+      if (isset($clor_rating_comment) && isset($clor_rating_comment->peer_avg_rating)) {
+        print $clor_rating_comment->peer_avg_rating;
+      }
+      else {
+        print '';
+      } ?>;print $clor_rating_comment->peer_avg_rating; ?>
       </div>
 
       <!--<div class="additionalbubble">-->
@@ -254,7 +265,13 @@
 		checkValue();	
 		function checkValue() {
 			var range = [0, 1, 2, 3, 4, 5];
-			var rating = <?php print $clor_rating_comment->rating; ?>;
+			var rating = <?php 
+      if (isset($clor_rating_comment) && isset($clor_rating_comment->rating)) {
+        print $clor_rating_comment->rating;
+      }
+      else {
+        print '';
+      } ?>;
 			if (inArray(rating, range)) {
 				jQuery("#counselor-rating-<?php print $item_num; ?>").val(rating);
 			}

@@ -263,7 +263,7 @@
 
   function setCounselorOverallRating() {
     var overallRating = jQuery("#counselor-overall_rating-0").val();
-    if (overallRating != "undefined") {
+    if (overallRating != "undefined" && overallRating != 0) {
       jQuery("#counselor-overall_rating-content").val(overallRating);
     }
   }
