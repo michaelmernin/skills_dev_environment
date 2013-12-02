@@ -15,7 +15,16 @@
  * - $form['submitted']: The main content of the user-created form.
  * - $form['details']: Internal information stored by Webform.
  */
+$calculate_js_path = drupal_get_path('module', 'counselee') . "/js/calculate.js";
+drupal_add_js($calculate_js_path);
 ?>
+
+
+
+<a href="#" name="pageTopPosition" ></a>
+<a href="#pageTopPosition" id="gotoTopBtn" style="display: none">click here to go to page top</a>
+
+
 <div id="wrap" style="padding-top: 20px;" class="container">
   <?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
   <?php print $messages; ?>
@@ -24,14 +33,14 @@
   if (is_selfreview($node->nid) && get_user_identity_by_nid($node->nid) != 0) {
 //  dd($type,'$type');
 //  dd(get_user_identity_by_nid($node->nid));
-      drupal_goto('accessdenied');
+    drupal_goto('accessdenied');
   }
 //dd($page['content']['system_main']['nodes'][3]['webform']['#node']->webform['components']);
 //print render($page['content']['system_main']['nodes'][3]['webform']['#node']->webform['components']);
 //dd($page['content'],'====================');
   print render($page['content']);
 // Print out the main part of the form.
-  // Feel free to break this up and move the pieces within the array.
+// Feel free to break this up and move the pieces within the array.
 //  print drupal_render($form['submitted']);
 //
 //  // Always print out the entire $form. This renders the remaining pieces of the
