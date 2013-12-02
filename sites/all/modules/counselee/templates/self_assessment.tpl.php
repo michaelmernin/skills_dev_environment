@@ -17,21 +17,35 @@
  */
 ?>
 <div id="wrap" style="padding-top: 20px;width:auto" class="container">
+  <a href="#" name="pageTopPosition" ></a>
+  <a href="#pageTopPosition" id="gotoTopBtn" style="display: none">click here to go to page top</a>
+  <h1 class="page-title"></h1>
+
   <?php
 //dd($node,'node');
 //dd($page['content']['system_main']['nodes'][3]['webform']['#node']->webform['components']);
 //print render($page['content']['system_main']['nodes'][3]['webform']['#node']->webform['components']);
 //dd($page['content'],'====================');
-//  print render($page['content']);
+//  print render($page['content']
+
+
+  $calculate_js_path = drupal_get_path('module', 'counselee') . "/js/calculate.js";
+  drupal_add_js($calculate_js_path);
+
+
+
+
+
+
   $temp_node = node_view($node);
   print drupal_render($temp_node);
-// Print out the main part of the form.
+  // Print out the main part of the form.
   // Feel free to break this up and move the pieces within the array.
-//  print drupal_render($form['submitted']);
-//
-//  // Always print out the entire $form. This renders the remaining pieces of the
-//  // form that haven't yet been rendered above.
-//  print drupal_render_children($form);
+  //  print drupal_render($form['submitted']);
+  //
+  //  // Always print out the entire $form. This renders the remaining pieces of the
+  //  // form that haven't yet been rendered above.
+  //  print drupal_render_children($form);
   ?>
 
 

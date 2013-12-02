@@ -4,6 +4,11 @@
  */
 
 
+function goTopEx() {
+    //window.scrollTo(0, 0)
+    var obj = jQuery("#gotoTopBtn")[0];
+    obj.click();
+}
 /**
  * To judge a string which can be convert a numeric.
  * @param {string} str A string
@@ -18,6 +23,25 @@ function IsNum(str)
     return false;
 }
 
+/**
+ * Get the category item name
+ * 
+ * */
+function getCategoryChildName(idValue)
+{
+    var arr = idValue.split("-");
+    var childName = '', len, i;
+    for (len = arr.length, i = len - 1; i >= 0; i--)
+    {
+        if (arr[i] != 'category')
+            childName = arr[i].substring(0, 1).toUpperCase()
+                    + arr[i].substring(1, arr[i].length)
+                    + ' ' + childName;
+        else
+            break;
+    }
+    return childName;
+}
 
 /**
  * Calculate the average score
@@ -25,9 +49,9 @@ function IsNum(str)
  * @param {string} elementType The element type 
  * @return {number} The average score
  * */
-function calculate_average_score(category, elementType)
+function calculateAverageScore(category, elementType)
 {
-    var i = 0, count = 0, sum = 0, value, averageScore;
+    var i = 0, count = 0, sum = 0, value, averageScore = '';
     for (i = 0; i < category.length; i++)
     {
         if (elementType == 'select')
@@ -41,13 +65,24 @@ function calculate_average_score(category, elementType)
             sum += parseFloat(value);
         }
     }
-
-    var averageScore = '';
     if (count != 0)
     {
         averageScore = (sum / count).toFixed(2);
     }
     return averageScore;
+}
+
+
+/**
+ * Register the select onchange event!
+ * 
+ * */
+function registerSelectOnchangeEvent(items, onchangeEvent)
+{
+    for (var i = 0; i < items.length; i++)
+    {
+        jQuery(items[i]).change(onchangeEvent);
+    }
 }
 
 
@@ -59,26 +94,82 @@ function calculate_average_score(category, elementType)
  *                  
  * @return {bool} 
  * */
-function checkComment(category, commentSuffix)
+function checkComments(category, commentSuffix)
 {
-    var value, commentLen, commentID, isRight = true;
-    for (var i = 0; i < category.length; i++)
+    var score, commentLen, commentID, li, i, field, isRight = true;
+    for (i = 0; i < category.length; i++)
     {
-        value = jQuery(category[i]).find('option:selected').val();
-        if (value != '3')
+        score = jQuery(category[i]).find('option:selected').val();
+        commentID = category[i] + "-" + commentSuffix;
+        jQuery(commentID).removeClass().addClass("form-textarea");
+        if (score != '3')
         {
-            commentID = category[i] + commentSuffix;
             commentLen = jQuery(commentID).val().length;
             if (commentLen < 1) {
-                alert('The socre is not 3 points.Please enter comment!');
-                jQuery(comments[i]).focus();
-                jQuery(comments[i]).removeClass().addClass("form-textarea required error");
+                addErrorMessageArea();
+                field = getCategoryChildName(category[i]);
+                li = '<li>' + field + "Comment field is required,because his score is not 3 point." + '</li>';
+                jQuery("#error-message").append(li);
+                jQuery(commentID).addClass('form-textarea required error');
                 isRight = false;
-                return isRight
             }
-            else
+        }
+    }
+    return isRight;
+}
+
+/**
+ * Modify the average points.
+ * 
+ * */
+function modifyElementValue(arr, value)
+{
+    for (var i = 0; i < arr.length; i++)
+    {
+        jQuery(arr[i]).html(value);
+    }
+}
+
+
+function getSamePrefixID(prefix)
+{
+    var id, samePrefixArr = new Array();
+    var arr = jQuery('select');
+    for (var i = 0; i < arr.length; i++)
+    {
+        id = arr[i].getAttribute("id");
+        if (id.indexOf(prefix) != -1)
+        {
+            samePrefixArr[samePrefixArr.length] = "#" + id;
+        }
+    }
+    return samePrefixArr;
+}
+
+/**
+ * Check required field
+ * 
+ * */
+function checkRequireField()
+{
+    var arr = jQuery("label > span"), obj, fieldId, description, isRight = true, li;
+    for (var i = 0; i < arr.length; i++)
+    {
+        if (arr[i].innerText == "*")
+        {
+            obj = arr[i].parentNode;
+            fieldId = "#" + obj.getAttribute("for");
+            description = obj.innerText;
+            addErrorMessageArea();
+            jQuery(fieldId).removeClass().addClass("form-text required");
+
+
+            if (getElementContentLength(jQuery(fieldId)) < 1)
             {
-                jQuery(comments[i]).removeClass().addClass("form-textarea");
+                li = '<li>' + description.substring(0, description.length - 1) + " field is required." + '</li>';
+                jQuery("#error-message").append(li);
+                jQuery(fieldId).addClass('form-textarea required error');
+                isRight = false;
             }
         }
     }
@@ -86,34 +177,61 @@ function checkComment(category, commentSuffix)
 }
 
 
-
-/**
- * Modify the average points.
- * 
- * */
-function modifyElementValue(category, value)
+function getElementContentLength(ele)
 {
-    var i;
-    for (i = 0; i < category.length; i++)
+    var type = ele[0].tagName;
+    if (type == 'INPUT')
+        return ele.val().length;
+    else if (type == "TEXTAREA")
+        return ele.val().length;
+
+    return 0;
+}
+
+
+function addErrorMessageArea()
+{
+    //.page-title
+    var errorArea = jQuery(".messages.error");
+    if (errorArea.length == 0)
     {
-        jQuery(category[i]).html(value);
+        var position = jQuery('.page-title');
+        var content = '<div class="messages error">'
+                + '<h2 class="element-invisible">Error message</h2>'
+                + '<ul id="error-message"></ul></div>';
+        position.after(content);
     }
 }
 
+function focusOnErrorMessage()
+{
+    var errorArea = jQuery(".messages.error");
+    //if (errorArea.length != 0)
+//    window.scrollTo(0, 0);
+
+    //jQuery("html,body").animate({"scrollTop": 0}, speed);
+
+    // jQuery("html,body").animate({"scrollTop": 0}, 1000);
+}
+
+function modifySelectCategoryValue(category, destArr)
+{
+    var averageScore = calculateAverageScore(category, 'select');
+    modifyElementValue(destArr, averageScore);
+}
 
 /**
- * Register the value change event
- * 
+ * Calculate the overall score average
  * */
-function registerValueChangeEvent()
+function modifyOverallScoreAverage(category, destArr)
 {
-
+    var averageScore = calculateAverageScore(category, 'html');
+    modifyElementValue(destArr, averageScore);
 }
 
 
-
- function initialOverScore()
-  {
+function initialOverScore()
+{
     var category = new Array();
     category[0] = 'client_engagements';
     category[1] = 'technical_abilities';
@@ -124,8 +242,8 @@ function registerValueChangeEvent()
 
     for (var i = 0; i < category.length; i++)
     {
-      jQuery('#rating_' + category[i]).html(jQuery('#src_self_' + category[i]).html());
-      jQuery('#counselor_rating_' + category[i]).html(jQuery('#src_counselor_' + category[i]).html());
+        jQuery('#rating_' + category[i]).html(jQuery('#src_self_' + category[i]).html());
+        jQuery('#counselor_rating_' + category[i]).html(jQuery('#src_counselor_' + category[i]).html());
     }
 
     var selfPre = '#src_self_';
@@ -136,7 +254,7 @@ function registerValueChangeEvent()
     self_internal[3] = selfPre + 'internal_contributions';
     self_internal[4] = selfPre + 'perficient_basics';
 
-    var self_internal = calculate_average_score(self_internal, 'html');
+    var self_internal = calculateAverageScore(self_internal, 'html');
     //rating_internal_contributions
     jQuery('#rating_internal_contributions').html(self_internal);
 
@@ -149,7 +267,7 @@ function registerValueChangeEvent()
     counselor_internal[4] = counselorPre + 'perficient_basics';
 
 
-    var counselor_internal = calculate_average_score(counselor_internal, 'html');
+    var counselor_internal = calculateAverageScore(counselor_internal, 'html');
     jQuery('#counselor_rating_internal_contributions').html(counselor_internal);
 
 
@@ -159,14 +277,14 @@ function registerValueChangeEvent()
     var counselor_all = new Array()
     for (var i = 0; i < category.length; i++)
     {
-      self_all[i] = '#rating_' + category[i];
-      counselor_all[i] = '#counselor_rating_' + category[i];
+        self_all[i] = '#rating_' + category[i];
+        counselor_all[i] = '#counselor_rating_' + category[i];
     }
 
-    var self_all_score = calculate_average_score(self_all, 'html');
+    var self_all_score = calculateAverageScore(self_all, 'html');
     jQuery('#rating_all').html(self_all_score);
 
-    var counselor_all_score = calculate_average_score(counselor_all, 'html');
+    var counselor_all_score = calculateAverageScore(counselor_all, 'html');
     jQuery('#counselor_rating_all').html(counselor_all_score);
 
-  }
+}
