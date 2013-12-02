@@ -238,13 +238,13 @@
   <div class="webform-submission-info clearfix">
 
     <div class="webform-submission-info-text">
-      <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Peer Comment | ·Peer Rating:  <?php 
+      <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Peer Comment | ·Peer Rating: <?php 
       if (isset($clor_rating_comment) && isset($clor_rating_comment->peer_avg_rating)) {
         print $clor_rating_comment->peer_avg_rating;
       }
       else {
         print '';
-      } ?>;print $clor_rating_comment->peer_avg_rating; ?>
+      } ?>
       </div>
 
       <!--<div class="additionalbubble">-->
@@ -275,7 +275,7 @@
 			if (inArray(rating, range)) {
 				jQuery("#counselor-rating-<?php print $item_num; ?>").val(rating);
 			}
-			else if (rating == ""){
+			else {
 				jQuery("#counselor-rating-<?php print $item_num; ?>").val(3);
 			}
 		}
