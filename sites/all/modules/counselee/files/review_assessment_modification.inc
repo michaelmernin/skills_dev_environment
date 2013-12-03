@@ -1096,7 +1096,7 @@ function send_approval_email_notification($rreid, $is_approved, $reject_comments
   // dd($provider_info, 'provider_info');
   if (isset($provider_info)) {
     $counselee_name = $provider_info[0]->employeeName;
-    $counselor_name = get_counelor($counselee_name);
+    $counselor_name = get_counselor($counselee_name);
     $token = $provider_info[0]->token;
     $mail_receiver_array = array();
     array_push($mail_receiver_array, $counselee_name);
