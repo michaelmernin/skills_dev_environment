@@ -92,9 +92,18 @@ function counselee_menu() {
     'weight' => 3,
     'file' => 'files/review_assessment_modification.inc',
   );
+  $items['watchstatus/reviewcontent/%'] = array(
+    'title' => 'Review Content',
+    'page callback' => 'load_review_content',
+    'page arguments' => array(2),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 3,
+    'file' => 'files/watch_review_status.inc',
+  );
   $items['watchstatus/submitcounselorassessment'] = array(
-    'title' => 'Submit Counselor Sheet',
-    'page callback' => 'submit_counselor_assessment',
+    'title' => 'Save Counselor Assessment Draft',
+    'page callback' => 'save_counselor_assessment_draft',
     'page arguments' => array(),
     'access arguments' => array('access to my dashboard'),
     'type' => MENU_CALLBACK,

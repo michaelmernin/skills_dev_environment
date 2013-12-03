@@ -3,7 +3,8 @@
 // dd($rreid, 'rreid');
 // dd($nid, 'nid');
 // dd($reviewee, 'reviewee');
-// dd($self_dataset, 'self_dataset');
+// dd($clor_rating_comment, '$clor_rating_comment');
+// dd($pie_data, 'pie_data');
 ?>
 <div class="webform-ssion-info clearfix">
   <!--Self comment-->
@@ -239,8 +240,8 @@
 
     <div class="webform-submission-info-text">
       <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Peer Comment | ·Peer Rating: <?php 
-      if (isset($clor_rating_comment) && isset($clor_rating_comment->peer_avg_rating)) {
-        print $clor_rating_comment->peer_avg_rating;
+      if (isset($pie_data) && isset($pie_data->all_avg)) {
+        print $pie_data->all_avg;
       }
       else {
         print '';

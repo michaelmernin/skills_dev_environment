@@ -27,7 +27,34 @@
 
   });
 
-  function submitcounselorassessment() {
+  function submitCounselorAssessment() {
+    var rreid = getRreid();
+    var nid = getNid();
+    var count = getCount();
+    var items = iterateItems(count);
+    var overallRating = getOverallRating();
+
+    if (items != false) {
+      jQuery.ajax({
+        type: "POST",
+        data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items, 'overallRating': overallRating},
+        url: '<?php echo $base_relatively_path ?>watchstatus/submitcounselorassessment',
+        success: function(text) {
+          // window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
+          location.reload();
+          // if(typeof(jQuery("#submit_button").attr("disabled"))!="undefined") {
+          // jQuery('#submit_button').removeAttr("disabled");
+        }
+        // else {
+        //   window.location.href = "<?php // print base_path() . 'viewassessment' ?>";
+        //   return;
+        // }
+      });
+    }
+
+  }
+
+  function approveCounseleeAssessment() {
     clickSubmitButton();
 
     // var area
@@ -41,7 +68,7 @@
       jQuery.ajax({
         type: "POST",
         data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items, 'overallRating': overallRating},
-        url: '<?php echo $base_relatively_path ?>watchstatus/submitcounselorassessment',
+        url: '<?php echo $base_relatively_path ?>watchstatus/approvecounseleeassessment',
         success: function(text) {
           window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
           // location.reload();
@@ -276,7 +303,9 @@
 </script>
             <div>
               <div class="draftbutton" style="float: left; margin-right: 15px;">
-                <!-- <a id="modal-912872" href="#modal-container-912872" >Disapprove</a> -->
+                  <input class="webform-draft form-submit btn btn-large" type="submit" value="Save Draft" name="op" formnovalidate="formnovalidate" onclick="submitCounselorAssessment()">
+              </div>
+              <div class="draftbutton" style="float: left; margin-right: 15px;">
                 <a id="modal-912872" href="#modal-container-912872" role="button" data-toggle="modal"><input formnovalidate="formnovalidate" class="webform-draft form-submit btn btn-large" type="submit" name="op" value="Disapprove"></a>
                 <div class="row-fluid">
                   <div class="span12">
@@ -323,7 +352,7 @@
                       </div>
                       <div class="modal-footer">
                         <img class="loading_img" id="status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
-                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="counselor_submit_btn" onclick="submitcounselorassessment()">APPROVE</button>
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="counselor_submit_btn" onclick="approveCounseleeAssessment()">APPROVE</button>
 
                       </div>
                     </div>

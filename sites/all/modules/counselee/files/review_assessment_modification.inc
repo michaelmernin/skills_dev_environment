@@ -242,7 +242,7 @@ function _manage_pie_chart($peer_name, $comment_name, $form_key) {
     $pie_data->id = $form_key;
     $pie_data->have_peer_data = FALSE;
   }
-
+  dd($pie_data, 'pie_data');
   return $pie_data;
 }
 
@@ -363,9 +363,29 @@ function _fetch_counselor_revised_comments($counselor_submit_data) {
 }
 
 /**
- * Page callback function of submit counselor's rating and comments.
+ * Page callback function of save conselor's assessment as draft
+**/
+function save_counselor_assessment_draft() {
+  $result_val = 1;
+  $rreid = $_POST['rreid'];
+  $nid = $_POST['nid'];
+  $items = $_POST['items'];
+  $overall_rating = $_POST['overallRating'];
+
+  $decoded_items = array();
+  foreach ($items as $item) {
+    $temp = json_decode($item);
+    array_push($decoded_items, $temp);
+  }
+
+  $result = _submit_counselor_draft_to_DB($rreid, $nid, $decoded_items, $overall_rating);
+  echo $result_val;
+}
+
+/**
+ * Page callback function of approve counselee's assessment.
  * */
-function submit_counselor_assessment() {
+function approve_counselee_assessment() {
   $result_val = 1;
   $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
@@ -553,6 +573,7 @@ function _matching_none_selection_items($none_selection_item, $self_cid_formkey_
         array_pop($temp);
       }
       $type = implode("_", $temp);
+      // dd($type, 'type');
       if (strpos($value['form_key'], $type) !== FALSE && $value['type'] == 'textarea') {
         if (!array_key_exists($key, $self_comments_array)) {
           $temp = new stdClass();
@@ -935,15 +956,24 @@ function get_latest_submitted_data_from_db($nid, $sid) {
  * @param int $nid
  * @return int $csiid
  * */
-function _insert_counselor_submittion_info_to_DB($nid) {
-  $csiid = '';
+function _insert_counselor_submittion_info_to_DB($nid, $is_draft=FALSE) {
   $timestamp = time();
-  $csiid = db_insert('prs_counselor_submit_info')
-          ->fields(array(
-            'nid' => $nid,
-            'submitTimestamp' => $timestamp,
-            'isDraft' => 1,
-          ))->execute();
+  if ($is_draft == FALSE) {
+    $csiid = db_insert('prs_counselor_submit_info')
+        ->fields(array(
+          'nid' => $nid,
+          'submitTimestamp' => $timestamp,
+          'isDraft' => 0,
+        ))->execute();
+  }
+  else {
+    $csiid = db_insert('prs_counselor_submit_info')
+        ->fields(array(
+          'nid' => $nid,
+          'submitTimestamp' => $timestamp,
+          'isDraft' => 1,
+        ))->execute();
+  }
   return $csiid;
 }
 
@@ -957,7 +987,6 @@ function _insert_counselor_submittion_info_to_DB($nid) {
 function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_items, $overall_rating) {
   $range = array(0, 1, 2, 3, 4, 5);
   $csdid_array = array();
-  // dd($clor_items, 'clor_items');
   foreach ($clor_items as $key => $value) {
     if (isset($value->rating) && in_array($value->rating, $range) && (isset($value->peerAvgRating))) {
       $csdid = db_insert('prs_counselor_submit_data')
@@ -1019,6 +1048,17 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
     $msg = 'You did not add any content to DB!';
     drupal_set_message($msg, 'status');
   }
+}
+
+function _submit_counselor_draft_to_DB($rreid, $nid, &$clor_items, $overall_rating) {
+  $is_draft = TRUE;
+  $sid = get_last_sid_by_nid($nid);
+  $csiid = _insert_counselor_submittion_info_to_DB($nid, $is_draft);
+  $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items, $overall_rating);
+
+  // $provider_table = db_update('prs_rel_provider_employee')
+  //               ->fields(array(
+  //                 ))
 }
 
 function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items, $overall_rating) {
@@ -1103,7 +1143,7 @@ function send_approval_email_notification($rreid, $is_approved, $reject_comments
     $email_addr = select_email_from_prs_reviewers($mail_receiver_array);
   }
   if (isset($email_addr)) {
-    $address = $email_addr[0];
+    $address = $email_addr[0]->mail;
   }
 
   if ($reject_comments != NULL) {
