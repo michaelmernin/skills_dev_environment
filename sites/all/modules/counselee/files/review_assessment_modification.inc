@@ -1102,11 +1102,6 @@ function send_approval_email_notification($rreid, $is_approved, $reject_comments
     array_push($mail_receiver_array, $counselee_name);
     $email_addr = select_email_from_prs_reviewers($mail_receiver_array);
   }
-  // dd($counselee_name, 'counselee_name');
-  // dd($counselor_name, 'counselor_name');
-  // dd($token, 'token');
-  // dd($mail_receiver_array, 'mail_receiver_array');
-  // dd($email_addr, 'email_addr');
   if (isset($email_addr)) {
     $address = $email_addr[0];
   }
