@@ -134,7 +134,7 @@ function counsellor_schema() {
       'isCounselorApproved' => array(
         'description' => 'status that if counselor approved its counselee\'s review. 0 for not submitted, 1 for approved, 2 for denied.',
         'type' => 'int',
-        'size' =>  'small',
+        'size' => 'small',
         'not null' => TRUE,
         'default' => 0,
       ),
@@ -192,6 +192,20 @@ function counsellor_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'isCounseleeApproved' => array(
+        'description' => 'Status for counselee approve couselor comment. 0 for not submitted, 1 for approved, 2 for denied.',
+        'type' => 'int',
+        'size'=>'small',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'counseleeReason' => array(
+        'description' => 'Couselee\'s reason to disapprove the counselor comment',
+        'type' => 'varchar',
+        'length' => '100',
+        'not null' => TRUE,
+        'default' => '',
+      )
     ),
     'primary key' => array('rreid'),
   );
@@ -203,30 +217,30 @@ function counsellor_schema() {
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        ),
+      ),
       'nid' => array(
         'description' => 'Primary Key: Unique Node ID generated along with when a review was created.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        ),
+      ),
       'submitTimestamp' => array(
         'description' => 'A UNIX timestamp of when the evaluation was submitted.',
         'type' => 'int',
         'no null' => TRUE,
         'default' => 0,
-        ),
+      ),
       'isDraft' => array(
         'description' => 'A status bit to identify if counselor\'s submittion is drafted.',
         'type' => 'int',
         'size' => 'tiny',
         'unsigned' => TRUE,
         'default' => 0,
-        ),
       ),
+    ),
     'primary key' => array('csiid', 'nid'),
-    );
+  );
 
   $schema['prs_counselor_submit_data'] = array(
     'fields' => array(
@@ -235,19 +249,19 @@ function counsellor_schema() {
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        ),
+      ),
       'nid' => array(
         'description' => 'Primary Key: Unique ID of node which generated along with a review created.',
-        'type' => 'int',  
+        'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        ),
+      ),
       'csiid' => array(
         'description' => 'Unique Sequence ID. The identifer of counselor \'s submittion information.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        ),
+      ),
       'count' => array(
         'description' => 'The serial number of each question in a submitted sheet. Starts with 0.',
         'type' => 'int',
@@ -255,34 +269,34 @@ function counsellor_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        ),
+      ),
       'title' => array(
         'description' => 'The title of each item, it may be the subtitle of a section, or the question of an survey.',
         'type' => 'varchar',
         'length' => 255,
-        ),
+      ),
       'rating' => array(
         'description' => 'The rating that counselor will evaluate the counselee performance.',
         'type' => 'int',
         'unsigned' => TRUE,
-        ),
+      ),
       'counselor_comment' => array(
         'description' => 'The comment corresponds to this title.',
         'type' => 'text',
         'size' => 'medium',
-        ),
+      ),
       'peer_avg_rating' => array(
         'description' => 'The average peer rating that calculated by systhesizing certain items.',
         'type' => 'varchar',
         'length' => '16',
-        ),
+      ),
       'peer_comments' => array(
         'description' => 'The summarized comments of all the peers.',
         'type' => 'text',
         'size' => 'medium',
-        ),
       ),
-    'primary key' => array('csdid', 'nid' ,'csiid'),
+    ),
+    'primary key' => array('csdid', 'nid', 'csiid'),
   );
 
 

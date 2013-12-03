@@ -128,7 +128,7 @@ function counselee_menu() {
     'access arguments' => array('access to my dashboard'),
     'file' => 'files/page_audit_review.inc',
   );
-  
+
   //counselor_submit_review_result
   $items['watchstatus/submitreview/%'] = array(
     'title' => 'Submit Review Result',
@@ -138,7 +138,7 @@ function counselee_menu() {
     'page arguments' => array(2),
     'access arguments' => array('access to my dashboard'),
     'file' => 'files/page_audit_review.inc',
-    );
+  );
 
   $items['audit-review/approve-review-result'] = array(
     'title' => 'Counselee Approve Review Result',
@@ -166,7 +166,7 @@ function counselee_menu() {
     'access arguments' => array('access to my dashboard'),
     'type' => MENU_CALLBACK,
     'file' => 'files/page_audit_review.inc',
-  );  
+  );
   return $items;
 }
 
@@ -446,6 +446,7 @@ function counselee_do_peersreview($userName) {
   $peers_query->addField('provider', 'employeeName');
   $peers_query->addField('provider', 'rpeid');
   $peers_query->addField('general', 'description');
+  $peers_query->addField('provider', 'isCounselorApproved');
   $peers_query->condition('provider.providerName', $userName);
   $peers_query->condition('provider.status', 0);
   $peers_query->condition('review.rstatus', $status, 'in');
@@ -459,11 +460,13 @@ function counselee_do_peersreview($userName) {
     $reviewtype = $node->type;
     $description = $node->description;
     $token = $node->token;
+    $ispproved = $node->isCounselorApproved;
     $temp = array('employeeName' => $employeeName,
       'rpeid' => $rpeid,
       'reviewType' => $reviewtype,
       'description' => $description,
       'token' => $token,
+      'isApproved' =>$ispproved,
     );
     $result[$index++] = $temp;
   }
@@ -765,6 +768,7 @@ function get_self_review_finished_list($counselor) {
   $query->addField('review', 'rreid');
   $query->addField('review', 'employeename');
   $query->addField('general', 'description');
+  $query->addField('review','isCounseleeApproved');
   $query->condition('relation.counselorname', $counselor);
   $query->condition('review.rstatus', 2); // 2 Stand for self reivew has finished
 
@@ -777,7 +781,13 @@ function get_self_review_finished_list($counselor) {
     $rreid = $node->rreid;
     $reviewtype = $node->type;
     $description = $node->description;
-    $temp = array('employeeName' => $employeeName, 'rreid' => $rreid, 'reviewType' => $reviewtype, 'description' => $description);
+    $isCounseleeApproved = $node->isCounseleeApproved;
+    $temp = array('employeeName' => $employeeName, 
+      'rreid' => $rreid, 
+      'reviewType' => $reviewtype,
+      'description' => $description,
+      'isCounseleeApproved'=>$isCounseleeApproved,
+        );
     $result[$index++] = $temp;
   }
   return $result;

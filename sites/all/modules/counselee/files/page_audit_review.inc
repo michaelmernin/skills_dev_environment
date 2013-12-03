@@ -30,7 +30,6 @@ function counselee_confirm_review_result($rreid) {
     drupal_goto('accessdenied');
   }
 
-
   $nid = get_nid_by_rreid($rreid);
   $pageContent = '';
   $self_review = get_self_review_comment($nid);
@@ -100,8 +99,8 @@ WHERE
   return $counselor_review;
 }
 
-function get_question_select_comment_map() {
-  $self_counselor_map = array(
+function get_core_competencies_map() {
+  $core_competencies = array(
     array(
       'selfkey' => 'client_engagements',
       'commentkey' => 'client_engagements_comments',
@@ -138,6 +137,12 @@ function get_question_select_comment_map() {
       'exist_peer' => 1,
       'counselorkey' => 6,
     ),
+  );
+  return $core_competencies;
+}
+
+function get_internal_contribution_map() {
+  $internal_contributions = array(
     array(
       'selfkey' => 'business_development',
       'commentkey' => 'business_development_comments',
@@ -170,7 +175,7 @@ function get_question_select_comment_map() {
     ),
   );
 
-  return $self_counselor_map;
+  return $internal_contributions;
 }
 
 /**
@@ -205,7 +210,7 @@ function get_extend_description_map() {
  */
 function approve_review_result() {
   $rreid = $_POST['rreid'];
-  audit_review_result_update($rreid, 4, '');
+  audit_review_result_update($rreid, 4, 1, '');
   $msg = 'You had approved the review result.';
   drupal_set_message($msg, 'status');
   print true;
@@ -214,7 +219,8 @@ function approve_review_result() {
 function disapprove_review_result() {
   $rreid = $_POST['rreid'];
   $disapprove_reason = $_POST['disapproveReason'];
-  audit_review_result_update($rreid, 2, $disapprove_reason);
+
+  audit_review_result_update($rreid, 2, 2, $disapprove_reason);
 
   $msg = 'You had disapproved the review result.';
   drupal_set_message($msg, 'status');
@@ -223,7 +229,7 @@ function disapprove_review_result() {
 
 function submit_review_result() {
   $rreid = $_POST['rreid'];
-  audit_review_result_update($rreid, 5, '');
+  audit_review_result_update($rreid, 5, 1, '');
   $msg = 'You had submitted the review result.';
   drupal_set_message($msg, 'status');
   print TRUE;
@@ -233,13 +239,18 @@ function submit_review_result() {
  * Modify the prs_rel_review_employee rstatus
  * 
  */
-function audit_review_result_update($rreid, $rstatus, $reason) {
+function audit_review_result_update($rreid, $rstatus, $approveStatus = 1, $reason) {
+  dd('audit_review_result_update');
   $num_updated = db_update('prs_rel_review_employee')
       ->fields(array(
         'rstatus' => $rstatus,
+        'isCounseleeApproved' => $approveStatus,
+        'counseleeReason' => $reason,
       ))
       ->condition('rreid', $rreid)
       ->execute();
+  
+  dd('Reach here');
 
   if ($num_updated == 1) {
 
@@ -266,10 +277,7 @@ function get_achievements() {
   
 }
 
-function get_performance_evaluation($self_review, $counselor_review) {
-  $content = '';
-  $self_review_select_map = get_question_select_comment_map();
-
+function get_category_content($self_review, $counselor_review, $catetory_map) {
   $problem_node = array(
     'key' => null,
     'description' => null,
@@ -280,12 +288,12 @@ function get_performance_evaluation($self_review, $counselor_review) {
     'counselor_comment' => null,
     'peer_comment' => null,
     'exist_peer' => null,
+    'category' => null,
   );
 
-  //CORE COMPETENCIES
-  $core_competencies_content = '';
-  for ($i = 0; $i < count($self_review_select_map) && $i < 6; $i++) {
-    $review = $self_review_select_map[$i];
+  $content = '';
+  for ($i = 0; $i < count($catetory_map); $i++) {
+    $review = $catetory_map[$i];
     $problem_node['key'] = $review['selfkey'];
     $problem_node['description'] = $self_review[$review['selfkey']]->name;
     $problem_node['self_rating'] = $self_review[$review['selfkey']]->data;
@@ -298,26 +306,24 @@ function get_performance_evaluation($self_review, $counselor_review) {
     $problem_node['peer_rating'] = $counselor_review[$review['selfkey']]->peer_avg_rating;
 
     //dd($problem_node, '$problem_node');
-    $core_competencies_content .= theme('page_audit_review_question', array('node' => $problem_node));
+    $content .= theme('page_audit_review_question', array('node' => $problem_node));
   }
+
+  return $content;
+}
+
+function get_performance_evaluation($self_review, $counselor_review) {
+  $content = '';
+
+  //CORE COMPETENCIES
+  $core_competencies_map = get_core_competencies_map();
+  $core_competencies_content = get_category_content($self_review, $counselor_review, $core_competencies_map);
   $core_competencies_content = add_fieldset(1, 'CORE COMPETENCIES', $core_competencies_content);
 
+
   //INTERNAL CONTRIBUTIONS
-  $internal_contributions_content = '';
-  for ($i = 6; $i < count($self_review_select_map); $i++) {
-    $review = $self_review_select_map[$i];
-    $problem_node['key'] = $review['selfkey'];
-    $problem_node['description'] = $self_review[$review['selfkey']]->name;
-    $problem_node['self_rating'] = $self_review[$review['selfkey']]->data;
-    $problem_node['self_comment'] = $self_review[$review['commentkey']]->data;
-    $problem_node['exist_peer'] = $review['exist_peer'];
-
-    $problem_node['counselor_rating'] = $counselor_review[$review['selfkey']]->rating;
-    $problem_node['counselor_comment'] = $counselor_review[$review['selfkey']]->counselor_comment;
-
-
-    $internal_contributions_content .= theme('page_audit_review_question', array('node' => $problem_node));
-  }
+  $internal_contributions = get_internal_contribution_map();
+  $internal_contributions_content = get_category_content($self_review, $counselor_review, $internal_contributions);
   $internal_contributions_content = add_fieldset(1, 'INTERNAL CONTRIBUTIONS', $internal_contributions_content);
 
   return add_fieldset(0, "Performance Evaluation", $core_competencies_content . $internal_contributions_content);

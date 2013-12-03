@@ -63,7 +63,7 @@
    * */
   function showReviewList(items)
   {
-    var obj, name, rpeid, reviewType, description, token, url, li;
+    var obj, name, rpeid, reviewType, description, isApproved, token, url, li;
     for (var i = 0; i < items.length; i++)
     {
       obj = items[i];
@@ -72,12 +72,18 @@
       reviewType = obj.reviewType;
       description = obj.description;
       token = obj.token;
+      isApproved = obj.isApproved;
 
       basePath = '<?php print $base_path = get_curPage_base_url(); ?>';
       url = basePath + token;
-      if (name == '<?php print get_current_user_name(); ?>')
+      if (name == '<?php print get_current_user_name(); ?>' && isApproved == 0)
       {
         li = " <li> <a href='" + url + "'>" + description + " is started.Please fill up your Self-Review form.(" + reviewName(reviewType) + ")</a> </li>";
+        jQuery('#myWorkForMe').append(li);
+      }
+      else if (name == '<?php print get_current_user_name(); ?>' && isApproved == 2)
+      {
+        li = " <li> <a href='" + url + "'>" + description + " was rejected by your counselor.Please fill up your Self-Review form again.(" + reviewName(reviewType) + ")</a> </li>";
         jQuery('#myWorkForMe').append(li);
       }
       else
@@ -95,7 +101,7 @@
    * */
   function showSelfReviewFinished(items)
   {
-    var obj, name, rreid, reviewType, description, token, url, li;
+    var obj, name, rreid, reviewType, description, token, isCounseleeApproved, url, li;
     for (var i = 0; i < items.length; i++)
     {
       obj = items[i];
@@ -103,9 +109,13 @@
       rreid = obj.rreid;
       reviewType = obj.reviewType;
       description = obj.description;
+      isCounseleeApproved = obj.isCounseleeApproved;
       url = "./watchstatus/viewassessment/" + rreid;
-      li = " <li> <a href='" + url + "'>[" + name + "] has finished " + description + " self reivew.(" + reviewName(reviewType) + ")</a> </li>";
-      jQuery('#myWorkForOther').append(li);
+      if (isCounseleeApproved == 0)
+        li = " <li> <a href='" + url + "'>[" + name + "] has finished " + description + " self reivew.(" + reviewName(reviewType) + ")</a> </li>";
+      else if (isCounseleeApproved == 2)
+         li = " <li> <a href='" + url + "'>[" + name + "] disagreed " + description + ".Please check the review again.(" + reviewName(reviewType) + ")</a> </li>";
+        jQuery('#myWorkForOther').append(li);
     }
 
   }
