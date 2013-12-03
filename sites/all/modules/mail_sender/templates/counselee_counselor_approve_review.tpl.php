@@ -1,7 +1,9 @@
 <div>
   Dear [counselee],<br>
   <br>
-  [counselor] disapprove your self review comment.<br>
+  [counselor] disapproved your self review comment.<br>
+  Disapprove reason:<br>
+  [reason]
   You should do review comment again by clicking this link of the Enterprise Review System 
   <a href='[url]'>[url]</a><br>
   <br>

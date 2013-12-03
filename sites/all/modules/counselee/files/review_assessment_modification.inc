@@ -1105,7 +1105,7 @@ function send_approval_email_notification($rreid, $is_approved, $reject_comments
   if (isset($email_addr)) {
     $address = $email_addr[0];
   }
-  dd('counselor_audit_review_remind');
+
   if ($reject_comments != NULL) {
     counselor_audit_review_remind($address, $counselee_name, $counselor_name, $token, $rreid, $is_approved, $reject_comments);
   }

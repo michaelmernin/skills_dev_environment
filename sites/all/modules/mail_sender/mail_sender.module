@@ -198,7 +198,12 @@ function mail_sender_template_adapter($address, $params, $type) {
       break;
     //5 stand for counselor audit the review result,notify counselee the review result
     case 5:
-      $templateName = 'counselee_counselor_audit_review.tpl.php';
+      if ($params['is_approve'] == false) {
+        $templateName = 'counselee_counselor_disapprove_review.tpl.php';
+      }
+      else if ($params['is_approve'] == true) {
+        $templateName = 'counselee_counselor_approve_review.tpl.php';
+      }
       break;
     //6 stand for counselor submit the review result,notify gm that 
     case 6:
@@ -350,7 +355,7 @@ function counselee_audit_review_result_remind($rreid, $is_approve, $reason) {
  * @param string $nid The nid of the node,counselee annual performance review node
  * @param bool $is_approve if
  */
-function counselor_audit_review_remind($address, $counselee_name, $counselor_name, $token, $rreid, $is_approve, $reject_comment=NULL) {
+function counselor_audit_review_remind($address, $counselee_name, $counselor_name, $token, $rreid, $is_approve, $reject_comment = NULL) {
 
   if ($is_approve) {
     $url = get_curPage_base_url() . 'watchstatus/counseleeconfirmresult/' . $rreid;
@@ -361,6 +366,8 @@ function counselor_audit_review_remind($address, $counselee_name, $counselor_nam
   $params = array(
     'counselee' => $counselee_name,
     'counselor' => $counselor_name,
+    'reason' => $reject_comment,
+    'is_approve' => $is_approve,
     'url' => $url,
   );
   $type = 5; // 5 stand for counselor audit the review result

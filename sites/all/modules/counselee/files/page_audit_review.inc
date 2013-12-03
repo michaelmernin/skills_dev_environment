@@ -240,7 +240,6 @@ function submit_review_result() {
  * 
  */
 function audit_review_result_update($rreid, $rstatus, $approveStatus = 1, $reason) {
-  dd('audit_review_result_update');
   $num_updated = db_update('prs_rel_review_employee')
       ->fields(array(
         'rstatus' => $rstatus,
@@ -250,8 +249,6 @@ function audit_review_result_update($rreid, $rstatus, $approveStatus = 1, $reaso
       ->condition('rreid', $rreid)
       ->execute();
   
-  dd('Reach here');
-
   if ($num_updated == 1) {
 
     //rstatus == 4 stand for that counselee disapprove the result
