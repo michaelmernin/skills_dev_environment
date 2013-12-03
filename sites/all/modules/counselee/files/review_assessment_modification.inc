@@ -242,7 +242,6 @@ function _manage_pie_chart($peer_name, $comment_name, $form_key) {
     $pie_data->id = $form_key;
     $pie_data->have_peer_data = FALSE;
   }
-  dd($pie_data, 'pie_data');
   return $pie_data;
 }
 
