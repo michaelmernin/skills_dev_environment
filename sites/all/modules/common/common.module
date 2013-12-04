@@ -2,10 +2,10 @@
 
 /**
  * @file
- * 
+ *
  * This is the Common module you can put Common method in here
- * 
- * 
+ *
+ *
  */
 defined('ANNUAL_TEMP') or define('ANNUAL_TEMP', 'Annual Performace Review Tempate');
 defined('GOAL_STRING') or define('GOAL_STRING', 'goals_text');
@@ -22,14 +22,12 @@ defined('GM_REVIEW') or define('GM_REVIEW', 5);
 defined('GM_APPROVED') or define('GM_APPROVED', 6);
 defined('DELETED_REVIEW') or define('DELETED_REVIEW', 7);
 // End of defined review status constant.
-
-// Start of defined status of select peers 
+// Start of defined status of select peers
 defined('NO_SELECTION') or define('NO_SELECTION', 0);
 defined('COUNSELEE_SELECTED') or define('COUNSELEE_SELECTED', 1);
 defined('COUNSELOR_SELECTED') or define('COUNSELOR_SELECTED', 2);
 defined('BOTH_SELECTED') or define('BOTH_SELECTED', 3);
 // End of defined select peer status constant.
-
 
 /**
  * return my counselor and gm name
@@ -411,7 +409,7 @@ function prs_user_login_role() {
 /* * **********************About login by Mars end**************************************** */
 
 /**
- * 
+ *
  * @param type $title
  * @param type $template_name
  * @param type $is_selfreview 1 true, 0 false
@@ -422,7 +420,7 @@ function create_node($title, $template_name, $is_selfreview = 0) {
   $node->type = "webform";
   $node->title = $title;
   $node->language = LANGUAGE_NONE;
-  $node->uid = 1; // Or any id you 
+  $node->uid = 1; // Or any id you
   $random_string = random_string(10);
   $node->path = array('alias' => $random_string);
   $node->comment = 1;
@@ -439,6 +437,7 @@ function create_node($title, $template_name, $is_selfreview = 0) {
 
   foreach ($result as $key => $values) {
     $field_array = array();
+    $peer_field_array = array();
 
     $field_array['nid'] = $node->nid;
     $field_array['cid'] = $values->cid;
@@ -448,13 +447,18 @@ function create_node($title, $template_name, $is_selfreview = 0) {
     $field_array['type'] = $values->type;
     $field_array['extra'] = $values->extra;
     $field_array['value'] = $values->value;
-//        $field_array['mandatory'] = $values->mandatory;
     $field_array['required'] = $values->required;
     $field_array['weight'] = $values->weight;
-//        $field_array['score_weight'] = $values->score_weight;
-//        $field_array['min_length'] = $values->min_length;
 
     db_insert('webform_component')->fields($field_array)->execute();
+    //========for peer comment display==================================
+    if ($is_selfreview == 0 && $values->type == 'select') {
+      $peer_field_array['nid'] = $node->nid;
+      $peer_field_array['cid'] = $values->cid;
+      $peer_field_array['isDisplay'] = 0;
+      db_insert('prs_rel_peer_comment_display')->fields($peer_field_array)->execute();
+    }
+    //========for peer comment display==================================
   }
 
   change_redirect_path($node->nid, $is_selfreview);
@@ -628,8 +632,8 @@ function is_selfreview($nid) {
 
 /**
  * Get the current page url
- * 
- * 
+ *
+ *
  */
 function curPageURL() {
   $pageURL = 'http';
@@ -650,7 +654,7 @@ function curPageURL() {
 
 /**
  * Get current page base url
- * 
+ *
  */
 function get_curPage_base_url() {
   $pageURL = 'http';
@@ -678,11 +682,11 @@ WHERE
 AND a.providerName != a.employeeName
 ORDER BY
   a.nid;', array(':rreid' => $rreid))
-        ->fetchAll();
+      ->fetchAll();
   return $query;
 }
 
-function identify_accessibility($current_user_name, $reviewee, $counselor, $current_status=NULL, $target_status_array=NULL) {
+function identify_accessibility($current_user_name, $reviewee, $counselor, $current_status = NULL, $target_status_array = NULL) {
   $user_id_flag = '';
   $status_flag = '';
   if ($current_user_name == $reviewee) {
@@ -707,6 +711,6 @@ function identify_accessibility($current_user_name, $reviewee, $counselor, $curr
   }
 }
 
-function update_review_status($rreid, &$review_arg_array=NULL, &$provider_arg_array=NULL) {
+function update_review_status($rreid, &$review_arg_array = NULL, &$provider_arg_array = NULL) {
   
 }
