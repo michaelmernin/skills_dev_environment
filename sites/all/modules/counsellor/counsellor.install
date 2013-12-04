@@ -298,7 +298,38 @@ function counsellor_schema() {
     ),
     'primary key' => array('csdid', 'nid', 'csiid'),
   );
-
+$schema['prs_rel_peer_comment_display'] = array(
+    'fields' => array(
+      'pcdid' => array(
+        'description' => 'Primary Key: Unique Sequence ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+     'nid' => array(
+        'description' => 'Primary Key: Unique ID of node which generated along with a review created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'cid' => array(
+        'description' => 'The identifier for this component within this node, starts at 0 for each node.',
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'isDisplay' => array(
+        'description' => 'Status for dispaly comment. 0 for display, 1 for not display.',
+        'type' => 'int',
+        'size'=>'small',
+        'not null' => TRUE,
+        'default' => 0,
+      )
+    ),
+    'primary key' => array('pcdid'),
+  );
 
   return $schema;
 }
