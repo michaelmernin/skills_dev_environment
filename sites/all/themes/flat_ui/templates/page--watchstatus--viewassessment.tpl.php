@@ -4,6 +4,11 @@
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/highcharts.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/hightchart-no-data.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/modules/exporting.js"></script>
+
+<script src="<?php echo $module_path ?>/assets/javascripts/grid.locale-en.js"></script>
+<script src="<?php echo $module_path ?>/assets/javascripts/jquery.jqGrid.min.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $module_path ?>/assets/stylesheets/ui.jqgrid.css" />
+
 <script type="text/javascript">
   jQuery(document).ready(function() {
     //add a attr to hightchart tooltip for hide a rect
@@ -46,7 +51,7 @@
           // jQuery('#submit_button').removeAttr("disabled");
         }
         // else {
-        //   window.location.href = "<?php // print base_path() . 'viewassessment' ?>";
+        //   window.location.href = "<?php // print base_path() . 'viewassessment'  ?>";
         //   return;
         // }
       });
@@ -76,7 +81,7 @@
           // jQuery('#submit_button').removeAttr("disabled");
         }
         // else {
-        //   window.location.href = "<?php // print base_path() . 'viewassessment' ?>";
+        //   window.location.href = "<?php // print base_path() . 'viewassessment'    ?>";
         //   return;
         // }
       });
@@ -101,7 +106,7 @@
     if (rejectComments != false) {
       jQuery.ajax({
         type: "POST",
-        data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items, 'overallRating': overallRating, 'rejectComments': rejectComments },
+        data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items, 'overallRating': overallRating, 'rejectComments': rejectComments},
         url: '<?php echo $base_relatively_path ?>watchstatus/rejectcounseleeassessment',
         success: function(text) {
           window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
@@ -123,7 +128,7 @@
       var comment = getCounselorComment(i);
       var revisedComment = getCounselorRevisedComment(i);
       var content = {
-        "header": header, 
+        "header": header,
         "rating": rating,
         "comment": comment,
         "peerAvgRating": peerAvgRating,
@@ -131,7 +136,8 @@
       }
       var jsonString = JSON.stringify(content);
       items[i] = jsonString;
-    };
+    }
+    ;
     return items;
   }
 
@@ -152,7 +158,7 @@
     val = jQuery("#header-" + num).attr("value");
     return val;
   }
-  
+
   function getCounselorRating(num) {
     return jQuery("#counselor-rating-" + num + " option:selected").val();
   }
@@ -209,13 +215,13 @@
             <?php print render($page['content']) ?>
 
             <div class="view-self-comment-title">
-              <div style="font-weight: 600;float: left">·Overall Rating : | </div>
-              <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Self Overall Rating : </div>
+              <div style="font-weight: 600;float: left">·Overall Rating: | </div>
+              <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Self Overall Rating: </div>
               <div class="color-rating-box" id="counselee-overall_rating-content"></div>
               <br />
               <br />
-              <div class="color-rating-box" id="counselor-overall_rating"><input id="counselor-overall_rating-content" type="text" maxlength="10" size="60">
-              </div>
+            </div>
+            <div id="counselor-overall_rating" style="clear: left;margin-top: 3px;"><input id="counselor-overall_rating-content" type="text" maxlength="10" size="60">
             </div>
             <br />
             <br />
@@ -270,40 +276,40 @@
 
 
 
-<script type="text/javascript">
-  var basePath = '<?php print get_curPage_base_url() ?>';
-  var js_path = basePath + "sites/all/modules/counselee/js/annual_review_approve_overall.js";
-  var new_element = document.createElement("script");
-  new_element.setAttribute("type", "text/javascript");
-  new_element.setAttribute("src", js_path);
-  document.body.appendChild(new_element);
+            <script type="text/javascript">
+              var basePath = '<?php print get_curPage_base_url() ?>';
+              var js_path = basePath + "sites/all/modules/counselee/js/annual_review_approve_overall.js";
+              var new_element = document.createElement("script");
+              new_element.setAttribute("type", "text/javascript");
+              new_element.setAttribute("src", js_path);
+              document.body.appendChild(new_element);
 
-  // jQuery(document).ready(function() {
-  //   var isCounselor = '<?php // print $identity ?>';
-  //   if (isCounselor == "counselee") {
-  //     jQuery(".draftbutton").hide();
-  //   }
-  // });
-  setCounselorOverallRating();
-  setCounseleeOverallRating();
+              // jQuery(document).ready(function() {
+              //   var isCounselor = '<?php // print $identity    ?>';
+              //   if (isCounselor == "counselee") {
+              //     jQuery(".draftbutton").hide();
+              //   }
+              // });
+              setCounselorOverallRating();
+              setCounseleeOverallRating();
 
-  function setCounselorOverallRating() {
-    var overallRating = jQuery("#counselor-overall_rating-0").val();
-    if (overallRating != "undefined" && overallRating != 0) {
-      jQuery("#counselor-overall_rating-content").val(overallRating);
-    }
-  }
+              function setCounselorOverallRating() {
+                var overallRating = jQuery("#counselor-overall_rating-0").val();
+                if (overallRating != "undefined" && overallRating != 0) {
+                  jQuery("#counselor-overall_rating-content").val(overallRating);
+                }
+              }
 
-  function setCounseleeOverallRating() {
-    var overallRating = jQuery("#counselee-overall_rating-0").val();
-    if (overallRating != "undefined") {
-      jQuery("#counselee-overall_rating-content").append(overallRating);
-    }
-  }
-</script>
+              function setCounseleeOverallRating() {
+                var overallRating = jQuery("#counselee-overall_rating-0").val();
+                if (overallRating != "undefined") {
+                  jQuery("#counselee-overall_rating-content").append(overallRating);
+                }
+              }
+            </script>
             <div>
               <div class="draftbutton" style="float: left; margin-right: 15px;">
-                  <input class="webform-draft form-submit btn btn-large" type="submit" value="Save Draft" name="op" formnovalidate="formnovalidate" onclick="submitCounselorAssessment()">
+                <input class="webform-draft form-submit btn btn-large" type="submit" value="Save Draft" name="op" formnovalidate="formnovalidate" onclick="submitCounselorAssessment()">
               </div>
               <div class="draftbutton" style="float: left; margin-right: 15px;">
                 <a id="modal-912872" href="#modal-container-912872" role="button" data-toggle="modal"><input formnovalidate="formnovalidate" class="webform-draft form-submit btn btn-large" type="submit" name="op" value="Disapprove"></a>
