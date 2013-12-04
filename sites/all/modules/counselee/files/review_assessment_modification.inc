@@ -23,7 +23,6 @@ function load_self_assessment($rreid = NULL) {
   $cid_indexed_dataset = _indexed_by_cid($self_dataset);
   $item_count = count($self_dataset);
   $self_cid_formkey_type_array = _generate_self_cid_formkey_type($self_dataset);
-
   $self_adj_list = dfs_generate_adjacent_list($self_cid_formkey_type_array);
   $self_sequential_list = dfs_travel_all_node($self_adj_list);
   $self_mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
@@ -544,25 +543,30 @@ function _matching_none_selection_items($none_selection_item, $self_cid_formkey_
     }
     else if ($value['form_key'] == 'overall_rating' && $value['type'] == 'textfield') {
       $overall_rating->counselee_rating = $cid_indexed_dataset[$key]->DATA;
+      continue;
     }
-    foreach ($none_selection_item as $item) {
-      if ($value['form_key'] == 'project_roles_and_responsibilities_category') {
-        continue;
-      }
-      $temp = explode('_', $item['form_key']);
-      array_pop($temp);
-      if (array_search('label', $temp)) {
+    else {
+      foreach ($none_selection_item as $item) {
+        if ($value['form_key'] == 'project_roles_and_responsibilities_category') {
+          continue;
+        }
+        $temp = explode('_', $item['form_key']);
         array_pop($temp);
-      }
-      $type = implode("_", $temp);
-      // dd($type, 'type');
-      if (strpos($value['form_key'], $type) !== FALSE && $value['type'] == 'textarea') {
-        if (!array_key_exists($key, $self_comments_array)) {
-          $temp = new stdClass();
-          $temp->form_key = $cid_indexed_dataset[$key]->form_key;
-          $temp->question = $cid_indexed_dataset[$key]->name;
-          $temp->comment = $cid_indexed_dataset[$key]->DATA;
-          array_push($self_comments_array, $temp);
+        if (array_search('label', $temp)) {
+          array_pop($temp);
+        }
+        $type = implode("_", $temp);
+        $text_array = explode('_', $value['form_key']);
+        array_pop($text_array);
+        $text = implode("_", $text_array);
+        if (($text === $type) && $value['type'] == 'textarea') {
+          if (!array_key_exists($key, $self_comments_array)) {
+            $content = new stdClass();
+            $content->form_key = $cid_indexed_dataset[$key]->form_key;
+            $content->question = $cid_indexed_dataset[$key]->name;
+            $content->comment = $cid_indexed_dataset[$key]->DATA;
+            array_push($self_comments_array, $content);
+          }
         }
       }
     }
