@@ -244,7 +244,7 @@ jQuery(document).ready(
 );
 
 function check_reject_reasons() {
-    var comment = jQuery("#counselor_reject_reason").val();
+    var comment = jQuery.trim(jQuery("#counselor_reject_reason").val());
     var len = comment.length;
     if (len < 1) {
         alert('Please write down reason. If you are going to reject, this area cannot be blank!');

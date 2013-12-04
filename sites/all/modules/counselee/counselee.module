@@ -98,7 +98,7 @@ function counselee_menu() {
     'page arguments' => array(2),
     'access arguments' => array('access to my dashboard'),
     'type' => MENU_LOCAL_TASK,
-    'weight' => 3,
+    'weight' => 4,
     'file' => 'files/watch_review_status.inc',
   );
   $items['watchstatus/submitcounselorassessment'] = array(
@@ -132,7 +132,7 @@ function counselee_menu() {
     'title' => 'Confirm Review Result',
     'page callback' => 'counselee_confirm_review_result',
     'type' => MENU_LOCAL_TASK,
-    'weight' => 4,
+    'weight' => 5,
     'page arguments' => array(2),
     'access arguments' => array('access to my dashboard'),
     'file' => 'files/page_audit_review.inc',
@@ -143,7 +143,7 @@ function counselee_menu() {
     'title' => 'Submit Review Result',
     'page callback' => 'counselor_submit_review_result',
     'type' => MENU_LOCAL_TASK,
-    'weight' => 5,
+    'weight' => 6,
     'page arguments' => array(2),
     'access arguments' => array('access to my dashboard'),
     'file' => 'files/page_audit_review.inc',
