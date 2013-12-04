@@ -613,11 +613,14 @@ function print_render_tabs($tabs) {
   else if (_is_assessment_visible_for_counselor($userId_flag, $rstatus)) {
     print render($tabs['tabs']['output']['3']);
   }
-  else if ($userId_flag == 0 && $rstatus == 3) {
+  else if ($userId_flag == 0 && $rstatus == APPROVED_BY_COUNSELOR) {
+    print render($tabs['tabs']['output']['5']);
+  }
+  else if ($userId_flag == 1 && $rstatus == APPROVED_BY_COUNSELOR) {
     print render($tabs['tabs']['output']['4']);
   }
-  else if ($userId_flag == 1 && $rstatus == 4) {
-    print render($tabs['tabs']['output']['5']);
+  else if ($userId_flag == 1 && $rstatus == JOINT_REVIEW) {
+    print render($tabs['tabs']['output']['6']);
   }
 }
 
@@ -628,8 +631,8 @@ function print_render_tabs($tabs) {
  * @return bool
  * */
 function _is_assessment_editable($userId_flag, $rstatus) {
-// while login user is the counselee of review and status is REVIEW_IN_DRAFT
-  if ($userId_flag == 0 && $rstatus == 1) {
+  // while login user is the counselee of review and status is REVIEW_IN_DRAFT
+  if ($userId_flag == 0 && $rstatus == REVIEW_IN_DRAFT) {
     return TRUE;
   }
   else {
@@ -643,7 +646,7 @@ function _is_assessment_editable($userId_flag, $rstatus) {
  * REVIEW_IN_DRAFT, the result is no
  * */
 function _is_assessment_visible_for_counselor($userId_flag, $rstatus) {
-  if (($rstatus > 1 && $rstatus < 3) && ($userId_flag == 1)) {
+  if (($rstatus == REVIEW_BY_COUNSELOR) && ($userId_flag == 1)) {
     return TRUE;
   }
   else {

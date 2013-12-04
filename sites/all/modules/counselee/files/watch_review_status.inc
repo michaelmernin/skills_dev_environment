@@ -129,6 +129,14 @@ function display_peer_selection_page($rreid, $userId_flag, $all_employee_array, 
 }
 
 /**
+ * Page callback function of review content.
+**/
+function load_review_content() {
+  $pageContent = '';
+  return $pageContent;
+}
+
+/**
  * update_review_spstatus_manager
  * according to the user id and current spstatus of the review, call the corresponding update spstatus 
  * executing functions. The attribute "spstatus" is an integer in table "prs_rel_review_employee". Status of 

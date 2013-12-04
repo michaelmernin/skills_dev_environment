@@ -309,7 +309,7 @@
             </script>
             <div>
               <div class="draftbutton" style="float: left; margin-right: 15px;">
-                <input class="webform-draft form-submit btn btn-large" type="submit" value="Save Draft" name="op" formnovalidate="formnovalidate" onclick="submitCounselorAssessment()">
+                <input class="webform-draft form-submit btn btn-large" type="submit" value="Save As Draft" name="op" formnovalidate="formnovalidate" onclick="submitCounselorAssessment()">
               </div>
               <div class="draftbutton" style="float: left; margin-right: 15px;">
                 <a id="modal-912872" href="#modal-container-912872" role="button" data-toggle="modal"><input formnovalidate="formnovalidate" class="webform-draft form-submit btn btn-large" type="submit" name="op" value="Disapprove"></a>

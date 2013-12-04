@@ -34,10 +34,10 @@
         · Counselor Comment:
       </div>
 
-      <div class="additionalbubble">
+      <!-- <div class="additionalbubble"> -->
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
             <textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
-          if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_rating_commentomment)) {
+          if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
             print $clor_rating_comment->clor_comment; 
           }
           else {
@@ -45,7 +45,7 @@
           }
           ?></textarea>
         </div>
-      </div>
+      <!-- </div> -->
     </div>
   </div>
   <br>

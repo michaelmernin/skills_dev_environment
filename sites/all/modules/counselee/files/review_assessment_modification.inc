@@ -76,7 +76,6 @@ function load_self_assessment($rreid = NULL) {
   //Item below is for counselor
   ///////////////////////////////////////////////////////
   $csiid = get_counselor_latest_submissionID($nid);
-   // dd($csiid,'$csiid');
   if ($csiid != -1) {
     $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
     $revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
@@ -116,6 +115,7 @@ function load_self_assessment($rreid = NULL) {
       if ($have_counselor_data) {
         generate_synthesized_peer_comment($value->form_key, $unread_comment, $revised_comments);
       }
+      // dd($revised_comments, 'revised_comments');
       $content = theme('view_assessment', array(
         'item_num' => $key,
         'rreid' => $rreid,
@@ -262,9 +262,9 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
         if ($is_first) {
           foreach ($one_question_answer->ratings as $key => $one_ratings) {
             $peer_name_temp[$key]['flag'] = TRUE;
-            if ($one_ratings != 'N/A') {
-              if ($one_ratings != 0) {
-                $peer_name_temp[$key]['rating'] = $one_ratings;
+            if ($one_ratings['rating'] != 'N/A') {
+              if ($one_ratings['rating'] != 0) {
+                $peer_name_temp[$key]['rating'] = $one_ratings['rating'];
                 $peer_name_temp[$key]['count'] = 1;
               }
               else {
@@ -286,9 +286,9 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
         else {
           foreach ($one_question_answer->ratings as $key => $one_ratings) {
             if ($peer_name_temp[$key]['flag']) {
-              if ($one_ratings != 0) {
+              if ($one_ratings['rating'] != 0) {
 
-                $peer_name_temp[$key]['rating'] = $peer_name_temp[$key]['rating'] + $one_ratings;
+                $peer_name_temp[$key]['rating'] = $peer_name_temp[$key]['rating'] + $one_ratings['rating'];
                 $peer_name_temp[$key]['count'] = $peer_name_temp[$key]['count'] + 1;
               }
               $comment_name[$key] .=$one_question_answer->comments[$key]->comment . ' <br/>';
@@ -463,7 +463,7 @@ function _get_provider_review_content($nid_sid_array) {
     $nid = $nid_sid_pair['nid'];
     $sid = $nid_sid_pair['sid'];
     $providerName = $nid_sid_pair['providerName'];
-    $dataset = get_latest_submitted_data_from_db($nid, $sid);
+    $dataset = get_latest_peer_submitted_data_from_db($nid, $sid);
     $objInstance->nid = $nid;
     $objInstance->sid = $sid;
     $objInstance->providerName = $providerName;
@@ -651,10 +651,15 @@ function synthesize_all_peer_review_ratings_and_comments(&$nid_pname_array, &$pr
     $obj->question = $pr_data_array[$providerName]->dataset[$i]->name;
 
     $obj->ratings = $rating_array[$mapping_table[$iterate_counting]['rating_idx']];
+    foreach ($nid_pname_array as $item) {
+      $pname = $item['providerName'];
+      $obj->ratings[$pname]['comment'] = $comment_array[$mapping_table[$iterate_counting]['comment_idx']][$pname]->comment;
+    }
     $obj->comments = $comment_array[$mapping_table[$iterate_counting]['comment_idx']];
     $iterate_counting++;
     array_push($all_peer_review_content, $obj);
   }
+  // dd($all_peer_review_content, 'all_peer_review_content');
   return $all_peer_review_content;
 }
 
@@ -672,10 +677,16 @@ function _generate_provider_syn_ratings_array($pr_data_array, $count) {
   foreach ($pr_data_array as $item) {
     foreach ($item->dataset as $key => $value) {
       if ($value->type == 'select' && $value->DATA !== '') {
-        $rating_array[$value->cid][$item->providerName] = $value->DATA;
+        $rating_array[$value->cid][$item->providerName] = array();
+        $rating_array[$value->cid][$item->providerName]['nid']= $item->nid;
+        $rating_array[$value->cid][$item->providerName]['rating'] = $value->DATA;
+        $rating_array[$value->cid][$item->providerName]['isDisplay'] = $value->isDisplay;
       }
       else if ($value->type == 'select' && $value->DATA == NULL) {
-        $rating_array[$value->cid][$item->providerName] = 'N/A';
+        $rating_array[$value->cid][$item->providerName] = array();
+        $rating_array[$value->cid][$item->providerName]['nid'] = $item->nid;
+        $rating_array[$value->cid][$item->providerName]['rating'] = 'N/A';
+        $rating_array[$value->cid][$item->providerName]['isDisplay'] = $value->isDisplay;
       }
     }
   }
@@ -916,6 +927,7 @@ function dfs_push(&$target, $source) {
 /**
  * get_latest_submitted_data_from_db
  * @param int $nid
+ * @param int $sid
  * @return array $dataset,data which contains $cid, $sid, $pid, $form_key, $type, $weight, $name, $data.
  * if you would like to accuire additional data from here, feel free to adjust the db_query statement.
  * */
@@ -947,6 +959,66 @@ function get_latest_submitted_data_from_db($nid, $sid) {
           webform_component.nid = :nid
         ORDER BY
           webform_component.cid', array(':sid' => $sid, ':nid' => $nid))->fetchAll();
+  return $dataset;
+}
+
+/**
+ * get_latest_peer_submitted_data_from_db
+ * @param int $nid
+ * @param int $sid
+ * @return array $dataset
+**/
+function get_latest_peer_submitted_data_from_db($nid, $sid) {
+  $dataset = db_query('SELECT
+      a.cid,
+      a.form_key,
+      a.name,
+      a.type,
+      a.pid,
+      a.weight,
+
+    IF (a.nid IS NULL, :nid, a.nid) AS nid,
+     a.sid,
+     a.DATA,
+     b.isDisplay
+    FROM
+      (
+        SELECT
+          wc.cid,
+          wc.form_key,
+          wc.name,
+          wc.type,
+          wc.pid,
+          wc.weight,
+          wc.nid,
+
+        IF (wd.sid IS NULL, :sid, wd.sid) AS sid,
+
+      IF (wd.DATA IS NULL, \'\', wd.DATA) AS DATA
+      FROM
+        webform_component wc
+      LEFT JOIN (
+        SELECT
+          DATA,
+          cid,
+          nid,
+          sid
+        FROM
+          webform_submitted_data
+        WHERE
+          nid = :nid
+        AND sid = :sid
+      ) wd ON wc.cid = wd.cid
+      WHERE
+        wc.nid = :nid
+      ORDER BY
+        wc.cid
+      ) a
+    LEFT JOIN prs_rel_peer_comment_display b ON a.cid = b.cid
+    WHERE
+      a.nid = :nid
+    AND a.sid = :sid
+    AND (b.nid = :nid OR b.nid IS NULL)', array(':sid' => $sid, ':nid' => $nid))->fetchAll();
   return $dataset;
 }
 
@@ -1055,9 +1127,18 @@ function _submit_counselor_draft_to_DB($rreid, $nid, &$clor_items, $overall_rati
   $csiid = _insert_counselor_submittion_info_to_DB($nid, $is_draft);
   $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items, $overall_rating);
 
-  // $provider_table = db_update('prs_rel_provider_employee')
-  //               ->fields(array(
-  //                 ))
+  $provider_table = db_update('prs_rel_provider_employee')
+                ->fields(array(
+                  'isRead' => 1,
+                  ))
+                ->condition('nid', $nid)
+                ->execute();
+  if (isset($csdid_array)) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
 }
 
 function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items, $overall_rating) {
@@ -1132,7 +1213,6 @@ function _append_counselor_reject_info_to_DB($rreid, $nid, &$clor_items, &$rejec
 
 function send_approval_email_notification($rreid, $is_approved, $reject_comments=NULL) {
   $provider_info = get_provider_info($rreid);
-  // dd($provider_info, 'provider_info');
   if (isset($provider_info)) {
     $counselee_name = $provider_info[0]->employeeName;
     $counselor_name = get_counselor($counselee_name);
