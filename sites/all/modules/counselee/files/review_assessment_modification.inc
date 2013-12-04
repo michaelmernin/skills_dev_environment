@@ -20,33 +20,21 @@ function load_self_assessment($rreid = NULL) {
 ////////////////////////////////////////////////////////
 
   $self_dataset = get_latest_submitted_data_from_db($nid, $sid);
-  // dd($self_dataset, 'self_dataset');
   $cid_indexed_dataset = _indexed_by_cid($self_dataset);
-  // dd($cid_indexed_dataset, 'cid_indexed_dataset');
   $item_count = count($self_dataset);
-// dd($cid_indexed_dataset, 'cid_indexed_dataset');
   $self_cid_formkey_type_array = _generate_self_cid_formkey_type($self_dataset);
 
-  // dd($self_cid_formkey_type_array, 'self_cid_formkey_type_array');
   $self_adj_list = dfs_generate_adjacent_list($self_cid_formkey_type_array);
   $self_sequential_list = dfs_travel_all_node($self_adj_list);
   $self_mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
-  // dd($self_adj_list, 'self_adj_list');
-  // dd($self_mapping_table, 'self_mapping_table');
-  // dd($self_sequential_list, 'self_sequential_list');
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
   $review_info = new stdClass();
   $self_comments_array = array();
   $overall_rating = new stdClass();
-  // dd($cid_indexed_dataset, 'cid_indexed_dataset');
   _matching_none_selection_items($none_selection_item, $self_cid_formkey_type_array, $cid_indexed_dataset, $review_info, $self_comments_array, $overall_rating);
-  // $self_dataset = generate_selfassessment_result_array($self_dataset);
-  // $rating_qa_sheet = _generate_rating_qa_sheet($self_dataset);
   $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($cid_indexed_dataset, $self_mapping_table);
-  // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
   $self_question_rating_comment_result = _resort_item_by_weight($self_question_rating_comment_result);
   $self_item_count = count($self_question_rating_comment_result);
-// dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
   $total_item_count = $self_item_count + count($self_comments_array);
 ////////////////////////////////////////////////////////
 // Item below is for peers
@@ -56,16 +44,11 @@ function load_self_assessment($rreid = NULL) {
   $have_peer_data = TRUE;
   $have_counselor_data = TRUE;
   $providerInfo_table = get_all_providers_info_from_db($rreid);
-//  dd($providerInfo_table,'$providerInfo_table');
   if (count($providerInfo_table)) {
     //selected peers
     $nid_pname_sid_array = _fetch_provider_nodeID_and_submissionID($providerInfo_table);
-//    dd($nid_pname_sid_array,'$nid_pname_sid_array');
     $pr_data_array = _get_provider_review_content($nid_pname_sid_array);
     $mapping_table = reorder_form_contents($pr_data_array, $cid_formkey_type_array, $adj_list);
-//  dd($mapping_table,'$mapping_table');
-// dd($cid_formkey_type_array, 'cid_formkey_type_array');
-// dd($adj_list, 'adj_list');
     $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
   }
   else {
@@ -1133,6 +1116,23 @@ function _submit_counselor_draft_to_DB($rreid, $nid, &$clor_items, $overall_rati
                   ))
                 ->condition('nid', $nid)
                 ->execute();
+
+  $provider_array = db_select('prs_rel_provider_employee')
+                ->fields('prs_rel_provider_employee', array(
+                  'providerName'))
+                ->condition('rreid', $rreid)
+                ->condition('nid', $nid, '!=')
+                ->condition('status', 1)
+                ->execute()->fetchAll();
+  foreach ($provider_array as $key => $value) {
+    $provider_info = db_update('prs_rel_provider_employee')
+                    ->fields(array(
+                      'isRead' => 1,
+                      ))
+                    ->condition('rreid', $rreid)
+                    ->condition('providerName', $value->providerName)
+                    ->execute();
+  }
   if (isset($csdid_array)) {
     return TRUE;
   }
@@ -1154,6 +1154,22 @@ function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items, $overa
       ))
       ->condition('nid', $nid)
       ->execute();
+  $provider_array = db_select('prs_rel_provider_employee')
+                ->fields('prs_rel_provider_employee', array(
+                  'providerName'))
+                ->condition('rreid', $rreid)
+                ->condition('nid', $nid, '!=')
+                ->condition('status', 1)
+                ->execute()->fetchAll();
+  foreach ($provider_array as $key => $value) {
+    $provider_info = db_update('prs_rel_provider_employee')
+                    ->fields(array(
+                      'isRead' => 1,
+                      ))
+                    ->condition('rreid', $rreid)
+                    ->condition('providerName', $value->providerName)
+                    ->execute();
+  }
 
   $review_table = db_update('prs_rel_review_employee')
       ->fields(array(
@@ -1191,6 +1207,22 @@ function _append_counselor_reject_info_to_DB($rreid, $nid, &$clor_items, &$rejec
       ))
       ->condition('nid', $nid)
       ->execute();
+  $provider_array = db_select('prs_rel_provider_employee')
+                ->fields('prs_rel_provider_employee', array(
+                  'providerName'))
+                ->condition('rreid', $rreid)
+                ->condition('nid', $nid, '!=')
+                ->condition('status', 1)
+                ->execute()->fetchAll();
+  foreach ($provider_array as $key => $value) {
+    $provider_info = db_update('prs_rel_provider_employee')
+                    ->fields(array(
+                      'isRead' => 1,
+                      ))
+                    ->condition('rreid', $rreid)
+                    ->condition('providerName', $value->providerName)
+                    ->execute();
+  }
   $webform_table = db_update('webform_submissions')
       ->fields(array(
         'is_draft' => 1,))

@@ -48,6 +48,7 @@
 
             <div class="view-self-comment-title">
               <div style="font-weight: 600;float: left">·Overall Rating: | </div>
+              <div class="color-rating-box" id="counselor-overall_rating-content"></div>
               <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Self Overall Rating: </div>
               <div class="color-rating-box" id="counselee-overall_rating-content"></div>
             </div>
@@ -117,8 +118,8 @@
 
               function setCounselorOverallRating() {
                 var overallRating = jQuery("#counselor-overall_rating-0").val();
-                if (overallRating != "undefined" && overallRating != 0) {
-                  jQuery("#counselor-overall_rating-content").val(overallRating);
+                if (overallRating != "undefined") {
+                  jQuery("#counselor-overall_rating-content").append(overallRating);
                 }
               }
 

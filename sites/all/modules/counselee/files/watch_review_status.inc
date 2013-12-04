@@ -131,8 +131,145 @@ function display_peer_selection_page($rreid, $userId_flag, $all_employee_array, 
 /**
  * Page callback function of review content.
 **/
-function load_review_content() {
+function load_review_content($rreid=NULL) {
+  access_authen($rreid);
+  $cur_user_name = get_current_user_name();
+  $reviewee = get_reviewee_from_db($rreid);
+  $counselor = get_counselor($reviewee);
+  $review_status = get_review_status_from_db($rreid);
+  
+  $provider_info = get_provider_info($rreid, $reviewee);
+  $nid = $provider_info[0]->nid;
+  $sid = get_last_sid_by_nid($nid);
+  module_load_include('inc', 'counselee', 'files/review_assessment_modification');
+
+////////////////////////////////////////////////////////
+// Item below is for self assessment
+////////////////////////////////////////////////////////
+
+  $self_dataset = get_latest_submitted_data_from_db($nid, $sid);
+  $cid_indexed_dataset = _indexed_by_cid($self_dataset);
+  $item_count = count($self_dataset);
+  $self_cid_formkey_type_array = _generate_self_cid_formkey_type($self_dataset);
+
+  $self_adj_list = dfs_generate_adjacent_list($self_cid_formkey_type_array);
+  $self_sequential_list = dfs_travel_all_node($self_adj_list);
+  $self_mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
+  $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
+  $review_info = new stdClass();
+  $self_comments_array = array();
+  $overall_rating = new stdClass();
+  _matching_none_selection_items($none_selection_item, $self_cid_formkey_type_array, $cid_indexed_dataset, $review_info, $self_comments_array, $overall_rating);
+  $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($cid_indexed_dataset, $self_mapping_table);
+  $self_question_rating_comment_result = _resort_item_by_weight($self_question_rating_comment_result);
+  $self_item_count = count($self_question_rating_comment_result);
+  $total_item_count = $self_item_count + count($self_comments_array);
+////////////////////////////////////////////////////////
+// Item below is for peers
+////////////////////////////////////////////////////////
+  $cid_formkey_type_array = array();
+  $adj_list = array();
+  $have_peer_data = TRUE;
+  $have_counselor_data = TRUE;
+  $providerInfo_table = get_all_providers_info_from_db($rreid);
+  if (count($providerInfo_table)) {
+    //selected peers
+    $nid_pname_sid_array = _fetch_provider_nodeID_and_submissionID($providerInfo_table);
+    $pr_data_array = _get_provider_review_content($nid_pname_sid_array);
+    $mapping_table = reorder_form_contents($pr_data_array, $cid_formkey_type_array, $adj_list);
+    $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
+  }
+  else {
+    // no peer
+    $have_peer_data = FALSE;
+  }
+  ///////////////////////////////////////////////////////
+  //Item below is for counselor
+  ///////////////////////////////////////////////////////
+  $csiid = get_counselor_latest_submissionID($nid);
+  if ($csiid != -1) {
+    $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
+    $revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
+    $overall_rating->counselor_rating = _fetch_counselor_overall_rating($revised_comments);
+  }
+  else {
+    $have_counselor_data = FALSE;
+    $revised_comments = array();
+    for($i = 0; $i < $total_item_count+1; $i++) {
+      $revised_comments[$i] = new stdClass();
+    }
+    $overall_rating->counselor_rating = 0;
+  }
+
   $pageContent = '';
+  foreach ($self_question_rating_comment_result as $key => $value) {
+//=====================the question which have pie chart ============CONST===============================
+    $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
+    $unread_comment = array();
+    if (in_array($value->form_key, $pie_form_key_array)) {
+      $form_key = $value->form_key . '_category';
+      if ($have_peer_data) {
+        $fieldset_cid = get_fieldset_key_in_peer_table($form_key, $cid_formkey_type_array);
+        $children_array = get_children_array_by_cid($fieldset_cid, $adj_list);
+        $peer_name = array();
+        $comment_name = array();
+        _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, $peer_name, $comment_name, $unread_comment);
+        $pie_data = _manage_pie_chart($peer_name, $comment_name, $form_key);
+      }
+      else {
+        $pie_data = new stdClass();
+        $pie_data->id = $form_key;
+        $pie_data->all_avg = 'No Data.';
+        $pie_data->have_peer_data = FALSE;
+      }
+//=====================pie chart end=====================================================================
+      if ($have_counselor_data) {
+        generate_synthesized_peer_comment($value->form_key, $unread_comment, $revised_comments);
+      }
+      // dd($revised_comments, 'revised_comments');
+      $content = theme('review_content', array(
+        'item_num' => $key,
+        'rreid' => $rreid,
+        'nid' => $nid,
+        'reviewee' => $reviewee,
+        'self_dataset' => $value,
+        'pie_data' => $pie_data,
+        'unread_comment' => $unread_comment,
+        'clor_rating_comment' => $revised_comments[$key],
+        'total_item_count' => $total_item_count,
+        'review_info' => $review_info,
+      ));
+      $pageContent .= $content;
+    }
+    else {
+      $content = theme('review_content_without_chart', array(
+        'item_num' => $key,
+        'rreid' => $rreid,
+        'nid' => $nid,
+        'reviewee' => $reviewee,
+        'self_dataset' => $value,
+        'clor_rating_comment' => $revised_comments[$key],
+        'total_item_count' => $total_item_count,
+        'review_info' => $review_info,
+        'overall_rating' => $overall_rating,
+      ));
+      $pageContent .= $content;
+    }
+  }
+  foreach ($self_comments_array as $key => $value) {
+    $content = theme('review_content_comment_only', array(
+      'item_num' => $self_item_count + $key,
+      'rreid' => $rreid,
+      'nid' => $nid,
+      'reviewee' => $reviewee,
+      'self_comment' => $value,
+      'clor_rating_comment' => $revised_comments[$self_item_count + $key],
+      'total_item_count' => $total_item_count,
+      'review_info' => $review_info,
+    ));
+    $pageContent .= $content;
+  }
+  // generate comment only content here.
   return $pageContent;
 }
 
@@ -410,90 +547,3 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag, $r
   }
 }
 
-/**
- * get_latest_submitted_data_from_db
- * @param int $nid
- * @return array $dataset,data which contains $cid, $sid, $pid, $form_key, $type, $weight, $name, $data.
- * if you would like to accuire additional data from here, feel free to adjust the db_query statement.
-**/
-function get_latest_submitted_data_from_db($nid) {
-  $sid = get_last_sid_by_nid($nid);
-  $dataset = db_query('SELECT
-        webform_component.cid,
-        webform_component.form_key,
-        webform_component.name,
-        webform_component.type,
-        webform_component.pid,
-        webform_component.weight,
-        IF (wd.sid IS NULL, \'NIL\', wd.sid) AS sid,
-        IF (wd.DATA IS NULL, \'NIL\', wd.DATA) AS DATA
-        FROM
-          webform_component
-        LEFT JOIN (
-          SELECT
-            DATA,
-            sid,
-            cid,
-            nid
-          FROM
-            webform_submitted_data
-          WHERE
-            nid = :nid
-          AND sid = :sid
-        ) wd ON webform_component.cid = wd.cid
-        WHERE
-          webform_component.nid = :nid
-        ORDER BY
-          webform_component.cid', 
-    array(':sid'=> $sid, ':nid' => $nid ))->fetchAll();
-  return $dataset;
-}
-
-/**
- * insert counselor's submission info to db table prs_counselor_submit_info
- * @param int $nid
- * @return int $csiid
-**/
-function _insert_counselor_submittion_info_to_DB($nid) {
-  $csiid = '';
-  $timestamp = time();
-  $csiid = db_insert('prs_counselor_submit_info')
-        ->fields(array(
-          'nid' => $nid,
-          'submitTimestamp' => $timestamp,
-          'isDraft' => 1,
-          ))->execute();
-  return $csiid;
-}
-
-/**
- * insert counselor's submission data to db table prs_counselor_submit_data
- * @param int $nid
- * @param int $csiid
- * @param array by reference $data_array
- * @return array $csdid_array
-**/
-function _insert_counselor_submittion_data_to_DB($nid, $csiid, &$data_array) {
-  $csdid_array = array();
-  foreach ($data_array as $data) {
-    $csdid = db_insert('prs_counselor_submit_data')
-          ->fields(array(
-            'nid' => $nid,
-            'csiid' => $csiid,
-            'count' => $data['count'],
-            'header' => $data['header'],
-            'rating' => $data['rating'],
-            'comment' => $data['comment'],
-            ))->execute();
-    if ($csdid != -1) {
-      array_push($csdid_array, $csdid);
-    }
-  }
-  if (count($csdid_array) != 0) {
-    return $csdid_array;
-  }
-  else {
-    $msg = 'You did not add any content to DB!';
-    drupal_set_message($msg, 'status');
-  }
-}

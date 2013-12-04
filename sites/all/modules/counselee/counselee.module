@@ -262,6 +262,44 @@ function counselee_theme() {
       'variables' => array('rreid' => NULL, 'node' => NULL),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'self_assessment',),
+    'review_content' => array(
+      'variables' => array(
+        'item_num' => NULL,
+        'rreid' => NULL,
+        'nid' => NULL,
+        'reviewee' => NULL,
+        'self_dataset' => NULL,
+        'pie_data' => NULL,
+        'unread_comment' => NULL,
+        'total_item_count' => NULL,
+        'review_info' => NULL,
+        ),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'review_content_item',),
+    'review_content_without_chart' => array(
+      'variables' => array(
+        'item_num' => NULL,
+        'rreid' => NULL,
+        'nid' => NULL,
+        'reviewee' => NULL,
+        'self_dataset' => NULL,
+        'self_item_count' => NULL,
+        'review_info' => NULL,
+        ),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'review_content_without_chart',),
+    'review_content_comment_only' => array(
+      'variables' => array(
+        'item_num' => NULL,
+        'rreid' => NULL,
+        'nid' => NULL,
+        'reviewee' => NULL,
+        'self_comment' => NULL,
+        'total_item_count' => NULL,
+        'review_info' => NULL,
+        ),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'review_content_comment_only',),
     'view_assessment' => array(
       'variables' => array(
         'item_num' => NULL,
