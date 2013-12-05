@@ -47,9 +47,9 @@
             <?php print render($page['content']) ?>
 
             <div class="view-self-comment-title">
-              <div style="font-weight: 600;float: left">·Overall Rating: | </div>
+              <div style="font-weight: 600;float: left">·Overall Rating:  </div>
               <div class="color-rating-box" id="counselor-overall_rating-content"></div>
-              <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Self Overall Rating: </div>
+              <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">| ·Self Overall Rating: </div>
               <div class="color-rating-box" id="counselee-overall_rating-content"></div>
             </div>
             <br />

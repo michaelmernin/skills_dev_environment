@@ -64,6 +64,10 @@
       </div>      
     </div>
   </div>
+  <input type="hidden" id="counselor-overall_rating-<?php print $item_num; ?>" value="<?php print $overall_rating->counselor_rating ?>"/>
+  <input type="hidden" id="counselee-overall_rating-<?php print $item_num; ?>" value="<?php print $overall_rating->counselee_rating ?>"/>
+  <input type="hidden" id="reviewee-<?php print $item_num; ?>" value="<?php print $reviewee ?>"/>
+  
   <br>
 </div>
 <hr>

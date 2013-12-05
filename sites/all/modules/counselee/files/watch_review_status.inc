@@ -156,10 +156,14 @@ function load_review_content($rreid=NULL) {
   $self_sequential_list = dfs_travel_all_node($self_adj_list);
   $self_mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
-  $review_info = new stdClass();
+  $review_info = array();
+  $review_info['clientdate'] = array();
+  $review_info['project_roles_and_responsibilities'] = array(); 
+  $review_info['rating'] = array();
   $self_comments_array = array();
   $overall_rating = new stdClass();
-  _matching_none_selection_items($none_selection_item, $self_cid_formkey_type_array, $cid_indexed_dataset, $review_info, $self_comments_array, $overall_rating);
+  _matching_none_selection_items($none_selection_item, $self_dataset, $review_info, $self_comments_array, $overall_rating);
+  $review_info_content_num = count($review_info['clientdate']);
   $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($cid_indexed_dataset, $self_mapping_table);
   $self_question_rating_comment_result = _resort_item_by_weight($self_question_rating_comment_result);
   $self_item_count = count($self_question_rating_comment_result);
@@ -202,6 +206,25 @@ function load_review_content($rreid=NULL) {
   }
 
   $pageContent = '';
+
+  for($i = 0; $i < $review_info_content_num; $i++) {
+    $clientdate = $review_info['clientdate'][$i]->DATA;
+    $project_roles_and_responsibilities = $review_info['project_roles_and_responsibilities'][$i]->DATA;
+    $rating = $review_info['rating'][$i]->DATA;
+    if (validate_numbers($review_info, $i)) {
+      $content = theme('project_roles_and_responsibilities', array(
+        'rreid' => $rreid,
+        'nid' => $nid,
+        'reviewee' => $reviewee,
+        'review_info_content_num' => $i,
+        'clientdate' => $clientdate,
+        'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
+        'rating' => $rating,
+        ));
+      $pageContent .= $content;
+    }
+  }
+
   foreach ($self_question_rating_comment_result as $key => $value) {
 //=====================the question which have pie chart ============CONST===============================
     $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
@@ -237,7 +260,6 @@ function load_review_content($rreid=NULL) {
         'unread_comment' => $unread_comment,
         'clor_rating_comment' => $revised_comments[$key],
         'total_item_count' => $total_item_count,
-        'review_info' => $review_info,
       ));
       $pageContent .= $content;
     }
@@ -250,7 +272,6 @@ function load_review_content($rreid=NULL) {
         'self_dataset' => $value,
         'clor_rating_comment' => $revised_comments[$key],
         'total_item_count' => $total_item_count,
-        'review_info' => $review_info,
         'overall_rating' => $overall_rating,
       ));
       $pageContent .= $content;
@@ -265,7 +286,6 @@ function load_review_content($rreid=NULL) {
       'self_comment' => $value,
       'clor_rating_comment' => $revised_comments[$self_item_count + $key],
       'total_item_count' => $total_item_count,
-      'review_info' => $review_info,
     ));
     $pageContent .= $content;
   }
