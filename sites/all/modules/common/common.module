@@ -485,20 +485,13 @@ function get_temp_node_id($temp_name) {
 }
 
 function change_redirect_path($nid, $is_selfreview) {
-//  dd($is_selfreview, '$is_selfreview');
   $url = 'feedbacksubmitsuccess';
-  // you can change here if you want to copy template totally, you can change here to query first
-//  $allow_draft = 1;
-//  $submit_limit = 1;
   $total_submit_limit = 1; //default -1 change by Mars
-//  dd($nid,'$nid');
   if ($is_selfreview) {
     $query = db_update('webform');
     $query
         ->fields(array(
           'redirect_url' => $url,
-//        'allow_draft' => $allow_draft,
-//        'submit_limit' => $submit_limit,
         ))
         ->condition('nid', $nid)
         ->execute();

@@ -77,8 +77,21 @@ categoryProfessionalismValueChange();
 categoryLeadershipValueChange();
 categoryTeamworkValueChange();
 
+
+function addNoteMessageArea()
+{
+    //.page-title
+    var position = jQuery('.form-actions');
+    var content = '<div><font color="red">'
+            + 'Please note, upon selecting the Submit button, the form is locked and un-editable.'
+            + '</font></div>';
+    position.after(content);
+
+}
+
 jQuery(document).ready(
         function() {
+            addNoteMessageArea();
             jQuery("input[name='op'][value='Submit']").click(
                     function() {
                         jQuery(".messages.error").remove();
