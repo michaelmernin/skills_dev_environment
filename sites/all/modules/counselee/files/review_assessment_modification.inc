@@ -722,7 +722,12 @@ function _matching_none_selection_items($none_selection_item, $self_dataset, &$r
           if (!array_key_exists($self_dataset[$i]->cid, $self_comments_array)) {
             $content = new stdClass();
             $content->form_key = $self_dataset[$i]->form_key;
-            $content->question = $self_dataset[$i]->name;
+            if ($self_dataset[$i]->form_key == 'achievements_text') {
+              $content->question = $self_dataset[$i]->name;
+            }
+            else {
+              $content->question = $item['name'];
+            }
             $content->comment = $self_dataset[$i]->DATA;
             array_unshift($self_comments_array, $content);
           }
@@ -801,12 +806,11 @@ function synthesize_all_peer_review_ratings_and_comments(&$nid_pname_array, &$pr
     foreach ($nid_pname_array as $item) {
       $pname = $item['providerName'];
       $obj->ratings[$pname]['comment'] = $comment_array[$mapping_table[$iterate_counting]['comment_idx']][$pname]->comment;
+      $obj->ratings[$pname]['isRead'] = $comment_array[$mapping_table[$iterate_counting]['comment_idx']][$pname]->isRead;
     }
-    $obj->comments = $comment_array[$mapping_table[$iterate_counting]['comment_idx']];
     $iterate_counting++;
     array_push($all_peer_review_content, $obj);
   }
-  // dd($all_peer_review_content, 'all_peer_review_content');
   return $all_peer_review_content;
 }
 
@@ -940,6 +944,7 @@ function _generate_self_cid_formkey_type($self_dataset) {
       $cid_formkey_type_array[$value->cid] = array();
       $cid_formkey_type_array[$value->cid]['form_key'] = $value->form_key;
       $cid_formkey_type_array[$value->cid]['type'] = $value->type;
+      $cid_formkey_type_array[$value->cid]['name'] =$value->name;
       $cid_formkey_type_array[$value->cid]['pid'] = $value->pid;
     }
   }
@@ -1495,13 +1500,13 @@ function validate_numbers($review_info_array, $index) {
   if (array_key_exists($index, $review_info_array['clientdate']) && array_key_exists($index, $review_info_array['project_roles_and_responsibilities']) && array_key_exists($index, $review_info_array['rating'])) {
     $cl_str = $review_info_array['clientdate'][$index]->no;
     $pr_str = $review_info_array['project_roles_and_responsibilities'][$index]->no;
-    $ra_num = $review_info_array['rating'][$index]->no;
+    // $ra_num = $review_info_array['rating'][$index]->no;
 
     $cl_pos = strpos($cl_str, '#');
     $cl_num = substr($cl_str, $cl_pos + 1, 1);
     $pr_pos = strpos($pr_str, '#');
     $pr_num = substr($pr_str, $pr_pos + 1, 1);
-    if ($cl_num == $pr_num && $cl_num == $ra_num) {
+    if ($cl_num == $pr_num) {
       return TRUE;
     }
     else {
