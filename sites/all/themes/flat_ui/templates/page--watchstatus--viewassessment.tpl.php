@@ -75,7 +75,7 @@
         data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items, 'overallRating': overallRating},
         url: '<?php echo $base_relatively_path ?>watchstatus/approvecounseleeassessment',
         success: function(text) {
-          window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
+          window.location.href = "<?php print base_path() . 'watchstatus/reviewcontent/' ?>" + rreid;
         }
       });
     }
