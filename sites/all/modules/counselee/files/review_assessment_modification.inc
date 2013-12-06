@@ -29,7 +29,7 @@ function load_self_assessment($rreid = NULL) {
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
   $review_info = array();
   $review_info['clientdate'] = array();
-  $review_info['project_roles_and_responsibilities'] = array(); 
+  $review_info['project_roles_and_responsibilities'] = array();
   $review_info['rating'] = array();
   $self_comments_array = array();
   $overall_rating = new stdClass();
@@ -83,7 +83,7 @@ function load_self_assessment($rreid = NULL) {
 
   $pageContent = '';
 
-  for($i = 0; $i < $review_info_content_num; $i++) {
+  for ($i = 0; $i < $review_info_content_num; $i++) {
     $clientdate = $review_info['clientdate'][$i]->DATA;
     $project_roles_and_responsibilities = $review_info['project_roles_and_responsibilities'][$i]->DATA;
     $rating = $review_info['rating'][$i]->DATA;
@@ -96,7 +96,7 @@ function load_self_assessment($rreid = NULL) {
         'clientdate' => $clientdate,
         'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
         'rating' => $rating,
-        ));
+      ));
       $pageContent .= $content;
     }
   }
@@ -117,9 +117,10 @@ function load_self_assessment($rreid = NULL) {
 //        dd($peer_json, '$peer_json');
       }
       else {
+        $peer_json = '';
         $pie_data = new stdClass();
         $pie_data->id = $form_key;
-        $pie_data->all_avg = 'No Data.';
+        $pie_data->all_avg = NO_DATA;
         $pie_data->have_peer_data = FALSE;
       }
 //=====================pie chart end=====================================================================
@@ -250,17 +251,21 @@ function get_peer_comment_information_array($rreid, $item_count = -1) {
     $pr_data_array = _get_provider_review_content($nid_pname_sid_array);
     $mapping_table = reorder_form_contents($pr_data_array, $cid_formkey_type_array, $adj_list);
     $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
+    $peer_info = new stdClass();
+    $peer_info->cid_formkey_type_array = $cid_formkey_type_array;
+    $peer_info->adj_list = $adj_list;
+    $peer_info->have_peer_data = $have_peer_data;
+    $peer_info->peer_question_rating_comment_result = $peer_question_rating_comment_result;
 //    dd($peer_question_rating_comment_result, '$peer_question_rating_comment_result');
   }
   else {
     // no peer
-    $have_peer_data = FALSE;
+    $peer_info = new stdClass();
+    $peer_info->cid_formkey_type_array = NULL;
+    $peer_info->adj_list = NULL;
+    $peer_info->have_peer_data = FALSE;
+    $peer_info->peer_question_rating_comment_result = NULL;
   }
-  $peer_info = new stdClass();
-  $peer_info->cid_formkey_type_array = $cid_formkey_type_array;
-  $peer_info->adj_list = $adj_list;
-  $peer_info->have_peer_data = $have_peer_data;
-  $peer_info->peer_question_rating_comment_result = $peer_question_rating_comment_result;
   return $peer_info;
 }
 
@@ -671,7 +676,7 @@ function _fetch_all_none_selection_items($self_cid_formkey_type_array) {
 }
 
 function _matching_none_selection_items($none_selection_item, $self_dataset, &$review_info, &$self_comments_array, &$overall_rating) {
-  for($i = count($self_dataset) -1; $i >= 0; $i--) {
+  for ($i = count($self_dataset) - 1; $i >= 0; $i--) {
     if ($self_dataset[$i]->form_key == 'project_roles_and_responsibilities' && $self_dataset[$i]->type == 'textarea') {
       $review_info_item = new stdClass();
       $review_info_item->no = $self_dataset[$i]->no;
@@ -684,7 +689,7 @@ function _matching_none_selection_items($none_selection_item, $self_dataset, &$r
       $review_info_item->no = $self_dataset[$i]->no;
       $review_info_item->DATA = $self_dataset[$i]->DATA;
       array_push($review_info['clientdate'], $review_info_item);
-      continue;      
+      continue;
     }
     else if ($self_dataset[$i]->form_key == 'overall_rating' && $self_dataset[$i]->type == 'textfield') {
       $overall_rating->counselee_rating = $self_dataset[$i]->DATA;
@@ -700,7 +705,7 @@ function _matching_none_selection_items($none_selection_item, $self_dataset, &$r
     else if ($self_dataset[$i]->form_key == 'project_roles_and_responsibilities_category') {
       continue;
     }
-    else if ($self_dataset[$i]->type == 'textarea'){
+    else if ($self_dataset[$i]->type == 'textarea') {
       foreach ($none_selection_item as $item) {
         $temp = explode('_', $item['form_key']);
         array_pop($temp);
@@ -1489,9 +1494,9 @@ function validate_numbers($review_info_array, $index) {
     $ra_num = $review_info_array['rating'][$index]->no;
 
     $cl_pos = strpos($cl_str, '#');
-    $cl_num = substr($cl_str, $cl_pos+1, 1);
+    $cl_num = substr($cl_str, $cl_pos + 1, 1);
     $pr_pos = strpos($pr_str, '#');
-    $pr_num = substr($pr_str, $pr_pos+1, 1);
+    $pr_num = substr($pr_str, $pr_pos + 1, 1);
     if ($cl_num == $pr_num && $cl_num == $ra_num) {
       return TRUE;
     }

@@ -291,7 +291,7 @@
           {name: 'title', index: 'title', width: 100},
           {name: 'rating', index: 'rating', align: 'center', width: 50},
           {name: 'comment', index: 'comment', width: 300},
-          {name: 'display', index: 'display', align: 'center', width: 30, viewable: false, editable: true, edittype: 'checkbox', editoptions: {value: "True:False"}, formatter: "checkbox", formatoptions: {disabled: false}},
+          {name: 'display', index: 'display', align: 'center', width: 50, viewable: false, editable: true, edittype: 'checkbox', editoptions: {value: "True:False"}, formatter: "checkbox", formatoptions: {disabled: false}},
           {name: 'nid', index: 'nid', hidden: true},
           {name: 'cid', index: 'cid', hidden: true}],
         multiselect: false,

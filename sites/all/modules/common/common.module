@@ -11,7 +11,7 @@ defined('ANNUAL_TEMP') or define('ANNUAL_TEMP', 'Annual Performace Review Tempat
 defined('GOAL_STRING') or define('GOAL_STRING', 'goals_text');
 defined('NO_COMMENT') or define('NO_COMMENT', 'No comment.');
 defined('NO_ANSWER') or define('NO_ANSWER', 'No answer.');
-
+defined('NO_DATA') or define('NO_DATA', 'No data');
 // Start of defined the review status constant.
 defined('NEW_REVIEW_START') or define('NEW_REVIEW_START', 0);
 defined('REVIEW_IN_DRAFT') or define('REVIEW_IN_DRAFT', 1);
