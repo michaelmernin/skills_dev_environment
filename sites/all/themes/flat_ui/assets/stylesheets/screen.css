@@ -14240,6 +14240,7 @@ div.error {
 }
 
 /****************highchart***********************************************************/
+/*
 .highcharts-container{
 	overflow: visible !important;
 
@@ -14247,10 +14248,10 @@ div.error {
 .highcharts-container svg {
     overflow: visible;
 }
-/*.highcharts-tooltip{
+.highcharts-tooltip{
 	word-wrap:break-word;
 	max-width: 600px;
-}*/
+}
 
 .highcharts-tooltip span {
     max-width: 650px;
@@ -14259,7 +14260,7 @@ div.error {
 	max-height:600px;
     overflow: auto;
 }
-/*
+
 .tooltipbox{
 	max-width: 600px;
 	word-wrap:break-word;
@@ -14293,4 +14294,19 @@ div.error {
     font-family: inherit;
     height: 200px;
     width: 100%;
+}
+
+/******************************jqgrid***************************/
+#v_comment{
+        word-wrap: break-word; /* IE 5.5+ and CSS3 */
+        white-space: pre-wrap; /* CSS3 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        overflow: hidden;
+        height: auto;
+        vertical-align: middle;
+        padding-top: 3px;
+        padding-bottom: 3px;
+
 }

@@ -34,8 +34,10 @@ function counselee_confirm_review_result($rreid) {
   $pageContent = '';
   $self_review = get_self_review_comment($nid);
   $counselor_review = get_counselor_review_comment($nid);
-
-  $pageContent .= get_performance_evaluation($self_review, $counselor_review);
+  module_load_include('inc', 'counselee', 'files/review_assessment_modification');
+  $peer_comment_info_set = get_peer_comment_information_array($rreid);
+//  dd($peer_comment_info_set,'$peer_comment_info_set');
+  $pageContent .= get_performance_evaluation($self_review, $counselor_review, $peer_comment_info_set);
   $pageContent .= get_extend_description_part($self_review, $counselor_review);
   $pageContent .= theme('page_audit_review_score', array());
   $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
@@ -62,6 +64,7 @@ WHERE
   foreach ($result as $node) {
     $key = $node->form_key;
     $self_review_map[$key] = $node;
+//    dd($self_review_map,'$self_review_map');
   }
 
   return $self_review_map;
@@ -248,7 +251,7 @@ function audit_review_result_update($rreid, $rstatus, $approveStatus = 1, $reaso
       ))
       ->condition('rreid', $rreid)
       ->execute();
-  
+
   if ($num_updated == 1) {
 
     //rstatus == 4 stand for that counselee disapprove the result
@@ -274,7 +277,7 @@ function get_achievements() {
   
 }
 
-function get_category_content($self_review, $counselor_review, $catetory_map) {
+function get_category_content($self_review, $counselor_review, $catetory_map, $peer_comment_info_set = NULL) {
   $problem_node = array(
     'key' => null,
     'description' => null,
@@ -299,22 +302,30 @@ function get_category_content($self_review, $counselor_review, $catetory_map) {
 
     $problem_node['counselor_rating'] = $counselor_review[$review['selfkey']]->rating;
     $problem_node['counselor_comment'] = $counselor_review[$review['selfkey']]->counselor_comment;
-    $problem_node['peer_comment'] = $counselor_review[$review['selfkey']]->peer_comments;
+//    $problem_node['peer_comment'] = $counselor_review[$review['selfkey']]->peer_comments;
     $problem_node['peer_rating'] = $counselor_review[$review['selfkey']]->peer_avg_rating;
-
-    //dd($problem_node, '$problem_node');
+    if ($review['exist_peer']) {
+//  dd($review['selfkey'],'$review[selfkey]');
+//  dd($peer_comment_info_set,'$peer_comment_info_set');
+//      module_load_include('inc', 'counselee', 'files/review_assessment_modification');
+      $problem_node['peer_comment'] = get_peer_comment_information_json($review['selfkey'], $peer_comment_info_set);
+    }
+    else {
+      $problem_node['peer_comment'] = '';
+    }
+//    dd($problem_node, '$problem_node');
     $content .= theme('page_audit_review_question', array('node' => $problem_node));
   }
 
   return $content;
 }
 
-function get_performance_evaluation($self_review, $counselor_review) {
+function get_performance_evaluation($self_review, $counselor_review, $peer_comment_info_set) {
   $content = '';
-
+    
   //CORE COMPETENCIES
   $core_competencies_map = get_core_competencies_map();
-  $core_competencies_content = get_category_content($self_review, $counselor_review, $core_competencies_map);
+  $core_competencies_content = get_category_content($self_review, $counselor_review, $core_competencies_map, $peer_comment_info_set);
   $core_competencies_content = add_fieldset(1, 'CORE COMPETENCIES', $core_competencies_content);
 
 
@@ -386,7 +397,9 @@ function counselor_submit_review_result($rreid) {
   $pageContent = '';
   $self_review = get_self_review_comment($nid);
   $counselor_review = get_counselor_review_comment($nid);
-  $pageContent .= get_performance_evaluation($self_review, $counselor_review);
+  module_load_include('inc', 'counselee', 'files/review_assessment_modification');
+  $peer_comment_info_set = get_peer_comment_information_array($rreid);
+  $pageContent .= get_performance_evaluation($self_review, $counselor_review,$peer_comment_info_set);
   $pageContent .= get_extend_description_part($self_review, $counselor_review);
   $pageContent .= theme('page_audit_review_score', array());
   $pageContent .= theme('page_audit_review_btn_submit', array('rreid' => $rreid));

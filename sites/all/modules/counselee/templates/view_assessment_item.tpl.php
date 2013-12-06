@@ -36,6 +36,7 @@
                 enabled: false
               },
               tooltip: {
+  //                enabled: false,
                 useHTML: true,
                 formatter: function() {
                   var val = jQuery("#" + this.point.name + "_<?php print $pie_data->id ?>").val();
@@ -45,6 +46,7 @@
                   var textval = '<div class="tooltipbox">' + title + '<br/><table class="toolbox"><tr><td><div class="tooldiv">' + val + '</div></td></tr><table></div>';
                   return textval;
                 },
+  //                pointFormat: '{series.name}: <b>{point.y}</b><br/>',
                 shared: true
               },
               exporting: {
@@ -98,7 +100,7 @@
                   ]
                 }]
             });
-	
+
           </script>
         </div>
       <?php else: ?>
@@ -191,7 +193,14 @@
 
             <div id="comment-content-value-<?php print $item_num; ?>"
                  style="margin: 4px 0px 0px; height: 140px; width: 96%;overflow-y:auto;">
-                   <?php print $self_dataset->comment ?>
+                   <?php
+                   if (trim($self_dataset->comment) != '') {
+                     print $self_dataset->comment;
+                   }
+                   else {
+                     print NO_COMMENT;
+                   }
+                   ?>
             </div>
           </div>
         </div>
@@ -213,18 +222,18 @@
           <option value="5">5</option>
         </select>
       </div>
-		
+
       <!--<div class="additionalbubble">-->
       <div>
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
           <textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
-          if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
-            print $clor_rating_comment->clor_comment; 
-          }
-          else {
-            print '';
-          }
-          ?></textarea>
+            if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
+              print $clor_rating_comment->clor_comment;
+            }
+            else {
+              print '';
+            }
+            ?></textarea>
         </div>
       </div>
     </div>
@@ -235,61 +244,130 @@
   <input type="hidden" id="nid-<?php print $item_num; ?>" value="<?php print $nid ?>"/>
   <input type="hidden" id="total_item_count-<?php print $item_num; ?>" value="<?php print $total_item_count ?>"/>
 
-  <!--Display the peer comment message-->
-  <div class="webform-submission-info clearfix">
+
+
+  <!--      <div>
+          <div style="padding: 0 10px 5px;margin-bottom: 5px;">
+            <textarea id="peer-comment-<?php // print $item_num        ?>"  cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
+//            foreach ($unread_comment as $item) {
+//              print $item;
+//            }
+  ?></textarea>
+          </div>
+        </div>-->
+<!--Display the peer comment message-->
+  <div class="webform-submission-info clearfix" style=" margin-bottom: 10px">
 
     <div class="webform-submission-info-text">
-      <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Peer Comment | ·Peer Rating: <?php 
-      if (isset($pie_data) && isset($pie_data->all_avg)) {
-        print $pie_data->all_avg;
-      }
-      else {
-        print '';
-      } ?>
+      <!--<div style="font-weight: 600;float: left">·Peer Comment |</div>-->
+      <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Peer Rating:</div>
+      <div class="color-rating-box" id="assessment-content-value-<?php print $item_num; ?>">
+        <?php
+        if (isset($pie_data) && isset($pie_data->all_avg)) {
+          print $pie_data->all_avg;
+        }
+        else {
+          print '';
+        }
+        ?>
+
       </div>
 
-      <!--<div class="additionalbubble">-->
-      <div>
-        <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-          <textarea id="peer-comment-<?php print $item_num ?>"  cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
-                   foreach ($unread_comment as $item) {
-                     print $item;
-                   }
-                   ?></textarea>
-        </div>
-      </div>
     </div>
   </div>
+  
+  <div>
+    <table id="peer-table-<?php print $item_num ?>"></table>
+    <div id="peer-div-<?php print $item_num ?>"></div>
+    <script>
+      var lastSel;
+      jQuery("#peer-table-<?php print $item_num ?>").jqGrid({
+        datatype: "local",
+        height: 250,
+        width: 800,
+        colNames: ['Peer Name', 'Title', 'Rating', 'Comment', 'Display', 'Nid', 'Cid'],
+        colModel: [
+          {name: 'peer_name', index: 'peer_name', width: 60,align: 'center', sorttype: "text"},
+          {name: 'title', index: 'title', width: 100},
+          {name: 'rating', index: 'rating', align: 'center', width: 50},
+          {name: 'comment', index: 'comment', width: 300},
+          {name: 'display', index: 'display', align: 'center', width: 30, viewable: false, editable: true, edittype: 'checkbox', editoptions: {value: "True:False"}, formatter: "checkbox", formatoptions: {disabled: false}},
+          {name: 'nid', index: 'nid', hidden: true},
+          {name: 'cid', index: 'cid', hidden: true}],
+        multiselect: false,
+        caption: "·Peer Comment",
+        pager: '#peer-div-<?php print $item_num ?>',
+        rowNum: 15,
+        rowList: [15, 20, 25],
+        pginput: false,
+        viewrecords: true,
+        editurl: 'clientArray',
+        ondblClickRow: function(id) {
+          if (id && id !== lastSel) {
+            jQuery('#peer-table-<?php print $item_num ?>').restoreRow(lastSel);
+            lastSel = id;
+          }
+          jQuery('#peer-table-<?php print $item_num ?>').viewGridRow(id, {width: 700, height: 320, dataheight: 200});
+//jQuery('#peer-table-<?php print $item_num ?>').editGridRow(id, {width: 700, height: 320, dataheight: 200});
+        }
+      }).navGrid('#peer-div-<?php print $item_num ?>',
+              {view: false, add: false, edit: false, del: false, search: false},
+      {}, // use default settings for edit  
+
+              {}, // use default settings for add  
+
+              {}, // delete instead that del:false we need this  
+
+              {} // enable the advanced searching  
+
+
+      );
+      var peer_data_<?php print $item_num ?> = [<?php print $peer_json ?>];
+      for (var i = 0; i <= peer_data_<?php print $item_num ?>.length; i++)
+        jQuery("#peer-table-<?php print $item_num ?>").jqGrid('addRowData', i + 1, peer_data_<?php print $item_num ?>[i]);
+
+
+
+
+    </script>
+
+
+  </div>
+  
+
+
+
 </div>
 <hr>
 <script>
-		checkValue();	
-		function checkValue() {
-			var range = [0, 1, 2, 3, 4, 5];
-			var rating = <?php 
-      if (isset($clor_rating_comment) && isset($clor_rating_comment->rating)) {
-        print $clor_rating_comment->rating;
-      }
-      else {
-        print -1;
-      } ?>;
-			if (inArray(rating, range)) {
-				jQuery("#counselor-rating-<?php print $item_num; ?>").val(rating);
-			}
-			else {
-				jQuery("#counselor-rating-<?php print $item_num; ?>").val(3);
-			}
-		}
-		
+  checkValue();
+  function checkValue() {
+    var range = [0, 1, 2, 3, 4, 5];
+    var rating = <?php
+        if (isset($clor_rating_comment) && isset($clor_rating_comment->rating)) {
+          print $clor_rating_comment->rating;
+        }
+        else {
+          print -1;
+        }
+        ?>;
+    if (inArray(rating, range)) {
+      jQuery("#counselor-rating-<?php print $item_num; ?>").val(rating);
+    }
+    else {
+      jQuery("#counselor-rating-<?php print $item_num; ?>").val(3);
+    }
+  }
 
-		function inArray(needle, haystack) {
-			var length = haystack.length;
-			for (var i = 0; i < length; ++i) {
-				if (haystack[i] == needle) {
-					return true;
-				}
-			}
-			return false;
-		}
+
+  function inArray(needle, haystack) {
+    var length = haystack.length;
+    for (var i = 0; i < length; ++i) {
+      if (haystack[i] == needle) {
+        return true;
+      }
+    }
+    return false;
+  }
 </script>
 

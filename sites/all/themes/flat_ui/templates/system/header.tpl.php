@@ -21,7 +21,9 @@
           </div>
               <?php if($logged_in):?>
         <div id="login_user" style="float: right; padding: 30px 0 0 10px;">
-            Hi, <?php global $user; echo $user->name; ?>
+            Hi, <?php global $user; 
+            $format_name= format_login_name($user->name);
+            echo $format_name; ?>
         </div>
               <?php endif;?>
 <!--          <div class="nav-collapse nav-menu-collapse">

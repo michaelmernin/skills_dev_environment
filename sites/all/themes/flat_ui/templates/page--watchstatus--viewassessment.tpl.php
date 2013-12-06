@@ -12,7 +12,7 @@
 <script type="text/javascript">
   jQuery(document).ready(function() {
     //add a attr to hightchart tooltip for hide a rect
-    jQuery(".highcharts-tooltip").attr("visibility", "hidden");
+//    jQuery(".highcharts-tooltip").attr("visibility", "hidden");
 //    var highChartsTooltipJqueryObj;
 //    jQuery(".highcharts-tooltip span").hover(
 //            function() {
@@ -51,7 +51,7 @@
           // jQuery('#submit_button').removeAttr("disabled");
         }
         // else {
-        //   window.location.href = "<?php // print base_path() . 'viewassessment'  ?>";
+        //   window.location.href = "<?php // print base_path() . 'viewassessment'     ?>";
         //   return;
         // }
       });
@@ -76,14 +76,7 @@
         url: '<?php echo $base_relatively_path ?>watchstatus/approvecounseleeassessment',
         success: function(text) {
           window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
-          // location.reload();
-          // if(typeof(jQuery("#submit_button").attr("disabled"))!="undefined") {
-          // jQuery('#submit_button').removeAttr("disabled");
         }
-        // else {
-        //   window.location.href = "<?php // print base_path() . 'viewassessment'    ?>";
-        //   return;
-        // }
       });
     }
     else {
@@ -172,7 +165,28 @@
   }
 
   function getCounselorRevisedComment(num) {
-    return jQuery("#peer-comment-" + num).val();
+    var ids = jQuery("#peer-table-" + num).jqGrid('getDataIDs');
+    var rowDataRel=new Array();
+    for (var i = 0; i < ids.length; i++)
+    {
+      var rowId = ids[i];
+      var rowData = jQuery("#peer-table-" + num).jqGrid('getRowData', rowId);
+//      var json_string = "{\"nid\":"+ rowData.nid + ",\"cid\"=" + rowData.cid + ",\"display\":" + rowData.display + "}";
+      
+      var json_string = {
+        "nid": rowData.nid,
+        "cid": rowData.cid,
+        "display": rowData.display,
+      }
+      rowDataRel[i] = JSON.stringify(json_string);
+//      console.log(rowDataRel[i]);
+//      console.log(rowId);
+    }
+
+//    return JSON.stringify(jQuery("#peer-table-" + num).getRowData());
+    return rowDataRel;
+
+
   }
 
   function getCounselorRejectComment() {
@@ -285,7 +299,7 @@
               document.body.appendChild(new_element);
 
               // jQuery(document).ready(function() {
-              //   var isCounselor = '<?php // print $identity    ?>';
+              //   var isCounselor = '<?php // print $identity       ?>';
               //   if (isCounselor == "counselee") {
               //     jQuery(".draftbutton").hide();
               //   }

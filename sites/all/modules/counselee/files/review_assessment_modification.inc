@@ -44,25 +44,28 @@ function load_self_assessment($rreid = NULL) {
 ////////////////////////////////////////////////////////
 // Item below is for peers
 ////////////////////////////////////////////////////////
-  $cid_formkey_type_array = array();
-  $adj_list = array();
-  $have_peer_data = TRUE;
-  $have_counselor_data = TRUE;
-  $providerInfo_table = get_all_providers_info_from_db($rreid);
-  if (count($providerInfo_table)) {
-    //selected peers
-    $nid_pname_sid_array = _fetch_provider_nodeID_and_submissionID($providerInfo_table);
-    $pr_data_array = _get_provider_review_content($nid_pname_sid_array);
-    $mapping_table = reorder_form_contents($pr_data_array, $cid_formkey_type_array, $adj_list);
-    $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
-  }
-  else {
-    // no peer
-    $have_peer_data = FALSE;
-  }
+//  $cid_formkey_type_array = array();
+//  $adj_list = array();
+//  $have_peer_data = TRUE;
+//  $providerInfo_table = get_all_providers_info_from_db($rreid);
+//  if (count($providerInfo_table)) {
+//    //selected peers
+//    $nid_pname_sid_array = _fetch_provider_nodeID_and_submissionID($providerInfo_table);
+//    $pr_data_array = _get_provider_review_content($nid_pname_sid_array);
+//    $mapping_table = reorder_form_contents($pr_data_array, $cid_formkey_type_array, $adj_list);
+//    $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
+////    dd($peer_question_rating_comment_result, '$peer_question_rating_comment_result');
+//  }
+//  else {
+//    // no peer
+//    $have_peer_data = FALSE;
+//  }
+
+  $peer_information_set = get_peer_comment_information_array($rreid, $item_count);
   ///////////////////////////////////////////////////////
   //Item below is for counselor
   ///////////////////////////////////////////////////////
+  $have_counselor_data = TRUE;
   $csiid = get_counselor_latest_submissionID($nid);
   if ($csiid != -1) {
     $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
@@ -72,7 +75,7 @@ function load_self_assessment($rreid = NULL) {
   else {
     $have_counselor_data = FALSE;
     $revised_comments = array();
-    for($i = 0; $i < $total_item_count+1; $i++) {
+    for ($i = 0; $i < $total_item_count + 1; $i++) {
       $revised_comments[$i] = new stdClass();
     }
     $overall_rating->counselor_rating = 0;
@@ -100,16 +103,18 @@ function load_self_assessment($rreid = NULL) {
   foreach ($self_question_rating_comment_result as $key => $value) {
 //=====================the question which have pie chart ============CONST===============================
     $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
-    $unread_comment = array();
+//    $unread_comment = array();
     if (in_array($value->form_key, $pie_form_key_array)) {
       $form_key = $value->form_key . '_category';
-      if ($have_peer_data) {
-        $fieldset_cid = get_fieldset_key_in_peer_table($form_key, $cid_formkey_type_array);
-        $children_array = get_children_array_by_cid($fieldset_cid, $adj_list);
+      if ($peer_information_set->have_peer_data) {
+        $fieldset_cid = get_fieldset_key_in_peer_table($form_key, $peer_information_set->cid_formkey_type_array);
+        $children_array = get_children_array_by_cid($fieldset_cid, $peer_information_set->adj_list);
         $peer_name = array();
-        $comment_name = array();
-        _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, $peer_name, $comment_name, $unread_comment);
-        $pie_data = _manage_pie_chart($peer_name, $comment_name, $form_key);
+//        $comment_name = array();
+        $peer_json = '';
+        _manage_data_return_three_array($children_array, $peer_information_set->peer_question_rating_comment_result, $peer_name, $peer_json);
+        $pie_data = _manage_pie_chart($peer_name, $form_key);
+//        dd($peer_json, '$peer_json');
       }
       else {
         $pie_data = new stdClass();
@@ -118,9 +123,9 @@ function load_self_assessment($rreid = NULL) {
         $pie_data->have_peer_data = FALSE;
       }
 //=====================pie chart end=====================================================================
-      if ($have_counselor_data) {
-        generate_synthesized_peer_comment($value->form_key, $unread_comment, $revised_comments);
-      }
+//      if ($have_counselor_data) {
+//        generate_synthesized_peer_comment($value->form_key, $unread_comment, $revised_comments);
+//      }
       // dd($revised_comments, 'revised_comments');
       $content = theme('view_assessment', array(
         'item_num' => $key,
@@ -129,7 +134,7 @@ function load_self_assessment($rreid = NULL) {
         'reviewee' => $reviewee,
         'self_dataset' => $value,
         'pie_data' => $pie_data,
-        'unread_comment' => $unread_comment,
+        'peer_json' => $peer_json,
         'clor_rating_comment' => $revised_comments[$key],
         'total_item_count' => $total_item_count,
       ));
@@ -165,7 +170,101 @@ function load_self_assessment($rreid = NULL) {
   return $pageContent;
 }
 
-function _manage_pie_chart($peer_name, $comment_name, $form_key) {
+function get_peer_comment_information_json($key, $peer_comment_info_set) {
+  $form_key = $key . '_category';
+  if ($peer_comment_info_set->have_peer_data) {
+    $fieldset_cid = get_fieldset_key_in_peer_table($form_key, $peer_comment_info_set->cid_formkey_type_array);
+    $children_array = get_children_array_by_cid($fieldset_cid, $peer_comment_info_set->adj_list);
+    $peer_json = get_peer_json($children_array, $peer_comment_info_set->peer_question_rating_comment_result);
+//    dd($peer_json, '$peer_json');
+  }
+  else {
+    $peer_json = '';
+  }
+  return $peer_json;
+}
+
+/**
+ * match question_and_answer array and return json
+ * @param type $children_array
+ * @param type $question_and_answer
+ * @return string
+ */
+function get_peer_json($children_array, $question_and_answer) {
+  $is_first = TRUE;
+  $peer_json = '';
+  foreach ($children_array as $one_child) {
+    foreach ($question_and_answer as $one_question_answer) {
+      if ($one_child == $one_question_answer->cid) {
+        if ($is_first) {
+          $is_first_json = TRUE;
+          foreach ($one_question_answer->ratings as $key => $one_ratings) {
+            $title = get_title_form_peer_array($one_question_answer);
+            if ($is_first_json) {
+              if ($one_ratings['isDisplay'] == 0) {
+                $peer_json = '{rating:"' . $one_ratings['rating'] . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
+                $is_first_json = FALSE;
+              }
+            }
+            else {
+              if ($one_ratings['isDisplay'] == 0) {
+                $peer_json .= ',{rating:"' . $one_ratings['rating'] . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
+              }
+            }
+          }
+          if (!$is_first_json) {
+            $is_first = FALSE;
+          }
+        }
+        else {
+          foreach ($one_question_answer->ratings as $key => $one_ratings) {
+
+            $title = get_title_form_peer_array($one_question_answer);
+            if ($one_ratings['isDisplay'] == 0) {
+              $peer_json .= ',{rating:"' . $one_ratings['rating'] . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
+            }
+          }
+        }
+        break;
+      }
+    }
+  }
+  return $peer_json;
+}
+
+/**
+ * get basic peerinfomation
+ * @param type $rreid
+ * @param type $item_count
+ * @return \stdClass
+ */
+function get_peer_comment_information_array($rreid, $item_count = -1) {
+
+  $cid_formkey_type_array = array();
+  $adj_list = array();
+  $have_peer_data = TRUE;
+  $providerInfo_table = get_all_providers_info_from_db($rreid);
+  if (count($providerInfo_table)) {
+    //selected peers
+    $nid_pname_sid_array = _fetch_provider_nodeID_and_submissionID($providerInfo_table);
+    $pr_data_array = _get_provider_review_content($nid_pname_sid_array);
+    $mapping_table = reorder_form_contents($pr_data_array, $cid_formkey_type_array, $adj_list);
+    $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
+//    dd($peer_question_rating_comment_result, '$peer_question_rating_comment_result');
+  }
+  else {
+    // no peer
+    $have_peer_data = FALSE;
+  }
+  $peer_info = new stdClass();
+  $peer_info->cid_formkey_type_array = $cid_formkey_type_array;
+  $peer_info->adj_list = $adj_list;
+  $peer_info->have_peer_data = $have_peer_data;
+  $peer_info->peer_question_rating_comment_result = $peer_question_rating_comment_result;
+  return $peer_info;
+}
+
+function _manage_pie_chart($peer_name, $form_key) {
   $count0_1 = 0;
   $countNA = 0;
   $count1_1_2 = 0;
@@ -185,27 +284,28 @@ function _manage_pie_chart($peer_name, $comment_name, $form_key) {
   $tooltiphtml4_1_5 = '';
   foreach ($peer_name as $key => $one_peer) {
     if ($one_peer > 0 && $one_peer <= 1) {
-      $tooltiphtml0_1.=$key . ':<br/>' . $comment_name[$key] . '<br/>';
+//      $tooltiphtml0_1.=$key . ':<br/>' . $comment_name[$key] . '<br/>';
+      $tooltiphtml0_1.=format_login_name($key) . ':' . round($one_peer, 2) . '<br/>';
       $count0_1++;
     }
     elseif ($one_peer > 1 && $one_peer <= 2) {
-      $tooltiphtml1_1_2.=$key . ':<br/>' . $comment_name[$key] . '<br/>';
+      $tooltiphtml1_1_2.=format_login_name($key) . ':' . round($one_peer, 2) . '<br/>';
       $count1_1_2++;
     }
     elseif ($one_peer > 2 && $one_peer <= 3) {
-      $tooltiphtml2_1_3.=$key . ':<br/>' . $comment_name[$key] . '<br/>';
+      $tooltiphtml2_1_3.=format_login_name($key) . ':' . round($one_peer, 2) . '<br/>';
       $count2_1_3++;
     }
     elseif ($one_peer > 3 && $one_peer <= 4) {
-      $tooltiphtml3_1_4.=$key . ':<br/>' . $comment_name[$key] . '<br/>';
+      $tooltiphtml3_1_4.=format_login_name($key) . ':' . round($one_peer, 2) . '<br/>';
       $count3_1_4++;
     }
     elseif ($one_peer > 4 && $one_peer <= 5) {
-      $tooltiphtml4_1_5.=$key . ':<br/>' . $comment_name[$key] . '<br/>';
+      $tooltiphtml4_1_5.=format_login_name($key) . ':' . round($one_peer, 2) . '<br/>';
       $count4_1_5++;
     }
     elseif ($one_peer == 0) {
-      $tooltiphtmlNA.=$key . ':<br/>' . $comment_name[$key] . '<br/>';
+      $tooltiphtmlNA.=format_login_name($key) . ':' . round($one_peer, 2) . '<br/>';
       $countNA++;
     }
     $all_avg = $all_avg + $one_peer;
@@ -254,15 +354,16 @@ function _manage_pie_chart($peer_name, $comment_name, $form_key) {
  * @param type $peer_question_rating_comment_result answer array
  * @param type $peer_name empty array return avg rating for each peer
  * @param type $comment_name return all comment for each peer
- * @param type $unread_comment return unread comment for each peer
+ * @param type $peer_json json string
  */
-function _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, &$peer_name, &$comment_name, &$unread_comment) {
+function _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, &$peer_name, &$peer_json) {
 
   $is_first = TRUE;
   foreach ($children_array as $one_child) {
     foreach ($peer_question_rating_comment_result as $one_question_answer) {
       if ($one_child == $one_question_answer->cid) {
         if ($is_first) {
+          $is_first_json = TRUE;
           foreach ($one_question_answer->ratings as $key => $one_ratings) {
             $peer_name_temp[$key]['flag'] = TRUE;
             if ($one_ratings['rating'] != 'N/A') {
@@ -274,10 +375,19 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
                 $peer_name_temp[$key]['rating'] = 0;
                 $peer_name_temp[$key]['count'] = 0;
               }
-              $comment_name[$key] = $one_question_answer->comments[$key]->comment . ' <br/>';
-              if ($one_question_answer->comments[$key]->isRead == 0) {
-                $unread_comment[$key] = $one_question_answer->comments[$key]->comment . ' ';
+//              $comment_name[$key] = $one_question_answer->comments[$key]->comment . ' <br/>';
+//              if ($one_question_answer->comments[$key]->isRead == 0) {
+//                $unread_comment[$key] = $one_question_answer->comments[$key]->comment . ' ';
+//              }
+              $title = get_title_form_peer_array($one_question_answer);
+              if ($is_first_json) {
+                $peer_json = '{peer_name:"' . format_login_name($key) . '",rating:"' . $one_ratings['rating'] . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",display:' . (($one_ratings['isDisplay'] == 0) ? 'true' : 'false') . ',nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
+                $is_first_json = FALSE;
               }
+              else {
+                $peer_json .= ',{peer_name:"' . format_login_name($key) . '",rating:"' . $one_ratings['rating'] . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",display:' . (($one_ratings['isDisplay'] == 0) ? 'true' : 'false') . ',nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
+              }
+//              dd($peer_json, '$peer_json');
             }
             else {
 
@@ -294,10 +404,12 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
                 $peer_name_temp[$key]['rating'] = $peer_name_temp[$key]['rating'] + $one_ratings['rating'];
                 $peer_name_temp[$key]['count'] = $peer_name_temp[$key]['count'] + 1;
               }
-              $comment_name[$key] .=$one_question_answer->comments[$key]->comment . ' <br/>';
-              if ($one_question_answer->comments[$key]->isRead == 0) {
-                $unread_comment[$key].=$one_question_answer->comments[$key]->comment . ' ';
-              }
+//              $comment_name[$key] .=$one_question_answer->comments[$key]->comment . ' <br/>';
+//              if ($one_question_answer->comments[$key]->isRead == 0) {
+//                $unread_comment[$key].=$one_question_answer->comments[$key]->comment . ' ';
+//              }
+              $title = get_title_form_peer_array($one_question_answer);
+              $peer_json.= ',{peer_name:"' . format_login_name($key) . '",rating:"' . $one_ratings['rating'] . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",display:' . (($one_ratings['isDisplay'] == 0) ? 'true' : 'false') . ',nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
             }
           }
         }
@@ -319,18 +431,24 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
   }
 }
 
+function get_title_form_peer_array($peer_array) {
+  $title_array_temp = explode('-', $peer_array->question);
+  $title_temp = array_shift($title_array_temp);
+  $title_array = explode('–', $title_temp);
+  $title = array_shift($title_array);
+//  dd($peer_array->question,'$peer_array->question');
+//  dd($title_array,'$title_array');
+//  dd($title,'$title');
+  return $title;
+}
+
 function get_fieldset_key_in_peer_table($form_key, $cid_formkey_type_array) {
-//  dd($form_key, '$form_key');
-//  dd($cid_formkey_type_array, '$cid_formkey_type_array');
   foreach ($cid_formkey_type_array as $key => $one_cid) {
-//    dd($key, '$key');
-//    dd($one_cid['form_key'], '$one_cid->form_key');
     if ($one_cid['form_key'] == $form_key) {
       $fieldset_cid = $key;
       break;
     }
   }
-//  dd($fieldset_cid, '$fieldset_cid');
   return $fieldset_cid;
 }
 
@@ -341,9 +459,9 @@ function get_children_array_by_cid($fieldset_cid, $adj_list) {
 function generate_synthesized_peer_comment($form_key, &$unread_comment, $revised_comments) {
   foreach ($revised_comments as $comment) {
     if ($comment->form_key == $form_key) {
-      if (!array_key_exists('revised', $unread_comment)) {
-        $unread_comment['revised'] = $comment->peer_comments;
-      }
+//      if (!array_key_exists('revised', $unread_comment)) {
+      $unread_comment['revised'] = $comment->peer_comments;
+//      }
     }
   }
 }
@@ -366,7 +484,7 @@ function _fetch_counselor_revised_comments($counselor_submit_data) {
 
 /**
  * Page callback function of save conselor's assessment as draft
-**/
+ * */
 function save_counselor_assessment_draft() {
   $result_val = 1;
   $rreid = $_POST['rreid'];
@@ -424,8 +542,8 @@ function reject_counselee_assessment() {
     array_push($decoded_items, $temp);
   }
   $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments, $overall_rating);
-  $is_approved = FALSE;
-  send_approval_email_notification($rreid, $is_approved, $reject_comments);
+//  $is_approved = FALSE;
+//  send_approval_email_notification($rreid, $is_approved, $reject_comments);
   echo $result_val;
 }
 
@@ -647,9 +765,9 @@ function synthesize_self_review_ratings_and_comments($self_dataset, $mapping_tab
  * @param int $item_count
  * @return array
  * */
-function synthesize_all_peer_review_ratings_and_comments(&$nid_pname_array, &$pr_data_array, &$mapping_table, $item_count) {
+function synthesize_all_peer_review_ratings_and_comments(&$nid_pname_array, &$pr_data_array, &$mapping_table, $item_count = -1) {
   $all_peer_review_content = array();
-  $count = count($nid_pname_array);
+//  $count = count($nid_pname_array);
   if (count($nid_pname_array) != 0) {
     $providerName = $nid_pname_array[0]['providerName'];
   }
@@ -691,16 +809,18 @@ function synthesize_all_peer_review_ratings_and_comments(&$nid_pname_array, &$pr
  * @param int $count
  * @return array
  * */
-function _generate_provider_syn_ratings_array($pr_data_array, $count) {
-  $rating_array = range(0, $count - 1);
-  for ($i = 0; $i < $count; $i++) {
-    $rating_array[$i] = array();
+function _generate_provider_syn_ratings_array($pr_data_array, $count = -1) {
+  if ($count != -1) {
+    $rating_array = range(0, $count - 1);
+    for ($i = 0; $i < $count; $i++) {
+      $rating_array[$i] = array();
+    }
   }
   foreach ($pr_data_array as $item) {
     foreach ($item->dataset as $key => $value) {
       if ($value->type == 'select' && $value->DATA !== '') {
         $rating_array[$value->cid][$item->providerName] = array();
-        $rating_array[$value->cid][$item->providerName]['nid']= $item->nid;
+        $rating_array[$value->cid][$item->providerName]['nid'] = $item->nid;
         $rating_array[$value->cid][$item->providerName]['rating'] = $value->DATA;
         $rating_array[$value->cid][$item->providerName]['isDisplay'] = $value->isDisplay;
       }
@@ -729,10 +849,12 @@ function _get_provider_isRead_status_from_db($nid) {
  * @param int $count
  * @return array
  * */
-function _generate_provider_syn_comments_array($pr_data_array, $count) {
-  $comment_array = range(0, $count - 1);
-  for ($i = 0; $i < $count; $i++) {
-    $comment_array[$i] = array();
+function _generate_provider_syn_comments_array($pr_data_array, $count = -1) {
+  if ($count != -1) {
+    $comment_array = range(0, $count - 1);
+    for ($i = 0; $i < $count; $i++) {
+      $comment_array[$i] = array();
+    }
   }
   foreach ($pr_data_array as $item) {
     foreach ($item->dataset as $key => $value) {
@@ -991,7 +1113,7 @@ function get_latest_submitted_data_from_db($nid, $sid) {
  * @param int $nid
  * @param int $sid
  * @return array $dataset
-**/
+ * */
 function get_latest_peer_submitted_data_from_db($nid, $sid) {
   $dataset = db_query('SELECT
       a.cid,
@@ -1051,23 +1173,23 @@ function get_latest_peer_submitted_data_from_db($nid, $sid) {
  * @param int $nid
  * @return int $csiid
  * */
-function _insert_counselor_submittion_info_to_DB($nid, $is_draft=FALSE) {
+function _insert_counselor_submittion_info_to_DB($nid, $is_draft = FALSE) {
   $timestamp = time();
   if ($is_draft == FALSE) {
     $csiid = db_insert('prs_counselor_submit_info')
-        ->fields(array(
-          'nid' => $nid,
-          'submitTimestamp' => $timestamp,
-          'isDraft' => 0,
-        ))->execute();
+            ->fields(array(
+              'nid' => $nid,
+              'submitTimestamp' => $timestamp,
+              'isDraft' => 0,
+            ))->execute();
   }
   else {
     $csiid = db_insert('prs_counselor_submit_info')
-        ->fields(array(
-          'nid' => $nid,
-          'submitTimestamp' => $timestamp,
-          'isDraft' => 1,
-        ))->execute();
+            ->fields(array(
+              'nid' => $nid,
+              'submitTimestamp' => $timestamp,
+              'isDraft' => 1,
+            ))->execute();
   }
   return $csiid;
 }
@@ -1093,11 +1215,12 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
                 'rating' => $value->rating,
                 'peer_avg_rating' => $value->peerAvgRating,
                 'counselor_comment' => $value->comment,
-                'peer_comments' => $value->revisedComment,
+//                'peer_comments' => $value->revisedComment,
               ))->execute();
       if ($csdid != -1) {
         array_push($csdid_array, $csdid);
       }
+      $update_peer_display = update_peer_display($value->revisedComment);
     }
     else if (isset($value->rating) && in_array($value->rating, $range) && (!isset($value->peerAvgRating))) {
       $csdid = db_insert('prs_counselor_submit_data')
@@ -1128,13 +1251,13 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
     }
   }
   $overall_rating_csdid = db_insert('prs_counselor_submit_data')
-                        -> fields(array(
-                          'nid' => $nid,
-                          'csiid' => $csiid,
-                          'count' => count($csdid_array),
-                          'title' => 'overall_rating',
-                          'counselor_comment' => $overall_rating,
-                          ))->execute();
+          ->fields(array(
+            'nid' => $nid,
+            'csiid' => $csiid,
+            'count' => count($csdid_array),
+            'title' => 'overall_rating',
+            'counselor_comment' => $overall_rating,
+          ))->execute();
 
   if (count($csdid_array) != 0 && $overall_rating_csdid != -1) {
     return $csdid_array;
@@ -1145,6 +1268,59 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
   }
 }
 
+function update_peer_display($peer_json_array) {
+
+  $where_display = '';
+  $where_not_display = '';
+  $is_display_first = TRUE;
+  $is_not_display_first = TRUE;
+  foreach ($peer_json_array as $one_peer_comment) {
+    $temp = json_decode($one_peer_comment);
+    $where_one_string = '(nid=' . $temp->nid . ' and cid=' . $temp->cid . ')';
+    if ($temp->display == 'True') {
+      //set 0
+      if ($is_display_first) {
+
+        $where_display.=$where_one_string;
+        $is_display_first = FALSE;
+      }
+      else {
+        $where_display.=' or ' . $where_one_string;
+      }
+    }
+    else {
+      //set 1
+      if ($is_not_display_first) {
+
+        $where_not_display.=$where_one_string;
+        $is_not_display_first = FALSE;
+      }
+      else {
+        $where_not_display.=' or ' . $where_one_string;
+      }
+    }
+  }
+//  dd($where_display, '$where_display');
+//  dd($where_not_display, '$where_not_display');
+  if ($where_display != '') {
+    $peerdisply_info_true = db_update('prs_rel_peer_comment_display')
+        ->fields(array(
+          'isDisplay' => 0, //display peer comment
+        ))
+        ->where($where_display)
+        ->execute();
+  }
+  if ($where_not_display != '') {
+    $peerdisply_info_false = db_update('prs_rel_peer_comment_display')
+        ->fields(array(
+          'isDisplay' => 1, //not display peer comment
+        ))
+        ->where($where_not_display)
+        ->execute();
+  }
+  return $peerdisply_info_true + $peerdisply_info_false;
+}
+
 function _submit_counselor_draft_to_DB($rreid, $nid, &$clor_items, $overall_rating) {
   $is_draft = TRUE;
   $sid = get_last_sid_by_nid($nid);
@@ -1152,27 +1328,27 @@ function _submit_counselor_draft_to_DB($rreid, $nid, &$clor_items, $overall_rati
   $csdid_array = _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, $clor_items, $overall_rating);
 
   $provider_table = db_update('prs_rel_provider_employee')
-                ->fields(array(
-                  'isRead' => 1,
-                  ))
-                ->condition('nid', $nid)
-                ->execute();
+      ->fields(array(
+        'isRead' => 1,
+      ))
+      ->condition('nid', $nid)
+      ->execute();
 
   $provider_array = db_select('prs_rel_provider_employee')
-                ->fields('prs_rel_provider_employee', array(
-                  'providerName'))
-                ->condition('rreid', $rreid)
-                ->condition('nid', $nid, '!=')
-                ->condition('status', 1)
-                ->execute()->fetchAll();
+          ->fields('prs_rel_provider_employee', array(
+            'providerName'))
+          ->condition('rreid', $rreid)
+          ->condition('nid', $nid, '!=')
+          ->condition('status', 1)
+          ->execute()->fetchAll();
   foreach ($provider_array as $key => $value) {
     $provider_info = db_update('prs_rel_provider_employee')
-                    ->fields(array(
-                      'isRead' => 1,
-                      ))
-                    ->condition('rreid', $rreid)
-                    ->condition('providerName', $value->providerName)
-                    ->execute();
+        ->fields(array(
+          'isRead' => 1,
+        ))
+        ->condition('rreid', $rreid)
+        ->condition('providerName', $value->providerName)
+        ->execute();
   }
   if (isset($csdid_array)) {
     return TRUE;
@@ -1196,20 +1372,20 @@ function _submit_counselor_approve_info_to_DB($rreid, $nid, &$clor_items, $overa
       ->condition('nid', $nid)
       ->execute();
   $provider_array = db_select('prs_rel_provider_employee')
-                ->fields('prs_rel_provider_employee', array(
-                  'providerName'))
-                ->condition('rreid', $rreid)
-                ->condition('nid', $nid, '!=')
-                ->condition('status', 1)
-                ->execute()->fetchAll();
+          ->fields('prs_rel_provider_employee', array(
+            'providerName'))
+          ->condition('rreid', $rreid)
+          ->condition('nid', $nid, '!=')
+          ->condition('status', 1)
+          ->execute()->fetchAll();
   foreach ($provider_array as $key => $value) {
     $provider_info = db_update('prs_rel_provider_employee')
-                    ->fields(array(
-                      'isRead' => 1,
-                      ))
-                    ->condition('rreid', $rreid)
-                    ->condition('providerName', $value->providerName)
-                    ->execute();
+        ->fields(array(
+          'isRead' => 1,
+        ))
+        ->condition('rreid', $rreid)
+        ->condition('providerName', $value->providerName)
+        ->execute();
   }
 
   $review_table = db_update('prs_rel_review_employee')
@@ -1249,20 +1425,20 @@ function _append_counselor_reject_info_to_DB($rreid, $nid, &$clor_items, &$rejec
       ->condition('nid', $nid)
       ->execute();
   $provider_array = db_select('prs_rel_provider_employee')
-                ->fields('prs_rel_provider_employee', array(
-                  'providerName'))
-                ->condition('rreid', $rreid)
-                ->condition('nid', $nid, '!=')
-                ->condition('status', 1)
-                ->execute()->fetchAll();
+          ->fields('prs_rel_provider_employee', array(
+            'providerName'))
+          ->condition('rreid', $rreid)
+          ->condition('nid', $nid, '!=')
+          ->condition('status', 1)
+          ->execute()->fetchAll();
   foreach ($provider_array as $key => $value) {
     $provider_info = db_update('prs_rel_provider_employee')
-                    ->fields(array(
-                      'isRead' => 1,
-                      ))
-                    ->condition('rreid', $rreid)
-                    ->condition('providerName', $value->providerName)
-                    ->execute();
+        ->fields(array(
+          'isRead' => 1,
+        ))
+        ->condition('rreid', $rreid)
+        ->condition('providerName', $value->providerName)
+        ->execute();
   }
   $webform_table = db_update('webform_submissions')
       ->fields(array(
@@ -1284,7 +1460,7 @@ function _append_counselor_reject_info_to_DB($rreid, $nid, &$clor_items, &$rejec
   }
 }
 
-function send_approval_email_notification($rreid, $is_approved, $reject_comments=NULL) {
+function send_approval_email_notification($rreid, $is_approved, $reject_comments = NULL) {
   $provider_info = get_provider_info($rreid);
   if (isset($provider_info)) {
     $counselee_name = $provider_info[0]->employeeName;

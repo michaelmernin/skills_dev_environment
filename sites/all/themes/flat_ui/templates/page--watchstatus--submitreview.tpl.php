@@ -1,7 +1,9 @@
 <?php $base_path = get_curPage_base_url()  ?>
-<script type="text/javascript">
+<?php $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui') ?>
+<script src="<?php echo $module_path ?>/assets/javascripts/grid.locale-en.js"></script>
+<script src="<?php echo $module_path ?>/assets/javascripts/jquery.jqGrid.min.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $module_path ?>/assets/stylesheets/ui.jqgrid.css" />
 
-</script>
 <?php require_once 'header.tpl.php'; ?>
 <div class="minheight">
   <div id="pr_mywokingstage_page" class="container">

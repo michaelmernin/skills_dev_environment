@@ -1,7 +1,5 @@
 <?php $base_path = get_curPage_base_url(); ?>
-<script type="text/javascript">
 
-</script>
 <?php require_once 'header.tpl.php'; ?>
 <div class="minheight">
   <div id="pr_mywokingstage_page" class="container">
