@@ -35,8 +35,6 @@ function load_self_assessment($rreid = NULL) {
   $overall_rating = new stdClass();
   _matching_none_selection_items($none_selection_item, $self_dataset, $review_info, $self_comments_array, $overall_rating);
   $review_info_content_num = count($review_info['clientdate']);
-  // dd($review_info_content_num, 'review_info_content_num');
-  // dd($review_info, 'review_info');
   $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($indexed_dataset, $self_mapping_table);
   $self_question_rating_comment_result = _resort_item_by_weight($self_question_rating_comment_result);
   $self_item_count = count($self_question_rating_comment_result);
@@ -346,7 +344,7 @@ function _manage_pie_chart($peer_name, $form_key) {
     }
   }
   else {
-    $pie_data->all_avg = 'No Data.';
+    $pie_data->all_avg = NO_DATA;
     $pie_data->id = $form_key;
     $pie_data->have_peer_data = FALSE;
   }
@@ -547,8 +545,8 @@ function reject_counselee_assessment() {
     array_push($decoded_items, $temp);
   }
   $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments, $overall_rating);
-//  $is_approved = FALSE;
-//  send_approval_email_notification($rreid, $is_approved, $reject_comments);
+  $is_approved = FALSE;
+  send_approval_email_notification($rreid, $is_approved, $reject_comments);
   echo $result_val;
 }
 
@@ -1356,6 +1354,8 @@ function _submit_counselor_draft_to_DB($rreid, $nid, &$clor_items, $overall_rati
         ->execute();
   }
   if (isset($csdid_array)) {
+    $msg = 'Submission saved. You may return to this form later and it will restore the current values.';
+    drupal_set_message($msg, 'status');
     return TRUE;
   }
   else {
