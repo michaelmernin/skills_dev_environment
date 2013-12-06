@@ -130,8 +130,8 @@ function display_peer_selection_page($rreid, $userId_flag, $all_employee_array, 
 
 /**
  * Page callback function of view self assessment content
-**/
-function load_self_assessment_content($rreid=NULL) {
+ * */
+function load_self_assessment_content($rreid = NULL) {
   access_authen($rreid);
   $cur_user_name = get_current_user_name();
   $reviewee = get_reviewee_from_db($rreid);
@@ -155,7 +155,7 @@ function load_self_assessment_content($rreid=NULL) {
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
   $review_info = array();
   $review_info['clientdate'] = array();
-  $review_info['project_roles_and_responsibilities'] = array(); 
+  $review_info['project_roles_and_responsibilities'] = array();
   $review_info['rating'] = array();
   $self_comments_array = array();
   $overall_rating = new stdClass();
@@ -167,7 +167,7 @@ function load_self_assessment_content($rreid=NULL) {
   $total_item_count = $self_item_count + count($self_comments_array);
 
   $pageContent = '';
-  for($i = 0; $i < $review_info_content_num; $i++) {
+  for ($i = 0; $i < $review_info_content_num; $i++) {
     $clientdate = $review_info['clientdate'][$i]->DATA;
     $project_roles_and_responsibilities = $review_info['project_roles_and_responsibilities'][$i]->DATA;
     $rating = $review_info['rating'][$i]->DATA;
@@ -180,7 +180,7 @@ function load_self_assessment_content($rreid=NULL) {
         'clientdate' => $clientdate,
         'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
         'rating' => $rating,
-        ));
+      ));
       $pageContent .= $content;
     }
   }
@@ -191,7 +191,7 @@ function load_self_assessment_content($rreid=NULL) {
       'item_num' => $key,
       'self_dataset' => $value,
       'overall_rating' => $overall_rating,
-      ));
+    ));
     $pageContent .= $content;
   }
 
@@ -199,7 +199,7 @@ function load_self_assessment_content($rreid=NULL) {
     $content = theme('view_self_assessment_comment_only', array(
       'item_num' => $self_item_count + $key,
       'self_comment' => $value,
-      ));
+    ));
     $pageContent .= $content;
   }
 
@@ -208,14 +208,14 @@ function load_self_assessment_content($rreid=NULL) {
 
 /**
  * Page callback function of review content.
-**/
-function load_review_content($rreid=NULL) {
+ * */
+function load_review_content($rreid = NULL) {
   access_authen($rreid);
   $cur_user_name = get_current_user_name();
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
   $review_status = get_review_status_from_db($rreid);
-  
+
   $provider_info = get_provider_info($rreid, $reviewee);
   $nid = $provider_info[0]->nid;
   $sid = get_last_sid_by_nid($nid);
@@ -236,7 +236,7 @@ function load_review_content($rreid=NULL) {
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
   $review_info = array();
   $review_info['clientdate'] = array();
-  $review_info['project_roles_and_responsibilities'] = array(); 
+  $review_info['project_roles_and_responsibilities'] = array();
   $review_info['rating'] = array();
   $self_comments_array = array();
   $overall_rating = new stdClass();
@@ -249,22 +249,7 @@ function load_review_content($rreid=NULL) {
 ////////////////////////////////////////////////////////
 // Item below is for peers
 ////////////////////////////////////////////////////////
-  $cid_formkey_type_array = array();
-  $adj_list = array();
-  $have_peer_data = TRUE;
-  $have_counselor_data = TRUE;
-  $providerInfo_table = get_all_providers_info_from_db($rreid);
-  if (count($providerInfo_table)) {
-    //selected peers
-    $nid_pname_sid_array = _fetch_provider_nodeID_and_submissionID($providerInfo_table);
-    $pr_data_array = _get_provider_review_content($nid_pname_sid_array);
-    $mapping_table = reorder_form_contents($pr_data_array, $cid_formkey_type_array, $adj_list);
-    $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
-  }
-  else {
-    // no peer
-    $have_peer_data = FALSE;
-  }
+  $peer_information_set = get_peer_comment_information_array($rreid, $item_count);
   ///////////////////////////////////////////////////////
   //Item below is for counselor
   ///////////////////////////////////////////////////////
@@ -277,7 +262,7 @@ function load_review_content($rreid=NULL) {
   else {
     $have_counselor_data = FALSE;
     $revised_comments = array();
-    for($i = 0; $i < $total_item_count+1; $i++) {
+    for ($i = 0; $i < $total_item_count + 1; $i++) {
       $revised_comments[$i] = new stdClass();
     }
     $overall_rating->counselor_rating = 0;
@@ -285,7 +270,7 @@ function load_review_content($rreid=NULL) {
 
   $pageContent = '';
 
-  for($i = 0; $i < $review_info_content_num; $i++) {
+  for ($i = 0; $i < $review_info_content_num; $i++) {
     $clientdate = $review_info['clientdate'][$i]->DATA;
     $project_roles_and_responsibilities = $review_info['project_roles_and_responsibilities'][$i]->DATA;
     $rating = $review_info['rating'][$i]->DATA;
@@ -298,7 +283,7 @@ function load_review_content($rreid=NULL) {
         'clientdate' => $clientdate,
         'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
         'rating' => $rating,
-        ));
+      ));
       $pageContent .= $content;
     }
   }
@@ -306,28 +291,26 @@ function load_review_content($rreid=NULL) {
   foreach ($self_question_rating_comment_result as $key => $value) {
 //=====================the question which have pie chart ============CONST===============================
     $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
-    $unread_comment = array();
     if (in_array($value->form_key, $pie_form_key_array)) {
       $form_key = $value->form_key . '_category';
-      if ($have_peer_data) {
-        $fieldset_cid = get_fieldset_key_in_peer_table($form_key, $cid_formkey_type_array);
-        $children_array = get_children_array_by_cid($fieldset_cid, $adj_list);
+      if ($peer_information_set->have_peer_data) {
+        $fieldset_cid = get_fieldset_key_in_peer_table($form_key, $peer_information_set->cid_formkey_type_array);
+        $children_array = get_children_array_by_cid($fieldset_cid, $peer_information_set->adj_list);
         $peer_name = array();
-        $comment_name = array();
-        _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, $peer_name, $comment_name, $unread_comment);
-        $pie_data = _manage_pie_chart($peer_name, $comment_name, $form_key);
+//        $comment_name = array();
+        $peer_json = '';
+        _manage_data_return_three_array($children_array, $peer_information_set->peer_question_rating_comment_result, $peer_name, $peer_json);
+        $pie_data = _manage_pie_chart($peer_name, $form_key);
+//        dd($peer_json, '$peer_json');
       }
       else {
+        $peer_json = '';
         $pie_data = new stdClass();
         $pie_data->id = $form_key;
-        $pie_data->all_avg = 'No Data.';
+        $pie_data->all_avg = NO_DATA;
         $pie_data->have_peer_data = FALSE;
       }
 //=====================pie chart end=====================================================================
-      if ($have_counselor_data) {
-        generate_synthesized_peer_comment($value->form_key, $unread_comment, $revised_comments);
-      }
-      // dd($revised_comments, 'revised_comments');
       $content = theme('review_content', array(
         'item_num' => $key,
         'rreid' => $rreid,
@@ -335,7 +318,7 @@ function load_review_content($rreid=NULL) {
         'reviewee' => $reviewee,
         'self_dataset' => $value,
         'pie_data' => $pie_data,
-        'unread_comment' => $unread_comment,
+        'peer_json' => $peer_json,
         'clor_rating_comment' => $revised_comments[$key],
         'total_item_count' => $total_item_count,
       ));
@@ -441,7 +424,7 @@ function _insert_items_to_DB($rreid, $providers, &$email_receivers) {
                 'prid' => $prid,
                 'rreid' => $rreid,
                 'providerName' => $provider,
-                // 'token' => $token,
+                  // 'token' => $token,
               ))->execute();
       if ($rpeid != -1) {
         array_push($rpeids_array, $rpeid);
@@ -457,7 +440,6 @@ function _insert_items_to_DB($rreid, $providers, &$email_receivers) {
     return;
   }
 }
-
 
 /**
  * _get_provider_employeeName()
@@ -531,17 +513,17 @@ function _generate_headerInfo($headerInfo) {
  * @param array by reference $ratings
  * @param array by reference $comments
  * @return array that migrating above array together.
-**/
+ * */
 function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments) {
-  $target_array = array() ;
-  for($i = 0; $i < 24; $i++) {
+  $target_array = array();
+  for ($i = 0; $i < 24; $i++) {
     if ($i == 0 || $i == 1) {
       $target_array[$i] = array(
         'count' => $i,
         'header' => $headerInfo[$i],
         'rating' => 0,
         'comment' => '',
-        );
+      );
     }
     else if ($i == 2 || $i == 9) {
       continue;
@@ -552,7 +534,7 @@ function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments)
         'header' => '',
         'rating' => $ratings[$i],
         'comment' => $comments[$i],
-        );
+      );
     }
     else if (in_array($i, range(15, 20))) {
       $target_array[$i] = array(
@@ -560,7 +542,7 @@ function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments)
         'header' => '',
         'rating' => 0,
         'comment' => $comments[$i],
-        );
+      );
     }
     else if ($i == 23) {
       $target_array[$i] = array(
@@ -568,7 +550,7 @@ function _generate_counselor_submition_data(&$headerInfo, &$ratings, &$comments)
         'header' => '',
         'rating' => $ratings[$i],
         'comments' => '',
-        );
+      );
     }
   }
   return $target_array;
@@ -616,8 +598,8 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag, $r
     $employeeName = $info[0]->employeeName;
 
     //Generate peer review form for each peer  --function format_login_name($login_name) {
-    $receiver =  format_login_name($email_receiver);
-    $counselee =  format_login_name($employeeName);
+    $receiver = format_login_name($email_receiver);
+    $counselee = format_login_name($employeeName);
     $form_title = "Annual Performace Peer Review $receiver for $counselee";
     $peer_review_template_name = 'For Demo Peer Review Form Template';
     $node_msg = create_node($form_title, $peer_review_template_name);
@@ -631,7 +613,7 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag, $r
     $review_end_date = unixTimestampToDateArray($info[0]->period_end);
     $date = date_to_format($review_end_date);
     $base_path = get_curPage_base_url();
-    $peer_select_url = $base_path.$node_msg[1];
+    $peer_select_url = $base_path . $node_msg[1];
     $peer_info_params = array(
       'employeeName' => $employeeName,
       'reviewname' => $review_description,
