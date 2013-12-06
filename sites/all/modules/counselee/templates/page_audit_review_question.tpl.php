@@ -59,10 +59,12 @@
     <div id="peer-div-<?php print $node['key'] ?>"></div>
     <script>
       var lastSel;
+      var peer_data_<?php print $node['key'] ?> = [<?php print $node['peer_comment'] ?>];
       jQuery("#peer-table-<?php print $node['key'] ?>").jqGrid({
         datatype: "local",
         height: 250,
         width: 800,
+        data:peer_data_<?php print $node['key'] ?>,
         colNames: [ 'Title', 'Rating', 'Comment','Nid', 'Cid'],
         colModel: [
 //           {name: 'peer_name', index: 'peer_name', width: 60, align: 'center', sorttype: "text", cellattr: function(rowId, val, rawObject) {
@@ -87,8 +89,8 @@
         multiselect: false,
         caption: "·Peer Comment",
         pager: '#peer-div-<?php print $node['key'] ?>',
-        rowNum: 15,
-        rowList: [15, 20, 25],
+        rowNum: 10,
+        rowList: [10, 20, 30],
         pginput: false,
         viewrecords: true,
         editurl: 'clientArray',
@@ -112,9 +114,9 @@
 
 
       );
-      var peer_data_<?php print $node['key'] ?> = [<?php print $node['peer_comment'] ?>];
-      for (var i = 0; i <= peer_data_<?php print $node['key'] ?>.length; i++)
-        jQuery("#peer-table-<?php print $node['key'] ?>").jqGrid('addRowData', i + 1, peer_data_<?php print $node['key']?>[i]);
+      
+//      for (var i = 0; i <= peer_data_<?php // print $node['key'] ?>.length; i++)
+//        jQuery("#peer-table-<?php // print $node['key'] ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $node['key']?>[i]);
 
 
 

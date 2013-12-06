@@ -299,7 +299,7 @@ function load_review_content($rreid = NULL) {
         $peer_name = array();
 //        $comment_name = array();
         $peer_json = '';
-        _manage_data_return_three_array($children_array, $peer_information_set->peer_question_rating_comment_result, $peer_name, $peer_json);
+        _manage_data_return_three_array_readonly($children_array, $peer_information_set->peer_question_rating_comment_result, $peer_name, $peer_json);
         $pie_data = _manage_pie_chart($peer_name, $form_key);
 //        dd($peer_json, '$peer_json');
       }

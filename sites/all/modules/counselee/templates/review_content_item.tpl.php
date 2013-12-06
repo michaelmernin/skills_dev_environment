@@ -261,10 +261,12 @@
     <div id="peer-div-<?php print $item_num ?>"></div>
     <script>
       var lastSel;
+      var peer_data_<?php print $item_num ?> = [<?php print $peer_json ?>];
       jQuery("#peer-table-<?php print $item_num ?>").jqGrid({
         datatype: "local",
         height: 250,
         width: 800,
+        data:peer_data_<?php print $item_num ?>,
         colNames: ['Title', 'Rating', 'Comment', 'Nid', 'Cid'],
         colModel: [
           {name: 'title', index: 'title', width: 100, cellattr: function(rowId, val, rawObject) {
@@ -286,8 +288,8 @@
         multiselect: false,
         caption: "·Peer Comment",
         pager: '#peer-div-<?php print $item_num ?>',
-        rowNum: 15,
-        rowList: [15, 20, 25],
+        rowNum: 10,
+        rowList: [10, 20, 30],
         pginput: false,
         viewrecords: true,
         editurl: 'clientArray',
@@ -311,9 +313,9 @@
 
 
       );
-      var peer_data_<?php print $item_num ?> = [<?php print $peer_json ?>];
-      for (var i = 0; i <= peer_data_<?php print $item_num ?>.length; i++)
-        jQuery("#peer-table-<?php print $item_num ?>").jqGrid('addRowData', i + 1, peer_data_<?php print $item_num ?>[i]);
+      
+//      for (var i = 0; i <= peer_data_<?php // print $item_num ?>.length; i++)
+//        jQuery("#peer-table-<?php // print $item_num ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $item_num ?>[i]);
 
 
 

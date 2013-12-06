@@ -442,6 +442,91 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
   }
 }
 
+function _manage_data_return_three_array_readonly($children_array, $peer_question_rating_comment_result, &$peer_name, &$peer_json) {
+//need more test!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  $is_first = TRUE;
+  foreach ($children_array as $one_child) {
+    foreach ($peer_question_rating_comment_result as $one_question_answer) {
+      if ($one_child == $one_question_answer->cid) {
+        $is_first_json = TRUE;
+        if ($is_first) {
+          foreach ($one_question_answer->ratings as $key => $one_ratings) {
+            $peer_name_temp[$key]['flag'] = TRUE;
+            if ($one_ratings['rating'] != 'N/A') {
+              if ($one_ratings['rating'] != 0) {
+                $peer_name_temp[$key]['rating'] = $one_ratings['rating'];
+                $peer_name_temp[$key]['count'] = 1;
+              }
+              else {
+                $peer_name_temp[$key]['rating'] = 0;
+                $peer_name_temp[$key]['count'] = 0;
+              }
+              $title = get_title_form_peer_array($one_question_answer);
+              if ($is_first_json) {
+                if ($one_ratings['isDisplay'] == 0 && $one_ratings['isRead']) {
+                  $peer_json = '{rating:"' . (($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']) . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
+                  $is_first_json = FALSE;
+                }
+              }
+              else {
+                if ($one_ratings['isDisplay'] == 0 && $one_ratings['isRead']) {
+                  $peer_json .= ',{rating:"' . (($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']) . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
+                }
+              }
+//              dd($peer_json, '$peer_json');
+            }
+            else {
+
+              $peer_name_temp[$key]['flag'] = FALSE;
+            }
+          }
+          $is_first = FALSE;
+        }
+        else {
+          foreach ($one_question_answer->ratings as $key => $one_ratings) {
+            if ($peer_name_temp[$key]['flag']) {
+              if ($one_ratings['rating'] != 0) {
+
+                $peer_name_temp[$key]['rating'] = $peer_name_temp[$key]['rating'] + $one_ratings['rating'];
+                $peer_name_temp[$key]['count'] = $peer_name_temp[$key]['count'] + 1;
+              }
+              $title = get_title_form_peer_array($one_question_answer);
+              if ($is_first_json) {
+                if ($one_ratings['isDisplay'] == 0 && $one_ratings['isRead']) {
+                  $peer_json = '{rating:"' . (($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']) . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
+                  $is_first_json = FALSE;
+                }
+              }
+              else {
+                if ($one_ratings['isDisplay'] == 0 && $one_ratings['isRead']) {
+                  $peer_json .= ',{rating:"' . (($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']) . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
+                }
+              }
+            }
+          }
+        }
+        break;
+      }
+    }
+  }
+  foreach ($peer_name_temp as $key => $peer_avg) {
+    if ($peer_avg['flag']) {
+      //peer submit feedback
+      if ($peer_avg['count'] != 0) {
+        $peer_name[$key]['avgrating'] = $peer_avg['rating'] / $peer_avg['count'];
+        $peer_name[$key]['count'] = $peer_avg['count'];
+        $peer_name[$key]['allrating'] = $peer_avg['rating'];
+      }
+      else {
+        //peer select all NA
+        $peer_name[$key]['avgrating'] = 0;
+        $peer_name[$key]['count'] = 0;
+        $peer_name[$key]['allrating'] = 0;
+      }
+    }
+  }
+}
+
 function get_title_form_peer_array($peer_array) {
   $title_array_temp = explode('-', $peer_array->question);
   $title_temp = array_shift($title_array_temp);
