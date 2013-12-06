@@ -248,14 +248,14 @@
 
   <!--      <div>
           <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-            <textarea id="peer-comment-<?php // print $item_num        ?>"  cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
+            <textarea id="peer-comment-<?php // print $item_num           ?>"  cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
 //            foreach ($unread_comment as $item) {
 //              print $item;
 //            }
   ?></textarea>
           </div>
         </div>-->
-<!--Display the peer comment message-->
+  <!--Display the peer comment message-->
   <div class="webform-submission-info clearfix" style=" margin-bottom: 10px">
 
     <div class="webform-submission-info-text">
@@ -275,7 +275,7 @@
 
     </div>
   </div>
-  
+
   <div>
     <table id="peer-table-<?php print $item_num ?>"></table>
     <div id="peer-div-<?php print $item_num ?>"></div>
@@ -287,10 +287,23 @@
         width: 800,
         colNames: ['Peer Name', 'Title', 'Rating', 'Comment', 'Display', 'Nid', 'Cid'],
         colModel: [
-          {name: 'peer_name', index: 'peer_name', width: 60,align: 'center', sorttype: "text"},
-          {name: 'title', index: 'title', width: 100},
-          {name: 'rating', index: 'rating', align: 'center', width: 50},
-          {name: 'comment', index: 'comment', width: 300},
+          {name: 'peer_name', index: 'peer_name', width: 60, align: 'center', sorttype: "text", cellattr: function(rowId, val, rawObject) {
+              return 'title="' + rawObject.peer_name + '\nDouble click for more information."';
+            }},
+          {name: 'title', index: 'title', width: 100, cellattr: function(rowId, val, rawObject) {
+              return 'title="' + rawObject.title + '\nDouble click for more information."';
+            }},
+          {name: 'rating', index: 'rating', align: 'center', width: 50, cellattr: function(rowId, val, rawObject) {
+              return 'title="' + rawObject.rating + '\nDouble click for more information."';
+            }},
+          {name: 'comment', index: 'comment', width: 300, cellattr: function(rowId, val, rawObject) {
+              var comment_text = rawObject.comment;
+              var i = 200;
+              if (comment_text.length > i) {
+                comment_text = comment_text.substr(0, i) + '...';
+              }
+              return 'title="' + comment_text + '\nDouble click for more information."';
+            }},
           {name: 'display', index: 'display', align: 'center', width: 50, viewable: false, editable: true, edittype: 'checkbox', editoptions: {value: "True:False"}, formatter: "checkbox", formatoptions: {disabled: false}},
           {name: 'nid', index: 'nid', hidden: true},
           {name: 'cid', index: 'cid', hidden: true}],
@@ -333,7 +346,7 @@
 
 
   </div>
-  
+
 
 
 

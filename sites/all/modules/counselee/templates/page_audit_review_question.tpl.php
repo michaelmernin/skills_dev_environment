@@ -65,10 +65,23 @@
         width: 800,
         colNames: [ 'Title', 'Rating', 'Comment','Nid', 'Cid'],
         colModel: [
-//          {name: 'peer_name', index: 'peer_name', width: 60,align: 'center', sorttype: "text"},
-          {name: 'title', index: 'title', width: 100},
-          {name: 'rating', index: 'rating', align: 'center', width: 50},
-          {name: 'comment', index: 'comment', width: 300},
+//           {name: 'peer_name', index: 'peer_name', width: 60, align: 'center', sorttype: "text", cellattr: function(rowId, val, rawObject) {
+//              return 'title="' + rawObject.peer_name + '\nDouble click for more information."';
+//            }},
+          {name: 'title', index: 'title', width: 100, cellattr: function(rowId, val, rawObject) {
+              return 'title="' + rawObject.title + '\nDouble click for more information."';
+            }},
+          {name: 'rating', index: 'rating', align: 'center', width: 50, cellattr: function(rowId, val, rawObject) {
+              return 'title="' + rawObject.rating + '\nDouble click for more information."';
+            }},
+          {name: 'comment', index: 'comment', width: 300, cellattr: function(rowId, val, rawObject) {
+              var comment_text = rawObject.comment;
+              var i = 200;
+              if (comment_text.length > i) {
+                comment_text = comment_text.substr(0, i) + '...';
+              }
+              return 'title="' + comment_text + '\nDouble click for more information."';
+            }},
           {name: 'nid', index: 'nid', hidden: true},
           {name: 'cid', index: 'cid', hidden: true}],
         multiselect: false,
