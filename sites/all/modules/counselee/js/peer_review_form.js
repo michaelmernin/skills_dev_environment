@@ -89,9 +89,18 @@ function addNoteMessageArea()
 
 }
 
+function modifyProjectStyle()
+{
+//    webform-component-fieldset webform-component--project-roles-and-responsibilities-category form-wrapper
+    var position = jQuery(".webform-component-fieldset.webform-component--project-roles-and-responsibilities-category.form-wrapper");
+    position.removeClass().addClass('wfm-item');
+}
+
+
 jQuery(document).ready(
         function() {
             addNoteMessageArea();
+            modifyProjectStyle();
             jQuery("input[name='op'][value='Submit']").click(
                     function() {
                         jQuery(".messages.error").remove();

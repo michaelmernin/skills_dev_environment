@@ -53,18 +53,80 @@ function categoryInternalIcontributionsValueChange()
             new Array(overall_self_scores_average_id));
 }
 
+function convertTextToDate()
+{
+    var startDate = getCommonNameId("start-date", 'input');
+    var endDate = getCommonNameId("end-date", 'input');
+    textEleAddDateInput(startDate);
+    textEleAddDateInput(endDate);
+}
+
+function textEleAddDateInput(arr)
+{
+    for (var i = 0; i < arr.length; i++)
+    {
+        jQuery(arr[i]).attr("readonly", true);
+        jQuery(arr[i]).css('color', '#34495E');
+        jQuery(arr[i]).css('background', '#ffffff');
+        jQuery(arr[i]).datepicker({
+            firstDay: 1,
+            changeMonth: true,
+            changeYear: true
+        });
+    }
+}
+
+jQuery(document).ajaxComplete(
+        function() {
+            convertTextToDate();
+        }
+);
+
+
+function checkProjectStartEndDate()
+{
+    var startDate = getCommonNameId("start-date", 'input');
+    var endDate = getCommonNameId("end-date", 'input');
+    var len = startDate.length;
+    var start, end, startStr, endStr, li, isLegal = true;
+    for (i = 0; i < len; i++)
+    {
+        startStr = jQuery(startDate[i]).val();
+        endStr = jQuery(endDate[i]).val();
+        if (startStr == '' || endStr == '')
+            continue;
+        
+        start = new Date(startStr);
+        end = new Date(endStr);
+
+        if (start >= end)
+        {
+            isLegal = false;
+            addErrorMessageArea();
+            li = '<li>' + "Project Roles And Responsibilities " + (i + 1) + " Start Date must early than End Date." + '</li>';
+            jQuery("#error-message").append(li);
+            jQuery(startDate[i]).removeClass().addClass('form-text required form-textarea error');
+            jQuery(endDate[i]).removeClass().addClass('form-text required form-textarea error');
+        }
+    }
+    return isLegal;
+}
+
+
 jQuery(document).ready(
         function() {
             registerSelectOnchangeEvent(coreCompetenciesArr, categoryCoreCcompetenciesValueChange);
             registerSelectOnchangeEvent(internalContributionsArr, categoryInternalIcontributionsValueChange);
             categoryCoreCcompetenciesValueChange();
             categoryInternalIcontributionsValueChange();
+            convertTextToDate();
             jQuery("input[name='op'][value='Submit']").click(
                     function() {
                         jQuery(".messages.error").remove();
                         var result = checkComments(coreCompetenciesArr, 'comments')
                         result = checkComments(internalContributionsArr, 'comments') && result;
                         result = checkRequireField() && result;
+                        result = checkProjectStartEndDate() && result;
                         goTopEx();
                         return result;
                     });

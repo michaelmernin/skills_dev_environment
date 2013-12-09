@@ -17,6 +17,7 @@
  */
 $calculate_js_path = drupal_get_path('module', 'counselee') . "/js/calculate.js";
 drupal_add_js($calculate_js_path);
+appendCSSJS();
 ?>
 
 

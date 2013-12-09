@@ -146,6 +146,22 @@ function getSamePrefixID(prefix)
     return samePrefixArr;
 }
 
+function getCommonNameId(same,type)
+{
+    var id, idArr = new Array();
+    var arr = jQuery(type);
+    for (var i = 0; i < arr.length; i++)
+    {
+        id = arr[i].getAttribute("id");
+        if (id!=null && id.indexOf(same) != -1)
+        {
+            idArr[idArr.length] = "#" + id;
+        }
+    }
+    return idArr;
+}
+
+
 /**
  * Check required field
  * 
@@ -203,16 +219,6 @@ function addErrorMessageArea()
     }
 }
 
-function focusOnErrorMessage()
-{
-    var errorArea = jQuery(".messages.error");
-    //if (errorArea.length != 0)
-//    window.scrollTo(0, 0);
-
-    //jQuery("html,body").animate({"scrollTop": 0}, speed);
-
-    // jQuery("html,body").animate({"scrollTop": 0}, 1000);
-}
 
 function modifySelectCategoryValue(category, destArr)
 {

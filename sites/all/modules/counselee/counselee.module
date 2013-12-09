@@ -1055,3 +1055,26 @@ function get_counselor_submit_result($username) {
   }
   return $result;
 }
+
+function save_draft_for_anonymous_user($nid) {
+  if (is_selfreview($nid) == false) {
+    global $user;
+    $uid = $user->uid;
+    if ($uid != 0) {
+      $query = db_query("update {webform_submissions} set uid = $uid where nid = $nid")->execute();
+    }
+    else if ($uid == 0) {
+      $user->uid = get_webform_submissions_uid($nid);
+      $user->name = 'anonymous user for peer review form';
+    }
+  }
+}
+
+function get_webform_submissions_uid($nid) {
+  $dataset = db_query("select uid from {webform_submissions} where nid = $nid")->fetchAll();
+  if (count($dataset) == 1) {
+    return $dataset[0]->uid;
+  }
+  else
+    return 2;
+}

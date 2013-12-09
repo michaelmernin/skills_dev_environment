@@ -1549,7 +1549,7 @@ function template_preprocess_node(&$variables) {
       $time_frame_to = 'N/A';
     }
     $variables['submitted'] = t('Duration: From ' . $time_frame_from . ' To ' . $time_frame_to);
- //=====================END================================
+    //=====================END================================
 
 
 
@@ -2762,6 +2762,10 @@ function node_page_default() {
  * @see node_menu()
  */
 function node_page_view($node) {
+
+  // Save as Draft button for peer review form,when anonymous user review peer review form
+  save_draft_for_anonymous_user($node->nid);
+
   // If there is a menu link to this node, the link becomes the last part
   // of the active trail, and the link name becomes the page title.
   // Thus, we must explicitly set the page title to be the node title.
