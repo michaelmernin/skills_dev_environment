@@ -445,10 +445,10 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
 function _manage_data_return_three_array_readonly($children_array, $peer_question_rating_comment_result, &$peer_name, &$peer_json) {
 //need more test!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   $is_first = TRUE;
+  $is_first_json = TRUE;
   foreach ($children_array as $one_child) {
     foreach ($peer_question_rating_comment_result as $one_question_answer) {
       if ($one_child == $one_question_answer->cid) {
-        $is_first_json = TRUE;
         if ($is_first) {
           foreach ($one_question_answer->ratings as $key => $one_ratings) {
             $peer_name_temp[$key]['flag'] = TRUE;
