@@ -309,7 +309,7 @@ function _manage_pie_chart($peer_name, $form_key) {
       $count4_1_5++;
     }
     elseif ($one_peer['avgrating'] == 0) {
-      $tooltiphtmlNA.=format_login_name($key) . ':' . round($one_peer['avgrating'], 1) . '<br/>';
+      $tooltiphtmlNA.=format_login_name($key) . ':N/A<br/>';
       $countNA++;
     }
     $all_avg = $all_avg + $one_peer['avgrating'];

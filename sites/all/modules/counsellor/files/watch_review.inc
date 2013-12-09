@@ -335,7 +335,12 @@ function _get_watchpeerreview_component_html($contents) {
         $html_text.=theme('watch_peer_review_component', array('component_content' => $one_content));
       }
       else {
-        $html_text.=theme('watch_peer_review_component_select', array('component_content' => $one_content));
+        if ($one_content->form_key == 'overall_rating') {
+          $html_text.=theme('watch_peer_review_component_overallrating', array('component_content' => $one_content));
+        }
+        else {
+          $html_text.=theme('watch_peer_review_component_select', array('component_content' => $one_content));
+        }
       }
     }
   }

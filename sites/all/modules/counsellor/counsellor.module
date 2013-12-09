@@ -164,6 +164,11 @@ function counsellor_theme() {
       'path' => drupal_get_path('module', 'counsellor') . '/templates',
       'template' => 'watch_peer_review_component_select',
     ),
+    'watch_peer_review_component_overallrating' => array(
+      'variables' => array('component_content'),
+      'path' => drupal_get_path('module', 'counsellor') . '/templates',
+      'template' => 'watch_peer_review_component_overallrating',
+    ),
   );
 }
 
