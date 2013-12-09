@@ -54,7 +54,7 @@ appendCSSJS();
 
 <div class="row-fluid">
   <div class="span12">
-    <div id="modal-container-1752468" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="left: auto; width: auto; margin-left: 10%; margin-right: 10%;">
+    <div id="modal-container-1752468" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="left: 0px; width: auto; margin-left: 10%; margin-right: 10%;position: fixed;">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="close_btn" value="0">×</button>
         <h3 id="myModalLabel">

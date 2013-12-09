@@ -28,7 +28,7 @@ function _webform_defaults_lastyeargoal() {
       'attributes' => array(),
       'private' => FALSE,
       'analysis' => FALSE,
-      'goal_string'=>GOAL_STRING,
+      'goal_string' => GOAL_STRING,
     ),
   );
 }
@@ -143,15 +143,9 @@ function _webform_table_lastyeargoal($component, $value) {
 }
 
 function _webform_render_lastyeargoal($component, $value = NULL, $filter = TRUE) {
+  $is_first_year = FALSE;
   $node = isset($component['nid']) ? node_load($component['nid']) : NULL;
-//  if(get_user_identity_by_nid($component['nid'])!==0){
-//    drupal_goto('mydashboard');
-//    
-//  }
-//  dd($component,'$component');
-//  $component_name = 'goals_text';
   $last_nid = get_last_year_review_nid($node);
-//  dd($last_nid, '$last_nid');
   if ($last_nid != 0) {
     $sid = get_last_sid_by_nid($last_nid);
     if ($sid != 0) {
@@ -168,23 +162,9 @@ function _webform_render_lastyeargoal($component, $value = NULL, $filter = TRUE)
     }
   }
   else {
-    $display = 'There is no goal found';
+    $display = '';
+    $is_first_year = TRUE;
   }
-//  dd($node,'$node');
-//  dd($node,'$node');
-//  drupal_add_library('system', 'ui.slider');
-//  drupal_add_js('jQuery(document).ready(function(){jQuery("#webform-slider-'. $component['form_key'] .'").slider({
-//    min: 1,
-//    max: 5,
-//    step: 1,
-//    value: jQuery("#"+ jQuery("#webform-slider-'. $component['form_key'] .'").attr("data-rel") +" input").val(),
-//    slide: function(event, ui) {
-//      jQuery("#"+ jQuery("#webform-slider-'. $component['form_key'] .'").attr("data-rel") +" input").val(ui.value);
-//    }
-//  });});', 'inline');
-//  $slider = '<div class="slider-item slider-item-first">'. ($filter ? _webform_filter_xss($component['extra']['field_prefix']) : $component['extra']['field_prefix']) .'</div>';
-//  $slider .= '<div class="slider-item slider" id="webform-slider-'. $component['form_key'] .'" data-rel="webform-component-'. $component['form_key'] .'"></div>';
-//  $slider .= '<div class="slider-item slider-item-last">'. ($filter ? _webform_filter_xss($component['extra']['field_suffix']) : $component['extra']['field_suffix']) .'</div>';
   $element = array(
 //    '#type' => 'hidden',
 //    '#default_value' => $filter ? _webform_filter_values($component['value'], $node, NULL, NULL, FALSE) : $component['value'],
@@ -215,13 +195,17 @@ function _webform_render_lastyeargoal($component, $value = NULL, $filter = TRUE)
 //    $element['#default_value'] = 3;
 //  }
   $element['#attributes']['style'] = 'color:#9d9c9a';
-  if ($component['extra']['disabled']) {
+//  if ($component['extra']['disabled']) {
+  if (!$is_first_year) {
     if ($filter) {
       $element['#attributes']['readonly'] = 'readonly';
     }
     else {
       $element['#disabled'] = TRUE;
     }
+  }
+  else {
+    $element['#disabled'] = FALSE;
   }
   return $element;
 }
