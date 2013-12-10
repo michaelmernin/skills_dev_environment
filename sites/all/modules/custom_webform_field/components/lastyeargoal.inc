@@ -194,9 +194,10 @@ function _webform_render_lastyeargoal($component, $value = NULL, $filter = TRUE)
 //  else {
 //    $element['#default_value'] = 3;
 //  }
-  $element['#attributes']['style'] = 'color:#9d9c9a';
+
 //  if ($component['extra']['disabled']) {
   if (!$is_first_year) {
+    $element['#attributes']['style'] = 'color:#9d9c9a';
     if ($filter) {
       $element['#attributes']['readonly'] = 'readonly';
     }
@@ -205,6 +206,7 @@ function _webform_render_lastyeargoal($component, $value = NULL, $filter = TRUE)
     }
   }
   else {
+    $element['#attributes']['style'] = 'color:black';
     $element['#disabled'] = FALSE;
   }
   return $element;
