@@ -3,7 +3,6 @@
 // dd($rreid, 'rreid');
 // dd($nid, 'nid');
 // dd($reviewee, 'reviewee');
-// dd($clor_rating_comment, '$clor_rating_comment');
 // dd($pie_data, 'pie_data');
 ?>
 <div class="webform-ssion-info clearfix">
@@ -216,7 +215,8 @@
       <div class="view-self-comment-bubble">
         <div class="additionalbubble">
           <div style="padding: 0 5px 5px;margin-bottom: 5px;">
-            <div id="counselor-comment-<?php print $item_num; ?>" style="margin: 5px; height: 140px; width: 98%;overflow-y:auto;"><?php
+            <div id="counselor-comment-<?php print $item_num; ?>" style="margin: 5px; height: 140px; width: 98%;overflow-y:auto;">
+              <?php
               if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
                 if (trim($clor_rating_comment->clor_comment) != '') {
                   print $clor_rating_comment->clor_comment;

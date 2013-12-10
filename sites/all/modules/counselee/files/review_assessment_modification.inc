@@ -20,23 +20,16 @@ function load_self_assessment($rreid = NULL) {
 ////////////////////////////////////////////////////////
 
   $self_dataset = get_latest_submitted_data_from_db($nid, $sid);
-  $indexed_dataset = _indexed_by_cid($self_dataset);
-  $item_count = count($self_dataset);
-  $self_cid_formkey_type_array = _generate_self_cid_formkey_type($self_dataset);
-  $self_adj_list = dfs_generate_adjacent_list($self_cid_formkey_type_array);
-  $self_sequential_list = dfs_travel_all_node($self_adj_list);
-  $self_mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
+	$item_count = count($self_dataset);
+	$self_cid_formkey_type_array = array();
+	$self_question_rating_comment_result = process_self_assessment_data($self_dataset, $self_cid_formkey_type_array);
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
-  $review_info = array();
-  $review_info['clientdate'] = array();
-  $review_info['project_roles_and_responsibilities'] = array();
-  $review_info['rating'] = array();
+	$review_info = init_review_info_content();
+
   $self_comments_array = array();
   $overall_rating = new stdClass();
   _matching_none_selection_items($none_selection_item, $self_dataset, $review_info, $self_comments_array, $overall_rating);
   $review_info_content_num = count($review_info['clientdate']);
-  $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($indexed_dataset, $self_mapping_table);
-  $self_question_rating_comment_result = _resort_item_by_weight($self_question_rating_comment_result);
   $self_item_count = count($self_question_rating_comment_result);
   $total_item_count = $self_item_count + count($self_comments_array);
 ////////////////////////////////////////////////////////
@@ -84,7 +77,8 @@ function load_self_assessment($rreid = NULL) {
   for ($i = 0; $i < $review_info_content_num; $i++) {
     $clientdate = $review_info['clientdate'][$i]->DATA;
     $project_roles_and_responsibilities = $review_info['project_roles_and_responsibilities'][$i]->DATA;
-    $rating = $review_info['rating'][$i]->DATA;
+    $startdate = $review_info['startdate'][$i]->DATA;
+    $enddate = $review_info['enddate'][$i]->DATA;
     if (validate_numbers($review_info, $i)) {
       $content = theme('project_roles_and_responsibilities', array(
         'rreid' => $rreid,
@@ -93,7 +87,8 @@ function load_self_assessment($rreid = NULL) {
         'review_info_content_num' => $i,
         'clientdate' => $clientdate,
         'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
-        'rating' => $rating,
+				'startdate' => $startdate,
+				'enddate' => $enddate,
       ));
       $pageContent .= $content;
     }
@@ -122,7 +117,6 @@ function load_self_assessment($rreid = NULL) {
 //      if ($have_counselor_data) {
 //        generate_synthesized_peer_comment($value->form_key, $unread_comment, $revised_comments);
 //      }
-      // dd($revised_comments, 'revised_comments');
       $content = theme('view_assessment', array(
         'item_num' => $key,
         'rreid' => $rreid,
@@ -591,6 +585,8 @@ function save_counselor_assessment_draft() {
   $decoded_items = array();
   foreach ($items as $item) {
     $temp = json_decode($item);
+    // $text = check_plain(filter_xss($temp));
+    // dd($text, 'text');
     array_push($decoded_items, $temp);
   }
 
@@ -738,6 +734,17 @@ function _indexed_by_cid($self_dataset) {
   return $index_array;
 }
 
+function process_self_assessment_data($self_dataset, &$self_cid_formkey_type_array) {
+	$indexed_dataset = _indexed_by_cid($self_dataset);
+  $self_cid_formkey_type_array = _generate_self_cid_formkey_type($self_dataset);
+  $self_adj_list = dfs_generate_adjacent_list($self_cid_formkey_type_array);
+  $self_sequential_list = dfs_travel_all_node($self_adj_list);
+  $self_mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
+  $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($indexed_dataset, $self_mapping_table);
+  $self_sorted_question_rating_comment_result = _resort_item_by_weight($self_question_rating_comment_result);
+	return $self_sorted_question_rating_comment_result;
+} 
+
 function _resort_item_by_weight(&$self_question_rating_comment_result) {
   $temp_array = array();
   foreach ($self_question_rating_comment_result as $key => $value) {
@@ -766,6 +773,15 @@ function _fetch_all_none_selection_items($self_cid_formkey_type_array) {
   return $survey_item_question;
 }
 
+function init_review_info_content() {
+	$review_info = array();
+	$review_info['clientdate'] = array();
+	$review_info['project_roles_and_responsibilities'] = array();
+	$review_info['startdate'] = array();
+	$review_info['enddate'] = array();
+	return $review_info;
+}
+
 function _matching_none_selection_items($none_selection_item, $self_dataset, &$review_info, &$self_comments_array, &$overall_rating) {
   for ($i = count($self_dataset) - 1; $i >= 0; $i--) {
     if ($self_dataset[$i]->form_key == 'project_roles_and_responsibilities' && $self_dataset[$i]->type == 'textarea') {
@@ -782,15 +798,22 @@ function _matching_none_selection_items($none_selection_item, $self_dataset, &$r
       array_push($review_info['clientdate'], $review_info_item);
       continue;
     }
-    else if ($self_dataset[$i]->form_key == 'overall_rating' && $self_dataset[$i]->type == 'textfield') {
+    else if ($self_dataset[$i]->form_key == 'overall_rating' && $self_dataset[$i]->type == 'select') {
       $overall_rating->counselee_rating = $self_dataset[$i]->DATA;
       continue;
     }
-    else if ($self_dataset[$i]->form_key == 'rating' && $self_dataset[$i]->type == 'select') {
+    else if ($self_dataset[$i]->form_key == 'start_date' && $self_dataset[$i]->type == 'textfield') {
       $review_info_item = new stdClass();
       $review_info_item->no = $self_dataset[$i]->no;
       $review_info_item->DATA = $self_dataset[$i]->DATA;
-      array_push($review_info['rating'], $review_info_item);
+      array_push($review_info['startdate'], $review_info_item);
+      continue;
+    }
+    else if ($self_dataset[$i]->form_key == 'end_date' && $self_dataset[$i]->type == 'textfield') {
+      $review_info_item = new stdClass();
+      $review_info_item->no = $self_dataset[$i]->no;
+      $review_info_item->DATA = $self_dataset[$i]->DATA;
+      array_push($review_info['enddate'], $review_info_item);
       continue;
     }
     else if ($self_dataset[$i]->form_key == 'project_roles_and_responsibilities_category') {
@@ -841,7 +864,7 @@ function synthesize_self_review_ratings_and_comments($self_dataset, $mapping_tab
     if (!array_key_exists($i, $self_dataset)) {
       continue;
     }
-    if ($self_dataset[$i]->type != 'select' || $self_dataset[$i]->form_key == 'rating') {
+    if ($self_dataset[$i]->type != 'select' || $self_dataset[$i]->form_key == 'overall_rating') {
       continue;
     }
     $obj = new stdClass();
@@ -1000,8 +1023,8 @@ function _fetch_cid_formkey_from_dataset($data_src) {
 
 function _fetch_counselor_overall_rating($data_src) {
   foreach ($data_src as $key => $value) {
-    if ($value->form_key == 'overall_rating' && isset($value->clor_comment)) {
-      return $value->clor_comment;
+    if ($value->form_key == 'overall_rating' && isset($value->rating)) {
+      return $value->rating;
     }
   }
   return NULL;
@@ -1357,7 +1380,7 @@ function _insert_counselor_submittion_data_to_DB($rreid, $nid, $csiid, &$clor_it
             'csiid' => $csiid,
             'count' => count($csdid_array),
             'title' => 'overall_rating',
-            'counselor_comment' => $overall_rating,
+            'rating' => $overall_rating,
           ))->execute();
 
   if (count($csdid_array) != 0 && $overall_rating_csdid != -1) {
@@ -1586,10 +1609,9 @@ function send_approval_email_notification($rreid, $is_approved, $reject_comments
 }
 
 function validate_numbers($review_info_array, $index) {
-  if (array_key_exists($index, $review_info_array['clientdate']) && array_key_exists($index, $review_info_array['project_roles_and_responsibilities']) && array_key_exists($index, $review_info_array['rating'])) {
+  if (array_key_exists($index, $review_info_array['clientdate']) && array_key_exists($index, $review_info_array['project_roles_and_responsibilities']) && array_key_exists($index, $review_info_array['startdate']) && array_key_exists($index, $review_info_array['enddate'])) {
     $cl_str = $review_info_array['clientdate'][$index]->no;
     $pr_str = $review_info_array['project_roles_and_responsibilities'][$index]->no;
-    // $ra_num = $review_info_array['rating'][$index]->no;
 
     $cl_pos = strpos($cl_str, '#');
     $cl_num = substr($cl_str, $cl_pos + 1, 1);

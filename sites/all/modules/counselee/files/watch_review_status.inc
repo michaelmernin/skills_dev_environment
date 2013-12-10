@@ -142,27 +142,18 @@ function load_self_assessment_content($rreid = NULL) {
   $provider_info = get_provider_info($rreid, $reviewee);
   $nid = $provider_info[0]->nid;
   $sid = get_last_sid_by_nid($nid);
-  module_load_include('inc', 'counselee', 'files/review_assessment_modification');
 
   $self_dataset = get_latest_submitted_data_from_db($nid, $sid);
-  $cid_indexed_dataset = _indexed_by_cid($self_dataset);
-  $item_count = count($self_dataset);
-  $self_cid_formkey_type_array = _generate_self_cid_formkey_type($self_dataset);
-
-  $self_adj_list = dfs_generate_adjacent_list($self_cid_formkey_type_array);
-  $self_sequential_list = dfs_travel_all_node($self_adj_list);
-  $self_mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
+	$item_count = count($self_dataset);
+	$self_cid_formkey_type_array = array();
+	$self_question_rating_comment_result = process_self_assessment_data($self_dataset, $self_cid_formkey_type_array);
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
-  $review_info = array();
-  $review_info['clientdate'] = array();
-  $review_info['project_roles_and_responsibilities'] = array();
-  $review_info['rating'] = array();
+
+  $review_info = init_review_info_content();
   $self_comments_array = array();
   $overall_rating = new stdClass();
   _matching_none_selection_items($none_selection_item, $self_dataset, $review_info, $self_comments_array, $overall_rating);
   $review_info_content_num = count($review_info['clientdate']);
-  $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($cid_indexed_dataset, $self_mapping_table);
-  $self_question_rating_comment_result = _resort_item_by_weight($self_question_rating_comment_result);
   $self_item_count = count($self_question_rating_comment_result);
   $total_item_count = $self_item_count + count($self_comments_array);
 
@@ -170,7 +161,8 @@ function load_self_assessment_content($rreid = NULL) {
   for ($i = 0; $i < $review_info_content_num; $i++) {
     $clientdate = $review_info['clientdate'][$i]->DATA;
     $project_roles_and_responsibilities = $review_info['project_roles_and_responsibilities'][$i]->DATA;
-    $rating = $review_info['rating'][$i]->DATA;
+    $startdate = $review_info['startdate'][$i]->DATA;
+    $enddate = $review_info['enddate'][$i]->DATA;
     if (validate_numbers($review_info, $i)) {
       $content = theme('project_roles_and_responsibilities', array(
         'rreid' => $rreid,
@@ -179,7 +171,8 @@ function load_self_assessment_content($rreid = NULL) {
         'review_info_content_num' => $i,
         'clientdate' => $clientdate,
         'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
-        'rating' => $rating,
+        'startdate' => $startdate,
+				'enddate' => $enddate,
       ));
       $pageContent .= $content;
     }
@@ -226,24 +219,15 @@ function load_review_content($rreid = NULL) {
 ////////////////////////////////////////////////////////
 
   $self_dataset = get_latest_submitted_data_from_db($nid, $sid);
-  $cid_indexed_dataset = _indexed_by_cid($self_dataset);
   $item_count = count($self_dataset);
-  $self_cid_formkey_type_array = _generate_self_cid_formkey_type($self_dataset);
-
-  $self_adj_list = dfs_generate_adjacent_list($self_cid_formkey_type_array);
-  $self_sequential_list = dfs_travel_all_node($self_adj_list);
-  $self_mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
+	$self_cid_formkey_type_array = array();
+	$self_question_rating_comment_result = process_self_assessment_data($self_dataset, $self_cid_formkey_type_array);
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
-  $review_info = array();
-  $review_info['clientdate'] = array();
-  $review_info['project_roles_and_responsibilities'] = array();
-  $review_info['rating'] = array();
+	$review_info = init_review_info_content();	
   $self_comments_array = array();
   $overall_rating = new stdClass();
   _matching_none_selection_items($none_selection_item, $self_dataset, $review_info, $self_comments_array, $overall_rating);
   $review_info_content_num = count($review_info['clientdate']);
-  $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($cid_indexed_dataset, $self_mapping_table);
-  $self_question_rating_comment_result = _resort_item_by_weight($self_question_rating_comment_result);
   $self_item_count = count($self_question_rating_comment_result);
   $total_item_count = $self_item_count + count($self_comments_array);
 ////////////////////////////////////////////////////////
@@ -273,7 +257,8 @@ function load_review_content($rreid = NULL) {
   for ($i = 0; $i < $review_info_content_num; $i++) {
     $clientdate = $review_info['clientdate'][$i]->DATA;
     $project_roles_and_responsibilities = $review_info['project_roles_and_responsibilities'][$i]->DATA;
-    $rating = $review_info['rating'][$i]->DATA;
+		$startdate = $review_info['startdate'][$i]->DATA;
+		$enddate = $review_info['enddate'][$i]->DATA;
     if (validate_numbers($review_info, $i)) {
       $content = theme('project_roles_and_responsibilities', array(
         'rreid' => $rreid,
@@ -282,7 +267,8 @@ function load_review_content($rreid = NULL) {
         'review_info_content_num' => $i,
         'clientdate' => $clientdate,
         'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
-        'rating' => $rating,
+				'startdate' => $startdate,
+				'enddate' => $enddate,
       ));
       $pageContent .= $content;
     }

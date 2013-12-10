@@ -235,7 +235,14 @@
               <br />
               <br />
             </div>
-            <div id="counselor-overall_rating" style="clear: left;margin-top: 3px;"><input id="counselor-overall_rating-content" type="text" maxlength="10" size="60">
+			<div id="counselor-overall_rating" style="clear: left;margin-top: 3px;">
+			<select id="counselor-overall_rating-content" >
+						<option value="1">1</option>
+            			<option value="2">2</option>
+            			<option value="3">3</option>
+            			<option value="4">4</option>
+            			<option value="5">5</option>
+			</select>
             </div>
             <br />
             <br />

@@ -282,6 +282,7 @@
     </div>
   </div>
 
+  <br />
   <div>
     <table id="peer-table-<?php print $item_num ?>"></table>
     <div id="peer-div-<?php print $item_num ?>"></div>
