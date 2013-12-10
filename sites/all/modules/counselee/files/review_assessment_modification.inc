@@ -592,7 +592,7 @@ function decode_json_object($json_context) {
   $decoded_items = array();
   foreach ($json_context as $key => $value) {
     $text = json_decode($value);
-    array_push($decoded_items, $value);
+    array_push($decoded_items, $text);
   }
   return $decoded_items;
 }
@@ -918,8 +918,9 @@ function synthesize_all_peer_review_ratings_and_comments(&$nid_pname_array, &$pr
 
 // We should iterate the content according to the adjusted sequence as mapping table!.
   $iterate_counting = 0;
+  
   for ($i = 0; $i < count($pr_data_array[$providerName]->dataset); $i++) {
-    if ($pr_data_array[$providerName]->dataset[$i]->type != 'select') {
+    if ($pr_data_array[$providerName]->dataset[$i]->type != 'select' || $pr_data_array[$providerName]->dataset[$i]->form_key == 'overall_rating') {
       continue;
     }
     $obj = new stdClass();
