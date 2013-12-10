@@ -319,6 +319,9 @@
                 if (overallRating != "undefined" && overallRating != 0) {
                   jQuery("#counselor-overall_rating-content").val(overallRating);
                 }
+								else {
+									jQuery("#counselor-overall_rating-contetn").val(3);
+								}
               }
 
               function setCounseleeOverallRating() {

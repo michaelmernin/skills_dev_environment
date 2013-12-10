@@ -95,11 +95,16 @@
                 print -1;
               }
               ?>;
-    if (inArray(rating, range)) {
-      jQuery("#counselor-rating-<?php print $item_num; ?>").append(rating);
+		if (inArray(rating, range)) {
+			if (rating != 0) {
+				jQuery("#counselor-rating-<?php print $item_num; ?>").append(rating);
+			}
+			else {
+				jQuery("#counselor-rating-<?php print $item_num; ?>").append("N/A");
+			}
     }
     else {
-      jQuery("#counselor-rating-<?php print $item_num; ?>").val(3);
+      jQuery("#counselor-rating-<?php print $item_num; ?>").append(3);
     }
   }
 

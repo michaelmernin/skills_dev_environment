@@ -341,7 +341,12 @@
         }
         ?>;
     if (inArray(rating, range)) {
-      jQuery("#counselor-rating-<?php print $item_num; ?>").append(rating);
+			if (rating != 0) {
+				jQuery("#counselor-rating-<?php print $item_num; ?>").append(rating);
+			}
+			else {
+				jQuery("#counselor-rating-<?php print $item_num; ?>").append(0);
+			}
     }
     else {
       jQuery("#counselor-rating-<?php print $item_num; ?>").append(3);

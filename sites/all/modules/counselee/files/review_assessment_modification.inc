@@ -582,16 +582,31 @@ function save_counselor_assessment_draft() {
   $items = $_POST['items'];
   $overall_rating = $_POST['overallRating'];
 
+	check_submittion_content($items);
   $decoded_items = array();
   foreach ($items as $item) {
     $temp = json_decode($item);
-    // $text = check_plain(filter_xss($temp));
-    // dd($text, 'text');
-    array_push($decoded_items, $temp);
+    array_push($decoded_items, $text);
   }
 
   $result = _submit_counselor_draft_to_DB($rreid, $nid, $decoded_items, $overall_rating);
   echo $result_val;
+}
+
+function check_submittion_content($checked_item) {
+	foreach($checked_item as $key => $value) {
+		if ($value instanceof stdClass) {
+			check_submittion_content($value);
+		}
+		else if (is_array($value)) {
+			check_submittion_content($value);
+		}
+		else {
+			$context = check_plain(filter_xss($value));
+			$replacement = array($key => $context);
+			$checked_item = array_replace($checked_item, $replacement);
+		}
+	}
 }
 
 /**
@@ -606,7 +621,7 @@ function approve_counselee_assessment() {
 
   $decoded_items = array();
   foreach ($items as $item) {
-    $temp = json_decode($item);
+    $text = json_decode($item);
     array_push($decoded_items, $temp);
   }
 
