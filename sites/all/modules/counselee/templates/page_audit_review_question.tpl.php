@@ -8,7 +8,7 @@
     <b style="font-weight: 700"> Self Rating:</b>
     <font color="red">
     <span id="<?php print 'src_self_' . $node['key']; ?>" >
-      <?php print $node['self_rating']; ?>
+      <?php print display_rating($node['self_rating']); ?>
     </span>
     </font>  
 
@@ -16,10 +16,9 @@
       | ·Counselor Rating: </b>
     <font color="red">
     <span id="<?php print 'src_counselor_' . $node['key']; ?>" >
-      <?php print $node['counselor_rating']; ?>
+      <?php print  display_rating($node['counselor_rating']); ?>
     </span>
     </font>
-
 
 
     <?php

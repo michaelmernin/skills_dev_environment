@@ -90,8 +90,6 @@ function self_review_select_value_change(category, index)
     {
         score_rating = (sum / count).toFixed(2);
     }
-
-
     if (index == 1)
     {
         jQuery(counselor_composite_id[6]).html(score_rating);
@@ -183,7 +181,11 @@ function initialize_self_score_rating()
     for (var i = 0; i < self_score_id.length; i++)
     {
         value = jQuery(self_score_id[i]).html();
-        jQuery(overall_self_composite_scores_id[i]).html(value);
+        if ((IsNum(value)))
+            jQuery(overall_self_composite_scores_id[i]).html(value);
+        else
+            jQuery(overall_self_composite_scores_id[i]).html("");
+
     }
 
     var internal_rating = calculate_element_value_average(self_internal_score_id);

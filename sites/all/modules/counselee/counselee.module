@@ -276,14 +276,14 @@ function counselee_theme() {
         'item_num' => NULL,
         'self_dataset' => NULL,
         'overall_rating' => NULL,
-        ),
+      ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'view_self_assessment_item',),
     'view_self_assessment_comment_only' => array(
       'variables' => array(
         'item_num' => NULL,
         'self_comment' => NULL,
-        ),
+      ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'view_self_assessment_comment_only',),
     'review_content' => array(
@@ -1079,11 +1079,28 @@ function get_webform_submissions_uid($nid) {
     return 2;
 }
 
-
-  function display_comment($comment) {
-    if (strlen($comment) < 1) {
-      return "No Comment.";
-    }
-    else
-      return $comment;
+/**
+ * Display counselee and counselor comment
+ * When there is no comment, display No Comment
+ * 
+ */
+function display_comment($comment) {
+  if (strlen($comment) < 1) {
+    return "No Comment.";
   }
+  else
+    return $comment;
+}
+
+/**
+ * Display rating,when the rating is 0,display N/A
+ * 
+ */
+function display_rating($rate) {
+  if ($rate == '0' || $rate == 0) {
+    return 'N/A';
+  }
+  else
+    return $rate;
+}
+

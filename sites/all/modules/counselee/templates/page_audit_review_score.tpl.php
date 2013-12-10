@@ -21,8 +21,8 @@
         <td id="counselor_rating_consulting_skills"></td>
       </tr>
       <tr><td>Professionalism</td>
-        <td id="rating_professionalism">3</td>
-        <td id="counselor_rating_professionalism">3</td>
+        <td id="rating_professionalism"></td>
+        <td id="counselor_rating_professionalism"></td>
       </tr>
       <tr><td>Leadership</td>
         <td id="rating_leadership"></td>
@@ -55,11 +55,19 @@
     category[4] = 'leadership';
     category[5] = 'teamwork';
 
+    var selfRate, counselorRate;
     for (var i = 0; i < category.length; i++)
     {
-      jQuery('#rating_' + category[i]).html(jQuery('#src_self_' + category[i]).html());
-      jQuery('#counselor_rating_' + category[i]).html(jQuery('#src_counselor_' + category[i]).html());
+      selfRate = jQuery('#src_self_' + category[i]).html();
+      
+      if (IsNum(selfRate))
+        jQuery('#rating_' + category[i]).html(selfRate);
+
+      counselorRate = jQuery('#src_counselor_' + category[i]).html();
+      if (IsNum(counselorRate))
+        jQuery('#counselor_rating_' + category[i]).html(counselorRate);
     }
+
 
     var selfPre = '#src_self_';
     var self_internal = new Array();
