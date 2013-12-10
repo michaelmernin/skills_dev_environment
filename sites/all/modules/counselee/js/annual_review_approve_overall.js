@@ -1,38 +1,38 @@
 //counselor-rating-3
-//assessment-content-value-3
+//assessment-content-value
 var self_score_id = new Array();
-self_score_id[0] = '#assessment-content-value-3';
-self_score_id[1] = '#assessment-content-value-4';
-self_score_id[2] = '#assessment-content-value-5';
-self_score_id[3] = '#assessment-content-value-6';
-self_score_id[4] = '#assessment-content-value-7';
-self_score_id[5] = '#assessment-content-value-8';
+self_score_id[0] = '#assessment-content-value-0';
+self_score_id[1] = '#assessment-content-value-1';
+self_score_id[2] = '#assessment-content-value-2';
+self_score_id[3] = '#assessment-content-value-3';
+self_score_id[4] = '#assessment-content-value-4';
+self_score_id[5] = '#assessment-content-value-5';
 
 
 var self_internal_score_id = new Array();
-self_internal_score_id[0] = '#assessment-content-value-10';
-self_internal_score_id[1] = '#assessment-content-value-11';
-self_internal_score_id[2] = '#assessment-content-value-12';
-self_internal_score_id[3] = '#assessment-content-value-13';
-self_internal_score_id[4] = '#assessment-content-value-14';
+self_internal_score_id[0] = '#assessment-content-value-6';
+self_internal_score_id[1] = '#assessment-content-value-7';
+self_internal_score_id[2] = '#assessment-content-value-8';
+self_internal_score_id[3] = '#assessment-content-value-9';
+self_internal_score_id[4] = '#assessment-content-value-10';
 
 
 
 var counselor_score_id = new Array();
-counselor_score_id[0] = '#counselor-rating-3';
-counselor_score_id[1] = '#counselor-rating-4';
-counselor_score_id[2] = '#counselor-rating-5';
-counselor_score_id[3] = '#counselor-rating-6';
-counselor_score_id[4] = '#counselor-rating-7';
-counselor_score_id[5] = '#counselor-rating-8';
+counselor_score_id[0] = '#counselor-rating-0';
+counselor_score_id[1] = '#counselor-rating-1';
+counselor_score_id[2] = '#counselor-rating-2';
+counselor_score_id[3] = '#counselor-rating-3';
+counselor_score_id[4] = '#counselor-rating-4';
+counselor_score_id[5] = '#counselor-rating-5';
 
 
 var counselor_internal_score_id = new Array();
-counselor_internal_score_id[0] = '#counselor-rating-10';
-counselor_internal_score_id[1] = '#counselor-rating-11';
-counselor_internal_score_id[2] = '#counselor-rating-12';
-counselor_internal_score_id[3] = '#counselor-rating-13';
-counselor_internal_score_id[4] = '#counselor-rating-14';
+counselor_internal_score_id[0] = '#counselor-rating-6';
+counselor_internal_score_id[1] = '#counselor-rating-7';
+counselor_internal_score_id[2] = '#counselor-rating-8';
+counselor_internal_score_id[3] = '#counselor-rating-9';
+counselor_internal_score_id[4] = '#counselor-rating-10';
 
 
 
@@ -139,8 +139,8 @@ function counselor_core_competencies_value_change()
 function self_review_internal_contributions()
 {
     self_review_select_value_change(counselor_internal_score_id, 1);
-    
-     var rating = calculate_element_value_average(counselor_composite_id);
+
+    var rating = calculate_element_value_average(counselor_composite_id);
     jQuery(counselor_composite_average_id).html(rating);
 }
 
@@ -191,11 +191,58 @@ function initialize_self_score_rating()
 
     var self_all_rating = calculate_element_value_average(overall_self_composite_scores_id);
     jQuery(overall_self_scores_average_id).html(self_all_rating);
-
-
-
-
 }
+
+
+
+function getCommonNameId(same, type)
+{
+    var id, idArr = new Array();
+    var arr = jQuery(type);
+    for (var i = 0; i < arr.length; i++)
+    {
+        id = arr[i].getAttribute("id");
+        if (id != null && id.indexOf(same) != -1)
+        {
+            idArr[idArr.length] = "#" + id;
+        }
+    }
+    return idArr;
+}
+
+
+//counselor-comment
+//counselor-rating
+function checkComment()
+{
+    var ratings = getCommonNameId("counselor-rating", "select");
+    var comments = getCommonNameId("counselor-comment", "textarea");
+
+    var i, len = ratings.length, score, comment, isRight = true;
+    for (i = 0; i < len; i++)
+    {
+        score = jQuery(ratings[i]).find('option:selected').val();
+        comment = jQuery(comments[i]).val();
+
+        jQuery(comments[i]).removeClass().addClass("form-textarea");
+        if ((score != '3' || score != 3) && comment.length < 1)
+        {
+            alert(comments[i]);
+//            addErrorMessageArea();
+//            field = getCategoryChildName(category[i]);
+//            li = '<li>' + field + "Comment field is required,because his score is not 3 point." + '</li>';
+//            jQuery("#error-message").append(li);
+
+            jQuery(comments[i]).css("border", "2px");
+            jQuery(comments[i]).css("solid", "red");
+            isRight = false;
+        }
+    }
+    return isRight;
+}
+
+
+
 
 initialize_self_score_rating();
 register_self_form_select_onchange_event(counselor_score_id, counselor_core_competencies_value_change);
@@ -204,40 +251,14 @@ counselor_core_competencies_value_change();
 self_review_internal_contributions();
 
 
-function check_comments(category, comments)
-{
-    var value, comment, len, isRight = true;
-    for (var i = 0; i < category.length; i++)
-    {
-        value = jQuery(category[i]).find('option:selected').val();
-//        alert(value);
-        if (value != '3')
-        {
-            comment = jQuery(comments[i]).val();
-            len = comment.length;
-            if (len < 1) {
-                alert('The socre is not 3 points.Please enter comment!');
-                jQuery(comments[i]).focus();
-                jQuery(comments[i]).removeClass().addClass("form-textarea required error");
-                isRight = false;
-                return isRight
-            }
-            else
-            {
-                jQuery(comments[i]).removeClass().addClass("form-textarea");
-            }
-        }
-    }
-    return isRight;
-}
 jQuery(document).ready(
         function() {
-//            jQuery("input[name='op'][value='Submit']").click(
-//                    function() {
-//                        return check_comments(core_competencies_id, core_competencies_comment_id)
-//                                && check_comments(internal_contributions_id, internal_contributions_comment_id);
-//                    });
-            jQuery("#counselor_disapprove_btn").click(function(){
+            jQuery("input[name='op'][value='Approve']").click(
+                    function() {
+//                        checkComment();
+
+                    });
+            jQuery("#counselor_disapprove_btn").click(function() {
                 return check_reject_reasons();
             })
         }

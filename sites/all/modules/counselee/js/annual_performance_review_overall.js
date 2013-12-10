@@ -1,7 +1,5 @@
 var coreCompetenciesPre = 'core-competencies-category';
 var coreCompetenciesArr = getSamePrefixID(coreCompetenciesPre);
-
-
 var internalContributionsPre = 'internal-contributions-category';
 var internalContributionsArr = getSamePrefixID(internalContributionsPre);
 

@@ -1078,3 +1078,12 @@ function get_webform_submissions_uid($nid) {
   else
     return 2;
 }
+
+
+  function display_comment($comment) {
+    if (strlen($comment) < 1) {
+      return "No Comment.";
+    }
+    else
+      return $comment;
+  }

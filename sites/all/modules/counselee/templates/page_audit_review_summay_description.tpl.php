@@ -1,6 +1,6 @@
 <fieldset class="webform-component-fieldset webform-catalogue ">
   <legend>
-    <span class="fieldset-legend"> <?php print $node['description']; ?>
+    <span class="fieldset-legend"> <?php print ucfirst($node['description']); ?>
     </span>
   </legend>
 

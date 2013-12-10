@@ -102,7 +102,7 @@ function checkComments(category, commentSuffix)
         score = jQuery(category[i]).find('option:selected').val();
         commentID = category[i] + "-" + commentSuffix;
         jQuery(commentID).removeClass().addClass("form-textarea");
-        if (score != '3')
+        if (score != '3' || score != 3)
         {
             commentLen = jQuery(commentID).val().length;
             if (commentLen < 1) {
@@ -110,7 +110,7 @@ function checkComments(category, commentSuffix)
                 field = getCategoryChildName(category[i]);
                 li = '<li>' + field + "Comment field is required,because his score is not 3 point." + '</li>';
                 jQuery("#error-message").append(li);
-                jQuery(commentID).addClass('form-textarea required error');
+                jQuery(commentID).removeClass().addClass('form-textarea required error');
                 isRight = false;
             }
         }
@@ -146,14 +146,14 @@ function getSamePrefixID(prefix)
     return samePrefixArr;
 }
 
-function getCommonNameId(same,type)
+function getCommonNameId(same, type)
 {
     var id, idArr = new Array();
     var arr = jQuery(type);
     for (var i = 0; i < arr.length; i++)
     {
         id = arr[i].getAttribute("id");
-        if (id!=null && id.indexOf(same) != -1)
+        if (id != null && id.indexOf(same) != -1)
         {
             idArr[idArr.length] = "#" + id;
         }
@@ -178,7 +178,6 @@ function checkRequireField()
             description = obj.innerText;
             addErrorMessageArea();
             jQuery(fieldId).removeClass().addClass("form-text required");
-
 
             if (getElementContentLength(jQuery(fieldId)) < 1)
             {

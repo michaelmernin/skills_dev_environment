@@ -5,6 +5,12 @@
 // dd($reviewee, 'reviewee');
 // dd($clor_rating_comment, '$clor_rating_comment');
 // dd($pie_data, 'pie_data');
+//
+////sites/all/themes/flat_ui/assets/stylesheets/screen.css
+//
+//$screen_js_path = drupal_get_path('themes', 'flat_ui') . "/assets/stylesheets/screen.css";
+//drupal_add_css($screen_js_path);
+
 ?>
 <div class="webform-ssion-info clearfix">
   <!--Self comment-->
