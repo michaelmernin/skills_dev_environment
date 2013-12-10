@@ -107,7 +107,12 @@
               function setCounseleeOverallRating() {
                 var overallRating = jQuery("#counselee-overall_rating-0").val();
                 if (overallRating != "undefined") {
-                  jQuery("#counselee-overall_rating-content").append(overallRating);
+									if (overallRating != 0) {
+										jQuery("#counselee-overall_rating-content").append(overallRating);
+									}
+									else {
+										jQuery("#counselee-overall_rating-content").append("N/A");
+									}	
                 }
               }
             </script>

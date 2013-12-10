@@ -320,7 +320,7 @@
                   jQuery("#counselor-overall_rating-content").val(overallRating);
                 }
 								else {
-									jQuery("#counselor-overall_rating-contetn").val(3);
+									jQuery("#counselor-overall_rating-content").val(3);
 								}
               }
 

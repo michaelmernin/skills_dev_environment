@@ -374,7 +374,7 @@
         }
         ?>;
     if (inArray(rating, range)) {
-      jQuery("#counselor-rating-<?php print $item_num; ?>").val(rating);
+				jQuery("#counselor-rating-<?php print $item_num; ?>").val(rating);
     }
     else {
       jQuery("#counselor-rating-<?php print $item_num; ?>").val(3);

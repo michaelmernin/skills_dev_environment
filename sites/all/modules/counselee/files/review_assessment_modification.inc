@@ -582,15 +582,19 @@ function save_counselor_assessment_draft() {
   $items = $_POST['items'];
   $overall_rating = $_POST['overallRating'];
 
-	check_submittion_content($items);
-  $decoded_items = array();
-  foreach ($items as $item) {
-    $temp = json_decode($item);
-    array_push($decoded_items, $text);
-  }
-
+//	check_submittion_content($items);
+  $decoded_items = decode_json_object($items);
   $result = _submit_counselor_draft_to_DB($rreid, $nid, $decoded_items, $overall_rating);
   echo $result_val;
+}
+
+function decode_json_object($json_context) {
+  $decoded_items = array();
+  foreach ($json_context as $key => $value) {
+    $text = json_decode($value);
+    array_push($decoded_items, $value);
+  }
+  return $decoded_items;
 }
 
 function check_submittion_content($checked_item) {
@@ -619,11 +623,7 @@ function approve_counselee_assessment() {
   $items = $_POST['items'];
   $overall_rating = $_POST['overallRating'];
 
-  $decoded_items = array();
-  foreach ($items as $item) {
-    $text = json_decode($item);
-    array_push($decoded_items, $temp);
-  }
+  $decoded_items = decode_json_object($items);
 
   $result = _submit_counselor_approve_info_to_DB($rreid, $nid, $decoded_items, $overall_rating);
   $is_approved = TRUE;
@@ -643,11 +643,9 @@ function reject_counselee_assessment() {
   $items = $_POST['items'];
   $reject_comments = $_POST['rejectComments'];
   $overall_rating = $_POST['overallRating'];
-  $decoded_items = array();
-  foreach ($items as $item) {
-    $temp = json_decode($item);
-    array_push($decoded_items, $temp);
-  }
+  
+  $decoded_items = decode_json_object($items);
+
   $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments, $overall_rating);
   $is_approved = FALSE;
   send_approval_email_notification($rreid, $is_approved, $reject_comments);
