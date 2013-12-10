@@ -41,6 +41,7 @@ function counselee_confirm_review_result($rreid) {
   $pageContent .= get_project_message_part($self_review);
   $pageContent .= get_performance_evaluation($self_review, $counselor_review, $peer_comment_info_set);
   $pageContent .= get_extend_description_part($self_review, $counselor_review);
+  $pageContent .= get_overall_rating_part($self_review, $counselor_review);
   $pageContent .= theme('page_audit_review_score', array());
   $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
   return $pageContent;
@@ -223,9 +224,6 @@ function get_extend_description_map() {
     array(
       'selfkey' => 'achievements_text',
     ),
-    array(
-      'selfkey' => 'overall_rating',
-    )
   );
 
   return $textarea_map;
@@ -389,7 +387,7 @@ function get_extend_description_part($self_review, $counselor_review) {
   foreach ($self_review_comment_map as $review) {
     $extend_description['description'] = $self_review[$review['selfkey']]->name;
     $extend_description['self_description'] = $self_review[$review['selfkey']]->data;
-    //$extend_description['counselor_description'] = $counselor_review[$review['selfkey']]->counselor_comment;
+    $extend_description['counselor_description'] = $counselor_review[$review['selfkey']]->counselor_comment;
 
     $content .= theme('page_audit_review_summay_description', array('node' => $extend_description));
   }
@@ -444,8 +442,18 @@ function counselor_submit_review_result($rreid) {
   $pageContent .= get_project_message_part($self_review);
   $pageContent .= get_performance_evaluation($self_review, $counselor_review, $peer_comment_info_set);
   $pageContent .= get_extend_description_part($self_review, $counselor_review);
+  $pageContent .= get_overall_rating_part($self_review, $counselor_review);
   $pageContent .= theme('page_audit_review_score', array());
   $pageContent .= theme('page_audit_review_btn_submit', array('rreid' => $rreid));
 
   return $pageContent;
+}
+
+function get_overall_rating_part($self_review, $counselor_review) {
+
+  $extend_description['description'] = $self_review['overall_rating']->name;
+  $extend_description['self_description'] = $self_review['overall_rating']->data;
+  $extend_description['counselor_description'] = $counselor_review['overall_rating']->rating;
+
+  return theme('page_audit_review_summay_description', array('node' => $extend_description));
 }
