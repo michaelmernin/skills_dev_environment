@@ -11,7 +11,7 @@
 				<div class="fieldset-wrapper">
 					<div class="form-item webform-component webform-component-textfield webform-component--project-roles-and-responsibilities-category--wfm--0--clientdate">
 						<div id="client-date-">
-							Client(Dates) :  <?php print $clientdate; ?>
+							Client:  <?php print $clientdate; ?>
 						</div>
 					</div>					
 					<div class="form-item webform-component webform-component-textfield webform-component--project-roles-and-responsibilities-category--wfm--0--startdate">

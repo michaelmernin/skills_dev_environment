@@ -11,6 +11,7 @@
  * 3. Achievements
  * 4. Performance Evaluation
  * 5. Extend Description
+ * 6. Overall Rating
  */
 
 /**
@@ -36,7 +37,8 @@ function counselee_confirm_review_result($rreid) {
   $counselor_review = get_counselor_review_comment($nid);
   module_load_include('inc', 'counselee', 'files/review_assessment_modification');
   $peer_comment_info_set = get_peer_comment_information_array($rreid);
-//  dd($peer_comment_info_set,'$peer_comment_info_set');
+
+  $pageContent .= get_project_message_part($self_review);
   $pageContent .= get_performance_evaluation($self_review, $counselor_review, $peer_comment_info_set);
   $pageContent .= get_extend_description_part($self_review, $counselor_review);
   $pageContent .= theme('page_audit_review_score', array());
@@ -60,14 +62,33 @@ WHERE
     component.nid = '$nid'";
   $result = db_query($sql)->fetchAll();
 
-  $self_review_map = Array();
+  $self_review_data = Array();
+
+  $project_node = array(
+    'clientdate' => array(),
+    'start_date' => array(),
+    'end_date' => array(),
+    'project_roles_and_responsibilities' => array(),
+  );
+
+  $project_key = array('clientdate' => true,
+    'start_date' => true,
+    'end_date' => true,
+    'project_roles_and_responsibilities' => true);
+
   foreach ($result as $node) {
     $key = $node->form_key;
-    $self_review_map[$key] = $node;
-//    dd($self_review_map,'$self_review_map');
+    $self_review_data[$key] = $node;
+
+    if (isset($project_key[$key])) {
+      $project_node[$key][count($project_node[$key])] = $node;
+    }
   }
 
-  return $self_review_map;
+
+  $self_review_data['project'] = $project_node;
+
+  return $self_review_data;
 }
 
 /**
@@ -202,6 +223,9 @@ function get_extend_description_map() {
     array(
       'selfkey' => 'achievements_text',
     ),
+    array(
+      'selfkey' => 'overall_rating',
+    )
   );
 
   return $textarea_map;
@@ -269,8 +293,25 @@ function audit_review_result_update($rreid, $rstatus, $approveStatus = 1, $reaso
   return 'failed';
 }
 
-function get_project_message_part() {
-  
+function get_project_message_part($self_review) {
+
+  $content = '';
+  $project = $self_review['project'];
+  $len = count($project['clientdate']);
+
+  for ($i = 0; $i < $len; $i++) {
+    $content.= theme('project_roles_and_responsibilities', array(
+      'rreid' => null,
+      'nid' => null,
+      'reviewee' => null,
+      'review_info_content_num' => null,
+      'clientdate' => $project['clientdate'][$i]->data,
+      'project_roles_and_responsibilities' => $project['project_roles_and_responsibilities'][$i]->data,
+      'startdate' => $project['start_date'][$i]->data,
+      'enddate' => $project['end_date'][$i]->data,
+    ));
+  }
+  return $content;
 }
 
 function get_achievements() {
@@ -322,7 +363,7 @@ function get_category_content($self_review, $counselor_review, $catetory_map, $p
 
 function get_performance_evaluation($self_review, $counselor_review, $peer_comment_info_set) {
   $content = '';
-    
+
   //CORE COMPETENCIES
   $core_competencies_map = get_core_competencies_map();
   $core_competencies_content = get_category_content($self_review, $counselor_review, $core_competencies_map, $peer_comment_info_set);
@@ -399,7 +440,9 @@ function counselor_submit_review_result($rreid) {
   $counselor_review = get_counselor_review_comment($nid);
   module_load_include('inc', 'counselee', 'files/review_assessment_modification');
   $peer_comment_info_set = get_peer_comment_information_array($rreid);
-  $pageContent .= get_performance_evaluation($self_review, $counselor_review,$peer_comment_info_set);
+
+  $pageContent .= get_project_message_part($self_review);
+  $pageContent .= get_performance_evaluation($self_review, $counselor_review, $peer_comment_info_set);
   $pageContent .= get_extend_description_part($self_review, $counselor_review);
   $pageContent .= theme('page_audit_review_score', array());
   $pageContent .= theme('page_audit_review_btn_submit', array('rreid' => $rreid));
