@@ -51,7 +51,7 @@
           // jQuery('#submit_button').removeAttr("disabled");
         }
         // else {
-        //   window.location.href = "<?php // print base_path() . 'viewassessment'     ?>";
+        //   window.location.href = "<?php // print base_path() . 'viewassessment'        ?>";
         //   return;
         // }
       });
@@ -166,13 +166,13 @@
 
   function getCounselorRevisedComment(num) {
     var ids = jQuery("#peer-table-" + num).jqGrid('getDataIDs');
-    var rowDataRel=new Array();
+    var rowDataRel = new Array();
     for (var i = 0; i < ids.length; i++)
     {
       var rowId = ids[i];
       var rowData = jQuery("#peer-table-" + num).jqGrid('getRowData', rowId);
 //      var json_string = "{\"nid\":"+ rowData.nid + ",\"cid\"=" + rowData.cid + ",\"display\":" + rowData.display + "}";
-      
+
       var json_string = {
         "nid": rowData.nid,
         "cid": rowData.cid,
@@ -235,14 +235,14 @@
               <br />
               <br />
             </div>
-			<div id="counselor-overall_rating" style="clear: left;margin-top: 3px;">
-			<select id="counselor-overall_rating-content" >
-						<option value="1">1</option>
-            			<option value="2">2</option>
-            			<option value="3">3</option>
-            			<option value="4">4</option>
-            			<option value="5">5</option>
-			</select>
+            <div id="counselor-overall_rating" style="clear: left;margin-top: 3px;">
+              <select id="counselor-overall_rating-content" >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
             </div>
             <br />
             <br />
@@ -306,7 +306,7 @@
               document.body.appendChild(new_element);
 
               // jQuery(document).ready(function() {
-              //   var isCounselor = '<?php // print $identity       ?>';
+              //   var isCounselor = '<?php // print $identity          ?>';
               //   if (isCounselor == "counselee") {
               //     jQuery(".draftbutton").hide();
               //   }
@@ -322,6 +322,7 @@
 								else {
 									jQuery("#counselor-overall_rating-content").val(3);
 								}
+
               }
 
               function setCounseleeOverallRating() {
@@ -351,8 +352,15 @@
                           Do you want to disapprove this self assessment? <br>
                           Please write down reason below.
                         </p>
-                        <textarea id="counselor_reject_reason" cols="30" rows="5" style="width: 500px" maxlength="500" placeholder="Please write reasons here..."></textarea>
-                        <label>Limited to 500 words.</label>
+                        <textarea id="counselor_reject_reason" 
+                                  cols="30"
+                                  rows="5"
+                                  style="width: 500px" 
+                                  maxlength="500"
+                                  onchange="textareaLimitWord(this, 255)"
+                                  onkeydown ="textareaLimitWord(this, 255)"
+                                  placeholder="Please write reasons here..."></textarea>
+                        <label>Limited to 255 words.</label>
                       </div>
                       <div class="modal-footer">
                         <img class="loading_img" id="status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
@@ -401,3 +409,15 @@
 </div>
 
 <?php require_once 'footer.tpl.php'; ?>
+
+
+<script>
+
+              function textareaLimitWord(ta, maxLength)
+              {
+                if (ta.value.length > maxLength) {
+                  ta.value = ta.value.substring(0, maxLength);
+                }
+              }
+
+</script>
