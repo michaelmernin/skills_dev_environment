@@ -23,8 +23,10 @@
       Do you want to disapprove this self review result? <br>
       Please write down reason below.
     </p>
-    <textarea id="counselee_disagree_reason" cols="30" rows="5" style="width: 500px" 
+
+    <textarea id="counselee_disagree_reason" cols="30" rows="5" maxlength="500" style="width: 500px" 
               placeholder="Please write reasons here..."></textarea>
+    <label>Limited to 500 words.</label>
 
   </div>
   <div class="modal-footer">

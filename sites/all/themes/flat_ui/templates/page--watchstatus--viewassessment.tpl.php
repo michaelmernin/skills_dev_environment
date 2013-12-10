@@ -351,7 +351,8 @@
                           Do you want to disapprove this self assessment? <br>
                           Please write down reason below.
                         </p>
-                        <textarea id="counselor_reject_reason" cols="30" rows="5" style="width: 500px" placeholder="Please write reasons here..."></textarea>
+                        <textarea id="counselor_reject_reason" cols="30" rows="5" style="width: 500px" maxlength="500" placeholder="Please write reasons here..."></textarea>
+                        <label>Limited to 500 words.</label>
                       </div>
                       <div class="modal-footer">
                         <img class="loading_img" id="status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
