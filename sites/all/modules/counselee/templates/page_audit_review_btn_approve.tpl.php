@@ -24,9 +24,15 @@
       Please write down reason below.
     </p>
 
-    <textarea id="counselee_disagree_reason" cols="30" rows="5" maxlength="500" style="width: 500px" 
+    <textarea id="counselee_disagree_reason" 
+              cols="30" 
+              rows="5" 
+              maxlength="500"
+              onchange="textareaLimitWord(this, 255)"
+              onkeydown ="textareaLimitWord(this, 255)"
+              style="width: 500px" 
               placeholder="Please write reasons here..."></textarea>
-    <label>Limited to 500 words.</label>
+    <label>Limited to 255 words.</label>
 
   </div>
   <div class="modal-footer">
@@ -94,38 +100,47 @@
 
 <script type="text/javascript">
 
-              function disapprove_review_result(id)
-              {
-                var disapproveReason = jQuery('#counselee_disagree_reason').val();
-                if (disapproveReason.length < 1)
+                function disapprove_review_result(id)
                 {
-                  alert("Please write down reason below.");
-                  return;
+                  var disapproveReason = jQuery('#counselee_disagree_reason').val();
+                  if (disapproveReason.length < 1)
+                  {
+                    alert("Please write down reason below.");
+                    return;
+                  }
+
+                  jQuery('#status_loading_img_89759').css('display', 'inline');
+                  var bathpath = '<?php print base_path(); ?>';
+                  jQuery.ajax({
+                    type: "POST",
+                    url: bathpath + 'audit-review/disapprove-review-result',
+                    data: {'rreid': id, 'disapproveReason': disapproveReason},
+                    success: function(date) {
+                      window.location.href = "<?php print get_curPage_base_url() . 'watchstatus/basicinfo/' ?>" + id;
+                    }
+                  });
                 }
 
-                jQuery('#status_loading_img_89759').css('display', 'inline');
-                var bathpath = '<?php print base_path(); ?>';
-                jQuery.ajax({
-                  type: "POST",
-                  url: bathpath + 'audit-review/disapprove-review-result',
-                  data: {'rreid': id, 'disapproveReason': disapproveReason},
-                  success: function(date) {
-                    window.location.href = "<?php print get_curPage_base_url() . 'watchstatus/basicinfo/' ?>" + id;
-                  }
-                });
-              }
+                function approve_review_result(id)
+                {
+                  jQuery('#status_loading_img_89758').css('display', 'inline');
+                  var bathpath = '<?php print base_path(); ?>';
+                  jQuery.ajax({
+                    type: "POST",
+                    url: bathpath + 'audit-review/approve-review-result',
+                    data: {'rreid': id},
+                    success: function(date) {
+                      window.location.href = "<?php print get_curPage_base_url() . 'watchstatus/basicinfo/' ?>" + id;
+                    }
+                  });
+                }
 
-              function approve_review_result(id)
-              {
-                jQuery('#status_loading_img_89758').css('display', 'inline');
-                var bathpath = '<?php print base_path(); ?>';
-                jQuery.ajax({
-                  type: "POST",
-                  url: bathpath + 'audit-review/approve-review-result',
-                  data: {'rreid': id},
-                  success: function(date) {
-                    window.location.href = "<?php print get_curPage_base_url() . 'watchstatus/basicinfo/' ?>" + id;
+                function textareaLimitWord(ta, maxLength)
+                {
+//                  alert(maxLength);
+                  if (ta.value.length > maxLength) {
+                    ta.value = ta.value.substring(0, maxLength);
                   }
-                });
-              }
+                }
+
 </script>
