@@ -38,8 +38,8 @@ counselor_internal_score_id[4] = '#counselor-rating-10';
 
 var overall_self_composite_scores_id = new Array();
 overall_self_composite_scores_id[0] = '#rating_client_engagements';
-overall_self_composite_scores_id[1] = '#rating_technical_abilities';
-overall_self_composite_scores_id[2] = '#rating_consulting_skills';
+overall_self_composite_scores_id[1] = '#rating_consulting_skills';
+overall_self_composite_scores_id[2] = '#rating_technical_abilities';
 overall_self_composite_scores_id[3] = '#rating_professionalism';
 overall_self_composite_scores_id[4] = '#rating_leadership';
 overall_self_composite_scores_id[5] = '#rating_teamwork';
@@ -51,8 +51,8 @@ var overall_self_scores_average_id = '#rating_all';
 
 var counselor_composite_id = new Array();
 counselor_composite_id[0] = '#counselor_rating_client_engagements';
-counselor_composite_id[1] = '#counselor_rating_technical_abilities';
-counselor_composite_id[2] = '#counselor_rating_consulting_skills';
+counselor_composite_id[1] = '#counselor_rating_consulting_skills';
+counselor_composite_id[2] = '#counselor_rating_technical_abilities';
 counselor_composite_id[3] = '#counselor_rating_professionalism';
 counselor_composite_id[4] = '#counselor_rating_leadership';
 counselor_composite_id[5] = '#counselor_rating_teamwork';
