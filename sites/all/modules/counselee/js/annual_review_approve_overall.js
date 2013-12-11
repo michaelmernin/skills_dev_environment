@@ -76,6 +76,8 @@ function getElementValue(ele) {
         return ele.val();
     else if (type == "SELECT")
         return ele.find('option:selected').val();
+    else if (type == "DIV")
+        return ele.html();
 
 
     return ele.val();
