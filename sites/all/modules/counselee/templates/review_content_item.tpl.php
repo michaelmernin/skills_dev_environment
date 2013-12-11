@@ -261,7 +261,7 @@
     <div id="peer-div-<?php print $item_num ?>"></div>
     <script>
       var lastSel;
-      var peer_data_<?php print $item_num ?> = [<?php print $peer_json ?>];
+      var peer_data_<?php print $item_num ?> = <?php print $peer_json ?>;
       jQuery("#peer-table-<?php print $item_num ?>").jqGrid({
         datatype: "local",
         height: 250,

@@ -16,7 +16,7 @@
       | ·Counselor Rating: </b>
     <font color="red">
     <span id="<?php print 'src_counselor_' . $node['key']; ?>" >
-      <?php print  display_rating($node['counselor_rating']); ?>
+      <?php print display_rating($node['counselor_rating']); ?>
     </span>
     </font>
 
@@ -45,13 +45,13 @@
   </div>
 
 
-<?php if ($node['exist_peer']) : ?>
+  <?php if ($node['exist_peer']) : ?>
     <div>
       <table id="peer-table-<?php print $node['key'] ?>"></table>
       <div id="peer-div-<?php print $node['key'] ?>"></div>
       <script>
         var lastSel;
-        var peer_data_<?php print $node['key'] ?> = [<?php print $node['peer_comment'] ?>];
+        var peer_data_<?php print $node['key'] ?> = <?php print $node['peer_comment'] ?>;
         jQuery("#peer-table-<?php print $node['key'] ?>").jqGrid({
           datatype: "local",
           height: 250,
@@ -107,12 +107,12 @@
 
         );
 
-        //      for (var i = 0; i <= peer_data_<?php // print $node['key']   ?>.length; i++)
-        //        jQuery("#peer-table-<?php // print $node['key']   ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $node['key']  ?>[i]);
+        //      for (var i = 0; i <= peer_data_<?php // print $node['key']    ?>.length; i++)
+        //        jQuery("#peer-table-<?php // print $node['key']    ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $node['key']   ?>[i]);
 
       </script>
     </div>
-<?php endif; ?>
+  <?php endif; ?>
 </div>
 <hr>
 
