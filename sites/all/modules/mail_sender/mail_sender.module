@@ -387,7 +387,7 @@ function counselor_submit_review_result_remind($rreid) {
   $query->condition('review.rreid', $rreid);
 
   $dataset = $query->execute()->fetchAll();
-
+  
 
   if (count($dataset) == 1) {
     $address = $dataset[0]->mail;

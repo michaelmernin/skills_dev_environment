@@ -5,7 +5,7 @@
 
 
 function goTopEx() {
-    //window.scrollTo(0, 0)
+//window.scrollTo(0, 0)
     var obj = jQuery("#gotoTopBtn")[0];
     obj.click();
 }
@@ -58,7 +58,6 @@ function calculateAverageScore(category, elementType)
             value = jQuery(category[i]).find('option:selected').val();
         else if (elementType == 'html')
             value = jQuery(category[i]).html();
-
         if (IsNum(value) && value != '0')
         {
             count++;
@@ -177,7 +176,6 @@ function checkRequireField()
             fieldId = "#" + obj.getAttribute("for");
             description = obj.innerText;
             jQuery(fieldId).removeClass().addClass("form-text required");
-
             if (getElementContentLength(jQuery(fieldId)) < 1)
             {
                 addErrorMessageArea();
@@ -199,14 +197,34 @@ function getElementContentLength(ele)
         return ele.val().length;
     else if (type == "TEXTAREA")
         return ele.val().length;
-
     return 0;
 }
+
+/**
+ * Get page element value
+ * 
+ * @param {object} ele Object Element
+ * */
+function getElementValue(ele) {
+    var type = ele[0].tagName;
+
+    if (type == "INPUT")
+        return ele.val();
+    else if (type == "TEXTAREA")
+        return ele.val();
+    else if (type == "SELECT")
+        return ele.find('option:selected').val();
+
+
+    return ele.val();
+}
+
+
 
 
 function addErrorMessageArea()
 {
-    //.page-title
+//.page-title
     var errorArea = jQuery(".messages.error");
     if (errorArea.length == 0)
     {

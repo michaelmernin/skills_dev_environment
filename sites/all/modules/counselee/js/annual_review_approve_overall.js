@@ -62,6 +62,25 @@ var counselor_composite_average_id = '#counselor_rating_all';
 
 
 
+/**
+ * Get page element value
+ * 
+ * @param {object} ele Object Element
+ * */
+function getElementValue(ele) {
+    var type = ele[0].tagName;
+
+    if (type == "INPUT")
+        return ele.val();
+    else if (type == "TEXTAREA")
+        return ele.val();
+    else if (type == "SELECT")
+        return ele.find('option:selected').val();
+
+
+    return ele.val();
+}
+
 
 function IsNum(str)
 {
@@ -77,7 +96,7 @@ function self_review_select_value_change(category, index)
     var i = 0, count = 0, sum = 0, value;
     for (i = 0; i < category.length; i++)
     {
-        value = jQuery(category[i]).find('option:selected').val();
+        value = getElementValue(jQuery(category[i]));
         if (IsNum(value) && value != '0')
         {
             count++;
@@ -119,7 +138,7 @@ function counselor_core_competencies_value_change()
     var value;
     for (var i = 0; i < counselor_score_id.length; i++)
     {
-        value = jQuery(counselor_score_id[i]).find('option:selected').val();
+        value = getElementValue(jQuery(counselor_score_id[i]));
         if (IsNum(value) && value != '0')
         {
             jQuery(counselor_composite_id[i]).html(value);
@@ -180,7 +199,7 @@ function initialize_self_score_rating()
     var value;
     for (var i = 0; i < self_score_id.length; i++)
     {
-        value = jQuery(self_score_id[i]).html();
+        value = getElementValue(jQuery(self_score_id[i]));
         if ((IsNum(value)))
             jQuery(overall_self_composite_scores_id[i]).html(value);
         else

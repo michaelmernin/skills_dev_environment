@@ -11,6 +11,7 @@
 <script>
 
   var workingItemsNum = 0;
+  var basePath = '<?php print $base_path = get_curPage_base_url(); ?>';
 
   function reviewName(type)
   {
@@ -42,7 +43,7 @@
       reviewType = obj.reviewType;
       description = obj.description;
 
-      url = "./watchstatus/selectpeers/" + rreid;
+      url = basePath + "watchstatus/selectpeers/" + rreid;
       if (userType == 'counselee') {
         li = " <li> <a href='" + url + "'>" + description + " is started.Please select peers for yourself" + ".(" + reviewName(reviewType) + ") </a> </li>";
         jQuery('#myWorkForMe').append(li);
@@ -74,7 +75,6 @@
       token = obj.token;
       isApproved = obj.isApproved;
 
-      basePath = '<?php print $base_path = get_curPage_base_url(); ?>';
       url = basePath + token;
       if (name == '<?php print get_current_user_name(); ?>' && isApproved == 0)
       {
@@ -110,7 +110,7 @@
       reviewType = obj.reviewType;
       description = obj.description;
       isCounseleeApproved = obj.isCounseleeApproved;
-      url = "./watchstatus/viewassessment/" + rreid;
+      url = basePath + "watchstatus/viewassessment/" + rreid;
       if (isCounseleeApproved == 0)
         li = " <li> <a href='" + url + "'>[" + name + "] has finished " + description + " self reivew.(" + reviewName(reviewType) + ")</a> </li>";
       else if (isCounseleeApproved == 2)
@@ -133,7 +133,7 @@
       rreid = obj.rreid;
       reviewType = obj.reviewType;
       description = obj.description;
-      url = "./watchstatus/counseleeconfirmresult/" + rreid;
+      url = basePath + "watchstatus/counseleeconfirmresult/" + rreid;
       li = " <li> <a href='" + url + "'>" + description + " has approved by your counselor.Please check the review.(" + reviewName(reviewType) + ")</a> </li>";
       jQuery('#myWorkForMe').append(li);
     }
@@ -149,7 +149,7 @@
       rreid = obj.rreid;
       reviewType = obj.reviewType;
       description = obj.description;
-      url = "./watchstatus/submitreview/" + rreid;
+      url = basePath + "watchstatus/submitreview/" + rreid;
       li = " <li> <a href='" + url + "'>[" + name + "] has agreed " + description + ".Please submit the review.(" + reviewName(reviewType) + ")</a> </li>";
       jQuery('#myWorkForOther').append(li);
     }
