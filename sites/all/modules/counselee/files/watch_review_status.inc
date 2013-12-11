@@ -132,13 +132,21 @@ function display_peer_selection_page($rreid, $userId_flag, $all_employee_array, 
  * Page callback function of view self assessment content
  * */
 function load_self_assessment_content($rreid = NULL) {
-  access_authen($rreid);
   $cur_user_name = get_current_user_name();
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
   $review_status = get_review_status_from_db($rreid);
-  module_load_include('inc', 'counselee', 'files/review_assessment_modification');
+	
+	module_load_include('inc', 'common', 'defined_constants');
 
+	$allowed_roles = AccessRoles::getSelfAssessmentRead();
+	$allowed_status = AccessStatus::getSelfAssessmentRead();
+
+	if(!identify_accessibility($cur_user_name, $reviewee, $counselor, $allowed_roles, $allowed_status, $review_status)) {
+		drupal_goto('accessdenied');
+	}
+
+  module_load_include('inc', 'counselee', 'files/review_assessment_modification');
   $provider_info = get_provider_info($rreid, $reviewee);
   $nid = $provider_info[0]->nid;
   $sid = get_last_sid_by_nid($nid);
@@ -203,17 +211,25 @@ function load_self_assessment_content($rreid = NULL) {
  * Page callback function of review content.
  * */
 function load_review_content($rreid = NULL) {
-  access_authen($rreid);
   $cur_user_name = get_current_user_name();
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
   $review_status = get_review_status_from_db($rreid);
+	
+	module_load_include('inc', 'common', 'defined_constants');
 
+	$allowed_roles = AccessRoles::getReviewContent();
+	$allowed_status = AccessStatus::getReviewContent();
+
+	if(!identify_accessibility($cur_user_name, $reviewee, $counselor, $allowed_roles, $allowed_status, $review_status)) {
+		drupal_goto('accessdenied');
+	}
+
+	module_load_include('inc', 'counselee', 'files/review_assessment_modification');
   $provider_info = get_provider_info($rreid, $reviewee);
   $nid = $provider_info[0]->nid;
   $sid = get_last_sid_by_nid($nid);
-  module_load_include('inc', 'counselee', 'files/review_assessment_modification');
-
+	
 ////////////////////////////////////////////////////////
 // Item below is for self assessment
 ////////////////////////////////////////////////////////
