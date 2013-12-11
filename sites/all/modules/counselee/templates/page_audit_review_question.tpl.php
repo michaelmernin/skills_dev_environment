@@ -51,7 +51,7 @@
       <div id="peer-div-<?php print $node['key'] ?>"></div>
       <script>
         var lastSel;
-        var peer_data_<?php print $node['key'] ?> = <?php print $node['peer_comment'] ?>;
+        var peer_data_<?php print $node['key'] ?> =<?php print (trim($node['peer_comment']) == '') ? '[]' : $node['peer_comment']; ?>;
         jQuery("#peer-table-<?php print $node['key'] ?>").jqGrid({
           datatype: "local",
           height: 250,
@@ -107,8 +107,8 @@
 
         );
 
-        //      for (var i = 0; i <= peer_data_<?php // print $node['key']    ?>.length; i++)
-        //        jQuery("#peer-table-<?php // print $node['key']    ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $node['key']   ?>[i]);
+        //      for (var i = 0; i <= peer_data_<?php // print $node['key']      ?>.length; i++)
+        //        jQuery("#peer-table-<?php // print $node['key']      ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $node['key']     ?>[i]);
 
       </script>
     </div>

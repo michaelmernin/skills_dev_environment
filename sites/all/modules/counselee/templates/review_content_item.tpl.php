@@ -36,16 +36,16 @@
               },
               tooltip: {
                 enabled: false
-  //                useHTML: true,
-  //                formatter: function() {
-  //                  var val = jQuery("#" + this.point.name + "_<?php // print $pie_data->id    ?>").val();
-  //                  // alert(this.point.name);
-  //                  var title = this.point.name;
-  //
-  //                  var textval = '<div class="tooltipbox">' + title + '<br/><table class="toolbox"><tr><td><div class="tooldiv">' + val + '</div></td></tr><table></div>';
-  //                  return textval;
-  //                },
-  //                shared: true
+                        //                useHTML: true,
+                        //                formatter: function() {
+                        //                  var val = jQuery("#" + this.point.name + "_<?php // print $pie_data->id     ?>").val();
+                        //                  // alert(this.point.name);
+                        //                  var title = this.point.name;
+                        //
+                        //                  var textval = '<div class="tooltipbox">' + title + '<br/><table class="toolbox"><tr><td><div class="tooldiv">' + val + '</div></td></tr><table></div>';
+                        //                  return textval;
+                        //                },
+                        //                shared: true
               },
               exporting: {
                 //true for exporting
@@ -261,12 +261,14 @@
     <div id="peer-div-<?php print $item_num ?>"></div>
     <script>
       var lastSel;
-      var peer_data_<?php print $item_num ?> = <?php print $peer_json ?>;
+      var peer_data_<?php print $item_num ?> = <?php
+        print (trim($peer_json) == '') ? '[]' : $peer_json;
+        ?>;
       jQuery("#peer-table-<?php print $item_num ?>").jqGrid({
         datatype: "local",
         height: 250,
         width: 800,
-        data:peer_data_<?php print $item_num ?>,
+        data: peer_data_<?php print $item_num ?>,
         colNames: ['Title', 'Rating', 'Comment', 'Nid', 'Cid'],
         colModel: [
           {name: 'title', index: 'title', width: 100, cellattr: function(rowId, val, rawObject) {
@@ -313,9 +315,9 @@
 
 
       );
-      
-//      for (var i = 0; i <= peer_data_<?php // print $item_num ?>.length; i++)
-//        jQuery("#peer-table-<?php // print $item_num ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $item_num ?>[i]);
+
+//      for (var i = 0; i <= peer_data_<?php // print $item_num  ?>.length; i++)
+//        jQuery("#peer-table-<?php // print $item_num  ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $item_num  ?>[i]);
 
 
 
@@ -341,12 +343,12 @@
         }
         ?>;
     if (inArray(rating, range)) {
-			if (rating != 0) {
-				jQuery("#counselor-rating-<?php print $item_num; ?>").append(rating);
-			}
-			else {
-				jQuery("#counselor-rating-<?php print $item_num; ?>").append(0);
-			}
+      if (rating != 0) {
+        jQuery("#counselor-rating-<?php print $item_num; ?>").append(rating);
+      }
+      else {
+        jQuery("#counselor-rating-<?php print $item_num; ?>").append(0);
+      }
     }
     else {
       jQuery("#counselor-rating-<?php print $item_num; ?>").append(3);

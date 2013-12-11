@@ -10,7 +10,6 @@
 //
 //$screen_js_path = drupal_get_path('themes', 'flat_ui') . "/assets/stylesheets/screen.css";
 //drupal_add_css($screen_js_path);
-
 ?>
 <div class="webform-ssion-info clearfix">
   <!--Self comment-->
@@ -42,7 +41,7 @@
                 enabled: false
               },
               tooltip: {
-  //                enabled: false,
+                //                enabled: false,
                 useHTML: true,
                 formatter: function() {
                   var val = jQuery("#" + this.point.name + "_<?php print $pie_data->id ?>").val();
@@ -52,7 +51,7 @@
                   var textval = '<div class="tooltipbox">' + title + '<br/><table class="toolbox"><tr><td><div class="tooldiv">' + val + '</div></td></tr><table></div>';
                   return textval;
                 },
-  //                pointFormat: '{series.name}: <b>{point.y}</b><br/>',
+                //                pointFormat: '{series.name}: <b>{point.y}</b><br/>',
                 shared: true
               },
               exporting: {
@@ -233,13 +232,13 @@
       <div>
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
           <textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
-            if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
-              print $clor_rating_comment->clor_comment;
-            }
-            else {
-              print '';
-            }
-            ?></textarea>
+                   if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
+                     print $clor_rating_comment->clor_comment;
+                   }
+                   else {
+                     print '';
+                   }
+                   ?></textarea>
         </div>
       </div>
     </div>
@@ -254,11 +253,11 @@
 
   <!--      <div>
           <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-            <textarea id="peer-comment-<?php // print $item_num           ?>"  cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
+            <textarea id="peer-comment-<?php // print $item_num            ?>"  cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
 //            foreach ($unread_comment as $item) {
 //              print $item;
 //            }
-  ?></textarea>
+                   ?></textarea>
           </div>
         </div>-->
   <!--Display the peer comment message-->
@@ -288,12 +287,14 @@
     <div id="peer-div-<?php print $item_num ?>"></div>
     <script>
       var lastSel;
-      var peer_data_<?php print $item_num ?> = <?php print $peer_json ?>;
+      var peer_data_<?php print $item_num ?> = <?php
+        print (trim($peer_json) == '') ? '[]' : $peer_json;
+        ?>;
       jQuery("#peer-table-<?php print $item_num ?>").jqGrid({
         datatype: "local",
         height: 250,
         width: 800,
-        data:peer_data_<?php print $item_num ?>,
+        data: peer_data_<?php print $item_num ?>,
         colNames: ['Peer Name', 'Title', 'Rating', 'Comment', 'Display', 'Nid', 'Cid'],
         colModel: [
           {name: 'peer_name', index: 'peer_name', width: 60, align: 'center', sorttype: "text", cellattr: function(rowId, val, rawObject) {
@@ -344,9 +345,9 @@
 
 
       );
-      
-//      for (var i = 0; i <= peer_data_<?php // print $item_num ?>.length; i++)
-//        jQuery("#peer-table-<?php // print $item_num ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $item_num ?>[i]);
+
+//      for (var i = 0; i <= peer_data_<?php // print $item_num  ?>.length; i++)
+//        jQuery("#peer-table-<?php // print $item_num  ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $item_num  ?>[i]);
 
 
 
@@ -374,7 +375,7 @@
         }
         ?>;
     if (inArray(rating, range)) {
-				jQuery("#counselor-rating-<?php print $item_num; ?>").val(rating);
+      jQuery("#counselor-rating-<?php print $item_num; ?>").val(rating);
     }
     else {
       jQuery("#counselor-rating-<?php print $item_num; ?>").val(3);
