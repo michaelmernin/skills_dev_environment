@@ -176,11 +176,11 @@ function checkRequireField()
             obj = arr[i].parentNode;
             fieldId = "#" + obj.getAttribute("for");
             description = obj.innerText;
-            addErrorMessageArea();
             jQuery(fieldId).removeClass().addClass("form-text required");
 
             if (getElementContentLength(jQuery(fieldId)) < 1)
             {
+                addErrorMessageArea();
                 li = '<li>' + description.substring(0, description.length - 1) + " field is required." + '</li>';
                 jQuery("#error-message").append(li);
                 jQuery(fieldId).addClass('form-textarea required error');

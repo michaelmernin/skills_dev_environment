@@ -110,7 +110,8 @@ jQuery(document).ready(
                         result = checkComments(leadershipArr, 'comment') && result;
                         result = checkComments(teamworkArr, 'comment') && result;
                         result = checkRequireField() && result;
-                        goTopEx();
+                        if (!result)
+                            goTopEx();
                         return result;
                     });
         }

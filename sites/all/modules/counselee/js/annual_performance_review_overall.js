@@ -1,5 +1,6 @@
 var coreCompetenciesPre = 'core-competencies-category';
 var coreCompetenciesArr = getSamePrefixID(coreCompetenciesPre);
+
 var internalContributionsPre = 'internal-contributions-category';
 var internalContributionsArr = getSamePrefixID(internalContributionsPre);
 
@@ -93,7 +94,7 @@ function checkProjectStartEndDate()
         endStr = jQuery(endDate[i]).val();
         if (startStr == '' || endStr == '')
             continue;
-        
+
         start = new Date(startStr);
         end = new Date(endStr);
 
@@ -125,7 +126,8 @@ jQuery(document).ready(
                         result = checkComments(internalContributionsArr, 'comments') && result;
                         result = checkRequireField() && result;
                         result = checkProjectStartEndDate() && result;
-                        goTopEx();
+                        if (!result)
+                            goTopEx();
                         return result;
                     });
         }
