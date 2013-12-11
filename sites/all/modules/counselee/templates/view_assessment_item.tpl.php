@@ -288,7 +288,7 @@
     <div id="peer-div-<?php print $item_num ?>"></div>
     <script>
       var lastSel;
-      var peer_data_<?php print $item_num ?> = [<?php print $peer_json ?>];
+      var peer_data_<?php print $item_num ?> = <?php print $peer_json ?>;
       jQuery("#peer-table-<?php print $item_num ?>").jqGrid({
         datatype: "local",
         height: 250,
@@ -305,7 +305,7 @@
           {name: 'rating', index: 'rating', align: 'center', width: 50, cellattr: function(rowId, val, rawObject) {
               return 'title="' + rawObject.rating + '\nDouble click for more information."';
             }},
-          {name: 'comment', index: 'comment', width: 300, cellattr: function(rowId, val, rawObject) {
+          {name: 'comment', index: 'comment', width: 300, sorttype: "text", cellattr: function(rowId, val, rawObject) {
               var comment_text = rawObject.comment;
               var i = 200;
               if (comment_text.length > i) {

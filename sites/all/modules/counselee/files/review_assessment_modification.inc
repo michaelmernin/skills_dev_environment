@@ -15,16 +15,16 @@ function load_self_assessment($rreid = NULL) {
   $provider_info = get_provider_info($rreid, $reviewee);
   $nid = $provider_info[0]->nid;
   $sid = get_last_sid_by_nid($nid);
-////////////////////////////////////////////////////////
-// Item below is for self assessment
-////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////
+  // Item below is for self assessment
+  ////////////////////////////////////////////////////////
 
   $self_dataset = get_latest_submitted_data_from_db($nid, $sid);
-	$item_count = count($self_dataset);
-	$self_cid_formkey_type_array = array();
-	$self_question_rating_comment_result = process_self_assessment_data($self_dataset, $self_cid_formkey_type_array);
+  $item_count = count($self_dataset);
+  $self_cid_formkey_type_array = array();
+  $self_question_rating_comment_result = process_self_assessment_data($self_dataset, $self_cid_formkey_type_array);
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
-	$review_info = init_review_info_content();
+  $review_info = init_review_info_content();
 
   $self_comments_array = array();
   $overall_rating = new stdClass();
@@ -32,26 +32,9 @@ function load_self_assessment($rreid = NULL) {
   $review_info_content_num = count($review_info['clientdate']);
   $self_item_count = count($self_question_rating_comment_result);
   $total_item_count = $self_item_count + count($self_comments_array);
-////////////////////////////////////////////////////////
-// Item below is for peers
-////////////////////////////////////////////////////////
-//  $cid_formkey_type_array = array();
-//  $adj_list = array();
-//  $have_peer_data = TRUE;
-//  $providerInfo_table = get_all_providers_info_from_db($rreid);
-//  if (count($providerInfo_table)) {
-//    //selected peers
-//    $nid_pname_sid_array = _fetch_provider_nodeID_and_submissionID($providerInfo_table);
-//    $pr_data_array = _get_provider_review_content($nid_pname_sid_array);
-//    $mapping_table = reorder_form_contents($pr_data_array, $cid_formkey_type_array, $adj_list);
-//    $peer_question_rating_comment_result = synthesize_all_peer_review_ratings_and_comments($nid_pname_sid_array, $pr_data_array, $mapping_table, $item_count);
-////    dd($peer_question_rating_comment_result, '$peer_question_rating_comment_result');
-//  }
-//  else {
-//    // no peer
-//    $have_peer_data = FALSE;
-//  }
-
+  ////////////////////////////////////////////////////////
+  // Item below is for peers
+  ////////////////////////////////////////////////////////
   $peer_information_set = get_peer_comment_information_array($rreid, $item_count);
   ///////////////////////////////////////////////////////
   //Item below is for counselor
@@ -73,7 +56,7 @@ function load_self_assessment($rreid = NULL) {
   }
 
   $pageContent = '';
-
+  appendCSSJS();
   for ($i = 0; $i < $review_info_content_num; $i++) {
     $clientdate = $review_info['clientdate'][$i]->DATA;
     $project_roles_and_responsibilities = $review_info['project_roles_and_responsibilities'][$i]->DATA;
@@ -87,12 +70,13 @@ function load_self_assessment($rreid = NULL) {
         'review_info_content_num' => $i,
         'clientdate' => $clientdate,
         'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
-				'startdate' => $startdate,
-				'enddate' => $enddate,
+        'startdate' => $startdate,
+        'enddate' => $enddate,
       ));
       $pageContent .= $content;
     }
   }
+  $pageContent .= '<hr>';
   foreach ($self_question_rating_comment_result as $key => $value) {
 //=====================the question which have pie chart ============CONST===============================
     $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
@@ -358,7 +342,7 @@ function _manage_pie_chart($peer_name, $form_key) {
  * @param type $peer_json json string
  */
 function _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, &$peer_name, &$peer_json) {
-
+  $peer_json_array = array();
   $is_first = TRUE;
   foreach ($children_array as $one_child) {
     foreach ($peer_question_rating_comment_result as $one_question_answer) {
@@ -376,19 +360,10 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
                 $peer_name_temp[$key]['rating'] = 0;
                 $peer_name_temp[$key]['count'] = 0;
               }
-//              $comment_name[$key] = $one_question_answer->comments[$key]->comment . ' <br/>';
-//              if ($one_question_answer->comments[$key]->isRead == 0) {
-//                $unread_comment[$key] = $one_question_answer->comments[$key]->comment . ' ';
-//              }
               $title = get_title_form_peer_array($one_question_answer);
-              if ($is_first_json) {
-                $peer_json = '{peer_name:"' . format_login_name($key) . '",rating:"' . (($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']) . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",display:' . (($one_ratings['isDisplay'] == 0) ? 'true' : 'false') . ',nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
-                $is_first_json = FALSE;
-              }
-              else {
-                $peer_json .= ',{peer_name:"' . format_login_name($key) . '",rating:"' . (($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']) . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",display:' . (($one_ratings['isDisplay'] == 0) ? 'true' : 'false') . ',nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
-              }
-//              dd($peer_json, '$peer_json');
+
+              $peer_json_std = get_peer_json_std(format_login_name($key), (($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']), ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))), (($one_ratings['isDisplay'] == 0) ? 'true' : 'false'), $one_ratings['nid'], $one_question_answer->cid, $title);
+              array_push($peer_json_array, $peer_json_std);
             }
             else {
 
@@ -405,12 +380,9 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
                 $peer_name_temp[$key]['rating'] = $peer_name_temp[$key]['rating'] + $one_ratings['rating'];
                 $peer_name_temp[$key]['count'] = $peer_name_temp[$key]['count'] + 1;
               }
-//              $comment_name[$key] .=$one_question_answer->comments[$key]->comment . ' <br/>';
-//              if ($one_question_answer->comments[$key]->isRead == 0) {
-//                $unread_comment[$key].=$one_question_answer->comments[$key]->comment . ' ';
-//              }
               $title = get_title_form_peer_array($one_question_answer);
-              $peer_json.= ',{peer_name:"' . format_login_name($key) . '",rating:"' . (($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']) . '",comment:"' . ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))) . '",display:' . (($one_ratings['isDisplay'] == 0) ? 'true' : 'false') . ',nid:"' . $one_ratings['nid'] . '",cid:"' . $one_question_answer->cid . '",title:"' . $title . '"}';
+              $peer_json_std = get_peer_json_std(format_login_name($key), (($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']), ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))), (($one_ratings['isDisplay'] == 0) ? 'true' : 'false'), $one_ratings['nid'], $one_question_answer->cid, $title);
+              array_push($peer_json_array, $peer_json_std);
             }
           }
         }
@@ -434,6 +406,20 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
       }
     }
   }
+  $peer_json = drupal_json_encode($peer_json_array);
+}
+
+function get_peer_json_std($peer_name, $rating, $comment, $display, $nid, $cid, $title) {
+  $peer_json_std = new stdClass();
+  $peer_json_std->peer_name = $peer_name;
+  $peer_json_std->rating = $rating;
+  $peer_json_std->comment = $comment;
+  $peer_json_std->display = $display;
+  $peer_json_std->nid = $nid;
+  $peer_json_std->cid = $cid;
+  $peer_json_std->title = $title;
+
+  return $peer_json_std;
 }
 
 function _manage_data_return_three_array_readonly($children_array, $peer_question_rating_comment_result, &$peer_name, &$peer_json) {
@@ -598,19 +584,19 @@ function decode_json_object($json_context) {
 }
 
 function check_submittion_content($checked_item) {
-	foreach($checked_item as $key => $value) {
-		if ($value instanceof stdClass) {
-			check_submittion_content($value);
-		}
-		else if (is_array($value)) {
-			check_submittion_content($value);
-		}
-		else {
-			$context = check_plain(filter_xss($value));
-			$replacement = array($key => $context);
-			$checked_item = array_replace($checked_item, $replacement);
-		}
-	}
+  foreach ($checked_item as $key => $value) {
+    if ($value instanceof stdClass) {
+      check_submittion_content($value);
+    }
+    else if (is_array($value)) {
+      check_submittion_content($value);
+    }
+    else {
+      $context = check_plain(filter_xss($value));
+      $replacement = array($key => $context);
+      $checked_item = array_replace($checked_item, $replacement);
+    }
+  }
 }
 
 /**
@@ -643,7 +629,7 @@ function reject_counselee_assessment() {
   $items = $_POST['items'];
   $reject_comments = $_POST['rejectComments'];
   $overall_rating = $_POST['overallRating'];
-  
+
   $decoded_items = decode_json_object($items);
 
   $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments, $overall_rating);
@@ -748,15 +734,15 @@ function _indexed_by_cid($self_dataset) {
 }
 
 function process_self_assessment_data($self_dataset, &$self_cid_formkey_type_array) {
-	$indexed_dataset = _indexed_by_cid($self_dataset);
+  $indexed_dataset = _indexed_by_cid($self_dataset);
   $self_cid_formkey_type_array = _generate_self_cid_formkey_type($self_dataset);
   $self_adj_list = dfs_generate_adjacent_list($self_cid_formkey_type_array);
   $self_sequential_list = dfs_travel_all_node($self_adj_list);
   $self_mapping_table = adjust_question_and_answer($self_cid_formkey_type_array, $self_sequential_list);
   $self_question_rating_comment_result = synthesize_self_review_ratings_and_comments($indexed_dataset, $self_mapping_table);
   $self_sorted_question_rating_comment_result = _resort_item_by_weight($self_question_rating_comment_result);
-	return $self_sorted_question_rating_comment_result;
-} 
+  return $self_sorted_question_rating_comment_result;
+}
 
 function _resort_item_by_weight(&$self_question_rating_comment_result) {
   $temp_array = array();
@@ -787,12 +773,12 @@ function _fetch_all_none_selection_items($self_cid_formkey_type_array) {
 }
 
 function init_review_info_content() {
-	$review_info = array();
-	$review_info['clientdate'] = array();
-	$review_info['project_roles_and_responsibilities'] = array();
-	$review_info['startdate'] = array();
-	$review_info['enddate'] = array();
-	return $review_info;
+  $review_info = array();
+  $review_info['clientdate'] = array();
+  $review_info['project_roles_and_responsibilities'] = array();
+  $review_info['startdate'] = array();
+  $review_info['enddate'] = array();
+  return $review_info;
 }
 
 function _matching_none_selection_items($none_selection_item, $self_dataset, &$review_info, &$self_comments_array, &$overall_rating) {
@@ -918,7 +904,7 @@ function synthesize_all_peer_review_ratings_and_comments(&$nid_pname_array, &$pr
 
 // We should iterate the content according to the adjusted sequence as mapping table!.
   $iterate_counting = 0;
-  
+
   for ($i = 0; $i < count($pr_data_array[$providerName]->dataset); $i++) {
     if ($pr_data_array[$providerName]->dataset[$i]->type != 'select' || $pr_data_array[$providerName]->dataset[$i]->form_key == 'overall_rating') {
       continue;
@@ -927,8 +913,8 @@ function synthesize_all_peer_review_ratings_and_comments(&$nid_pname_array, &$pr
     $obj->cid = $pr_data_array[$providerName]->dataset[$i]->cid;
     $obj->form_key = $pr_data_array[$providerName]->dataset[$i]->form_key;
     $obj->question = $pr_data_array[$providerName]->dataset[$i]->name;
-
-    $obj->ratings = $rating_array[$mapping_table[$iterate_counting]['rating_idx']];
+    $index = $mapping_table[$iterate_counting]['rating_idx'];
+    $obj->ratings = $rating_array[$index];
     foreach ($nid_pname_array as $item) {
       $pname = $item['providerName'];
       $obj->ratings[$pname]['comment'] = $comment_array[$mapping_table[$iterate_counting]['comment_idx']][$pname]->comment;

@@ -51,7 +51,7 @@
           // jQuery('#submit_button').removeAttr("disabled");
         }
         // else {
-        //   window.location.href = "<?php // print base_path() . 'viewassessment'        ?>";
+        //   window.location.href = "<?php // print base_path() . 'viewassessment'          ?>";
         //   return;
         // }
       });
@@ -60,7 +60,7 @@
   }
 
   function approveCounseleeAssessment() {
-    clickSubmitButton();
+    counselor_approve_clickSubmitButton();
 
     // var area
     var rreid = getRreid();
@@ -86,7 +86,7 @@
   }
 
   function disapproveCounseleeSelfAssessment() {
-
+    counselor_disapprove_clickSubmitButton();
     //variables
     var rreid = getRreid();
     var nid = getNid();
@@ -306,7 +306,7 @@
               document.body.appendChild(new_element);
 
               // jQuery(document).ready(function() {
-              //   var isCounselor = '<?php // print $identity          ?>';
+              //   var isCounselor = '<?php // print $identity            ?>';
               //   if (isCounselor == "counselee") {
               //     jQuery(".draftbutton").hide();
               //   }
@@ -319,9 +319,9 @@
                 if (overallRating != "undefined" && overallRating != 0) {
                   jQuery("#counselor-overall_rating-content").val(overallRating);
                 }
-								else {
-									jQuery("#counselor-overall_rating-content").val(3);
-								}
+                else {
+                  jQuery("#counselor-overall_rating-content").val(3);
+                }
 
               }
 
@@ -363,7 +363,7 @@
                         <label>Limited to 255 words.</label>
                       </div>
                       <div class="modal-footer">
-                        <img class="loading_img" id="status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
+                        <img class="loading_img" id="disapprove_status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
                         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="counselor_disapprove_btn" onclick="disapproveCounseleeSelfAssessment()">Disapprove</button>
 
                       </div>
@@ -390,7 +390,7 @@
                         </p>
                       </div>
                       <div class="modal-footer">
-                        <img class="loading_img" id="status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
+                        <img class="loading_img" id="approve_status_loading_img" title="loading..." style="width: 25px; height: 25px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
                         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button> <button class="btn btn-danger" id="counselor_submit_btn" onclick="approveCounseleeAssessment()">APPROVE</button>
 
                       </div>

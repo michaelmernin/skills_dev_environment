@@ -14,6 +14,18 @@ function clickSubmitButton() {
     jQuery('#submit_button').removeClass();
     jQuery('#submit_button').addClass("btn btn-primarybtn-block disabled");
 }
+function counselor_approve_clickSubmitButton() {
+    jQuery('#approve_status_loading_img').show();
+    jQuery('#counselor_submit_btn').attr("disabled", "disabled");
+    jQuery('#counselor_submit_btn').removeClass();
+    jQuery('#counselor_submit_btn').addClass("btn btn-primarybtn-block disabled");
+}
+function counselor_disapprove_clickSubmitButton() {
+    jQuery('#disapprove_status_loading_img').show();
+    jQuery('#counselor_disapprove_btn').attr("disabled", "disabled");
+    jQuery('#counselor_disapprove_btn').removeClass();
+    jQuery('#counselor_disapprove_btn').addClass("btn btn-primarybtn-block disabled");
+}
 
 
 function switchProjectName(flag) {

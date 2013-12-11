@@ -302,7 +302,7 @@ function get_project_message_part($self_review) {
       'rreid' => null,
       'nid' => null,
       'reviewee' => null,
-      'review_info_content_num' => null,
+      'review_info_content_num' => $i,
       'clientdate' => $project['clientdate'][$i]->data,
       'project_roles_and_responsibilities' => $project['project_roles_and_responsibilities'][$i]->data,
       'startdate' => $project['start_date'][$i]->data,

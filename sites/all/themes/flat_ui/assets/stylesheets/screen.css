@@ -13982,7 +13982,8 @@ div.error {
     padding-top:10px;
 }
 .additionalbubble {
-    background: none repeat scroll 0 0 #E6E6FF;
+ /*   background: none repeat scroll 0 0 #E6E6FF;*/
+    background: none repeat scroll 0 0 #E0E0E0;
     border-radius: 5px;
     box-shadow: -1px -1px 0 rgba(0, 0, 0, 0.2) inset;
     margin-top: 10px;
@@ -14014,7 +14015,9 @@ div.error {
     font-size: 0;
     position: relative; /* 定位，也可以使用 absolute，看具体定位需求 */
     border: 10px solid transparent; /* 箭头大小 */
-    border-bottom-color: #e6e6ff; /* 箭头颜色 */
+ /*   border-bottom-color: #e6e6ff; /* 箭头颜色 */
+    border-bottom-color: #E0E0E0; /* 箭头颜色 */
+	
     border-top: 0; /* 箭头指向相对应的 border 为 0 */
     overflow: hidden;
     top: -10px;
@@ -14216,7 +14219,8 @@ div.error {
 }
 
 .additionalbubbleP {
-    background: none repeat scroll 0 0 #E6E6FF;
+   /* background: none repeat scroll 0 0 #E6E6FF;*/
+    background: none repeat scroll 0 0 #E0E0E0;
     border-radius: 5px;
     box-shadow: -1px -1px 0 rgba(0, 0, 0, 0.2) inset;
     margin-top: 10px;
@@ -14231,7 +14235,8 @@ div.error {
     font-size: 0;
     position: relative; /* 定位，也可以使用 absolute，看具体定位需求 */
     border: 10px solid transparent; /* 箭头大小 */
-    border-bottom-color: #e6e6ff; /* 箭头颜色 */
+ /*   border-bottom-color: #e6e6ff; /* 箭头颜色 */
+    border-bottom-color: #E0E0E0; /* 箭头颜色 */
     border-top: 0; /* 箭头指向相对应的 border 为 0 */
     overflow: hidden;
     top: -10px;
