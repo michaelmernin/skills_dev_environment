@@ -352,7 +352,6 @@ function load_review_content($rreid = NULL) {
     ));
     $pageContent .= $content;
   }
-  // generate comment only content here.
   return $pageContent;
 }
 

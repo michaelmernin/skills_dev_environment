@@ -526,8 +526,8 @@ function _fetch_counselor_revised_comments($counselor_submit_data) {
     $comment_item->form_key = $value->title;
     $comment_item->rating = $value->rating;
     $comment_item->peer_avg_rating = $value->peer_avg_rating;
-    $comment_item->clor_comment = $value->counselor_comment;
-    $comment_item->peer_comments = $value->peer_comments;
+    $comment_item->clor_comment = filter_xss_and_check_plain($value->counselor_comment);
+    $comment_item->peer_comments = filter_xss_and_check_plain($value->peer_comments);
 
     array_push($revised_comments, $comment_item);
   }
@@ -544,7 +544,6 @@ function save_counselor_assessment_draft() {
   $items = $_POST['items'];
   $overall_rating = $_POST['overallRating'];
 
-//	check_submittion_content($items);
   $decoded_items = decode_json_object($items);
   $result = _submit_counselor_draft_to_DB($rreid, $nid, $decoded_items, $overall_rating);
   echo $result_val;
@@ -557,22 +556,6 @@ function decode_json_object($json_context) {
     array_push($decoded_items, $text);
   }
   return $decoded_items;
-}
-
-function check_submittion_content($checked_item) {
-  foreach ($checked_item as $key => $value) {
-    if ($value instanceof stdClass) {
-      check_submittion_content($value);
-    }
-    else if (is_array($value)) {
-      check_submittion_content($value);
-    }
-    else {
-      $context = check_plain(filter_xss($value));
-      $replacement = array($key => $context);
-      $checked_item = array_replace($checked_item, $replacement);
-    }
-  }
 }
 
 /**
@@ -848,7 +831,7 @@ function synthesize_self_review_ratings_and_comments($self_dataset, $mapping_tab
     $obj->question = $self_dataset[$mapping_table[$temp_idx]['rating_idx']]->name;
 
     $obj->rating = $self_dataset[$mapping_table[$temp_idx]['rating_idx']]->DATA;
-    $obj->comment = $self_dataset[$mapping_table[$temp_idx]['comment_idx']]->DATA;
+    $obj->comment = filter_xss_and_check_plain($self_dataset[$mapping_table[$temp_idx]['comment_idx']]->DATA);
     $obj->weight = $self_dataset[$mapping_table[$temp_idx]['rating_idx']]->weight;
     $temp_idx++;
     array_push($self_review_content, $obj);
@@ -899,6 +882,7 @@ function synthesize_all_peer_review_ratings_and_comments(&$nid_pname_array, &$pr
     $iterate_counting++;
     array_push($all_peer_review_content, $obj);
   }
+  // dd($all_peer_review_content, 'all_peer_review_content');
   return $all_peer_review_content;
 }
 
@@ -959,7 +943,7 @@ function _generate_provider_syn_comments_array($pr_data_array, $count = -1) {
     foreach ($item->dataset as $key => $value) {
       if ($value->type == 'textarea' && $value->DATA !== '') {
         $comment_array[$value->cid][$item->providerName] = new stdClass();
-        $comment_array[$value->cid][$item->providerName]->comment = $value->DATA;
+				$comment_array[$value->cid][$item->providerName]->comment = filter_xss_and_check_plain($value->DATA);
         $comment_array[$value->cid][$item->providerName]->isRead = $item->isRead;
       }
       else if ($value->type == 'textarea' && $value->form_key != 'summary_comments' && $value->DATA == NULL) {
