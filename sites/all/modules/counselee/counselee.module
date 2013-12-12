@@ -344,6 +344,7 @@ function counselee_theme() {
         'unread_comment' => NULL,
         'total_item_count' => NULL,
         'peer_json' => NULL,
+        'json_count'=>NULL,
       ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'view_assessment_item',),

@@ -274,7 +274,20 @@
   <div>
     <table id="peer-table-<?php print $item_num ?>"></table>
     <div id="peer-div-<?php print $item_num ?>"></div>
+    <input type="hidden" value="<?php print $json_count ?>" id="peer-hidjsoncount-<?php print $item_num ?>"/>
     <script>
+      function changelocaldata_<?php print $item_num ?>(rowID){
+//      var Rownum=jQuery(obj).parents('tr').find('td').eq(0).html();
+        var Rowdata=jQuery("#peer-table-<?php print $item_num ?>").jqGrid('getLocalRow', rowID).display;
+        if(Rowdata=='true'){
+          jQuery("#peer-table-<?php print $item_num ?>").jqGrid('getLocalRow', rowID).display='false';
+        }else{
+          jQuery("#peer-table-<?php print $item_num ?>").jqGrid('getLocalRow', rowID).display='true';
+          
+        }
+      }
+      
+      
       var lastSel;
       var peer_data_<?php print $item_num ?> = <?php
         print (trim($peer_json) == '') ? '[]' : $peer_json;
@@ -284,7 +297,7 @@
         height: 250,
         width: 800,
         data: peer_data_<?php print $item_num ?>,
-        colNames: ['Peer Name', 'Title', 'Rating', 'Comment', 'Display', 'Nid', 'Cid'],
+        colNames: ['Peer Name', 'Title', 'Rating', 'Comment', 'Display', 'Nid', 'Cid','Number'],
         colModel: [
           {name: 'peer_name', index: 'peer_name', width: 60, align: 'center', sorttype: "text", cellattr: function(rowId, val, rawObject) {
               return 'title="' + rawObject.peer_name + '\nDouble click for more information."';
@@ -303,10 +316,21 @@
               }
               return 'title="' + comment_text + '\nDouble click for more information."';
             }},
-          {name: 'display', index: 'display', align: 'center', width: 50, viewable: false, editable: true, edittype: 'checkbox', editoptions: {value: "True:False"}, formatter: "checkbox", formatoptions: {disabled: false}},
+          {name: 'display', index: 'display', align: 'center', width: 50, viewable: false, editable: true, edittype: 'checkbox', editoptions: {value: "True:False"}, formatter: function currencyFmatter(cellvalue, options, rowObject)
+            {
+              var check = '';
+              if (cellvalue == 'true') {
+//              console.log(options);
+                check = ' checked="checked"';
+              }
+              return '<input type="checkbox" value="' + cellvalue + '"' + check + ' onclick="changelocaldata_<?php print $item_num ?>('+rowObject.number+')">';
+
+            }},
           {name: 'nid', index: 'nid', hidden: true},
+          {name: 'number', index: 'number', hidden: true},
           {name: 'cid', index: 'cid', hidden: true}],
         multiselect: false,
+        rownumbers:true,
         caption: "·Peer Comment",
         pager: '#peer-div-<?php print $item_num ?>',
         rowNum: 10,
@@ -320,7 +344,6 @@
             lastSel = id;
           }
           jQuery('#peer-table-<?php print $item_num ?>').viewGridRow(id, {width: 700, height: 320, dataheight: 200});
-//jQuery('#peer-table-<?php print $item_num ?>').editGridRow(id, {width: 700, height: 320, dataheight: 200});
         }
       }).navGrid('#peer-div-<?php print $item_num ?>',
               {view: false, add: false, edit: false, del: false, search: false},

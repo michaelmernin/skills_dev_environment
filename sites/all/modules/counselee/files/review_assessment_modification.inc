@@ -10,12 +10,12 @@ function load_self_assessment($rreid = NULL) {
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
   $review_status = get_review_status_from_db($rreid);
-	$allowed_roles = AccessRoles::getViewAssessment();
-	$allowed_status = AccessStatus::getViewAssessment();
+  $allowed_roles = AccessRoles::getViewAssessment();
+  $allowed_status = AccessStatus::getViewAssessment();
 
-	if(!identify_accessibility($cur_user_name, $reviewee, $counselor, $allowed_roles, $allowed_status, $review_status)) {
-		drupal_goto('accessdenied');
-	}
+  if (!identify_accessibility($cur_user_name, $reviewee, $counselor, $allowed_roles, $allowed_status, $review_status)) {
+    drupal_goto('accessdenied');
+  }
 
   $provider_info = get_provider_info($rreid, $reviewee);
   $nid = $provider_info[0]->nid;
@@ -92,10 +92,12 @@ function load_self_assessment($rreid = NULL) {
         $children_array = get_children_array_by_cid($fieldset_cid, $peer_information_set->adj_list);
         $peer_name = array();
         $peer_json = '';
-        _manage_data_return_three_array($children_array, $peer_information_set->peer_question_rating_comment_result, $peer_name, $peer_json);
+        $json_count=0;
+        _manage_data_return_three_array($children_array, $peer_information_set->peer_question_rating_comment_result, $peer_name, $peer_json,$json_count);
         $pie_data = _manage_pie_chart($peer_name, $form_key);
       }
       else {
+        $json_count=0;
         $peer_json = '';
         $pie_data = new stdClass();
         $pie_data->id = $form_key;
@@ -109,6 +111,7 @@ function load_self_assessment($rreid = NULL) {
         'nid' => $nid,
         'reviewee' => $reviewee,
         'self_dataset' => $value,
+        'json_count'=>$json_count,
         'pie_data' => $pie_data,
         'peer_json' => $peer_json,
         'clor_rating_comment' => $revised_comments[$key],
@@ -318,9 +321,10 @@ function _manage_pie_chart($peer_name, $form_key) {
  * @param type $comment_name return all comment for each peer
  * @param type $peer_json json string
  */
-function _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, &$peer_name, &$peer_json) {
+function _manage_data_return_three_array($children_array, $peer_question_rating_comment_result, &$peer_name, &$peer_json,&$json_count) {
   $peer_json_array = array();
   $is_first = TRUE;
+  $number = 0;
   foreach ($children_array as $one_child) {
     foreach ($peer_question_rating_comment_result as $one_question_answer) {
       if ($one_child == $one_question_answer->cid) {
@@ -337,8 +341,8 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
                 $peer_name_temp[$key]['count'] = 0;
               }
               $title = get_title_form_peer_array($one_question_answer);
-
-              $peer_json_std = get_peer_json_std($key, $one_ratings['rating'], $one_ratings['comment'], $one_ratings['isDisplay'], $one_ratings['nid'], $one_question_answer->cid, $title);
+              $number++;
+              $peer_json_std = get_peer_json_std($key, $one_ratings['rating'], $one_ratings['comment'], $one_ratings['isDisplay'], $one_ratings['nid'], $one_question_answer->cid, $title, $number);
               array_push($peer_json_array, $peer_json_std);
             }
             else {
@@ -357,7 +361,8 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
                 $peer_name_temp[$key]['count'] = $peer_name_temp[$key]['count'] + 1;
               }
               $title = get_title_form_peer_array($one_question_answer);
-              $peer_json_std = get_peer_json_std($key, $one_ratings['rating'], $one_ratings['comment'], $one_ratings['isDisplay'], $one_ratings['nid'], $one_question_answer->cid, $title);
+              $number++;
+              $peer_json_std = get_peer_json_std($key, $one_ratings['rating'], $one_ratings['comment'], $one_ratings['isDisplay'], $one_ratings['nid'], $one_question_answer->cid, $title,$number);
               array_push($peer_json_array, $peer_json_std);
             }
           }
@@ -382,10 +387,9 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
       }
     }
   }
+  $json_count=count($peer_json_array);
   $peer_json = drupal_json_encode($peer_json_array);
 }
-
-
 
 function get_peer_json_without_peer_name_std($rating, $comment, $nid, $cid, $title) {
   $peer_json_std = new stdClass();
@@ -397,7 +401,7 @@ function get_peer_json_without_peer_name_std($rating, $comment, $nid, $cid, $tit
   return $peer_json_std;
 }
 
-function get_peer_json_std($peer_name, $rating, $comment, $display, $nid, $cid, $title) {
+function get_peer_json_std($peer_name, $rating, $comment, $display, $nid, $cid, $title,$number) {
   $peer_json_std = new stdClass();
   $peer_json_std->peer_name = format_login_name($peer_name);
   $peer_json_std->rating = (($rating == 0) ? 'N/A' : $rating);
@@ -406,6 +410,7 @@ function get_peer_json_std($peer_name, $rating, $comment, $display, $nid, $cid, 
   $peer_json_std->nid = $nid;
   $peer_json_std->cid = $cid;
   $peer_json_std->title = $title;
+  $peer_json_std->number = $number;
   return $peer_json_std;
 }
 
@@ -1360,8 +1365,9 @@ function update_peer_display($peer_json_array) {
   $is_not_display_first = TRUE;
   foreach ($peer_json_array as $one_peer_comment) {
     $temp = json_decode($one_peer_comment);
+    dd($temp,'$temp');
     $where_one_string = '(nid=' . $temp->nid . ' and cid=' . $temp->cid . ')';
-    if ($temp->display == 'True') {
+    if ($temp->display == 'true') {
       //set 0
       if ($is_display_first) {
 

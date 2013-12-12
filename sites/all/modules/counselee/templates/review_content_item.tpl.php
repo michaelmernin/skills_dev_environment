@@ -288,6 +288,7 @@
           {name: 'nid', index: 'nid', hidden: true},
           {name: 'cid', index: 'cid', hidden: true}],
         multiselect: false,
+        rownumbers:true,
         caption: "·Peer Comment",
         pager: '#peer-div-<?php print $item_num ?>',
         rowNum: 10,

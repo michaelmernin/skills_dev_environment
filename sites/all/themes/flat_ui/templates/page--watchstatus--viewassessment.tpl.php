@@ -165,12 +165,13 @@
   }
 
   function getCounselorRevisedComment(num) {
-    var ids = jQuery("#peer-table-" + num).jqGrid('getDataIDs');
+    var ids = jQuery("#peer-hidjsoncount-"+num).val();
+//    console.log(ids);
     var rowDataRel = new Array();
-    for (var i = 0; i < ids.length; i++)
+    for (var i = 1; i <= ids; i++)
     {
-      var rowId = ids[i];
-      var rowData = jQuery("#peer-table-" + num).jqGrid('getRowData', rowId);
+      var rowId = i;
+      var rowData = jQuery("#peer-table-" + num).jqGrid('getLocalRow', rowId);
 //      var json_string = "{\"nid\":"+ rowData.nid + ",\"cid\"=" + rowData.cid + ",\"display\":" + rowData.display + "}";
 
       var json_string = {
@@ -178,7 +179,7 @@
         "cid": rowData.cid,
         "display": rowData.display,
       }
-      rowDataRel[i] = JSON.stringify(json_string);
+      rowDataRel[i-1] = JSON.stringify(json_string);
 //      console.log(rowDataRel[i]);
 //      console.log(rowId);
     }
