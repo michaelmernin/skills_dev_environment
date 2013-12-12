@@ -343,12 +343,12 @@
         }
         ?>;
     if (inArray(rating, range)) {
-      if (rating != 0) {
-        jQuery("#counselor-rating-<?php print $item_num; ?>").append(rating);
-      }
-      else {
-        jQuery("#counselor-rating-<?php print $item_num; ?>").append(0);
-      }
+			if (rating != 0) {
+				jQuery("#counselor-rating-<?php print $item_num; ?>").append(rating);
+			}
+			else {
+				jQuery("#counselor-rating-<?php print $item_num; ?>").append("N/A");
+			}
     }
     else {
       jQuery("#counselor-rating-<?php print $item_num; ?>").append(3);

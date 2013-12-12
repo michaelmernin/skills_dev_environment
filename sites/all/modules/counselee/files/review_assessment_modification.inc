@@ -5,12 +5,17 @@
  * Page callback function for view assessment.
  * */
 function load_self_assessment($rreid = NULL) {
-  access_authen($rreid);
+//  access_authen($rreid);
   $cur_user_name = get_current_user_name();
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
   $review_status = get_review_status_from_db($rreid);
-  // identify_accessibility($cur_user_name, $reviewee, $counselor, $tgr_status, $cur_status);
+	$allowed_roles = AccessRoles::getViewAssessment();
+	$allowed_status = AccessStatus::getViewAssessment();
+
+	if(!identify_accessibility($cur_user_name, $reviewee, $counselor, $allowed_roles, $allowed_status, $review_status)) {
+		drupal_goto('accessdenied');
+	}
 
   $provider_info = get_provider_info($rreid, $reviewee);
   $nid = $provider_info[0]->nid;
