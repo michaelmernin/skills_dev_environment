@@ -232,13 +232,13 @@
       <div>
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
           <textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
-                   if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
-                     print $clor_rating_comment->clor_comment;
-                   }
-                   else {
-                     print '';
-                   }
-                   ?></textarea>
+            if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
+              print $clor_rating_comment->clor_comment;
+            }
+            else {
+              print '';
+            }
+            ?></textarea>
         </div>
       </div>
     </div>
@@ -249,17 +249,6 @@
   <input type="hidden" id="nid-<?php print $item_num; ?>" value="<?php print $nid ?>"/>
   <input type="hidden" id="total_item_count-<?php print $item_num; ?>" value="<?php print $total_item_count ?>"/>
 
-
-
-  <!--      <div>
-          <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-            <textarea id="peer-comment-<?php // print $item_num            ?>"  cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
-//            foreach ($unread_comment as $item) {
-//              print $item;
-//            }
-                   ?></textarea>
-          </div>
-        </div>-->
   <!--Display the peer comment message-->
   <div class="webform-submission-info clearfix" style=" margin-bottom: 10px">
 
@@ -345,13 +334,6 @@
 
 
       );
-
-//      for (var i = 0; i <= peer_data_<?php // print $item_num  ?>.length; i++)
-//        jQuery("#peer-table-<?php // print $item_num  ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $item_num  ?>[i]);
-
-
-
-
     </script>
 
 

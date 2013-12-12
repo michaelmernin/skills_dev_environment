@@ -201,7 +201,7 @@ function get_QandA_std_data($type, $cid, $nid, $name, $answer, $children, $form_
   $QandA_std_data->children = $children;
   $QandA_std_data->form_key = $form_key;
   $QandA_std_data->weight = $weight;
-  $QandA_std_data->comment = filter_xss(check_plain($select_comment));
+  $QandA_std_data->comment = ((trim(filter_xss_and_check_plain($select_comment)) == '') ? NO_COMMENT : filter_xss_and_check_plain($select_comment));
   $QandA_std_data->pid = $pid;
   return $QandA_std_data;
 }

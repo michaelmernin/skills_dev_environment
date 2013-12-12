@@ -169,7 +169,7 @@ function get_peer_json($children_array, $question_and_answer) {
           if ($one_ratings['rating'] != 'N/A') {
             if ($one_ratings['isDisplay'] == 0 && $one_ratings['isRead']) {
               $title = get_title_form_peer_array($one_question_answer);
-              $peer_json_std = get_peer_json_without_peer_name_std((($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']), ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))), $one_ratings['nid'], $one_question_answer->cid, $title);
+              $peer_json_std = get_peer_json_without_peer_name_std($one_ratings['rating'], $one_ratings['comment'], $one_ratings['nid'], $one_question_answer->cid, $title);
               array_push($peer_json_array, $peer_json_std);
             }
           }
@@ -333,7 +333,7 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
               }
               $title = get_title_form_peer_array($one_question_answer);
 
-              $peer_json_std = get_peer_json_std(format_login_name($key), (($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']), ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))), (($one_ratings['isDisplay'] == 0) ? 'true' : 'false'), $one_ratings['nid'], $one_question_answer->cid, $title);
+              $peer_json_std = get_peer_json_std($key, $one_ratings['rating'], $one_ratings['comment'], $one_ratings['isDisplay'], $one_ratings['nid'], $one_question_answer->cid, $title);
               array_push($peer_json_array, $peer_json_std);
             }
             else {
@@ -352,7 +352,7 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
                 $peer_name_temp[$key]['count'] = $peer_name_temp[$key]['count'] + 1;
               }
               $title = get_title_form_peer_array($one_question_answer);
-              $peer_json_std = get_peer_json_std(format_login_name($key), (($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']), ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))), (($one_ratings['isDisplay'] == 0) ? 'true' : 'false'), $one_ratings['nid'], $one_question_answer->cid, $title);
+              $peer_json_std = get_peer_json_std($key, $one_ratings['rating'], $one_ratings['comment'], $one_ratings['isDisplay'], $one_ratings['nid'], $one_question_answer->cid, $title);
               array_push($peer_json_array, $peer_json_std);
             }
           }
@@ -380,10 +380,12 @@ function _manage_data_return_three_array($children_array, $peer_question_rating_
   $peer_json = drupal_json_encode($peer_json_array);
 }
 
+
+
 function get_peer_json_without_peer_name_std($rating, $comment, $nid, $cid, $title) {
   $peer_json_std = new stdClass();
-  $peer_json_std->rating = $rating;
-  $peer_json_std->comment = $comment;
+  $peer_json_std->rating = (($rating == 0) ? 'N/A' : $rating);
+  $peer_json_std->comment = ((trim(filter_xss_and_check_plain($comment)) == '') ? NO_COMMENT : filter_xss_and_check_plain($comment));
   $peer_json_std->nid = $nid;
   $peer_json_std->cid = $cid;
   $peer_json_std->title = $title;
@@ -392,10 +394,10 @@ function get_peer_json_without_peer_name_std($rating, $comment, $nid, $cid, $tit
 
 function get_peer_json_std($peer_name, $rating, $comment, $display, $nid, $cid, $title) {
   $peer_json_std = new stdClass();
-  $peer_json_std->peer_name = $peer_name;
-  $peer_json_std->rating = $rating;
-  $peer_json_std->comment = $comment;
-  $peer_json_std->display = $display;
+  $peer_json_std->peer_name = format_login_name($peer_name);
+  $peer_json_std->rating = (($rating == 0) ? 'N/A' : $rating);
+  $peer_json_std->comment = ((trim(filter_xss_and_check_plain($comment)) == '') ? NO_COMMENT : filter_xss_and_check_plain($comment));
+  $peer_json_std->display = (($display == 0) ? 'true' : 'false');
   $peer_json_std->nid = $nid;
   $peer_json_std->cid = $cid;
   $peer_json_std->title = $title;
@@ -423,7 +425,8 @@ function _manage_data_return_three_array_readonly($children_array, $peer_questio
 
               if ($one_ratings['isDisplay'] == 0 && $one_ratings['isRead']) {
                 $title = get_title_form_peer_array($one_question_answer);
-                $peer_json_std = get_peer_json_without_peer_name_std((($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']), ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))), $one_ratings['nid'], $one_question_answer->cid, $title);
+
+                $peer_json_std = get_peer_json_without_peer_name_std($one_ratings['rating'], $one_ratings['comment'], $one_ratings['nid'], $one_question_answer->cid, $title);
                 array_push($peer_json_array, $peer_json_std);
               }
 
@@ -446,7 +449,7 @@ function _manage_data_return_three_array_readonly($children_array, $peer_questio
               }
               if ($one_ratings['isDisplay'] == 0 && $one_ratings['isRead']) {
                 $title = get_title_form_peer_array($one_question_answer);
-                $peer_json_std = get_peer_json_without_peer_name_std((($one_ratings['rating'] == 0) ? 'N/A' : $one_ratings['rating']), ((trim($one_ratings['comment']) == '') ? NO_COMMENT : filter_xss(check_plain($one_ratings['comment']))), $one_ratings['nid'], $one_question_answer->cid, $title);
+                $peer_json_std = get_peer_json_without_peer_name_std($one_ratings['rating'], $one_ratings['comment'], $one_ratings['nid'], $one_question_answer->cid, $title);
                 array_push($peer_json_array, $peer_json_std);
               }
             }

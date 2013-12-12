@@ -714,3 +714,15 @@ function identify_accessibility($current_user_name, $reviewee, $counselor, $curr
 function update_review_status($rreid, &$review_arg_array = NULL, &$provider_arg_array = NULL) {
   
 }
+
+/**
+ * check with filter_xss and check_plain
+ * @param type $unsafe_string
+ * @return type
+ */
+function filter_xss_and_check_plain($unsafe_string) {
+  
+  $safe_string = check_plain(filter_xss($unsafe_string));
+
+  return $safe_string;
+}
