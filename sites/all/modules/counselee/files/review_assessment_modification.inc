@@ -1365,7 +1365,6 @@ function update_peer_display($peer_json_array) {
   $is_not_display_first = TRUE;
   foreach ($peer_json_array as $one_peer_comment) {
     $temp = json_decode($one_peer_comment);
-    dd($temp,'$temp');
     $where_one_string = '(nid=' . $temp->nid . ' and cid=' . $temp->cid . ')';
     if ($temp->display == 'true') {
       //set 0
