@@ -51,7 +51,7 @@
           // jQuery('#submit_button').removeAttr("disabled");
         }
         // else {
-        //   window.location.href = "<?php // print base_path() . 'viewassessment'          ?>";
+        //   window.location.href = "<?php // print base_path() . 'viewassessment'           ?>";
         //   return;
         // }
       });
@@ -165,7 +165,7 @@
   }
 
   function getCounselorRevisedComment(num) {
-    var ids = jQuery("#peer-hidjsoncount-"+num).val();
+    var ids = jQuery("#peer-hidjsoncount-" + num).val();
 //    console.log(ids);
     var rowDataRel = new Array();
     for (var i = 1; i <= ids; i++)
@@ -179,7 +179,7 @@
         "cid": rowData.cid,
         "display": rowData.display,
       }
-      rowDataRel[i-1] = JSON.stringify(json_string);
+      rowDataRel[i - 1] = JSON.stringify(json_string);
 //      console.log(rowDataRel[i]);
 //      console.log(rowId);
     }
@@ -307,7 +307,7 @@
               document.body.appendChild(new_element);
 
               // jQuery(document).ready(function() {
-              //   var isCounselor = '<?php // print $identity            ?>';
+              //   var isCounselor = '<?php // print $identity             ?>';
               //   if (isCounselor == "counselee") {
               //     jQuery(".draftbutton").hide();
               //   }

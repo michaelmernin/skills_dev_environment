@@ -293,7 +293,18 @@ function check_reject_reasons() {
     if (len < 1) {
         alert('Please write down reason. If you are going to reject, this area cannot be blank!');
         jQuery("#counselor_reject_reason").focus();
+        disapprovehidalert();
+        
         return false;
     }
     return true;
+}
+
+function disapprovehidalert(){
+    
+    jQuery('#counselor_disapprove_btn').removeAttr("disabled");
+    jQuery('#disapprove_status_loading_img').hide();
+    jQuery('#counselor_disapprove_btn').removeClass();
+    jQuery('#counselor_disapprove_btn').addClass("btn btn-danger");
+    
 }
