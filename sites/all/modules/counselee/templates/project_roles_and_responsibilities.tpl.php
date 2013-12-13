@@ -32,7 +32,7 @@
             <div class="additionalbubble">
               <div style="padding: 0 5px 5px;margin-bottom: 5px;">
                 <div id="comment-content-value" style="margin: 5px; height: 140px; width: 98%;overflow-y:auto;">
-                  <?php print $project_roles_and_responsibilities; ?>
+                  <?php print filter_xss_and_check_plain($project_roles_and_responsibilities); ?>
                 </div>
               </div>
             </div>
