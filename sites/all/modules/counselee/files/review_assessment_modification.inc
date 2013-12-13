@@ -48,7 +48,6 @@ function load_self_assessment($rreid = NULL) {
   $csiid = get_counselor_latest_submissionID($nid);
   if ($csiid != -1) {
     $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
-		dd($counselor_submit_data, 'counselor_submit_data');
     $revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
     $overall_rating->counselor_rating = _fetch_counselor_overall_rating($revised_comments);
   }
