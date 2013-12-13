@@ -344,7 +344,7 @@ function counselee_theme() {
         'unread_comment' => NULL,
         'total_item_count' => NULL,
         'peer_json' => NULL,
-        'json_count'=>NULL,
+        'json_count' => NULL,
       ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'view_assessment_item',),
@@ -1086,11 +1086,16 @@ function get_webform_submissions_uid($nid) {
  * 
  */
 function display_comment($comment) {
+
+//  dd($comment, 'comment');
+//  dd(strlen($comment),'strlen($comment)');
+
   if (strlen($comment) < 1) {
     return "No Comment.";
   }
-  else
-    return $comment;
+  else {
+    return filter_xss_and_check_plain($comment);
+  }
 }
 
 /**

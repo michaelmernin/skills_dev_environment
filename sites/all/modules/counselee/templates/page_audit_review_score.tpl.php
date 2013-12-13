@@ -77,7 +77,7 @@
     self_internal[3] = selfPre + 'internal_contributions';
     self_internal[4] = selfPre + 'perficient_basics';
 
-    var self_internal = calculateAverageScore(self_internal, 'html');
+    var self_internal = calculateAverageScore(self_internal);
     //rating_internal_contributions
     jQuery('#rating_internal_contributions').html(self_internal);
 
@@ -90,7 +90,7 @@
     counselor_internal[4] = counselorPre + 'perficient_basics';
 
 
-    var counselor_internal = calculateAverageScore(counselor_internal, 'html');
+    var counselor_internal = calculateAverageScore(counselor_internal);
     jQuery('#counselor_rating_internal_contributions').html(counselor_internal);
 
 
@@ -104,14 +104,13 @@
       counselor_all[i] = '#counselor_rating_' + category[i];
     }
 
-    var self_all_score = calculateAverageScore(self_all, 'html');
+    var self_all_score = calculateAverageScore(self_all);
     jQuery('#rating_all').html(self_all_score);
 
-    var counselor_all_score = calculateAverageScore(counselor_all, 'html');
+    var counselor_all_score = calculateAverageScore(counselor_all);
     jQuery('#counselor_rating_all').html(counselor_all_score);
 
   }
-
 
   initialOverScore();
 </script>

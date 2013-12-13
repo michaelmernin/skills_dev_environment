@@ -1,18 +1,43 @@
-<fieldset class="webform-component-fieldset webform-catalogue ">
-  <legend>
-    <span class="fieldset-legend"> <?php print ucfirst($node['description']); ?>
-    </span>
-  </legend>
-
+<div class="webform-submission-info clearfix">
+  <!--Self comment-->
   <div class="webform-submission-info clearfix">
-    <div class="wellwarp">
-      <b style="font-weight: 700">Self Description:  </b>
-      <?php print $node['self_description']; ?>
+    <div id="header-17" value="achievements_text">
+     <?php print ucfirst($node['description']); ?>
     </div>
-    <div class="wellwarp">  
-      <b style="font-weight: 700">Counselor Description:  </b>
-      <?php print $node['counselor_description']; ?>
+    <br>
+
+    <div style="font-weight: 600;float: left">·Self Comment : </div>
+    <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;"></div>
+    <div class="view-self-comment-bubble">
+      <div class="additionalbubble">
+        <div style="padding: 0 5px 5px;margin-bottom: 5px;">
+          <div id="comment-content-value-17" style="margin: 5px; height: 140px; width: 98%;overflow-y:auto;">
+           <?php print display_comment($node['self_description']); ?>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <br>
+  <!--Display the counselor comment message-->
+  <div class="webform-submission-info clearfix">
+    <div class="webform-submission-info-text">
+      <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">
+        · Counselor Comment:
+      </div>
+      <div class="view-self-comment-bubble">
+        <div class="additionalbubble">
+          <div style="padding: 0 5px 5px;margin-bottom: 5px;">
+            <div id="counselor-comment-17" style="margin: 5px; height: 140px; width: 98%;overflow-y:auto;">
+            <?php print display_comment($node['counselor_description']); ?>
+            </div>
+          </div>
+        </div>
+      </div>     
     </div>
   </div>
-</fieldset>
+  <br>
+</div>
+
 <hr>

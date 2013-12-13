@@ -215,6 +215,8 @@ function getElementValue(ele) {
         return ele.html();
     else if(type =="TD")
         return ele.html();
+    else if(type == "SPAN")
+        return ele.html();
 
     return ele.val();
 }

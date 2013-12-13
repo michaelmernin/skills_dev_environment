@@ -602,7 +602,6 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag, $r
     $receiver = format_login_name($email_receiver);
     $counselee = format_login_name($employeeName);
     
-    dd($info,'$info');
     $node_msg = generate_peer_review_node($info[0], $receiver, $counselee);
     
     db_update('prs_rel_provider_employee')

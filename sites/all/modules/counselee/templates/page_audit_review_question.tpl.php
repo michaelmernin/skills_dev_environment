@@ -1,51 +1,76 @@
 <div class="webform-submission-info clearfix">
+  <!--Self comment-->
+  <div class="webform-submission-info clearfix">
+    <div id="header-0">
+      <?php print $node['description']; ?> 
+    </div>
+    <br>
+    <div class="view-self-comment">
+      <div class="view-self-comment-title">
+        <div style="font-weight: 600;float: left">·Self Comment | </div>
+        <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Self Rating:</div>
+        <div class="color-rating-box" id="<?php print 'src_self_' . $node['key']; ?>"> 
+          <?php print display_rating($node['self_rating']); ?></div>
+      </div>
+      
+      <div class="view-self-comment-bubble">
+        <div class="additionalbubble">
+          <div style="padding: 0 5px 5px;margin-bottom: 5px;">
+            <div style="margin: 5px; height: 140px; width: 98%;overflow-y:auto;">
+              <?php print display_comment($node['self_comment']); ?>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <div>
-    <?php print $node['description']; ?> 
+    <br>
+    <br>
+    <br>
+    
+    <!--Display the counselor comment message-->
+    <div class="webform-submission-info clearfix">
+      <div class="webform-submission-info-text">
+        <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">
+          ·Counselor Comment | ·Counselor Rating:</div>
+        <div class="color-rating-box" id="<?php print 'src_counselor_' . $node['key']; ?>">
+
+          <?php print display_rating($node['counselor_rating']); ?>
+          
+        </div>
+        <div class="view-self-comment-bubble">
+          <div class="additionalbubble">
+            <div style="padding: 0 5px 5px;margin-bottom: 5px;">
+              <div style="margin: 5px; height: 140px; width: 98%;overflow-y:auto;">
+                <?php print display_comment($node['counselor_comment']); ?>
+              </div>
+            </div>
+          </div>
+        </div>      
+      </div>
+    </div>
+    <br>
   </div>
 
-  <div class="wellwarp">
-    <b style="font-weight: 700"> Self Rating:</b>
-    <font color="red">
-    <span id="<?php print 'src_self_' . $node['key']; ?>" >
-      <?php print display_rating($node['self_rating']); ?>
-    </span>
-    </font>  
-
-    <b style="font-weight: 700">
-      | ·Counselor Rating: </b>
-    <font color="red">
-    <span id="<?php print 'src_counselor_' . $node['key']; ?>" >
-      <?php print display_rating($node['counselor_rating']); ?>
-    </span>
-    </font>
 
 
-    <?php
-    if ($node['exist_peer'] == true) {
-      print '<b style="font-weight: 700"> | ·Peer Rating: </b>  <font color="red">';
-      print $node['peer_rating'];
-      print '</font>';
-    }
-    ?>
-
-  </div>
 
 
-  <div class="wellwarp">
-    <b style="font-weight: 700">
-      Self Comment:
-    </b> <?php print display_comment($node['self_comment']); ?>
-  </div>
-
-  <div class="wellwarp">
-    <b style="font-weight: 700">
-      Counselor Comment:
-    </b> <?php print display_comment($node['counselor_comment']); ?>
-  </div>
 
 
   <?php if ($node['exist_peer']) : ?>
+
+
+    <div class="webform-submission-info clearfix">
+
+      <div class="webform-submission-info-text">
+        <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px; margin-bottom: 10px">·Peer Rating: </div>
+        <div class="color-rating-box" >
+         <?php print $node['peer_rating'];?>
+        </div>
+      </div>
+    </div>
+
     <div>
       <table id="peer-table-<?php print $node['key'] ?>"></table>
       <div id="peer-div-<?php print $node['key'] ?>"></div>
@@ -79,7 +104,7 @@
             {name: 'nid', index: 'nid', hidden: true},
             {name: 'cid', index: 'cid', hidden: true}],
           multiselect: false,
-          rownumbers:true,
+          rownumbers: true,
           caption: "·Peer Comment",
           pager: '#peer-div-<?php print $node['key'] ?>',
           rowNum: 10,
@@ -108,8 +133,8 @@
 
         );
 
-        //      for (var i = 0; i <= peer_data_<?php // print $node['key']      ?>.length; i++)
-        //        jQuery("#peer-table-<?php // print $node['key']      ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $node['key']     ?>[i]);
+        //      for (var i = 0; i <= peer_data_<?php // print $node['key']         ?>.length; i++)
+        //        jQuery("#peer-table-<?php // print $node['key']         ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $node['key']        ?>[i]);
 
       </script>
     </div>

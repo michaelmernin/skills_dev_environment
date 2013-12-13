@@ -170,7 +170,7 @@ function get_internal_contribution_map() {
     array(
       'selfkey' => 'career_counseling',
       'commentkey' => 'career_counseling_comments',
-      'exist_peer' => 0,    
+      'exist_peer' => 0,
     ),
     array(
       'selfkey' => 'recruiting_assistance',
@@ -449,5 +449,14 @@ function get_overall_rating_part($self_review, $counselor_review) {
   $extend_description['self_description'] = $self_review['overall_rating']->data;
   $extend_description['counselor_description'] = $counselor_review['overall_rating']->rating;
 
-  return theme('page_audit_review_summay_description', array('node' => $extend_description));
+
+  
+  
+  
+  return '<div>
+              <div style="font-weight: 600;float: left">·Counselor Overall Rating:  </div>
+              <div class="color-rating-box" id="counselor-overall_rating-content">'.$extend_description['counselor_description'].'</div>
+              <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">| ·Self Overall Rating: </div>
+              <div class="color-rating-box" id="counselee-overall_rating-content">'.  $extend_description['self_description'] .'</div>
+            </div><br><br><br>';
 }
