@@ -726,8 +726,8 @@ function update_review_status($rreid, &$review_arg_array = NULL, &$provider_arg_
  * @return type
  */
 function filter_xss_and_check_plain($unsafe_string) {
-  
-  $safe_string = check_plain(filter_xss($unsafe_string));
+//  filter_xss()
+  $safe_string = check_plain($unsafe_string);
 
   return $safe_string;
 }
