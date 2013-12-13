@@ -5,7 +5,7 @@
 // dd($reviewee, 'reviewee');
 // dd($review_info, 'review_info');
 // dd($self_dataset, 'self_dataset');
- // dd($clor_rating_comment, 'clor_rating_comment');
+// dd($clor_rating_comment, 'clor_rating_comment');
 // dd($overall_rating, 'overall_rating');
 ?>
 <div class="webform-submission-info clearfix">

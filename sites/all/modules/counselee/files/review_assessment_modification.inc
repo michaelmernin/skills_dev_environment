@@ -48,6 +48,7 @@ function load_self_assessment($rreid = NULL) {
   $csiid = get_counselor_latest_submissionID($nid);
   if ($csiid != -1) {
     $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
+		dd($counselor_submit_data, 'counselor_submit_data');
     $revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
     $overall_rating->counselor_rating = _fetch_counselor_overall_rating($revised_comments);
   }
@@ -64,7 +65,7 @@ function load_self_assessment($rreid = NULL) {
   appendCSSJS();
   for ($i = 0; $i < $review_info_content_num; $i++) {
     $clientdate = $review_info['clientdate'][$i]->DATA;
-    $project_roles_and_responsibilities = $review_info['project_roles_and_responsibilities'][$i]->DATA;
+    $project_roles_and_responsibilities = filter_xss_and_check_plain($review_info['project_roles_and_responsibilities'][$i]->DATA);
     $startdate = $review_info['startdate'][$i]->DATA;
     $enddate = $review_info['enddate'][$i]->DATA;
     if (validate_numbers($review_info, $i)) {
@@ -803,7 +804,7 @@ function _matching_none_selection_items($none_selection_item, $self_dataset, &$r
             else {
               $content->question = $item['name'];
             }
-            $content->comment = $self_dataset[$i]->DATA;
+            $content->comment = filter_xss_and_check_plain($self_dataset[$i]->DATA);
             array_unshift($self_comments_array, $content);
           }
         }
