@@ -38,7 +38,7 @@
                 enabled: false
                         //                useHTML: true,
                         //                formatter: function() {
-                        //                  var val = jQuery("#" + this.point.name + "_<?php // print $pie_data->id     ?>").val();
+                        //                  var val = jQuery("#" + this.point.name + "_<?php // print $pie_data->id      ?>").val();
                         //                  // alert(this.point.name);
                         //                  var title = this.point.name;
                         //
@@ -256,7 +256,7 @@
     </div>
   </div>
 
-  <div>
+  <div class="jQgrid-center">
     <table id="peer-table-<?php print $item_num ?>"></table>
     <div id="peer-div-<?php print $item_num ?>"></div>
     <script>
@@ -267,7 +267,8 @@
       jQuery("#peer-table-<?php print $item_num ?>").jqGrid({
         datatype: "local",
         height: 250,
-        width: 800,
+//        width: 800,
+        autowidth: true,
         data: peer_data_<?php print $item_num ?>,
         colNames: ['Title', 'Rating', 'Comment', 'Nid', 'Cid'],
         colModel: [
@@ -279,7 +280,7 @@
             }},
           {name: 'comment', index: 'comment', width: 300, cellattr: function(rowId, val, rawObject) {
               var comment_text = rawObject.comment;
-              var i = 200;
+              var i = 300;
               if (comment_text.length > i) {
                 comment_text = comment_text.substr(0, i) + '...';
               }
@@ -288,7 +289,7 @@
           {name: 'nid', index: 'nid', hidden: true},
           {name: 'cid', index: 'cid', hidden: true}],
         multiselect: false,
-        rownumbers:true,
+        rownumbers: true,
         caption: "·Peer Comment",
         pager: '#peer-div-<?php print $item_num ?>',
         rowNum: 10,
@@ -317,8 +318,8 @@
 
       );
 
-//      for (var i = 0; i <= peer_data_<?php // print $item_num  ?>.length; i++)
-//        jQuery("#peer-table-<?php // print $item_num  ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $item_num  ?>[i]);
+//      for (var i = 0; i <= peer_data_<?php // print $item_num   ?>.length; i++)
+//        jQuery("#peer-table-<?php // print $item_num   ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $item_num   ?>[i]);
 
 
 
@@ -344,12 +345,12 @@
         }
         ?>;
     if (inArray(rating, range)) {
-			if (rating != 0) {
-				jQuery("#counselor-rating-<?php print $item_num; ?>").append(rating);
-			}
-			else {
-				jQuery("#counselor-rating-<?php print $item_num; ?>").append("N/A");
-			}
+      if (rating != 0) {
+        jQuery("#counselor-rating-<?php print $item_num; ?>").append(rating);
+      }
+      else {
+        jQuery("#counselor-rating-<?php print $item_num; ?>").append("N/A");
+      }
     }
     else {
       jQuery("#counselor-rating-<?php print $item_num; ?>").append(3);

@@ -197,7 +197,7 @@ function get_QandA_std_data($type, $cid, $nid, $name, $answer, $children, $form_
   $QandA_std_data->cid = $cid;
   $QandA_std_data->nid = $nid;
   $QandA_std_data->name = $name;
-  $QandA_std_data->answer = $answer;
+  $QandA_std_data->answer = ((trim(filter_xss_and_check_plain($answer)) == '') ? NO_COMMENT : filter_xss_and_check_plain($answer));
   $QandA_std_data->children = $children;
   $QandA_std_data->form_key = $form_key;
   $QandA_std_data->weight = $weight;

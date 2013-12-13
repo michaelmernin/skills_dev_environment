@@ -250,7 +250,7 @@
   <input type="hidden" id="total_item_count-<?php print $item_num; ?>" value="<?php print $total_item_count ?>"/>
 
   <!--Display the peer comment message-->
-  <div class="webform-submission-info clearfix" style=" margin-bottom: 10px">
+  <div class="webform-submission-info clearfix">
 
     <div class="webform-submission-info-text">
       <!--<div style="font-weight: 600;float: left">·Peer Comment |</div>-->
@@ -271,7 +271,7 @@
   </div>
 
   <br />
-  <div>
+  <div class="jQgrid-center">
     <table id="peer-table-<?php print $item_num ?>"></table>
     <div id="peer-div-<?php print $item_num ?>"></div>
     <input type="hidden" value="<?php print $json_count ?>" id="peer-hidjsoncount-<?php print $item_num ?>"/>
@@ -295,7 +295,7 @@
       jQuery("#peer-table-<?php print $item_num ?>").jqGrid({
         datatype: "local",
         height: 250,
-        width: 800,
+//        width: 800,
         data: peer_data_<?php print $item_num ?>,
         colNames: ['Peer Name', 'Title', 'Rating', 'Comment', 'Display', 'Nid', 'Cid','Number'],
         colModel: [
@@ -308,9 +308,9 @@
           {name: 'rating', index: 'rating', align: 'center', width: 50, cellattr: function(rowId, val, rawObject) {
               return 'title="' + rawObject.rating + '\nDouble click for more information."';
             }},
-          {name: 'comment', index: 'comment', width: 300, sorttype: "text", cellattr: function(rowId, val, rawObject) {
+          {name: 'comment', index: 'comment', width: 300, sorttype: 'text', cellattr: function(rowId, val, rawObject) {
               var comment_text = rawObject.comment;
-              var i = 200;
+              var i = 300;
               if (comment_text.length > i) {
                 comment_text = comment_text.substr(0, i) + '...';
               }
@@ -331,6 +331,7 @@
           {name: 'cid', index: 'cid', hidden: true}],
         multiselect: false,
         rownumbers:true,
+        autowidth: true,
         caption: "·Peer Comment",
         pager: '#peer-div-<?php print $item_num ?>',
         rowNum: 10,

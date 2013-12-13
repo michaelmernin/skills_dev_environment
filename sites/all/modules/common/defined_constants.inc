@@ -4,6 +4,7 @@ defined('PEER_TEMP') or define('PEER_TEMP', 'For Demo Peer Review Form Template'
 defined('PROJECT_TEMP') or define('PROJECT_TEMP', 'For Demo Peer Review Form Template');
 
 defined('GOAL_STRING') or define('GOAL_STRING', 'goals_text');
+defined('FIRST_LAST_YEAR_GOAL') or define('FIRST_LAST_YEAR_GOAL', 'last_year_goal');
 defined('NO_COMMENT') or define('NO_COMMENT', 'No comment.');
 defined('NO_ANSWER') or define('NO_ANSWER', 'No answer.');
 defined('NO_DATA') or define('NO_DATA', 'No data');

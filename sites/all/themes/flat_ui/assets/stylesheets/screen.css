@@ -14315,3 +14315,13 @@ div.error {
         padding-bottom: 3px;
 
 }
+
+.jQgrid-center .ui-jqgrid {
+    margin-left: auto;
+    margin-right: auto;
+}
+/*for jqgrid comment in oneline*/
+.ui-jqgrid tr.jqgrow td{
+	white-space: nowrap !important;
+
+}

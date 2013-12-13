@@ -29,6 +29,7 @@ function _webform_defaults_lastyeargoal() {
       'private' => FALSE,
       'analysis' => FALSE,
       'goal_string' => GOAL_STRING,
+      'first_year_last_year_goal'=>FIRST_LAST_YEAR_GOAL,
     ),
   );
 }
@@ -162,7 +163,19 @@ function _webform_render_lastyeargoal($component, $value = NULL, $filter = TRUE)
     }
   }
   else {
-    $display = '';
+    $sid = get_this_year_sid_by_nid($component['nid']);
+    if ($sid != 0) {
+      $cid = get_cid_by_string(($filter ? _webform_filter_xss($component['extra']['first_year_last_year_goal']) : $component['extra']['first_year_last_year_goal']), $component['nid']);
+      if ($cid != 0) {
+        $display = get_last_year_goal($component['nid'], $sid, $cid);
+      }
+      else {
+        $display = 'config error! please connection Admin.';
+      }
+    }
+    else {
+      $display = '';
+    }
     $is_first_year = TRUE;
   }
   $element = array(
@@ -194,7 +207,6 @@ function _webform_render_lastyeargoal($component, $value = NULL, $filter = TRUE)
 //  else {
 //    $element['#default_value'] = 3;
 //  }
-
 //  if ($component['extra']['disabled']) {
   if (!$is_first_year) {
     $element['#attributes']['style'] = 'color:#9d9c9a';
@@ -226,6 +238,11 @@ function get_last_year_review_nid($node) {
     }
   }
   $nid = get_temp_node_id($title);
+  return $nid;
+}
+
+function first_year_review_nid($node) {
+  $nid = get_temp_node_id($node->title);
   return $nid;
 }
 
