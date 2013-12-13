@@ -5,7 +5,6 @@
  * Page callback function for view assessment.
  * */
 function load_self_assessment($rreid = NULL) {
-//  access_authen($rreid);
   $cur_user_name = get_current_user_name();
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
@@ -63,25 +62,14 @@ function load_self_assessment($rreid = NULL) {
   $pageContent = '';
   appendCSSJS();
   for ($i = 0; $i < $review_info_content_num; $i++) {
-    $clientdate = $review_info['clientdate'][$i]->DATA;
-    $project_roles_and_responsibilities = filter_xss_and_check_plain($review_info['project_roles_and_responsibilities'][$i]->DATA);
-    $startdate = $review_info['startdate'][$i]->DATA;
-    $enddate = $review_info['enddate'][$i]->DATA;
+		$proj_item = generate_project_roles_and_responsibilities_info($review_info, $i);
     if (validate_numbers($review_info, $i)) {
-      $content = theme('project_roles_and_responsibilities', array(
-        'rreid' => $rreid,
-        'nid' => $nid,
-        'reviewee' => $reviewee,
-        'review_info_content_num' => $i,
-        'clientdate' => $clientdate,
-        'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
-        'startdate' => $startdate,
-        'enddate' => $enddate,
-      ));
+			$content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $proj_item, $i);
       $pageContent .= $content;
     }
   }
   $pageContent .= '<hr>';
+	$is_read_only = FALSE;
   foreach ($self_question_rating_comment_result as $key => $value) {
 //=====================the question which have pie chart ============CONST===============================
     $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
@@ -105,47 +93,18 @@ function load_self_assessment($rreid = NULL) {
         $pie_data->have_peer_data = FALSE;
       }
 //=====================pie chart end=====================================================================
-      $content = theme('view_assessment', array(
-        'item_num' => $key,
-        'rreid' => $rreid,
-        'nid' => $nid,
-        'reviewee' => $reviewee,
-        'self_dataset' => $value,
-        'json_count'=>$json_count,
-        'pie_data' => $pie_data,
-        'peer_json' => $peer_json,
-        'clor_rating_comment' => $revised_comments[$key],
-        'total_item_count' => $total_item_count,
-      ));
+			$content = thematize_review_content_full($key, $rreid, $nid, $reviewee, $value, $json_count, $pie_data, $peer_json, $revised_comments, $total_item_count, $is_read_only);
       $pageContent .= $content;
     }
     else {
-      $content = theme('view_assessment_without_chart', array(
-        'item_num' => $key,
-        'rreid' => $rreid,
-        'nid' => $nid,
-        'reviewee' => $reviewee,
-        'self_dataset' => $value,
-        'clor_rating_comment' => $revised_comments[$key],
-        'total_item_count' => $total_item_count,
-        'overall_rating' => $overall_rating,
-      ));
+      $content = thematize_review_content_without_chart($key, $rreid, $nid, $reviewee, $value, $revised_comments, $total_item_count, $overall_rating, $is_read_only); 
       $pageContent .= $content;
     }
   }
   foreach ($self_comments_array as $key => $value) {
-    $content = theme('view_assessment_comment_only', array(
-      'item_num' => $self_item_count + $key,
-      'rreid' => $rreid,
-      'nid' => $nid,
-      'reviewee' => $reviewee,
-      'self_comment' => $value,
-      'clor_rating_comment' => $revised_comments[$self_item_count + $key],
-      'total_item_count' => $total_item_count,
-    ));
+    $content = thematize_review_content_comment_only($key, $self_item_count, $rreid, $nid, $reviewee, $value, $revised_comments, $total_item_count, $is_read_only);
     $pageContent .= $content;
   }
-  // generate comment only content here.
   return $pageContent;
 }
 
@@ -743,6 +702,115 @@ function init_review_info_content() {
   $review_info['startdate'] = array();
   $review_info['enddate'] = array();
   return $review_info;
+}
+
+function generate_project_roles_and_responsibilities_info($review_info, $index) {
+	$content = new stdClass();
+	$content->clientdate = $review_info['clientdate'][$index]->DATA;
+	$content->project_roles_and_responsibilities = filter_xss_and_check_plain($review_info['project_roles_and_responsibilities'][$index]->DATA);
+	$content->startdate = $review_info['startdate'][$index]->DATA;
+	$content->enddate = $review_info['enddate'][$index]->DATA;
+
+	return $content;
+}
+
+function thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $project_item, $index) {
+	$content = theme('project_roles_and_responsibilities', array(
+			'rreid' => $rreid,
+			'nid' => $nid,
+			'reviewee' => $reviewee,
+			'review_info_content_num' => $index,
+			'clientdate' => $project_item->clientdate,
+			'project_roles_and_responsibilities' => $project_item->project_roles_and_responsibilities,
+			'startdate' => $project_item->startdate,
+			'enddate' => $project_item->enddate,
+		));
+	return $content;
+}
+    
+function thematize_review_content_full($key, $rreid, $nid, $reviewee, $value, $json_count=NULL, $pie_data, $peer_json, $revised_comments, $total_item_count, $is_read_only) {
+	if ($is_read_only == FALSE) {
+		$content = theme('view_assessment', array(
+        'item_num' => $key,
+        'rreid' => $rreid,
+        'nid' => $nid,
+        'reviewee' => $reviewee,
+        'self_dataset' => $value,
+        'json_count'=>$json_count,
+        'pie_data' => $pie_data,
+        'peer_json' => $peer_json,
+        'clor_rating_comment' => $revised_comments[$key],
+        'total_item_count' => $total_item_count,
+      ));
+	}
+	else {
+		$content = theme('review_content', array(
+        'item_num' => $key,
+        'rreid' => $rreid,
+        'nid' => $nid,
+        'reviewee' => $reviewee,
+        'self_dataset' => $value,
+        'pie_data' => $pie_data,
+        'peer_json' => $peer_json,
+        'clor_rating_comment' => $revised_comments[$key],
+        'total_item_count' => $total_item_count,
+      ));
+	}
+	return $content;
+}
+
+function thematize_review_content_without_chart($key, $rreid, $nid, $reviewee, $value, $revised_comments, $total_item_count, $overall_rating, $is_read_only) {
+	if ($is_read_only == FALSE) {
+		$content = theme('view_assessment_without_chart', array(
+        'item_num' => $key,
+        'rreid' => $rreid,
+        'nid' => $nid,
+        'reviewee' => $reviewee,
+        'self_dataset' => $value,
+        'clor_rating_comment' => $revised_comments[$key],
+        'total_item_count' => $total_item_count,
+        'overall_rating' => $overall_rating,
+      ));
+	}
+	else {
+		$content = theme('review_content_without_chart', array(
+        'item_num' => $key,
+        'rreid' => $rreid,
+        'nid' => $nid,
+        'reviewee' => $reviewee,
+        'self_dataset' => $value,
+        'clor_rating_comment' => $revised_comments[$key],
+        'total_item_count' => $total_item_count,
+        'overall_rating' => $overall_rating,
+      ));
+	}
+	return $content;
+}
+
+function thematize_review_content_comment_only($key, $self_item_count, $rreid, $nid, $reviewee, $value, $revised_comments, $total_item_count, $is_read_only) {
+	if ($is_read_only == FALSE) {
+    $content = theme('view_assessment_comment_only', array(
+      'item_num' => $self_item_count + $key,
+      'rreid' => $rreid,
+      'nid' => $nid,
+      'reviewee' => $reviewee,
+      'self_comment' => $value,
+      'clor_rating_comment' => $revised_comments[$self_item_count + $key],
+      'total_item_count' => $total_item_count,
+    ));
+	}
+	else {
+    $content = theme('review_content_comment_only', array(
+      'item_num' => $self_item_count + $key,
+      'rreid' => $rreid,
+      'nid' => $nid,
+      'reviewee' => $reviewee,
+      'self_comment' => $value,
+      'clor_rating_comment' => $revised_comments[$self_item_count + $key],
+      'total_item_count' => $total_item_count,
+    ));
+	}
+	return $content;
 }
 
 function _matching_none_selection_items($none_selection_item, $self_dataset, &$review_info, &$self_comments_array, &$overall_rating) {

@@ -167,25 +167,12 @@ function load_self_assessment_content($rreid = NULL) {
 
   $pageContent = '';
   for ($i = 0; $i < $review_info_content_num; $i++) {
-    $clientdate = $review_info['clientdate'][$i]->DATA;
-    $project_roles_and_responsibilities = $review_info['project_roles_and_responsibilities'][$i]->DATA;
-    $startdate = $review_info['startdate'][$i]->DATA;
-    $enddate = $review_info['enddate'][$i]->DATA;
+		$proj_item = generate_project_roles_and_responsibilities_info($review_info, $i);
     if (validate_numbers($review_info, $i)) {
-      $content = theme('project_roles_and_responsibilities', array(
-        'rreid' => $rreid,
-        'nid' => $nid,
-        'reviewee' => $reviewee,
-        'review_info_content_num' => $i,
-        'clientdate' => $clientdate,
-        'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
-        'startdate' => $startdate,
-        'enddate' => $enddate,
-      ));
+			$content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $proj_item, $i);
       $pageContent .= $content;
     }
   }
-
   // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
   foreach ($self_question_rating_comment_result as $key => $value) {
     $content = theme('view_self_assessment_item', array(
@@ -269,27 +256,15 @@ function load_review_content($rreid = NULL) {
   }
 
   $pageContent = '';
-
   for ($i = 0; $i < $review_info_content_num; $i++) {
-    $clientdate = $review_info['clientdate'][$i]->DATA;
-    $project_roles_and_responsibilities = $review_info['project_roles_and_responsibilities'][$i]->DATA;
-    $startdate = $review_info['startdate'][$i]->DATA;
-    $enddate = $review_info['enddate'][$i]->DATA;
+		$proj_item = generate_project_roles_and_responsibilities_info($review_info, $i);
     if (validate_numbers($review_info, $i)) {
-      $content = theme('project_roles_and_responsibilities', array(
-        'rreid' => $rreid,
-        'nid' => $nid,
-        'reviewee' => $reviewee,
-        'review_info_content_num' => $i,
-        'clientdate' => $clientdate,
-        'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
-        'startdate' => $startdate,
-        'enddate' => $enddate,
-      ));
+			$content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $proj_item, $i);
       $pageContent .= $content;
     }
   }
 
+	$is_read_only = TRUE;
   foreach ($self_question_rating_comment_result as $key => $value) {
 //=====================the question which have pie chart ============CONST===============================
     $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
@@ -313,43 +288,16 @@ function load_review_content($rreid = NULL) {
         $pie_data->have_peer_data = FALSE;
       }
 //=====================pie chart end=====================================================================
-      $content = theme('review_content', array(
-        'item_num' => $key,
-        'rreid' => $rreid,
-        'nid' => $nid,
-        'reviewee' => $reviewee,
-        'self_dataset' => $value,
-        'pie_data' => $pie_data,
-        'peer_json' => $peer_json,
-        'clor_rating_comment' => $revised_comments[$key],
-        'total_item_count' => $total_item_count,
-      ));
+      $content = thematize_review_content_full($key, $rreid, $nid, $reviewee, $value, NULL, $pie_data, $peer_json, $revised_comments, $total_item_count, $is_read_only);
       $pageContent .= $content;
     }
     else {
-      $content = theme('review_content_without_chart', array(
-        'item_num' => $key,
-        'rreid' => $rreid,
-        'nid' => $nid,
-        'reviewee' => $reviewee,
-        'self_dataset' => $value,
-        'clor_rating_comment' => $revised_comments[$key],
-        'total_item_count' => $total_item_count,
-        'overall_rating' => $overall_rating,
-      ));
+      $content = thematize_review_content_without_chart($key, $rreid, $nid, $reviewee, $value, $revised_comments, $total_item_count, $overall_rating, $is_read_only);
       $pageContent .= $content;
     }
   }
   foreach ($self_comments_array as $key => $value) {
-    $content = theme('review_content_comment_only', array(
-      'item_num' => $self_item_count + $key,
-      'rreid' => $rreid,
-      'nid' => $nid,
-      'reviewee' => $reviewee,
-      'self_comment' => $value,
-      'clor_rating_comment' => $revised_comments[$self_item_count + $key],
-      'total_item_count' => $total_item_count,
-    ));
+    $content = thematize_review_content_comment_only($key, $self_item_count, $rreid, $nid, $reviewee, $value, $revised_comments, $total_item_count, $is_read_only);
     $pageContent .= $content;
   }
   return $pageContent;
