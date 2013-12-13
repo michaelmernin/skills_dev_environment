@@ -341,8 +341,10 @@ function set_fields_array($general_info, &$fields_array) {
 //  }
   //description
 //  if (isset($general_info['review_from_description'])) {
-  $end_year = substr($general_info['review_to_date'], 6, 9);
-  $description = check_plain($end_year . '_' . $review_type);
+//  $end_year = substr($general_info['review_to_date'], 6, 9);
+//  $description = check_plain($end_year . '_' . $review_type);
+
+  $description = return_review_name($general_info);
   $fields_array['description'] = $description;
 //  }
   if (isset($starttime) && isset($endtime) && isset($periodFtime) && isset($periodTTime)) {
@@ -543,8 +545,9 @@ function return_review_name($date) {
       $review_type = 'ANNUAL_REVIEW';
       $review_name = substr($date['review_to_date'], 6, 9) . '_' . $review_type;
       break;
-    case '1':
+    case '1' or 1:
       $review_type = 'PROJECT_REVIEW';
+      $review_name = $date['Project_Name_Text'] . '_' . $review_type;
       break;
     case '2':
       $review_type = 'THREE_MONTH_REVIEW';
@@ -564,11 +567,11 @@ function create_review_node($employee, $review_basic_info) {
   switch ($review_basic_info['review_type']) {
     //0 for annual review;
     case 0:
-
       $nid_token = create_annual_review_node($employee, $review_basic_info);
       break;
     // 1 for project review;
     case 1:
+      $nid_token = create_project_review_node($employee, $review_basic_info);
       break;
     // 2 for 3-month review
     case 2:
@@ -597,3 +600,12 @@ function create_annual_review_node($employee, $review_basic_info) {
   $nid_token = create_node($title, ANNUAL_TEMP, 1);
   return $nid_token;
 }
+
+function create_project_review_node($employee, $review_basic_info) {
+  $employee_name = format_login_name($employee);
+  $project_name = $review_basic_info['Project_Name_Text'];
+  $title = $employee_name . ' Project Review About ' . $project_name;
+  $nid_token = create_node($title, PROJECT_TEMP, 1);
+  return $nid_token;
+}
+

@@ -152,9 +152,9 @@ function load_self_assessment_content($rreid = NULL) {
   $sid = get_last_sid_by_nid($nid);
 
   $self_dataset = get_latest_submitted_data_from_db($nid, $sid);
-	$item_count = count($self_dataset);
-	$self_cid_formkey_type_array = array();
-	$self_question_rating_comment_result = process_self_assessment_data($self_dataset, $self_cid_formkey_type_array);
+  $item_count = count($self_dataset);
+  $self_cid_formkey_type_array = array();
+  $self_question_rating_comment_result = process_self_assessment_data($self_dataset, $self_cid_formkey_type_array);
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
 
   $review_info = init_review_info_content();
@@ -180,7 +180,7 @@ function load_self_assessment_content($rreid = NULL) {
         'clientdate' => $clientdate,
         'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
         'startdate' => $startdate,
-				'enddate' => $enddate,
+        'enddate' => $enddate,
       ));
       $pageContent .= $content;
     }
@@ -236,10 +236,10 @@ function load_review_content($rreid = NULL) {
 
   $self_dataset = get_latest_submitted_data_from_db($nid, $sid);
   $item_count = count($self_dataset);
-	$self_cid_formkey_type_array = array();
-	$self_question_rating_comment_result = process_self_assessment_data($self_dataset, $self_cid_formkey_type_array);
+  $self_cid_formkey_type_array = array();
+  $self_question_rating_comment_result = process_self_assessment_data($self_dataset, $self_cid_formkey_type_array);
   $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
-	$review_info = init_review_info_content();	
+  $review_info = init_review_info_content();
   $self_comments_array = array();
   $overall_rating = new stdClass();
   _matching_none_selection_items($none_selection_item, $self_dataset, $review_info, $self_comments_array, $overall_rating);
@@ -273,8 +273,8 @@ function load_review_content($rreid = NULL) {
   for ($i = 0; $i < $review_info_content_num; $i++) {
     $clientdate = $review_info['clientdate'][$i]->DATA;
     $project_roles_and_responsibilities = $review_info['project_roles_and_responsibilities'][$i]->DATA;
-		$startdate = $review_info['startdate'][$i]->DATA;
-		$enddate = $review_info['enddate'][$i]->DATA;
+    $startdate = $review_info['startdate'][$i]->DATA;
+    $enddate = $review_info['enddate'][$i]->DATA;
     if (validate_numbers($review_info, $i)) {
       $content = theme('project_roles_and_responsibilities', array(
         'rreid' => $rreid,
@@ -283,8 +283,8 @@ function load_review_content($rreid = NULL) {
         'review_info_content_num' => $i,
         'clientdate' => $clientdate,
         'project_roles_and_responsibilities' => $project_roles_and_responsibilities,
-				'startdate' => $startdate,
-				'enddate' => $enddate,
+        'startdate' => $startdate,
+        'enddate' => $enddate,
       ));
       $pageContent .= $content;
     }
@@ -601,9 +601,10 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag, $r
     //Generate peer review form for each peer  --function format_login_name($login_name) {
     $receiver = format_login_name($email_receiver);
     $counselee = format_login_name($employeeName);
-    $form_title = "Annual Performace Peer Review $receiver for $counselee";
-    $peer_review_template_name = 'For Demo Peer Review Form Template';
-    $node_msg = create_node($form_title, $peer_review_template_name);
+    
+    dd($info,'$info');
+    $node_msg = generate_peer_review_node($info[0], $receiver, $counselee);
+    
     db_update('prs_rel_provider_employee')
         ->fields(array('nid' => $node_msg[0], 'token' => $node_msg[1]))
         ->condition('rpeid', $rpeids_array[$i])
@@ -628,3 +629,23 @@ function send_peer_email_notification($rreid, $email_receivers, $userId_flag, $r
   }
 }
 
+function generate_peer_review_node($review_info, $receiver, $counselee) {
+  $review_type = $review_info->type;
+  $review_name = $review_info->description; 
+  
+  switch ($review_type) {
+    case ANNUAL_REVIEW:
+      $form_title = "Annual Review Peer Review $receiver for $counselee";
+      $peer_review_template_name = PEER_TEMP;
+      return create_node($form_title, $peer_review_template_name);
+      break;
+    case PROJECT_REVIEW:
+      $form_title = "$review_name Peer Review $receiver for $counselee";
+      $peer_review_template_name = PEER_TEMP;
+      return create_node($form_title, $peer_review_template_name);
+      break;
+    case THREE_MONTH_REVIEW:
+
+      break;
+  }
+}

@@ -46,18 +46,14 @@ function getCategoryChildName(idValue)
 /**
  * Calculate the average score
  * @param {array} category The elements array
- * @param {string} elementType The element type 
  * @return {number} The average score
  * */
-function calculateAverageScore(category, elementType)
+function calculateAverageScore(category)
 {
     var i = 0, count = 0, sum = 0, value, averageScore = '';
     for (i = 0; i < category.length; i++)
     {
-        if (elementType == 'select')
-            value = jQuery(category[i]).find('option:selected').val();
-        else if (elementType == 'html')
-            value = jQuery(category[i]).html();
+        value = getElementValue(jQuery(category[i]));
         if (IsNum(value) && value != '0')
         {
             count++;
@@ -118,14 +114,14 @@ function checkComments(category, commentSuffix)
 }
 
 /**
- * Modify the average points.
+ * Modify the destination array element value
  * 
  * */
-function modifyElementValue(arr, value)
+function modifyElementValue(destArr, value)
 {
-    for (var i = 0; i < arr.length; i++)
+    for (var i = 0; i < destArr.length; i++)
     {
-        jQuery(arr[i]).html(value);
+        jQuery(destArr[i]).html(value);
     }
 }
 
@@ -192,21 +188,20 @@ function checkRequireField()
 
 function getElementContentLength(ele)
 {
-    var type = ele[0].tagName;
-    if (type == 'INPUT')
-        return ele.val().length;
-    else if (type == "TEXTAREA")
-        return ele.val().length;
-    return 0;
+    var value = getElementValue(ele);
+    return value.length;
 }
 
 /**
  * Get page element value
  * 
- * @param {object} ele Object Element
+ * @param {object} ele Element Object
  * */
 function getElementValue(ele) {
     var type = ele[0].tagName;
+
+//    alert(ele);
+//    alert(type);
 
     if (type == "INPUT")
         return ele.val();
@@ -214,14 +209,22 @@ function getElementValue(ele) {
         return ele.val();
     else if (type == "SELECT")
         return ele.find('option:selected').val();
-
+    else if (type == "DIV")
+        return ele.html();
+    else if (type == "LABLE")
+        return ele.html();
+    else if(type =="TD")
+        return ele.html();
 
     return ele.val();
 }
 
 
 
-
+/**
+ * Add Error Message display area on webform page
+ * 
+ * */
 function addErrorMessageArea()
 {
 //.page-title
@@ -237,17 +240,9 @@ function addErrorMessageArea()
 }
 
 
-function modifySelectCategoryValue(category, destArr)
+function modifyCategoryValue(category, destArr)
 {
-    var averageScore = calculateAverageScore(category, 'select');
+    var averageScore = calculateAverageScore(category);
     modifyElementValue(destArr, averageScore);
 }
 
-/**
- * Calculate the overall score average
- * */
-function modifyOverallScoreAverage(category, destArr)
-{
-    var averageScore = calculateAverageScore(category, 'html');
-    modifyElementValue(destArr, averageScore);
-}

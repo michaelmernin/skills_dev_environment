@@ -40,9 +40,9 @@ function calculateSelectCategoryValueAndModify(category, index)
     var destArr = new Array();
     destArr[0] = compositeScoreArr[index];
     destArr[1] = overallCompositeScoresArr[index];
-    modifySelectCategoryValue(category, destArr);
+    modifyCategoryValue(category, destArr);
 
-    modifyOverallScoreAverage(overallCompositeScoresArr, new Array(overallScoresAverageId));
+    modifyCategoryValue(overallCompositeScoresArr, new Array(overallScoresAverageId));
 }
 
 function categoryTechnicalValueChange()

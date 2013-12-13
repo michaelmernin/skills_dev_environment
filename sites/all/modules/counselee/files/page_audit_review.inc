@@ -130,37 +130,31 @@ function get_core_competencies_map() {
       'selfkey' => 'client_engagements',
       'commentkey' => 'client_engagements_comments',
       'exist_peer' => 0,
-      'counselorkey' => 1,
     ),
     array(
       'selfkey' => 'consulting_skills',
       'commentkey' => 'consulting_skills_comments',
       'exist_peer' => 1,
-      'counselorkey' => 2,
     ),
     array(
       'selfkey' => 'technical_abilities',
       'commentkey' => 'technical_abilities_comments',
       'exist_peer' => 1,
-      'counselorkey' => 3,
     ),
     array(
       'selfkey' => 'professionalism',
       'commentkey' => 'professionalism_comments',
       'exist_peer' => 1,
-      'counselorkey' => 4,
     ),
     array(
       'selfkey' => 'leadership',
       'commentkey' => 'leadership_comments',
       'exist_peer' => 1,
-      'counselorkey' => 5,
     ),
     array(
       'selfkey' => 'teamwork',
       'commentkey' => 'teamwork_comments',
       'exist_peer' => 1,
-      'counselorkey' => 6,
     ),
   );
   return $core_competencies;
@@ -172,31 +166,26 @@ function get_internal_contribution_map() {
       'selfkey' => 'business_development',
       'commentkey' => 'business_development_comments',
       'exist_peer' => 0,
-      'counselorkey' => 6,
     ),
     array(
       'selfkey' => 'career_counseling',
       'commentkey' => 'career_counseling_comments',
-      'exist_peer' => 0,
-      'counselorkey' => 7,
+      'exist_peer' => 0,    
     ),
     array(
       'selfkey' => 'recruiting_assistance',
       'commentkey' => 'recruiting_assistance_comments',
       'exist_peer' => 0,
-      'counselorkey' => 8,
     ),
     array(
       'selfkey' => 'internal_contributions',
       'commentkey' => 'internal_contributions_comments',
       'exist_peer' => 0,
-      'counselorkey' => 9,
     ),
     array(
       'selfkey' => 'perficient_basics',
       'commentkey' => 'perficient_basics_comments',
       'exist_peer' => 0,
-      'counselorkey' => 10,
     ),
   );
 
@@ -262,6 +251,11 @@ function submit_review_result() {
 
 /**
  * Modify the prs_rel_review_employee rstatus
+ * 
+ * @param number $rreid prs_rel_review_employee id
+ * @param number $rstatus prs_rel_review_employee status
+ * @parsm number $approveStatus 
+ * @param string $reason The reason,user disapproved the review, 
  * 
  */
 function audit_review_result_update($rreid, $rstatus, $approveStatus = 1, $reason) {

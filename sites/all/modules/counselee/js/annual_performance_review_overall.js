@@ -27,7 +27,7 @@ var overall_self_scores_average_id = '#rating_all';
  * */
 function categoryCoreCcompetenciesValueChange()
 {
-    modifySelectCategoryValue(coreCompetenciesArr,
+    modifyCategoryValue(coreCompetenciesArr,
             new Array(composite_score_id[0]));
 
     var value;
@@ -39,16 +39,16 @@ function categoryCoreCcompetenciesValueChange()
         jQuery(overall_self_composite_scores_id[i]).html(value);
     }
 
-    modifyOverallScoreAverage(overall_self_composite_scores_id,
+    modifyCategoryValue(overall_self_composite_scores_id,
             new Array(overall_self_scores_average_id));
 
 }
 function categoryInternalIcontributionsValueChange()
 {
-    modifySelectCategoryValue(internalContributionsArr,
+    modifyCategoryValue(internalContributionsArr,
             new Array(composite_score_id[1], overall_self_composite_scores_id[6]));
 
-    modifyOverallScoreAverage(overall_self_composite_scores_id,
+    modifyCategoryValue(overall_self_composite_scores_id,
             new Array(overall_self_scores_average_id));
 }
 
