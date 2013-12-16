@@ -1,5 +1,13 @@
 <?php
 
+// Define the result_val to specify different status of server validation.
+defined('STATUS_OK') or define('STATUS_OK', 1);
+defined('INVALID_SELECTION') or define('INVALID_SELECTION', 2);
+defined('COMMENT_REQUIRED') or define('COMMENT_REQUIRED', 3);
+defined('INVALID_OVERALL') or define('INVALID_OVERALL', 4);
+defined('REJECT_COMMENT_REQUIRED') or define('REJECT_COMMENT_REQUIRED', 5);
+// end of status of server validation.
+
 /**
  * @file
  * Page callback function for view assessment.
@@ -502,7 +510,7 @@ function _fetch_counselor_revised_comments($counselor_submit_data) {
  * Page callback function of save conselor's assessment as draft
  * */
 function save_counselor_assessment_draft() {
-  $result_val = 1;
+  $result_val = STATUS_OK;
   $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
   $items = $_POST['items'];
@@ -526,18 +534,24 @@ function decode_json_object($json_context) {
  * Page callback function of approve counselee's assessment.
  * */
 function approve_counselee_assessment() {
-  $result_val = 1;
+  $result_val = STATUS_OK;
   $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
   $items = $_POST['items'];
   $overall_rating = $_POST['overallRating'];
 
+	$is_approval = TRUE;
   $decoded_items = decode_json_object($items);
-
-  $result = _submit_counselor_approve_info_to_DB($rreid, $nid, $decoded_items, $overall_rating);
-  $is_approved = TRUE;
-  send_approval_email_notification($rreid, $is_approved);
-  echo $result_val;
+	$result_val = counselor_sv_validation($decoded_items, $overall_rating, $is_approval);
+	if ($result_val != STATUS_OK) {
+		echo $result_val;
+	}
+	else {
+		$result = _submit_counselor_approve_info_to_DB($rreid, $nid, $decoded_items, $overall_rating);
+		$is_approved = TRUE;
+		send_approval_email_notification($rreid, $is_approved);
+		echo $result_val;
+	}
 }
 
 /**
@@ -546,19 +560,57 @@ function approve_counselee_assessment() {
  * Page callback function for reject counselee assessment
  * */
 function reject_counselee_assessment() {
-  $result_val = 1;
+  $result_val = STATUS_OK;
   $rreid = $_POST['rreid'];
   $nid = $_POST['nid'];
   $items = $_POST['items'];
   $reject_comments = $_POST['rejectComments'];
   $overall_rating = $_POST['overallRating'];
 
+	$is_approval = FALSE;
   $decoded_items = decode_json_object($items);
+	$result_val = counselor_sv_validation($decoded_items, $overall_rating, $is_approval, $reject_comments);
+	if ($result_val != STATUS_OK) {
+		echo $result_val;
+	}
+	else {
+		$result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments, $overall_rating);
+		$is_approved = FALSE;
+		send_approval_email_notification($rreid, $is_approved, $reject_comments);
+		echo $result_val;
+	}
+}
 
-  $result = _append_counselor_reject_info_to_DB($rreid, $nid, $decoded_items, $reject_comments, $overall_rating);
-  $is_approved = FALSE;
-  send_approval_email_notification($rreid, $is_approved, $reject_comments);
-  echo $result_val;
+function counselor_sv_validation($decoded_data, $overall_rating, $is_approval, $reject_comments=NULL) {
+	$result_val = STATUS_OK;
+	$rating_range = array(0, 1, 2, 3, 4, 5);
+	$error_msg = '';
+	foreach($decoded_data as $key => $value) {
+		if (isset($value->rating)) {
+			if (!in_array($value->rating, $rating_range)) {
+				$result_val = INVALID_SELECTION; 	
+				$error_msg = 'Invalid rating. Rating selection has to be in the range of 0 to 5.';
+				break;
+			}
+			else if ($value->rating != 3) {
+				if (!isset($value->comment)) {
+					$result_val = COMMENT_REQUIRED;
+					$error_msg = 'The rating is not 3 and the corresponding comment is required.';
+					break;
+				}
+			}
+		}
+	}
+	if (!in_array($overall_rating, $rating_range)) {
+		$result_val = INVALID_OVERALL;
+		$error_msg = 'Invalid overall rating. Overall rating has to be in the range of 1 to 5.';
+	}
+	if ((is_approval == FALSE) && (is_NULL($reject_comments) == TRUE)) {
+		$result_val = REJECT_COMMENT_REQUIRED;
+		$error_msg = 'Reject comments is required.';
+	}
+	drupal_set_message($error_msg, 'error');	
+	return $result_val;
 }
 
 /**

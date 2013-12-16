@@ -75,7 +75,12 @@
         data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items, 'overallRating': overallRating},
         url: '<?php echo $base_relatively_path ?>watchstatus/approvecounseleeassessment',
         success: function(text) {
-          window.location.href = "<?php print base_path() . 'watchstatus/reviewcontent/' ?>" + rreid;
+					if (text == 1) {
+						window.location.href = "<?php print base_path() . 'watchstatus/reviewcontent/' ?>" + rreid;
+					}
+					else {
+						location.reload();
+					}
         }
       });
     }
@@ -102,7 +107,12 @@
         data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items, 'overallRating': overallRating, 'rejectComments': rejectComments},
         url: '<?php echo $base_relatively_path ?>watchstatus/rejectcounseleeassessment',
         success: function(text) {
-          window.location.href = "<?php print base_path() . 'watchstatus/basicinfo/' ?>" + rreid;
+          if (text == 1) {
+						window.location.href = "<?php print base_path() . 'watchstatus/reviewcontent/' ?>" + rreid;
+					}
+					else {
+						location.reload();
+					}
         }
       });
     }
