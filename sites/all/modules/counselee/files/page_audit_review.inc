@@ -224,18 +224,69 @@ function get_extend_description_map() {
  */
 function approve_review_result() {
   $rreid = $_POST['rreid'];
-  audit_review_result_update($rreid, 4, 1, '');
+  $user_identity = get_user_identity($rreid);
+  if ($user_identity == 0)
+    print approve_review_result_by_counselee($rreid);
+  else if ($user_identity == 2)
+    print approve_review_result_by_gm($rreid);
+}
+
+function approve_review_result_by_counselee($rreid) {
+  $fields = array(
+    'rstatus' => 4,
+    'isCounseleeApproved' => 1,);
+
+  audit_review_result_update($rreid, 4, $fields);
   $msg = 'You had approved the review result.';
   drupal_set_message($msg, 'status');
-  print true;
+  return true;
+}
+
+function approve_review_result_by_gm($rreid) {
+  $fields = array(
+    'rstatus' => 6,
+    'isGmApproved' => 1,);
+  audit_review_result_update($rreid, 6, $fields);
+  $msg = 'You had approved the review result.';
+  drupal_set_message($msg, 'status');
+  return true;
 }
 
 function disapprove_review_result() {
   $rreid = $_POST['rreid'];
   $disapprove_reason = $_POST['disapproveReason'];
 
-  audit_review_result_update($rreid, 2, 2, $disapprove_reason);
+  $user_identity = get_user_identity($rreid);
+  switch ($user_identity) {
+    case 0:
+      disapprove_review_result_by_counselee($rreid, $disapprove_reason);
+      break;
+    case 2:
+      disapprove_review_result_by_gm($rreid, $disapprove_reason);
+      break;
+    default:
+      break;
+  }
+  print true;
+}
 
+function disapprove_review_result_by_counselee($rreid, $disapprove_reason) {
+  $fields = array(
+    'rstatus' => 2,
+    'isCounseleeApproved' => 2,
+    'counseleeReason' => $disapprove_reason);
+  audit_review_result_update($rreid, 2, $fields);
+  $msg = 'You had disapproved the review result.';
+  drupal_set_message($msg, 'status');
+  print true;
+}
+
+function disapprove_review_result_by_gm($rreid, $disapprove_reason) {
+  $fields = array(
+    'rstatus' => 2,
+    'isGmApproved' => 2,
+    'gmReason' => $disapprove_reason);
+  audit_review_result_update($rreid, 2, $fields);
   $msg = 'You had disapproved the review result.';
   drupal_set_message($msg, 'status');
   print true;
@@ -243,7 +294,12 @@ function disapprove_review_result() {
 
 function submit_review_result() {
   $rreid = $_POST['rreid'];
-  audit_review_result_update($rreid, 5, 1, '');
+  
+  $fields = array(
+    'rstatus' => 5
+  );
+
+  audit_review_result_update($rreid, 5, $fields);
   $msg = 'You had submitted the review result.';
   drupal_set_message($msg, 'status');
   print TRUE;
@@ -258,29 +314,33 @@ function submit_review_result() {
  * @param string $reason The reason,user disapproved the review, 
  * 
  */
-function audit_review_result_update($rreid, $rstatus, $approveStatus = 1, $reason) {
+function audit_review_result_update($rreid, $rstatus, $fields) {
   $num_updated = db_update('prs_rel_review_employee')
-      ->fields(array(
-        'rstatus' => $rstatus,
-        'isCounseleeApproved' => $approveStatus,
-        'counseleeReason' => $reason,
-      ))
+      ->fields($fields)
       ->condition('rreid', $rreid)
       ->execute();
 
   if ($num_updated == 1) {
 
-    //rstatus == 4 stand for that counselee disapprove the result
-    if ($rstatus == 4) {
-      counselee_audit_review_result_remind($rreid, TRUE, $reason);
-    }
-    else if ($rstatus == 2) {
-      counselee_audit_review_result_remind($rreid, FALSE, $reason);
-    }
-    else if ($rstatus == 5) {
-      counselor_submit_review_result_remind($rreid);
-    }
-    return 'success';
+    switch ($rstatus) {
+      case JOINT_REVIEW:
+        counselee_audit_review_result_remind($rreid, TRUE);
+        break;
+      case REVIEW_BY_COUNSELOR:
+        if (get_user_identity($rreid) == 0)
+          counselee_audit_review_result_remind($rreid, FALSE, $fields['counseleeReason']);
+        else if (get_user_identity($rreid) == 2)
+          gm_disapprove_review_result_remind($rreid);
+        break;
+      case GM_REVIEW:
+        counselor_submit_review_result_remind($rreid);
+        break;
+      case GM_APPROVED:
+        gm_approve_review_result_remind($rreid);
+        break;
+      default:
+        break;
+    }  
   }
   return 'failed';
 }
@@ -449,14 +509,36 @@ function get_overall_rating_part($self_review, $counselor_review) {
   $extend_description['self_description'] = $self_review['overall_rating']->data;
   $extend_description['counselor_description'] = $counselor_review['overall_rating']->rating;
 
-
-  
-  
-  
   return '<div>
               <div style="font-weight: 600;float: left">·Counselor Overall Rating:  </div>
-              <div class="color-rating-box" id="counselor-overall_rating-content">'.$extend_description['counselor_description'].'</div>
+              <div class="color-rating-box" id="counselor-overall_rating-content">' . $extend_description['counselor_description'] . '</div>
               <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">| ·Self Overall Rating: </div>
-              <div class="color-rating-box" id="counselee-overall_rating-content">'.  $extend_description['self_description'] .'</div>
+              <div class="color-rating-box" id="counselee-overall_rating-content">' . $extend_description['self_description'] . '</div>
             </div><br><br><br>';
+}
+
+function gm_audit_review_result($rreid) {
+
+  $identity = get_user_identity($rreid);
+
+  if ($identity != 2) {
+    drupal_set_message('You have no right to access!');
+    drupal_goto('accessdenied');
+  }
+
+  $nid = get_nid_by_rreid($rreid);
+  $pageContent = '';
+  $self_review = get_self_review_comment($nid);
+  $counselor_review = get_counselor_review_comment($nid);
+  module_load_include('inc', 'counselee', 'files/review_assessment_modification');
+  $peer_comment_info_set = get_peer_comment_information_array($rreid);
+
+  $pageContent .= get_project_message_part($self_review);
+  $pageContent .= get_performance_evaluation($self_review, $counselor_review, $peer_comment_info_set);
+  $pageContent .= get_extend_description_part($self_review, $counselor_review);
+  $pageContent .= get_overall_rating_part($self_review, $counselor_review);
+  $pageContent .= theme('page_audit_review_score', array());
+  $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
+
+  return $pageContent;
 }

@@ -101,20 +101,26 @@
    * */
   function showSelfReviewFinished(items)
   {
-    var obj, name, rreid, reviewType, description, token, isCounseleeApproved, url, li;
+    var obj, name, rreid, reviewType, description, token, isCounseleeApproved, url, li,gmName,isGmApproved;
     for (var i = 0; i < items.length; i++)
     {
       obj = items[i];
       name = obj.employeeName;
+      gmName = obj.gmName;
+      isGmApproved = obj.isGmApproved;
       rreid = obj.rreid;
       reviewType = obj.reviewType;
       description = obj.description;
       isCounseleeApproved = obj.isCounseleeApproved;
       url = basePath + "watchstatus/viewassessment/" + rreid;
+      
       if (isCounseleeApproved == 0)
         li = " <li> <a href='" + url + "'>[" + name + "] has finished " + description + " self reivew.(" + reviewName(reviewType) + ")</a> </li>";
       else if (isCounseleeApproved == 2)
         li = " <li> <a href='" + url + "'>[" + name + "] disagreed " + description + ".Please check the review again.(" + reviewName(reviewType) + ")</a> </li>";
+      else if (isGmApproved == 2)
+        li = " <li> <a href='" + url + "'>GM [" + gmName + "] disagreed " + description + ".Please check the review again.(" + reviewName(reviewType) + ")</a> </li>";
+
       jQuery('#myWorkForOther').append(li);
     }
 
@@ -153,7 +159,24 @@
       li = " <li> <a href='" + url + "'>[" + name + "] has agreed " + description + ".Please submit the review.(" + reviewName(reviewType) + ")</a> </li>";
       jQuery('#myWorkForOther').append(li);
     }
+  }
 
+
+  function showGmAuditList(items)
+  {
+    var obj, name, rreid, reviewType, description, url, li, counselor;
+    for (var i = 0; i < items.length; i++)
+    {
+      obj = items[i];
+      name = obj.counselee;
+      rreid = obj.rreid;
+      reviewType = obj.reviewType;
+      description = obj.description;
+      counselor = obj.counselor;
+      url = basePath + "watchstatus/gm-audit-review/" + rreid;
+      li = " <li> <a href='" + url + "'>" + description + " has finished by  " + name + " and " + counselor + ".Please check the review.(" + reviewName(reviewType) + ")</a> </li>";
+      jQuery('#myWorkForOther').append(li);
+    }
   }
 
   var peers = '<?php print json_encode($counseleePeers); ?>';
@@ -180,12 +203,18 @@
   var counselor_submit_review = eval(counselor_submit_review_json);
   showCounselorSubmitReview(counselor_submit_review);
 
+  var gm_audit_review_list_json = '<?php print json_encode($gm_audit_review_list); ?>';
+  var gm_audit_review_list = eval(gm_audit_review_list_json);
+  showGmAuditList(gm_audit_review_list);
+
+
   var workingItemsNum = counseleePeers.length
           + counselorPeers.length
           + reviewList.length
           + self_review_finished.length
           + counselee_confirm_review.length
-          + counselor_submit_review.length;
+          + counselor_submit_review.length
+          + gm_audit_review_list.length;
   if (workingItemsNum == 0)
   {
     var li = " <li> You have no work to do!</li>";

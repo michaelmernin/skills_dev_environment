@@ -158,6 +158,18 @@ function counselee_menu() {
     'file' => 'files/page_audit_review.inc',
   );
 
+
+  $items['watchstatus/gm-audit-review/%'] = array(
+    'title' => 'Audit Review Result',
+    'page callback' => 'gm_audit_review_result',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 8,
+    'page arguments' => array(2),
+    'access arguments' => array('access to my dashboard'),
+    'file' => 'files/page_audit_review.inc',
+  );
+
+
   $items['audit-review/approve-review-result'] = array(
     'title' => 'Counselee Approve Review Result',
     'page callback' => 'approve_review_result',
@@ -231,12 +243,14 @@ function counselee_block_view($delta = '') {
       $self_review_finished = get_self_review_finished_list(get_current_user_name());
       $counselee_confirm_review = get_confirm_review_result(get_current_user_name());
       $counselor_submit_review = get_counselor_submit_result(get_current_user_name());
+      $gm_audit_review_list = get_gm_audit_list(get_current_user_name());
       $block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers,
         'counselorPeers' => $counselorPeers,
         'reviewList' => $reviewList,
         'self_review_finished' => $self_review_finished,
         'counselee_confirm_review' => $counselee_confirm_review,
         'counselor_submit_review' => $counselor_submit_review,
+        'gm_audit_review_list' => $gm_audit_review_list,
       ));
       break;
   }
@@ -256,6 +270,7 @@ function counselee_theme() {
         'self_review_finished' => NULL,
         'counselee_confirm_review' => NULL,
         'counselor_submit_review' => NULL,
+        'my_working_list_view' => NULL,
       ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'my_working_list',),
@@ -695,6 +710,10 @@ function print_render_tabs($tabs) {
   else if ($userId_flag == 1 && $rstatus == JOINT_REVIEW) {
     print render($tabs['tabs']['output']['7']);
   }
+  else if($userId_flag == 2 && $rstatus == GM_REVIEW )
+  {
+    print render($tabs['tabs']['output']['8']); 
+  }
 }
 
 /**
@@ -930,6 +949,8 @@ function get_self_review_finished_list($counselor) {
   $query->addField('review', 'employeename');
   $query->addField('general', 'description');
   $query->addField('review', 'isCounseleeApproved');
+  $query->addField('review','isGmApproved');
+  $query->addField('relation','gmName');
   $query->condition('relation.counselorname', $counselor);
   $query->condition('review.rstatus', 2); // 2 Stand for self reivew has finished
 
@@ -943,11 +964,15 @@ function get_self_review_finished_list($counselor) {
     $reviewtype = $node->type;
     $description = $node->description;
     $isCounseleeApproved = $node->isCounseleeApproved;
+    $gmName =$node->gmName;
+    $isGmApproved = $node->isGmApproved;
     $temp = array('employeeName' => $employeeName,
       'rreid' => $rreid,
       'reviewType' => $reviewtype,
       'description' => $description,
       'isCounseleeApproved' => $isCounseleeApproved,
+      'gmName' =>$gmName,
+      'isGmApproved' =>$isGmApproved,
     );
     $result[$index++] = $temp;
   }
@@ -1087,9 +1112,6 @@ function get_webform_submissions_uid($nid) {
  */
 function display_comment($comment) {
 
-//  dd($comment, 'comment');
-//  dd(strlen($comment),'strlen($comment)');
-
   if (strlen($comment) < 1) {
     return "No Comment.";
   }
@@ -1110,3 +1132,39 @@ function display_rating($rate) {
     return $rate;
 }
 
+function get_gm_audit_list($name) {
+  $query = db_select('prs_rel_review_employee', 'review');
+  $query->innerJoin('prs_general', 'general', 'general.prid = review.prid');
+  $query->innerJoin('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName = review.employeeName');
+  $query->addField('review', 'prid');
+  $query->addField('review', 'rreid');
+  $query->addField('general', 'description');
+  $query->addField('general', 'type');
+  $query->addField('review', 'employeeName');
+  $query->addField('relation', 'counselorName');
+  $query->condition('relation.gmName', $name);
+  $query->condition('review.rstatus', 5);
+
+  $dataset = $query->execute()->fetchAll();
+
+  $result = array();
+  $index = 0;
+  foreach ($dataset as $node) {
+    $prid = $node->prid;
+    $rreid = $node->rreid;
+    $reviewtype = $node->type;
+    $description = $node->description;
+    $counselee = $node->employeeName;
+    $counselor = $node->counselorName;
+    $temp = array('prid' => $prid,
+      'rreid' => $rreid,
+      'reviewType' => $reviewtype,
+      'description' => $description,
+      'counselee' => $counselee,
+      'counselor' => $counselor,
+    );
+    $result[$index++] = $temp;
+  }
+
+  return $result;
+}

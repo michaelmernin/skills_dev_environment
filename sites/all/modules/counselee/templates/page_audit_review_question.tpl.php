@@ -60,6 +60,7 @@
 
   <?php if ($node['exist_peer']) : ?>
 
+
     <div class="webform-submission-info clearfix">
 
       <div class="webform-submission-info-text">
@@ -71,7 +72,6 @@
     </div>
 
     <div>
-    <div class="jQgrid-center">
       <table id="peer-table-<?php print $node['key'] ?>"></table>
       <div id="peer-div-<?php print $node['key'] ?>"></div>
       <script>
@@ -80,8 +80,7 @@
         jQuery("#peer-table-<?php print $node['key'] ?>").jqGrid({
           datatype: "local",
           height: 250,
-  //          width: 800,
-          autowidth: true,
+          width: 800,
           data: peer_data_<?php print $node['key'] ?>,
           colNames: ['Title', 'Rating', 'Comment', 'Nid', 'Cid'],
           colModel: [
@@ -96,7 +95,7 @@
               }},
             {name: 'comment', index: 'comment', width: 300, cellattr: function(rowId, val, rawObject) {
                 var comment_text = rawObject.comment;
-                var i = 300;
+                var i = 200;
                 if (comment_text.length > i) {
                   comment_text = comment_text.substr(0, i) + '...';
                 }
@@ -134,6 +133,8 @@
 
         );
 
+        //      for (var i = 0; i <= peer_data_<?php // print $node['key']         ?>.length; i++)
+        //        jQuery("#peer-table-<?php // print $node['key']         ?>").jqGrid('addRowData', i + 1, peer_data_<?php // print $node['key']        ?>[i]);
 
       </script>
     </div>

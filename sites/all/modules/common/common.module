@@ -164,11 +164,15 @@ function get_user_identity($rreid) {
   $cur_user_name = get_current_user_name();
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
+  $gm_name = get_gm_name($reviewee);
   if ($reviewee == $cur_user_name) {
     return 0;
   }
   else if ($cur_user_name == $counselor) {
     return 1;
+  }
+  else if ($cur_user_name == $gm_name) {
+    return 2;
   }
   else {
     return -1;
@@ -744,3 +748,13 @@ function filter_xss_and_check_plain($unsafe_string) {
   return $safe_string;
 }
 
+function get_gm_name($employeeName) {
+  $query = db_select('prs_rel_employee_counselor_gm', 'precg')
+      ->fields('precg', array('gmName'))
+      ->condition('precg.employeeName', $employeeName, '=');
+  $result = $query->execute()->fetchAll();
+  if (count($result) == 1)
+    return $result['0']->gmName;
+  else
+    return 'No GM';
+}

@@ -26,12 +26,6 @@ function mail_sender_cron() {
  */
 function mail_sender_send($address, $subject, $body, $isHtml) {
 
-//  $mail_on = variable_get('smtp_on', 1);
-//  if ($mail_on == 0) {
-//    watchdog('mail sender send', 'phpmailer is off', array(), WATCHDOG_NOTICE);
-//    return 'Phpmailer is off.';
-//  }
-
   try {
     $mail = new PHPMailer(true); //New instance, with exceptions enabled
     $mail->IsSMTP();
@@ -192,8 +186,6 @@ function mail_sender_template_adapter($address, $params, $type) {
         $subject = $params['counselee'] . " has approved the " . $params['reviewname'] . "'s result.";
         $templateName = 'counselor_counselee_approve_review_result.tpl.php';
       }
-//      else
-//        $templateName = 'counselor_counselee_audit_review_result.tpl.php';
 
       break;
     //5 stand for counselor audit the review result,notify counselee the review result
@@ -210,6 +202,21 @@ function mail_sender_template_adapter($address, $params, $type) {
       $templateName = 'gm_counselor_sumbit_review_result.tpl.php';
       break;
 
+    //7 stand for gm approve the review result,notify counselor that message
+    case 7:
+      $templateName = 'counselor_gm_approve_review.tpl.php';
+      break;
+
+    //8 stand for gm approve the review result,notify counselee that message
+    case 8:
+      $templateName = 'counselee_gm_approve_review.tpl.php';
+      break;
+
+    // stand for gm disapprove the review result,notify counselor that message
+    case 9:
+      $templateName = 'counselor_gm_disapprove_review.tpl.php';
+      break;
+    
     default:
       break;
   }
@@ -318,7 +325,7 @@ function provider_feedback_remind($prid) {
  * 
  * @param int $rreid  the prs_rel_review_employee rreid
  */
-function counselee_audit_review_result_remind($rreid, $is_approve, $reason) {
+function counselee_audit_review_result_remind($rreid, $is_approve, $reason=NULL) {
   $query = db_select('prs_rel_review_employee', 'review');
   $query->join('prs_general', 'general', 'general.prid = review.prid');
   $query->join('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName= review.employeeName');
@@ -375,6 +382,8 @@ function counselor_audit_review_remind($address, $counselee_name, $counselor_nam
 }
 
 function counselor_submit_review_result_remind($rreid) {
+  
+  dd('counselor_submit_review_result_remind');
   $query = db_select('prs_rel_review_employee', 'review');
   $query->join('prs_general', 'general', 'general.prid = review.prid');
   $query->join('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName= review.employeeName');
@@ -387,7 +396,6 @@ function counselor_submit_review_result_remind($rreid) {
   $query->condition('review.rreid', $rreid);
 
   $dataset = $query->execute()->fetchAll();
-  
 
   if (count($dataset) == 1) {
     $address = $dataset[0]->mail;
@@ -400,5 +408,68 @@ function counselor_submit_review_result_remind($rreid) {
     );
     $template_type = 6;
     return mail_sender_template_adapter($address, $params, $template_type);
+  }
+}
+
+function gm_approve_review_result_remind($rreid) {
+  $query = db_select('prs_rel_review_employee', 'review');
+  $query->join('prs_general', 'general', 'general.prid = review.prid');
+  $query->join('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName= review.employeeName');
+  $query->join('prs_reviewers', 'counselee', 'counselee.login_name = relation.employeeName');
+  $query->join('prs_reviewers', 'counselor', 'counselor.login_name = relation.counselorName');
+  $query->addField('general', 'description');
+  $query->addField('relation', 'employeeName');
+  $query->addField('relation', 'counselorName');
+  $query->addField('relation', 'gmName');
+  $query->addField('counselee', 'mail', 'counseleeMail');
+  $query->addField('counselor', 'mail', 'counselorMail');
+  $query->condition('review.rreid', $rreid);
+
+  $dataset = $query->execute()->fetchAll();
+  
+  if (count($dataset) == 1) {
+    $counselee_address = $dataset[0]->counseleeMail;
+    $counselor_address = $dataset[0]->counselorMail;
+    $params = array(
+      'counselor' => $dataset[0]->counselorName,
+      'counselee' => $dataset[0]->employeeName,
+      'gm' => $dataset[0]->gmName,
+      'reviewname' => $dataset[0]->description,
+    );
+
+    mail_sender_template_adapter($counselee_address, $params, 8);
+    mail_sender_template_adapter($counselor_address, $params, 7);
+  }
+}
+
+function gm_disapprove_review_result_remind($rreid) {
+  $query = db_select('prs_rel_review_employee', 'review');
+  $query->join('prs_general', 'general', 'general.prid = review.prid');
+  $query->join('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName= review.employeeName');
+  $query->join('prs_reviewers', 'counselee', 'counselee.login_name = relation.employeeName');
+  $query->join('prs_reviewers', 'counselor', 'counselor.login_name = relation.counselorName');
+  $query->addField('general', 'description');
+  $query->addField('relation', 'employeeName');
+  $query->addField('relation', 'counselorName');
+  $query->addField('relation', 'gmName');
+  $query->addField('counselee', 'mail', 'counseleeMail');
+  $query->addField('counselor', 'mail', 'counselorMail');
+  $query->addField('review', 'gmReason');
+
+  $query->condition('review.rreid', $rreid);
+  $dataset = $query->execute()->fetchAll();
+
+  if (count($dataset) == 1) {
+    $counselee_address = $dataset[0]->counseleeMail;
+    $counselor_address = $dataset[0]->counselorMail;
+    $params = array(
+      'counselor' => $dataset[0]->counselorName,
+      'counselee' => $dataset[0]->employeeName,
+      'gm' => $dataset[0]->gmName,
+      'reviewname' => $dataset[0]->description,
+      'reason' => $dataset[0]->gmReason,
+      'url' => get_curPage_base_url() . 'watchstatus/viewassessment/' . $rreid,
+    );
+    mail_sender_template_adapter($counselor_address, $params, 9);
   }
 }

@@ -1,4 +1,3 @@
-
 <div class="form-actions">
   <a id="modal-89759" href="#modal-container-89759" role="button" 
      class="btn btn-large" data-toggle="modal">
@@ -24,7 +23,7 @@
       Please write down reason below.
     </p>
 
-    <textarea id="counselee_disagree_reason" 
+    <textarea id="disagree_reason" 
               cols="30" 
               rows="5" 
               maxlength="500"
@@ -102,7 +101,7 @@
 
                 function disapprove_review_result(id)
                 {
-                  var disapproveReason = jQuery('#counselee_disagree_reason').val();
+                  var disapproveReason = jQuery('#disagree_reason').val();
                   if (disapproveReason.length < 1)
                   {
                     alert("Please write down reason below.");
@@ -137,7 +136,6 @@
 
                 function textareaLimitWord(ta, maxLength)
                 {
-//                  alert(maxLength);
                   if (ta.value.length > maxLength) {
                     ta.value = ta.value.substring(0, maxLength);
                   }
