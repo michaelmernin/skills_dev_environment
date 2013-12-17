@@ -818,3 +818,13 @@ function get_review_status_string($status) {
   }
   return $content;
 }
+
+function get_review_type_by_rreid($rreid) {
+  $query = db_query("select ge.type from {prs_rel_review_employee} rev,{prs_general} ge where rev.prid= ge.prid and rev.rreid=$rreid");
+  $result = $query->fetchAll();
+
+  if (count($result) == 1)
+    return $result[0]->type;
+  else
+    return -1;
+}

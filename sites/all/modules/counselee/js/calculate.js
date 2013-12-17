@@ -43,6 +43,22 @@ function getCategoryChildName(idValue)
     return childName;
 }
 
+function getFormKeyName(value)
+{
+    var arr = value.split("_");
+    var childName = '', len, i;
+    for (len = arr.length, i = len - 1; i >= 0; i--)
+    {
+        if (arr[i] != 'text')
+            childName = arr[i].substring(0, 1).toUpperCase()
+                    + arr[i].substring(1, arr[i].length)
+                    + ' ' + childName;
+    }
+    return childName;
+}
+
+
+
 /**
  * Calculate the average score
  * @param {array} category The elements array
@@ -213,9 +229,9 @@ function getElementValue(ele) {
         return ele.html();
     else if (type == "LABLE")
         return ele.html();
-    else if(type =="TD")
+    else if (type == "TD")
         return ele.html();
-    else if(type == "SPAN")
+    else if (type == "SPAN")
         return ele.html();
 
     return ele.val();

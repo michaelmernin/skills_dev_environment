@@ -1,12 +1,15 @@
 <?php $base_path = get_curPage_base_url() ?>
 <?php $base_relatively_path = base_path() ?>
 <?php $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui') ?>
+<?php $calculate_path = get_curPage_base_url() . drupal_get_path('module', 'counselee') ?>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/highcharts.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/hightchart-no-data.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/modules/exporting.js"></script>
 
 <script src="<?php echo $module_path ?>/assets/javascripts/grid.locale-en.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/jquery.jqGrid.min.js"></script>
+<script src="<?php echo $calculate_path ?>/js/calculate.js"></script>
+
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $module_path ?>/assets/stylesheets/ui.jqgrid.css" />
 
 <script type="text/javascript">
@@ -51,7 +54,7 @@
           // jQuery('#submit_button').removeAttr("disabled");
         }
         // else {
-        //   window.location.href = "<?php // print base_path() . 'viewassessment'           ?>";
+        //   window.location.href = "<?php // print base_path() . 'viewassessment'               ?>";
         //   return;
         // }
       });
@@ -75,12 +78,12 @@
         data: {'rreid': rreid, 'nid': nid, 'count': count, 'items': items, 'overallRating': overallRating},
         url: '<?php echo $base_relatively_path ?>watchstatus/approvecounseleeassessment',
         success: function(text) {
-					if (text == 1) {
-						window.location.href = "<?php print base_path() . 'watchstatus/reviewcontent/' ?>" + rreid;
-					}
-					else {
-						location.reload();
-					}
+          if (text == 1) {
+            window.location.href = "<?php print base_path() . 'watchstatus/reviewcontent/' ?>" + rreid;
+          }
+          else {
+            location.reload();
+          }
         }
       });
     }
@@ -108,11 +111,11 @@
         url: '<?php echo $base_relatively_path ?>watchstatus/rejectcounseleeassessment',
         success: function(text) {
           if (text == 1) {
-						window.location.href = "<?php print base_path() . 'watchstatus/reviewcontent/' ?>" + rreid;
-					}
-					else {
-						location.reload();
-					}
+            window.location.href = "<?php print base_path() . 'watchstatus/reviewcontent/' ?>" + rreid;
+          }
+          else {
+            location.reload();
+          }
         }
       });
     }
@@ -237,6 +240,10 @@
               ?><div class="tab"><ul class="pr360-tabs"><?php print_render_tabs($tabs);
               ?></ul></div><?php endif; ?>
 
+
+            <a href="#" id="gotoTopBtn" style="display: none">click here to go to page top</a>
+            <div class='page-title'></div>
+            
             <?php print render($page['content']) ?>
 
             <div class="view-self-comment-title">
@@ -317,7 +324,7 @@
               document.body.appendChild(new_element);
 
               // jQuery(document).ready(function() {
-              //   var isCounselor = '<?php // print $identity             ?>';
+              //   var isCounselor = '<?php // print $identity                 ?>';
               //   if (isCounselor == "counselee") {
               //     jQuery(".draftbutton").hide();
               //   }

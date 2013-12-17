@@ -64,7 +64,7 @@
    * */
   function showReviewList(items)
   {
-    var obj, name, rpeid, reviewType, description, isApproved, token, url, li;
+    var obj, name, rpeid, reviewType, description, isApproved, token, url, li,rreid;
     for (var i = 0; i < items.length; i++)
     {
       obj = items[i];
@@ -74,8 +74,9 @@
       description = obj.description;
       token = obj.token;
       isApproved = obj.isApproved;
+      rreid = obj.rreid;
 
-      url = basePath + token;
+      url = basePath +"watchstatus/selfassessment/" + rreid;
       if (name == '<?php print get_current_user_name(); ?>' && isApproved == 0)
       {
         li = " <li> <a href='" + url + "'>" + description + " is started.Please fill up your Self-Review form.(" + reviewName(reviewType) + ")</a> </li>";
@@ -88,6 +89,7 @@
       }
       else
       {
+        url = basePath + token;
         li = " <li> <a href='" + url + "'>" + description + " is started.Please fill up Peer Review form for [" + name + "].(" + reviewName(reviewType) + ")</a> </li>";
         jQuery('#myWorkForOther').append(li);
       }
@@ -101,7 +103,7 @@
    * */
   function showSelfReviewFinished(items)
   {
-    var obj, name, rreid, reviewType, description, token, isCounseleeApproved, url, li,gmName,isGmApproved;
+    var obj, name, rreid, reviewType, description, token, isCounseleeApproved, url, li, gmName, isGmApproved;
     for (var i = 0; i < items.length; i++)
     {
       obj = items[i];
@@ -113,7 +115,7 @@
       description = obj.description;
       isCounseleeApproved = obj.isCounseleeApproved;
       url = basePath + "watchstatus/viewassessment/" + rreid;
-      
+
       if (isCounseleeApproved == 0)
         li = " <li> <a href='" + url + "'>[" + name + "] has finished " + description + " self reivew.(" + reviewName(reviewType) + ")</a> </li>";
       else if (isCounseleeApproved == 2)

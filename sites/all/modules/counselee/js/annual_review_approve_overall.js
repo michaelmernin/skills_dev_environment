@@ -62,37 +62,6 @@ var counselor_composite_average_id = '#counselor_rating_all';
 
 
 
-/**
- * Get page element value
- * 
- * @param {object} ele Object Element
- * */
-function getElementValue(ele) {
-    var type = ele[0].tagName;
-
-    if (type == "INPUT")
-        return ele.val();
-    else if (type == "TEXTAREA")
-        return ele.val();
-    else if (type == "SELECT")
-        return ele.find('option:selected').val();
-    else if (type == "DIV")
-        return ele.html();
-
-
-    return ele.val();
-}
-
-
-function IsNum(str)
-{
-    if (str != null && str != "" && str != ' ')
-    {
-        return !isNaN(str);
-    }
-    return false;
-}
-
 function self_review_select_value_change(category, index)
 {
     var i = 0, count = 0, sum = 0, value;
@@ -218,14 +187,46 @@ function initialize_self_score_rating()
 
 
 
-function getCommonNameId(same, type)
+
+
+//counselor-comment
+//counselor-rating
+function checkCounselorComment()
+{
+    var ratings = getCommonNameId("counselor-rating", "select");
+    var comments = getCommonNameId("counselor-comment", "textarea");
+
+    var i, len = ratings.length, score, comment, field, isRight = true, formKey;
+    for (i = 0; i < len; i++)
+    {
+        score = getElementValue(jQuery(ratings[i]));
+        comment = getElementValue(jQuery(comments[i]));
+        jQuery(comments[i]).attr("style", "margin: 4px 0px 0px; height: 112px; width: 98%;");
+        if ((score != '3' || score != 3) && comment.trim().length < 1)
+        {
+            addErrorMessageArea();
+            formKey = jQuery(comments[i]).attr('form-key');
+            field = getFormKeyName(formKey);
+            li = '<li>' + field + "Comment field is required,because his score is not 3 point." + '</li>';
+            jQuery("#error-message").append(li);
+            jQuery(comments[i]).attr("style", "margin: 4px 0px 0px; height: 112px; width: 98%;border: 2px solid red;");
+            isRight = false;
+        }
+    }
+    return isRight;
+}
+
+
+
+function getSameFormKeyId(same, type)
 {
     var id, idArr = new Array();
     var arr = jQuery(type);
     for (var i = 0; i < arr.length; i++)
     {
         id = arr[i].getAttribute("id");
-        if (id != null && id.indexOf(same) != -1)
+        formKey = arr[i].getAttribute("form-key");
+        if (formKey != null && formKey.indexOf(same) != -1)
         {
             idArr[idArr.length] = "#" + id;
         }
@@ -234,37 +235,27 @@ function getCommonNameId(same, type)
 }
 
 
-//counselor-comment
-//counselor-rating
-function checkComment()
+function checkCounselorRequireField()
 {
-    var ratings = getCommonNameId("counselor-rating", "select");
-    var comments = getCommonNameId("counselor-comment", "textarea");
-
-    var i, len = ratings.length, score, comment, isRight = true;
+    var comments = getSameFormKeyId("text", "textarea");
+    var i, len = comments.length, comment, field, isRight = true, formKey;
     for (i = 0; i < len; i++)
     {
-        score = jQuery(ratings[i]).find('option:selected').val();
-        comment = jQuery(comments[i]).val();
-
-        jQuery(comments[i]).removeClass().addClass("form-textarea");
-        if ((score != '3' || score != 3) && comment.length < 1)
+        comment = getElementValue(jQuery(comments[i]));
+        jQuery(comments[i]).attr("style", "margin: 4px 0px 0px; height: 112px; width: 98%;");
+        if (comment.trim().length < 1)
         {
-            alert(comments[i]);
-//            addErrorMessageArea();
-//            field = getCategoryChildName(category[i]);
-//            li = '<li>' + field + "Comment field is required,because his score is not 3 point." + '</li>';
-//            jQuery("#error-message").append(li);
-
-            jQuery(comments[i]).css("border", "2px");
-            jQuery(comments[i]).css("solid", "red");
+            addErrorMessageArea();
+            formKey = jQuery(comments[i]).attr('form-key');
+            field = getFormKeyName(formKey);
+            li = '<li>' + field + " field is required." + '</li>';
+            jQuery("#error-message").append(li);
+            jQuery(comments[i]).attr("style", "margin: 4px 0px 0px; height: 112px; width: 98%;border: 2px solid red;");
             isRight = false;
         }
     }
     return isRight;
 }
-
-
 
 
 initialize_self_score_rating();
@@ -278,7 +269,12 @@ jQuery(document).ready(
         function() {
             jQuery("input[name='op'][value='Approve']").click(
                     function() {
-//                        checkComment();
+                        jQuery(".messages.error").remove();
+                        var result = checkCounselorComment();
+                        result = checkCounselorRequireField() && result;
+                        if (!result)
+                            goTopEx();
+                        return result;
 
                     });
             jQuery("#counselor_disapprove_btn").click(function() {
@@ -294,17 +290,14 @@ function check_reject_reasons() {
         alert('Please write down reason. If you are going to reject, this area cannot be blank!');
         jQuery("#counselor_reject_reason").focus();
         disapprovehidalert();
-        
         return false;
     }
     return true;
 }
 
-function disapprovehidalert(){
-    
+function disapprovehidalert() {
     jQuery('#counselor_disapprove_btn').removeAttr("disabled");
     jQuery('#disapprove_status_loading_img').hide();
     jQuery('#counselor_disapprove_btn').removeClass();
     jQuery('#counselor_disapprove_btn').addClass("btn btn-danger");
-    
 }

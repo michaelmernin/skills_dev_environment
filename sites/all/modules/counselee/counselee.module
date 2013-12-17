@@ -548,6 +548,7 @@ function counselee_do_peersreview($userName) {
   $peers_query->addField('provider', 'rpeid');
   $peers_query->addField('general', 'description');
   $peers_query->addField('provider', 'isCounselorApproved');
+  $peers_query->addField('review', 'rreid');
   $peers_query->condition('provider.providerName', $userName);
   $peers_query->condition('provider.status', 0);
   $peers_query->condition('review.rstatus', $status, 'in');
@@ -562,12 +563,14 @@ function counselee_do_peersreview($userName) {
     $description = $node->description;
     $token = $node->token;
     $ispproved = $node->isCounselorApproved;
+    $rreid = $node->rreid;
     $temp = array('employeeName' => $employeeName,
       'rpeid' => $rpeid,
       'reviewType' => $reviewtype,
       'description' => $description,
       'token' => $token,
       'isApproved' => $ispproved,
+      'rreid'=>$rreid,
     );
     $result[$index++] = $temp;
   }

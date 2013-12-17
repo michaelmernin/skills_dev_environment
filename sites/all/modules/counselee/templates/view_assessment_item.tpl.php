@@ -231,14 +231,18 @@
       <!--<div class="additionalbubble">-->
       <div>
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-          <textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
-            if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
-              print $clor_rating_comment->clor_comment;
-            }
-            else {
-              print '';
-            }
-            ?></textarea>
+          <textarea id="counselor-comment-<?php print $item_num; ?>"
+                    cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"
+                    form-key="<?php print $self_dataset->form_key; ?>" >
+                      <?php
+                      if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
+                        print $clor_rating_comment->clor_comment;
+                      }
+                      else {
+                        print '';
+                      }
+                      ?>
+          </textarea>
         </div>
       </div>
     </div>
@@ -276,18 +280,18 @@
     <div id="peer-div-<?php print $item_num ?>"></div>
     <input type="hidden" value="<?php print $json_count ?>" id="peer-hidjsoncount-<?php print $item_num ?>"/>
     <script>
-      function changelocaldata_<?php print $item_num ?>(rowID){
+      function changelocaldata_<?php print $item_num ?>(rowID) {
 //      var Rownum=jQuery(obj).parents('tr').find('td').eq(0).html();
-        var Rowdata=jQuery("#peer-table-<?php print $item_num ?>").jqGrid('getLocalRow', rowID).display;
-        if(Rowdata=='true'){
-          jQuery("#peer-table-<?php print $item_num ?>").jqGrid('getLocalRow', rowID).display='false';
-        }else{
-          jQuery("#peer-table-<?php print $item_num ?>").jqGrid('getLocalRow', rowID).display='true';
-          
+        var Rowdata = jQuery("#peer-table-<?php print $item_num ?>").jqGrid('getLocalRow', rowID).display;
+        if (Rowdata == 'true') {
+          jQuery("#peer-table-<?php print $item_num ?>").jqGrid('getLocalRow', rowID).display = 'false';
+        } else {
+          jQuery("#peer-table-<?php print $item_num ?>").jqGrid('getLocalRow', rowID).display = 'true';
+
         }
       }
-      
-      
+
+
       var lastSel;
       var peer_data_<?php print $item_num ?> = <?php
         print (trim($peer_json) == '') ? '[]' : $peer_json;
@@ -297,7 +301,7 @@
         height: 250,
 //        width: 800,
         data: peer_data_<?php print $item_num ?>,
-        colNames: ['Peer Name', 'Title', 'Rating', 'Comment', 'Display', 'Nid', 'Cid','Number'],
+        colNames: ['Peer Name', 'Title', 'Rating', 'Comment', 'Display', 'Nid', 'Cid', 'Number'],
         colModel: [
           {name: 'peer_name', index: 'peer_name', width: 60, align: 'center', sorttype: "text", cellattr: function(rowId, val, rawObject) {
               return 'title="' + rawObject.peer_name + '\nDouble click for more information."';
@@ -323,14 +327,14 @@
 //              console.log(options);
                 check = ' checked="checked"';
               }
-              return '<input type="checkbox" value="' + cellvalue + '"' + check + ' onclick="changelocaldata_<?php print $item_num ?>('+rowObject.number+')">';
+              return '<input type="checkbox" value="' + cellvalue + '"' + check + ' onclick="changelocaldata_<?php print $item_num ?>(' + rowObject.number + ')">';
 
             }},
           {name: 'nid', index: 'nid', hidden: true},
           {name: 'number', index: 'number', hidden: true},
           {name: 'cid', index: 'cid', hidden: true}],
         multiselect: false,
-        rownumbers:true,
+        rownumbers: true,
         autowidth: true,
         caption: "·Peer Comment",
         pager: '#peer-div-<?php print $item_num ?>',
