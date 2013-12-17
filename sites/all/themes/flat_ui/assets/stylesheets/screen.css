@@ -14325,3 +14325,10 @@ div.error {
 	white-space: nowrap !important;
 
 }
+.myAltRowClass{
+	background:#FFFF99;
+	cursor:pointer;
+}
+.counseleeAltRowClass{
+	cursor:pointer;
+}

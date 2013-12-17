@@ -7,10 +7,8 @@
  *
  *
  */
-
 // Include the .inc file.
 module_load_include('inc', 'common', 'defined_constants');
-
 
 /**
  * return my counselor and gm name
@@ -577,6 +575,7 @@ function get_last_sid_by_nid($nid) {
   }
   return $sid;
 }
+
 function get_this_year_sid_by_nid($nid) {
   $sid = 0;
   $query = db_select('webform_submissions', 'ws');
@@ -685,31 +684,31 @@ ORDER BY
   return $query;
 }
 
-function identify_accessibility($current_user_name, $reviewee, $counselor, $allowed_roles=NULL, $allowed_status=NULL, $current_status=NULL) {
+function identify_accessibility($current_user_name, $reviewee, $counselor, $allowed_roles = NULL, $allowed_status = NULL, $current_status = NULL) {
   $user_id_flag = '';
   $status_flag = '';
   if ($current_user_name == $reviewee) {
-		$role = 'counselee';
+    $role = 'counselee';
   }
   else if ($current_user_name == $counselor) {
-		$role = 'counselor';
+    $role = 'counselor';
   }
   else {
     drupal_goto('accessdenied');
-		return -1;
-	}
+    return -1;
+  }
 
-	if (!is_null($allowed_roles)) {
-		if (in_array($role, $allowed_roles)) {
-			$role_flag = 1;
-		}
-		else {
-			$role_flag = 0;
-		}
-	}
-	else {
-		$role_flag = 1;
-	}
+  if (!is_null($allowed_roles)) {
+    if (in_array($role, $allowed_roles)) {
+      $role_flag = 1;
+    }
+    else {
+      $role_flag = 0;
+    }
+  }
+  else {
+    $role_flag = 1;
+  }
 
   if (!is_null($current_status) && (!(is_null($allowed_status)))) {
     if (in_array($current_status, $allowed_status)) {
@@ -719,22 +718,21 @@ function identify_accessibility($current_user_name, $reviewee, $counselor, $allo
       $status_flag = 0;
     }
   }
-	else {
-		$status_flag = 1;
-	}
+  else {
+    $status_flag = 1;
+  }
 
-	if ($role_flag & $status_flag == 1) {
-		return TRUE;
-	}
-	else {
-		return FALSE;
-	}
+  if ($role_flag & $status_flag == 1) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
 }
 
 function update_review_status($rreid, &$review_arg_array = NULL, &$provider_arg_array = NULL) {
   
 }
-
 
 /**
  * check with filter_xss and check_plain
@@ -757,4 +755,66 @@ function get_gm_name($employeeName) {
     return $result['0']->gmName;
   else
     return 'No GM';
+}
+
+/**
+ * base type number return type string
+ * @param type $type
+ * @return string
+ */
+function get_review_type_string($type) {
+  switch ($type) {
+    case '0':
+      //  0 for annual review;
+      $review_type = 'Annual review';
+      break;
+    case '1':
+      // 1 for project review;
+      $review_type = 'Project review';
+      break;
+    case '2':
+      // 2 for 3-month review
+      $review_type = 'Three-month review';
+      break;
+  }
+  return $review_type;
+}
+
+/**
+ * base status number return status string
+ * @param type $status
+ * @return string
+ */
+function get_review_status_string($status) {
+  switch ($status) {
+    case 0:
+      //0 for New review start
+      $content = 'Start Review';
+      break;
+    case 1:
+      //1 for review in draft;
+      $content = 'Review in Draft';
+      break;
+    case 2:
+      // 2 for review by counsellor;
+      $content = 'Review by Counselor';
+      break;
+    case 3:
+      // 3 for approved by counsellor;
+      $content = 'Approved by Counselor';
+      break;
+    case 4:
+      // 4 for joint review;
+      $content = 'Joint review';
+      break;
+    case 5:
+      // 5 for GM review;
+      $content = 'GM Review';
+      break;
+    case 6:
+      // 6 for GM approved;
+      $content = 'GM Approve';
+      break;
+  }
+  return $content;
 }

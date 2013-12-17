@@ -1,8 +1,6 @@
 <?php $base_path = get_curPage_base_url() ?>
 <p>&nbsp;</p>
 <hr />
-<script>
-</script>
 <table class="table table-hover" id="status_review">
   <caption>
     <h3>Review Status</h3>
@@ -31,7 +29,7 @@
       $start_date_format = date_to_format($start_date);
       $end_date_format = date_to_format($end_date);
       $startid = $status->rreid;
-      $url = base_path().'watchstatus/basicinfo/' . $startid;
+      $url = base_path() . 'watchstatus/basicinfo/' . $startid;
       switch ($status->rstatus) {
         case 0:
           //0 for New review start

@@ -1,59 +1,8 @@
 <?php $base_path = get_curPage_base_url() ?>
 <?php $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui') ?>
-<!--<script src="<?php // echo $module_path ?>/assets/javascripts/highcharts/highcharts.js"></script>
-<script src="<?php // echo $module_path ?>/assets/javascripts/highcharts/modules/exporting.js"></script>-->
-<script type="text/javascript">
-//jQuery(function () {
-//    var chart;
-//    
-//    jQuery(document).ready(function () {
-//    	
-//    	// Build the chart
-//        jQuery('#containertest').highcharts({
-//            chart: {
-//                plotBackgroundColor: null,
-//                plotBorderWidth: null,
-//                plotShadow: false
-//            },
-//            title: {
-//                text: 'Browser market shares at a specific website, 2010'
-//            },
-//            tooltip: {
-//        	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-//            },
-//            plotOptions: {
-//                pie: {
-//                    allowPointSelect: true,
-//                    cursor: 'pointer',
-//                    dataLabels: {
-//                        enabled: false
-//                    },
-//                    showInLegend: true
-//                }
-//            },
-//            series: [{
-//                type: 'pie',
-//                name: 'Browser share',
-//                data: [
-//                    ['Firefox',   45.0],
-//                    ['IE',       26.8],
-//                    {
-//                        name: 'Chrome',
-//                        y: 12.8,
-//                        sliced: true,
-//                        selected: true
-//                    },
-//                    ['Safari',    8.5],
-//                    ['Opera',     6.2],
-//                    ['Others',   0.7]
-//                ]
-//            }]
-//        });
-//    });
-//    
-//});
-
-</script>
+<script src="<?php echo $module_path ?>/assets/javascripts/grid.locale-en.js"></script>
+<script src="<?php echo $module_path ?>/assets/javascripts/jquery.jqGrid.min.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $module_path ?>/assets/stylesheets/ui.jqgrid.css" />
 <?php require_once 'header.tpl.php'; ?>
 <div class="minheight">
   <div id="pr_mywokingstage_page" class="container">
@@ -66,27 +15,6 @@
           print drupal_render($navigation_tree);
           ?>
         </div>
-<!--            <script>
-            $(document).ready(function() {
-                jQuery("#tree ul").hide();
-                $("#tree li").each(function() {
-                    var handleSpan = jQuery("<span></span>");
-                    handleSpan.addClass("handle");
-                    handleSpan.prependTo(this);
-
-                    if(jQuery(this).has("ul").size() > 0) {
-                        handleSpan.addClass("collapsed");
-                        handleSpan.click(function() {
-                            var clicked = jQuery(this);
-                            clicked.toggleClass("collapsed expanded");
-                            clicked.siblings("ul").toggle();
-                        });
-                    }
-                });
-            });
-        </script>-->
-
-
       </div>
       <div id="pr_mywokingstage_content_right" class="span9">
         <div class="pr_workingstage_connent">
@@ -101,7 +29,74 @@
             <?php print render($page['my_working_stage']); ?>
             <?php print render($page['user_status']) ?>
 
-        <!--<div id="containertest" style="min-width: 310px; height: 400px; margin: 0 auto"></div>-->
+            <!--<div id="containertest" style="min-width: 310px; height: 400px; margin: 0 auto"></div>-->
+            <h3>Review Status</h3>
+            <table id="userStatusTable"></table>
+            <div id="userStatusTableBar"></div>
+            <script>
+
+
+              jQuery("#userStatusTable").jqGrid({
+                url: '<?php print $base_path . 'userstatus' ?>',
+                datatype: "json",
+                height: 250,
+                colNames: ['Counselee', 'Review Name', 'Period From', 'Period To', 'Type', 'Status', 'ReviewID', 'CounselorFlag', 'StatusNum'],
+                colModel: [
+                  {name: 'employeeName', index: 'employeeName', width: 60, align: 'center', sortable: true, cellattr: function(rowId, val, rawObject) {
+                      return rowhint(rowId, val, rawObject);
+                    }},
+                  {name: 'review_name', index: 'review_name', width: 100, align: "center", cellattr: function(rowId, val, rawObject) {
+                      return rowhint(rowId, val, rawObject);
+                    }},
+                  {name: 'period_from', index: 'period_from', width: 70, align: "center", cellattr: function(rowId, val, rawObject) {
+                      return rowhint(rowId, val, rawObject);
+                    }},
+                  {name: 'period_to', index: 'period_to', width: 70, align: "center", cellattr: function(rowId, val, rawObject) {
+                      return rowhint(rowId, val, rawObject);
+                    }},
+                  {name: 'type', index: 'type', width: 70, align: "center", cellattr: function(rowId, val, rawObject) {
+                      return rowhint(rowId, val, rawObject);
+                    }},
+                  {name: 'status', index: 'status', width: 100, align: "center", cellattr: function(rowId, val, rawObject) {
+//                 console.log(rawObject[7]);
+                      return statusrowhint(rowId, val, rawObject);
+                    }},
+                  {name: 'review_id', index: 'review_id', hidden: true},
+                  {name: 'counselor_flag', index: 'counselor_flag', hidden: true},
+                  {name: 'status_num', index: 'status_num', hidden: true}
+                ],
+                gridview: true,
+                rowattr: function(rd) {
+//                  console.log(rd);
+                  if (rd.counselor_flag === "1") { // verify that the testing is correct in your case
+                    return {"class": "myAltRowClass"};
+                  } else {
+                    return {"class": "counseleeAltRowClass"};
+                  }
+                },
+                onSelectRow: function(id, status) {
+//                  console.log(id);
+//                  console.log(status);
+                  var rowData = jQuery(this).getRowData(id);
+                  var rreid = rowData.review_id;
+                  window.location.href = "<?php print $base_path . 'watchstatus/basicinfo/' ?>" + rreid;
+//                  console.log(rreid);
+                },
+                multiselect: false,
+                rownumbers: true,
+                autowidth: true,
+                caption: "Review Status",
+                rowNum: 10,
+                pginput: false,
+//                sortable: true,
+                rowList: [10, 20, 30],
+                pager: '#userStatusTableBar',
+                //    sortname: 'counselee',
+                //    sortorder: "desc",
+                viewrecords: true
+              });
+              jQuery("#userStatusTable").jqGrid('navGrid', '#userStatusTableBar', {view: false, add: false, edit: false, del: false, search: false});
+            </script>
 
           </div>
         </div>

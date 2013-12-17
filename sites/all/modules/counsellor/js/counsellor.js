@@ -114,3 +114,38 @@ function get_review_type_tiplink(status) {
     }
     return review_type;
 }
+function rowhint(rowId, val, rawObject) {
+
+    return 'title="Click to see more information about this review."';
+}
+function statusrowhint(rowId, val, rawObject) {
+    var status=rawObject[8];
+    var content='';
+     switch (status) {
+        case '1':
+            //1 for review in draft;
+            content = 'title="This review is in draft, reviewer can edit it before submit."';
+            break;
+        case '2':
+            // 2 for review by counsellor;
+            content = 'title="This review now is review by counselor."';
+            break;
+        case '3':
+            // 3 for approved by counsellor;
+            content = 'title="This review is approved by counselor."';
+            break;
+        case '4':
+            // 4 for joint review;
+            content = 'title="Joint review."';
+            break;
+        case '5':
+            // 5 for GM review;
+            content = 'title="This review is review by GM."';
+            break;
+        case '6':
+            // 6 for GM approved;
+            content = 'title="This review is approved by GM."';
+            break;
+    }
+    return content;
+}

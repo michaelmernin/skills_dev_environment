@@ -92,7 +92,7 @@ function counsellor_block_view($delta = '') {
 //            $block['subject'] = render_subject_use_image('Configure Timeslot');
       $nTime = unixTimestampToDateArray('0');
       //information array about my counselor and my anniversary month
-      $my_name= get_current_user_name();
+      $my_name = get_current_user_name();
       $my_info = get_my_anniversary_counselor($my_name);
       $block['content'] = theme('basic_info_view', array('nTime' => $nTime, 'myInfo' => $my_info));
       break;
@@ -172,7 +172,6 @@ function counsellor_theme() {
   );
 }
 
-
 /**
  * get_counselees_from_db
  * @return type
@@ -185,6 +184,23 @@ function get_counselees_from_db() {
   $query->orderBy('precg.employeeName', 'ASC');
   $result = $query->execute()->fetchAll();
 
+  return $result;
+}
+
+/**
+ * get_counselees_from_db with user name
+ * @return type
+ */
+function get_counselees_from_db_with_username($cur_user_name) {
+  $query = db_select('prs_rel_employee_counselor_gm', 'precg');
+  $query->fields('precg', array('employeeName'));
+  $query->condition('precg.counselorName', $cur_user_name, '=');
+  $query->orderBy('precg.employeeName', 'ASC');
+  $results = $query->execute()->fetchAll();
+  $result = array();
+  foreach ($results as $one_result) {
+    array_push($result, $one_result->employeeName);
+  }
   return $result;
 }
 

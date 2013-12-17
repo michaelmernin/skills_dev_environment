@@ -40,6 +40,13 @@ function counselee_menu() {
     'access callback' => TRUE,
     'file' => 'files/dashboard.pages.inc',
   );
+  $items['userstatus'] = array(
+    'title' => 'Watch status',
+    'page callback' => 'show_status_table',
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'files/watach_userstatus_for_jqgrid.inc',
+  );
 
   $items['watchstatus'] = array(
     'title' => 'Watch status',
@@ -434,8 +441,8 @@ function select_reviewer_status_from_BD() {
         array_push($my_review_status, $status);
       }
 
-// counsellor login
-      $employee_name_array = generate_selected_participant_array($result);
+//// counsellor login
+//      $employee_name_array = generate_selected_participant_array($result);
     }
     else {
 // counselee login
@@ -1113,7 +1120,7 @@ function get_webform_submissions_uid($nid) {
 function display_comment($comment) {
 
   if (strlen($comment) < 1) {
-    return "No Comment.";
+    return NO_COMMENT;
   }
   else {
     return filter_xss_and_check_plain($comment);
