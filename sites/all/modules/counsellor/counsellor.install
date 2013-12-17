@@ -195,7 +195,7 @@ function counsellor_schema() {
       'isCounseleeApproved' => array(
         'description' => 'Status for counselee approve couselor comment. 0 for not submitted, 1 for approved, 2 for denied.',
         'type' => 'int',
-        'size'=>'small',
+        'size' => 'small',
         'not null' => TRUE,
         'default' => 0,
       ),
@@ -205,7 +205,21 @@ function counsellor_schema() {
         'length' => '260',
         'not null' => TRUE,
         'default' => '',
-      )
+      ),
+      'isGmApproved' => array(
+        'description' => 'Status for GM approve couselor submit. 0 for not submitted, 1 for approved, 2 for denied.',
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'gmReason' => array(
+        'description' => 'gm\'s reason to disapprove the counselor submit',
+        'type' => 'varchar',
+        'length' => '260',
+        'not null' => TRUE,
+        'default' => '',
+      ),
     ),
     'primary key' => array('rreid'),
   );
@@ -298,7 +312,7 @@ function counsellor_schema() {
     ),
     'primary key' => array('csdid', 'nid', 'csiid'),
   );
-$schema['prs_rel_peer_comment_display'] = array(
+  $schema['prs_rel_peer_comment_display'] = array(
     'fields' => array(
       'pcdid' => array(
         'description' => 'Primary Key: Unique Sequence ID.',
@@ -306,7 +320,7 @@ $schema['prs_rel_peer_comment_display'] = array(
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
-     'nid' => array(
+      'nid' => array(
         'description' => 'Primary Key: Unique ID of node which generated along with a review created.',
         'type' => 'int',
         'not null' => TRUE,
@@ -323,7 +337,7 @@ $schema['prs_rel_peer_comment_display'] = array(
       'isDisplay' => array(
         'description' => 'Status for dispaly comment. 0 for display, 1 for not display.',
         'type' => 'int',
-        'size'=>'small',
+        'size' => 'small',
         'not null' => TRUE,
         'default' => 0,
       )
