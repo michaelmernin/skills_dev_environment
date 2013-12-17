@@ -267,7 +267,8 @@ function is_gm() {
   $query = db_select('prs_rel_employee_counselor_gm', 'precg')
       ->fields('precg', array('counselorName'))
       ->condition('precg.gmName', $cur_user_name);
-  $count = $query->execute()->rowCount();
+  $count = $query->range(0, 1)->execute()->rowCount();
+//  dd($count,'$count');
   if ($count > 0) {
     return TRUE;
   }

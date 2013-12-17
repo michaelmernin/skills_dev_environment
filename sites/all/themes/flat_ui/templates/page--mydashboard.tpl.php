@@ -3,6 +3,25 @@
 <script src="<?php echo $module_path ?>/assets/javascripts/grid.locale-en.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/jquery.jqGrid.min.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $module_path ?>/assets/stylesheets/ui.jqgrid.css" />
+<script>
+  jQuery(document).ready(function() {
+    jQuery('#userStatusSearchIcon').toggle(
+            function() {
+              jQuery(this).hide();
+            },
+            function() {
+              jQuery(this).show();
+            }
+    );
+
+
+
+
+  });
+
+
+
+</script>
 <?php require_once 'header.tpl.php'; ?>
 <div class="minheight">
   <div id="pr_mywokingstage_page" class="container">
@@ -31,8 +50,16 @@
 
             <!--<div id="containertest" style="min-width: 310px; height: 400px; margin: 0 auto"></div>-->
             <h3>Review Status</h3>
-            <table id="userStatusTable"></table>
-            <div id="userStatusTableBar"></div>
+            <hr>
+            <div>
+              <table id="userStatusTable"></table>
+              <div id="userStatusTableBar"></div>
+            </div>
+            <!--            <div id="userStatusSearch">
+                          <span class="todo-search-icon" id="userStatusSearchIcon"></span>
+                          <div id="userStatusSearch-content" class="userStatusSearch-content-none"></div>
+
+                        </div>-->
             <script>
 
 
@@ -48,16 +75,22 @@
                   {name: 'review_name', index: 'review_name', width: 100, align: "center", cellattr: function(rowId, val, rawObject) {
                       return rowhint(rowId, val, rawObject);
                     }},
-                  {name: 'period_from', index: 'period_from', width: 70, align: "center", cellattr: function(rowId, val, rawObject) {
+                  {name: 'period_from', index: 'period_from', search: false, width: 70, align: "center", cellattr: function(rowId, val, rawObject) {
                       return rowhint(rowId, val, rawObject);
                     }},
-                  {name: 'period_to', index: 'period_to', width: 70, align: "center", cellattr: function(rowId, val, rawObject) {
+                  {name: 'period_to', index: 'period_to', search: false, width: 70, align: "center", cellattr: function(rowId, val, rawObject) {
                       return rowhint(rowId, val, rawObject);
                     }},
-                  {name: 'type', index: 'type', width: 70, align: "center", cellattr: function(rowId, val, rawObject) {
+                  {name: 'type', index: 'type', width: 70, align: "center", stype: "select", searchoptions: {
+                      value: "0:Annual review;1:Project review;2:Three-month review",
+                      defaultValue: "0"
+                    }, cellattr: function(rowId, val, rawObject) {
                       return rowhint(rowId, val, rawObject);
                     }},
-                  {name: 'status', index: 'status', width: 100, align: "center", cellattr: function(rowId, val, rawObject) {
+                  {name: 'status', index: 'status', width: 100, align: "center", stype: "select", searchoptions: {
+                      value: "1:Review in Draft;2:Review by Counselor;3:Approved by Counselor;4:Joint review;5:GM Review;6:GM Approve",
+                      defaultValue: "1"
+                    }, cellattr: function(rowId, val, rawObject) {
 //                 console.log(rawObject[7]);
                       return statusrowhint(rowId, val, rawObject);
                     }},
@@ -96,6 +129,7 @@
                 viewrecords: true
               });
               jQuery("#userStatusTable").jqGrid('navGrid', '#userStatusTableBar', {view: false, add: false, edit: false, del: false, search: false});
+              jQuery("#userStatusTable").jqGrid('filterToolbar', {searchOnEnter: false});
             </script>
 
           </div>
