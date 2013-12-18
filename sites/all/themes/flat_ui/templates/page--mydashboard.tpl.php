@@ -82,14 +82,14 @@
                       return rowhint(rowId, val, rawObject);
                     }},
                   {name: 'type', index: 'type', width: 70, align: "center", stype: "select", searchoptions: {
-                      value: "0:Annual review;1:Project review;2:Three-month review",
-                      defaultValue: "0"
+                      value: "-1:All Type;0:Annual review;1:Project review;2:Three-month review",
+                      defaultValue: "-1"
                     }, cellattr: function(rowId, val, rawObject) {
                       return rowhint(rowId, val, rawObject);
                     }},
                   {name: 'status', index: 'status', width: 100, align: "center", stype: "select", searchoptions: {
-                      value: "1:Review in Draft;2:Review by Counselor;3:Approved by Counselor;4:Joint review;5:GM Review;6:GM Approve",
-                      defaultValue: "1"
+                      value: "-1:All Status;1:Review in Draft;2:Review by Counselor;3:Approved by Counselor;4:Joint review;5:GM Review;6:GM Approve",
+                      defaultValue: "-1"
                     }, cellattr: function(rowId, val, rawObject) {
 //                 console.log(rawObject[7]);
                       return statusrowhint(rowId, val, rawObject);

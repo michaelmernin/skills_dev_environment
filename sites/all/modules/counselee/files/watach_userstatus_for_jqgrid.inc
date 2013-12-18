@@ -38,12 +38,23 @@ function get_user_status_table_data($get_data) {
   $cur_user_name = get_current_user_name();
   $my_counselee_names = get_counselees_from_db_with_username($cur_user_name);
   $is_gm = is_gm();
-//  dd($sidx, '$sidx');
-//  dd($get_data, '$get_data[]');
   if ($get_data['_search'] == 'true') {
     $swhere = '';
-    $type = isset($get_data['type']) ? ($swhere .='type=' . $get_data['type'] ) : '';
-    $status = isset($get_data['status']) ? ($swhere .= ' and rstatus=' . $get_data['status'] ) : '';
+    if(isset($get_data['type'])&&$get_data['type']!=-1){
+      
+      $swhere .='type=' . $get_data['type'];
+      
+    }else{
+      $swhere .='1=1';
+    }
+//    $type = isset($get_data['type']) ? ($swhere .='type=' . $get_data['type'] ) : '';
+    if(isset($get_data['status'])&&$get_data['status']!=-1){
+      
+      $swhere .=' and rstatus=' . $get_data['status'];
+      
+    }
+    
+//    $status = isset($get_data['status']) ? ($swhere .= ' and rstatus=' . $get_data['status'] ) : '';
     if (isset($get_data['employeeName'])) {
       $employeename_unformat = str_replace(" ", ".", $get_data['employeeName']);
       $swhere .= ' and employeeName like \'%' . $employeename_unformat . '%\'';
