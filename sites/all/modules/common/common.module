@@ -53,6 +53,7 @@ function get_basic_review_information($review_id) {
   $query->fields('re', array('employeeName', 'rreid', 'rstatus'));
   $query->addField('pg', 'period_start');
   $query->addField('pg', 'period_end');
+  $query->addField('pg', 'counselor_name');
   $query->addField('pg', 'time_frame_from');
   $query->addField('pg', 'time_frame_to');
   $query->addField('pg', 'project_name');

@@ -67,6 +67,13 @@ function counsellor_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'counselor_name' => array(
+        'description' => 'this field save this review\'s counselor',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+      ),
     ),
     'primary key' => array('prid'),
   );

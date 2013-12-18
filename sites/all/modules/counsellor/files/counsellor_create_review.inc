@@ -14,7 +14,8 @@
  */
 function submit_new_review($employees = NULL, $radio_val = NULL) {
   $rval = '1';
-  $general_id = insert_new_review_into_general_db($_POST);
+  $cur_name = get_current_user_name();
+  $general_id = insert_new_review_into_general_db($_POST, $cur_name);
 //  $general_id = '-1';
   if ($general_id != '-1') {
     if (count($employees) != '0') {
@@ -47,11 +48,11 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
             foreach ($review_ids as $review) {
               $counselee_address = select_email_from_prs_reviewers(array($review->employeeName));
               $address = $counselee_address[0]->mail;
-              $counselee_parems = array('username' => $review->employeeName, 
+              $counselee_parems = array('username' => $review->employeeName,
                 'reviewname' => return_review_name($_POST),
-                'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $review->rreid, 
-                'reviewurl' => get_curPage_base_url() . 'watchstatus/selfassessment/'.$review->rreid, 
-                'datetime' => $_POST['review_end_date'], 
+                'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $review->rreid,
+                'reviewurl' => get_curPage_base_url() . 'watchstatus/selfassessment/' . $review->rreid,
+                'datetime' => $_POST['review_to_date'],
                 'type' => 'counselee');
               mail_sender_template_adapter($address, $counselee_parems, 0);
             }
@@ -101,9 +102,10 @@ function submit_new_review($employees = NULL, $radio_val = NULL) {
  * @param type $data
  * @return string
  */
-function insert_new_review_into_general_db($data) {
+function insert_new_review_into_general_db($data, $counselor_name = NULL) {
+
   if (isset($data)) {
-    $general_id = insert_to_general_DB($data);
+    $general_id = insert_to_general_DB($data, $counselor_name);
   }
   else {
     $general_id = '-1';
@@ -122,7 +124,7 @@ function submit_new_self_review() {
     $cur_counselor_name = $counselor_name[0]->counselorName;
   }
   if ($cur_counselor_name != '') {
-    $general_id = insert_new_review_into_general_db($_POST);
+    $general_id = insert_new_review_into_general_db($_POST, $cur_counselor_name);
     //counselee
     if ($general_id != '-1') {
       $emp_array = array(
@@ -135,18 +137,18 @@ function submit_new_self_review() {
           //==========================================counselee email=================
           $my_address = select_email_from_prs_reviewers($emp_array);
           $address = $my_address[0]->mail;
-          $counselee_parems = array('username' => $cur_counselee_name, 
-            'reviewname' => return_review_name($_POST), 
-            'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $review_ids[0]->rreid, 
-            'reviewurl' => get_curPage_base_url() .'watchstatus/selfassessment/'. $review_ids[0]->rreid, 
-            'datetime' => $_POST['review_end_date'], 'type' => 'counselee');
+          $counselee_parems = array('username' => $cur_counselee_name,
+            'reviewname' => return_review_name($_POST),
+            'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $review_ids[0]->rreid,
+            'reviewurl' => get_curPage_base_url() . 'watchstatus/selfassessment/' . $review_ids[0]->rreid,
+            'datetime' => $_POST['review_to_date'], 'type' => 'counselee');
           mail_sender_template_adapter($address, $counselee_parems, 0);
           //==========================================counselee email end==============
           //==========================================counselor email==================
           $my_counselor_address = select_email_from_prs_reviewers(array($cur_counselor_name));
           $counselor_address = $my_counselor_address[0]->mail;
 
-          $counselor_parems = array('username' => $cur_counselee_name, 'reviewname' => return_review_name($_POST), 'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $review_ids[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $_POST['review_end_date'], 'type' => 'counselor');
+          $counselor_parems = array('username' => $cur_counselee_name, 'reviewname' => return_review_name($_POST), 'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $review_ids[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $_POST['review_to_date'], 'type' => 'counselor');
           mail_sender_template_adapter($counselor_address, $counselor_parems, 0);
           //==========================================counselor email end===============
         }
@@ -194,9 +196,9 @@ function start_new_review() {
         $address = $my_address[0]->mail;
         $datetime = $datetime_timestamp['month'] . '/' . $datetime_timestamp['day'] . '/' . $datetime_timestamp['year'];
         $reviewurl = '';
-        $counselee_parems = array('username' => $basic_info[0]->employeeName, 
-          'reviewname' => $basic_info[0]->description, 
-          'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $basic_info[0]->rreid, 
+        $counselee_parems = array('username' => $basic_info[0]->employeeName,
+          'reviewname' => $basic_info[0]->description,
+          'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $basic_info[0]->rreid,
           'reviewurl' => $reviewurl,
           'datetime' => $datetime, 'type' => 'counselee');
         mail_sender_template_adapter($address, $counselee_parems, 0);
@@ -250,10 +252,10 @@ function query_review($review_id) {
  * @return type general_id
  * @author Mars
  */
-function insert_to_general_DB($general_info) {
+function insert_to_general_DB($general_info,$counselor_name) {
   $general_id = null;
   $fields_array = array();
-  if (set_fields_array($general_info, $fields_array)) {
+  if (set_fields_array($general_info, $counselor_name,$fields_array)) {
     $general_id = db_insert('prs_general')
             ->fields($fields_array)->execute();
   }
@@ -273,9 +275,9 @@ function insert_to_general_DB($general_info) {
  * @param type $fields_array
  * @author Mars
  */
-function set_fields_array($general_info, &$fields_array) {
-  $starttime = NULL;
-  $endtime = NULL;
+function set_fields_array($general_info,$counselor_name, &$fields_array) {
+//  $starttime = NULL;
+//  $endtime = NULL;
   $periodFtime = NULL;
   $periodTTime = NULL;
   $flag = TRUE;
@@ -302,29 +304,35 @@ function set_fields_array($general_info, &$fields_array) {
         break;
     }
   }
+  
+  if(isset($counselor_name)){
+    $counselor_name_check=  check_plain($counselor_name);
+    $fields_array['counselor_name'] = $counselor_name_check;
+    
+  }
 
-  //start time
-  if (isset($general_info['review_start_date'])) {
-    $stime = explode_time($general_info['review_start_date']);
-    $starttime = explode_time_stand($stime);
-    $startTime = dateArrayTounixTimestamp($stime);
-    $fields_array['period_start'] = check_plain($startTime);
-  }
-  else {
-
-    return FALSE;
-  }
-  //end time
-  if (isset($general_info['review_end_date'])) {
-    $etime = explode_time($general_info['review_end_date']);
-    $endtime = explode_time_stand($etime);
-    $endTime = dateArrayTounixTimestamp($etime);
-    $fields_array['period_end'] = check_plain($endTime);
-  }
-  else {
-
-    return FALSE;
-  }
+//  //start time
+//  if (isset($general_info['review_start_date'])) {
+//    $stime = explode_time($general_info['review_start_date']);
+//    $starttime = explode_time_stand($stime);
+//    $startTime = dateArrayTounixTimestamp($stime);
+//    $fields_array['period_start'] = check_plain($startTime);
+//  }
+//  else {
+//
+//    return FALSE;
+//  }
+//  //end time
+//  if (isset($general_info['review_end_date'])) {
+//    $etime = explode_time($general_info['review_end_date']);
+//    $endtime = explode_time_stand($etime);
+//    $endTime = dateArrayTounixTimestamp($etime);
+//    $fields_array['period_end'] = check_plain($endTime);
+//  }
+//  else {
+//
+//    return FALSE;
+//  }
   //period from
   if (isset($general_info['review_from_date'])) {
     $pftime = explode_time($general_info['review_from_date']);
@@ -360,11 +368,11 @@ function set_fields_array($general_info, &$fields_array) {
   $description = return_review_name($general_info);
   $fields_array['description'] = $description;
 //  }
-  if (isset($starttime) && isset($endtime) && isset($periodFtime) && isset($periodTTime)) {
-    if ($starttime >= $endtime) {
-
-      $flag = FALSE;
-    }
+  if ( isset($periodFtime) && isset($periodTTime)) {
+//    if ($starttime >= $endtime) {
+//
+//      $flag = FALSE;
+//    }
     if ($periodFtime >= $periodTTime) {
 
       $flag = FALSE;

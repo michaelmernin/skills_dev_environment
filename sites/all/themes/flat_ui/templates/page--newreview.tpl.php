@@ -7,24 +7,24 @@
     var review_type = jQuery('#review_type').val();
     var Project_Name_Text_Not_Trim = jQuery('#Project_Name_Text').val();
     var Project_Name_Text = jQuery.trim(Project_Name_Text_Not_Trim);
-    var review_start_date = jQuery('#review_start_date').val();
-    var review_end_date = jQuery('#review_end_date').val();
+//    var review_start_date = jQuery('#review_start_date').val();
+//    var review_end_date = jQuery('#review_end_date').val();
     var review_from_date = jQuery('#review_from_date').val();
     var review_to_date = jQuery('#review_to_date').val();
 //    var review_from_description = jQuery('#review_from_description').val().trim();
 
-    if (review_start_date == '') {
-      alert('please enter start date!');
-      hideConfirmdialog();
-      return;
-
-    }
-    if (review_end_date == '') {
-      alert('please enter end date!');
-      hideConfirmdialog();
-      return;
-
-    }
+//    if (review_start_date == '') {
+//      alert('please enter start date!');
+//      hideConfirmdialog();
+//      return;
+//
+//    }
+//    if (review_end_date == '') {
+//      alert('please enter end date!');
+//      hideConfirmdialog();
+//      return;
+//
+//    }
     if (review_from_date == '') {
       alert('please enter period from date!');
       hideConfirmdialog();
@@ -52,15 +52,15 @@
 //        return;
 //      }
 //    }
-    var nstime = review_start_date.split('/');
-    var real_nstime = parseInt(nstime[2] + nstime[0] + nstime[1], 10);
-    var netime = review_end_date.split('/');
-    var real_netime = parseInt(netime[2] + netime[0] + netime[1], 10);
-    if (real_nstime >= real_netime) {
-      alert('Start Date must early than End Date!');
-      hideConfirmdialog();
-      return;
-    }
+//    var nstime = review_start_date.split('/');
+//    var real_nstime = parseInt(nstime[2] + nstime[0] + nstime[1], 10);
+//    var netime = review_end_date.split('/');
+//    var real_netime = parseInt(netime[2] + netime[0] + netime[1], 10);
+//    if (real_nstime >= real_netime) {
+//      alert('Start Date must early than End Date!');
+//      hideConfirmdialog();
+//      return;
+//    }
     var nrstime = review_from_date.split('/');
     var real_nrstime = parseInt(nrstime[2] + nrstime[0] + nrstime[1], 10);
     var nretime = review_to_date.split('/');
@@ -75,7 +75,7 @@
     if (employees != false) {
       jQuery.ajax({
         type: "POST",
-        data: {'review_type': review_type, 'review_start_date': review_start_date, 'review_end_date': review_end_date, 'review_from_date': review_from_date, 'review_to_date': review_to_date, 'Project_Name_Text': Project_Name_Text},
+        data: {'review_type': review_type, 'review_from_date': review_from_date, 'review_to_date': review_to_date, 'Project_Name_Text': Project_Name_Text},
         url: '<?php echo $base_relatively_path ?>newreview/submitreview/' + employees + '/1',
         success: function(text) {
           if (text != '-1') {

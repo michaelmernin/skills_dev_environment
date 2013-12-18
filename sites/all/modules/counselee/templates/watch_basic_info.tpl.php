@@ -37,28 +37,28 @@
       <td><h6>Anniversary Month:</h6></td>
       <td style="text-align:left;vertical-align:middle"><?php print render($myInfo['my_anniversary_month']) ?></td>
       <td><h6>Counselor:</h6></td>
-      <td style="text-align:left;vertical-align:middle"><?php print render($myInfo['my_counselor_name']) ?></td>
+      <td style="text-align:left;vertical-align:middle"><?php print render($basic_info->counselor_name) ?></td>
     </tr>
-    <tr>
+<!--    <tr>
       <td>
         <h6>Start Date:</h6>
       </td>
       <td style="text-align:left;vertical-align:middle"> 
         <?php
-        $watch_start_date = unixTimestampToDateArray($basic_info->period_start);
-        $watch_format_start_date = date_to_format($watch_start_date);
-        print render($watch_format_start_date);
+//        $watch_start_date = unixTimestampToDateArray($basic_info->period_start);
+//        $watch_format_start_date = date_to_format($watch_start_date);
+//        print render($watch_format_start_date);
         ?>
       </td>
       <td><h6>End Date:</h6></td>
       <td style="text-align:left;vertical-align:middle"> 
         <?php
-        $watch_end_date = unixTimestampToDateArray($basic_info->period_end);
-        $watch_format_end_date = date_to_format($watch_end_date);
-        print render($watch_format_end_date);
+//        $watch_end_date = unixTimestampToDateArray($basic_info->period_end);
+//        $watch_format_end_date = date_to_format($watch_end_date);
+//        print render($watch_format_end_date);
         ?>
       </td>
-    </tr>
+    </tr>-->
     <tr>
       <td>
         <h6>Period From:</h6>

@@ -25,7 +25,7 @@
       </td>
       <td><input placeholder="Type Project Name…" type="text" id="Project_Name_Text" /></td>
     </tr>
-    <tr>
+<!--    <tr>
       <td>
         <h6>Start Date<span class="form-required" title="This field is required.">*</span>:</h6>
       </td>
@@ -34,7 +34,7 @@
       </td>
       <td><h6>End Date<span class="form-required" title="This field is required.">*</span>:</h6></td>
       <td><input type="text" value="" id="review_end_date" class="datetimepicker"  readonly="readonly" style="color:#34495E;background-color:#ffffff"></td>
-    </tr>
+    </tr>-->
     <tr>
       <td>
         <h6>Period From<span class="form-required" title="This field is required.">*</span>:</h6>
