@@ -258,8 +258,8 @@ $ ln -sv /vagrant/config/coder/coder_sniffer/Drupal $(pear config-get php_dir)/P
     <target name="setup-dirs">
         <property name="project.logdir" value="${project.builddir}/logs" />
         <property name="project.artifacts" value="${project.builddir}/artifacts" />
-        <property name="project.drupal.dir" value="${project.builddir}/drupal" />
-        <property name="project.sitesdir" value="${project.builddir}/drupal/sites" />
+        <property name="project.drupal.dir" value="${project.builddir}" />
+        <property name="project.sitesdir" value="${project.builddir}/sites" />
     </target>
 
     <!-- # Build targets ################################################### -->
