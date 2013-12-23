@@ -465,15 +465,12 @@ function add_fieldset($style_type, $name, $content) {
     <legend><span class=\"fieldset-legend\"><a class=\"fieldset-title\" href=\"#\">
         $name</a></legend>$content</fieldset>";
       return $fieldset;
-      break;
     case 1:
       $category = "<fieldset class=\"webform-component-fieldset webform-catalogue \">
     <legend><span class=\"fieldset-legend\">$name</span></legend>$content</fieldset>";
       return $category;
-      break;
     default :
       return '';
-      ;
   }
 }
 

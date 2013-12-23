@@ -80,7 +80,6 @@ categoryTeamworkValueChange();
 
 function addNoteMessageArea()
 {
-    //.page-title
     var position = jQuery('.form-actions');
     var content = '<div><font color="red">'
             + 'Please note, upon selecting the Submit button, the form is locked and un-editable.'
@@ -110,6 +109,7 @@ jQuery(document).ready(
                         result = checkComments(leadershipArr, 'comment') && result;
                         result = checkComments(teamworkArr, 'comment') && result;
                         result = checkRequireField() && result;
+                        result = checkProjectStartEndDate() && result;
                         if (!result)
                             goTopEx();
                         return result;

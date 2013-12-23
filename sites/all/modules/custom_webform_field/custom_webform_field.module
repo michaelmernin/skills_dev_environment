@@ -59,6 +59,18 @@ function custom_webform_field_webform_component_info() {
       ),
       'file' => 'components/overallscore.inc',
     ),
+    'projectroles' => array(
+      'label' => t('Project Roles'),
+      'description' => t('Display the project roles message'),
+      'features' => array(
+        'csv' => FALSE,
+        'default_value' => FALSE,
+        'required' => FALSE,
+        'conditional' => FALSE,
+        'title_display' => FALSE,
+      ),
+      'file' => 'components/projectroles.inc',
+    ),
   );
 }
 
@@ -76,6 +88,10 @@ function custom_webform_field_theme() {
       'variables' => array('score_overall' => null, 'table_head' => null),
       'path' => drupal_get_path('module', 'custom_webform_field') . '/templates',
       'template' => 'peer-review-form-overall',),
+    'project-roles-and-responsebilities' => array(
+      'variables' => array(),
+      'path' => drupal_get_path('module', 'custom_webform_field') . '/templates',
+      'template' => 'project-roles-and-responsebilities'),
   );
 }
 

@@ -124,7 +124,9 @@ function get_peer_review_score_overall() {
   for ($i = 0; $i < count($peer_review_overall); $i++) {
     $peer_review_overall[$i]['rating'] = '';
   }
-  $content = theme('peer-review-form-overall', array('score_overall' => $peer_review_overall, 'table_head' => $table_head));
+  $content = theme('peer-review-form-overall', 
+      array('score_overall' => $peer_review_overall,
+        'table_head' => $table_head));
   return $content;
 }
 
@@ -144,6 +146,9 @@ function get_self_review_score_overall() {
   for ($i = 0; $i < count($self_review_overall); $i++) {
     $self_review_overall[$i]['rating'] = '';
   }
-  $content = theme('peer-review-form-overall', array('score_overall' => $self_review_overall, 'table_head' => $table_head));
+  $content = theme('peer-review-form-overall',
+      array('score_overall' => $self_review_overall,
+        'table_head' => $table_head)
+      );
   return $content;
 }

@@ -4,6 +4,12 @@
  */
 
 
+
+/**
+ * Click the anchor to back to top
+ * 
+ * 
+ * */
 function goTopEx() {
 //window.scrollTo(0, 0)
     var obj = jQuery("#gotoTopBtn")[0];
@@ -43,6 +49,12 @@ function getCategoryChildName(idValue)
     return childName;
 }
 
+
+/**
+ * Get field name from form key
+ * @param {stirng} value The value of the form key
+ * @return {string} The form key stand for field name
+ * */
 function getFormKeyName(value)
 {
     var arr = value.split("_");
@@ -56,7 +68,6 @@ function getFormKeyName(value)
     }
     return childName;
 }
-
 
 
 /**
@@ -85,7 +96,9 @@ function calculateAverageScore(category)
 
 
 /**
- * Register the select onchange event!
+ * Register the select onchange event
+ * @param {array} items The select element id
+ * @param {sting} onchangeEvent The register onchage event
  * 
  * */
 function registerSelectOnchangeEvent(items, onchangeEvent)
@@ -201,46 +214,107 @@ function checkRequireField()
     return isRight;
 }
 
-
-function getElementContentLength(ele)
+/**
+ * check the project start date and end date
+ * 
+ * */
+function checkProjectStartEndDate()
 {
-    var value = getElementValue(ele);
+    var startDate = getCommonNameId("start-date", 'input');
+    var endDate = getCommonNameId("end-date", 'input');
+    var len = startDate.length;
+    var start, end, startStr, endStr, li, isLegal = true;
+    for (var i = 0; i < len; i++)
+    {
+        startStr = jQuery(startDate[i]).val();
+        endStr = jQuery(endDate[i]).val();
+        if (startStr == '' || endStr == '')
+            continue;
+
+        start = new Date(startStr);
+        end = new Date(endStr);
+
+        if (start >= end)
+        {
+            isLegal = false;
+            addErrorMessageArea();
+            li = '<li>' + "Project Roles And Responsibilities " + (i + 1) + " Start Date must early than End Date." + '</li>';
+            jQuery("#error-message").append(li);
+            jQuery(startDate[i]).removeClass().addClass('form-text required form-textarea error');
+            jQuery(endDate[i]).removeClass().addClass('form-text required form-textarea error');
+        }
+    }
+    return isLegal;
+}
+
+
+
+/**
+ * Get the length of the element value
+ * @param {object} ele description
+ * @return {int} The length of the element content
+ * 
+ * */
+function getElementContentLength(obj)
+{
+    var value = getElementValue(obj);
     return value.length;
 }
 
 /**
  * Get page element value
  * 
- * @param {object} ele Element Object
+ * @param {object} obj Element Object
  * */
-function getElementValue(ele) {
-    var type = ele[0].tagName;
-
-//    alert(ele);
-//    alert(type);
+function getElementValue(obj) {
+    var type = obj[0].tagName;
 
     if (type == "INPUT")
-        return ele.val();
+        return obj.val();
     else if (type == "TEXTAREA")
-        return ele.val();
+        return obj.val();
     else if (type == "SELECT")
-        return ele.find('option:selected').val();
+        return obj.find('option:selected').val();
     else if (type == "DIV")
-        return ele.html();
+        return obj.html();
     else if (type == "LABLE")
-        return ele.html();
+        return obj.html();
     else if (type == "TD")
-        return ele.html();
+        return obj.html();
     else if (type == "SPAN")
-        return ele.html();
+        return obj.html();
 
-    return ele.val();
+    return obj.val();
+}
+
+
+
+/**
+ * Change textfield to Date Input
+ * @param {array} idArr Textfield elment id array
+ * */
+function textfieldToDateInput(idArr)
+{
+    for (var i = 0; i < idArr.length; i++)
+    {
+        jQuery(idArr[i]).attr("readonly", true);
+        jQuery(idArr[i]).css('color', '#34495E');
+        jQuery(idArr[i]).css('background', '#ffffff');
+        jQuery(idArr[i]).datepicker({
+            firstDay: 1,
+            changeMonth: true,
+            changeYear: true
+        });
+    }
 }
 
 
 
 /**
  * Add Error Message display area on webform page
+ * 
+ *      Add Error Message Area after the class of the element equal "page-title"
+ *      Add Error Message Area that his class equals with "message error"
  * 
  * */
 function addErrorMessageArea()
@@ -258,6 +332,10 @@ function addErrorMessageArea()
 }
 
 
+/**
+ * 
+ * 
+ * */
 function modifyCategoryValue(category, destArr)
 {
     var averageScore = calculateAverageScore(category);
