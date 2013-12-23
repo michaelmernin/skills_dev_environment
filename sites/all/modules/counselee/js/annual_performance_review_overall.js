@@ -35,7 +35,7 @@ function categoryCoreCcompetenciesValueChange()
     {
         value = jQuery(coreCompetenciesArr[i]).find('option:selected').val();
         if (value == '0')
-            value = "";
+            value = "N/A";
         jQuery(overall_self_composite_scores_id[i]).html(value);
     }
 

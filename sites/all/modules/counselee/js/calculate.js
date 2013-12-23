@@ -71,13 +71,34 @@ function getFormKeyName(value)
 
 
 /**
+ * According to part of the form key id.Get the list of the form-key ID.
+ * 
+ * */
+function getSameFormKeyId(same, type)
+{
+    var id, idArr = new Array();
+    var arr = jQuery(type);
+    for (var i = 0; i < arr.length; i++)
+    {
+        id = arr[i].getAttribute("id");
+        formKey = arr[i].getAttribute("form-key");
+        if (formKey != null && formKey.indexOf(same) != -1)
+        {
+            idArr[idArr.length] = "#" + id;
+        }
+    }
+    return idArr;
+}
+
+
+/**
  * Calculate the average score
  * @param {array} category The elements array
  * @return {number} The average score
  * */
 function calculateAverageScore(category)
 {
-    var i = 0, count = 0, sum = 0, value, averageScore = '';
+    var i = 0, count = 0, sum = 0, value, averageScore = 'N/A';
     for (i = 0; i < category.length; i++)
     {
         value = getElementValue(jQuery(category[i]));

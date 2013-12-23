@@ -1,192 +1,115 @@
 //counselor-rating-3
 //assessment-content-value
-var self_score_id = new Array();
-self_score_id[0] = '#assessment-content-value-0';
-self_score_id[1] = '#assessment-content-value-1';
-self_score_id[2] = '#assessment-content-value-2';
-self_score_id[3] = '#assessment-content-value-3';
-self_score_id[4] = '#assessment-content-value-4';
-self_score_id[5] = '#assessment-content-value-5';
+var counseleeCoreRatingID = new Array();
+counseleeCoreRatingID[0] = '#assessment-content-value-0';
+counseleeCoreRatingID[1] = '#assessment-content-value-1';
+counseleeCoreRatingID[2] = '#assessment-content-value-2';
+counseleeCoreRatingID[3] = '#assessment-content-value-3';
+counseleeCoreRatingID[4] = '#assessment-content-value-4';
+counseleeCoreRatingID[5] = '#assessment-content-value-5';
 
 
-var self_internal_score_id = new Array();
-self_internal_score_id[0] = '#assessment-content-value-6';
-self_internal_score_id[1] = '#assessment-content-value-7';
-self_internal_score_id[2] = '#assessment-content-value-8';
-self_internal_score_id[3] = '#assessment-content-value-9';
-self_internal_score_id[4] = '#assessment-content-value-10';
-
-
-
-var counselor_score_id = new Array();
-counselor_score_id[0] = '#counselor-rating-0';
-counselor_score_id[1] = '#counselor-rating-1';
-counselor_score_id[2] = '#counselor-rating-2';
-counselor_score_id[3] = '#counselor-rating-3';
-counselor_score_id[4] = '#counselor-rating-4';
-counselor_score_id[5] = '#counselor-rating-5';
-
-
-var counselor_internal_score_id = new Array();
-counselor_internal_score_id[0] = '#counselor-rating-6';
-counselor_internal_score_id[1] = '#counselor-rating-7';
-counselor_internal_score_id[2] = '#counselor-rating-8';
-counselor_internal_score_id[3] = '#counselor-rating-9';
-counselor_internal_score_id[4] = '#counselor-rating-10';
+var counseleeInternalRatingID = new Array();
+counseleeInternalRatingID[0] = '#assessment-content-value-6';
+counseleeInternalRatingID[1] = '#assessment-content-value-7';
+counseleeInternalRatingID[2] = '#assessment-content-value-8';
+counseleeInternalRatingID[3] = '#assessment-content-value-9';
+counseleeInternalRatingID[4] = '#assessment-content-value-10';
 
 
 
-var overall_self_composite_scores_id = new Array();
-overall_self_composite_scores_id[0] = '#rating_client_engagements';
-overall_self_composite_scores_id[1] = '#rating_consulting_skills';
-overall_self_composite_scores_id[2] = '#rating_technical_abilities';
-overall_self_composite_scores_id[3] = '#rating_professionalism';
-overall_self_composite_scores_id[4] = '#rating_leadership';
-overall_self_composite_scores_id[5] = '#rating_teamwork';
-overall_self_composite_scores_id[6] = '#rating_internal_contributions';
-
-var overall_self_scores_average_id = '#rating_all';
+var counselorCoreRatingID = new Array();
+counselorCoreRatingID[0] = '#counselor-rating-0';
+counselorCoreRatingID[1] = '#counselor-rating-1';
+counselorCoreRatingID[2] = '#counselor-rating-2';
+counselorCoreRatingID[3] = '#counselor-rating-3';
+counselorCoreRatingID[4] = '#counselor-rating-4';
+counselorCoreRatingID[5] = '#counselor-rating-5';
 
 
-
-var counselor_composite_id = new Array();
-counselor_composite_id[0] = '#counselor_rating_client_engagements';
-counselor_composite_id[1] = '#counselor_rating_consulting_skills';
-counselor_composite_id[2] = '#counselor_rating_technical_abilities';
-counselor_composite_id[3] = '#counselor_rating_professionalism';
-counselor_composite_id[4] = '#counselor_rating_leadership';
-counselor_composite_id[5] = '#counselor_rating_teamwork';
-counselor_composite_id[6] = '#counselor_rating_internal_contributions';
-
-var counselor_composite_average_id = '#counselor_rating_all';
+var counselorInternalRatingID = new Array();
+counselorInternalRatingID[0] = '#counselor-rating-6';
+counselorInternalRatingID[1] = '#counselor-rating-7';
+counselorInternalRatingID[2] = '#counselor-rating-8';
+counselorInternalRatingID[3] = '#counselor-rating-9';
+counselorInternalRatingID[4] = '#counselor-rating-10';
 
 
 
-function self_review_select_value_change(category, index)
-{
-    var i = 0, count = 0, sum = 0, value;
-    for (i = 0; i < category.length; i++)
-    {
-        value = getElementValue(jQuery(category[i]));
-        if (IsNum(value) && value != '0')
-        {
-            count++;
-            sum += parseInt(value);
-        }
-    }
+var counseleeOverallComositeScoreID = new Array();
+counseleeOverallComositeScoreID[0] = '#rating_client_engagements';
+counseleeOverallComositeScoreID[1] = '#rating_consulting_skills';
+counseleeOverallComositeScoreID[2] = '#rating_technical_abilities';
+counseleeOverallComositeScoreID[3] = '#rating_professionalism';
+counseleeOverallComositeScoreID[4] = '#rating_leadership';
+counseleeOverallComositeScoreID[5] = '#rating_teamwork';
+counseleeOverallComositeScoreID[6] = '#rating_internal_contributions';
 
-    var score_rating = '';
-    if (count != 0)
-    {
-        score_rating = (sum / count).toFixed(2);
-    }
-    if (index == 1)
-    {
-        jQuery(counselor_composite_id[6]).html(score_rating);
-    }
+var counseleeOverallAverageScoreID = '#rating_all';
 
 
-    //peer_review_overall_score_calculate(overall_reviewer_composite_scores_id, overall_reviewer_scores_average_id);
-}
 
-/**
- * Rejister select value onchange function
- * */
-function register_self_form_select_onchange_event(category, onchangeEvent)
-{
-    for (var i = 0; i < category.length; i++)
-    {
-        jQuery(category[i]).change(onchangeEvent);
-    }
-}
+var counselorOverallCompositeScoreid = new Array();
+counselorOverallCompositeScoreid[0] = '#counselor_rating_client_engagements';
+counselorOverallCompositeScoreid[1] = '#counselor_rating_consulting_skills';
+counselorOverallCompositeScoreid[2] = '#counselor_rating_technical_abilities';
+counselorOverallCompositeScoreid[3] = '#counselor_rating_professionalism';
+counselorOverallCompositeScoreid[4] = '#counselor_rating_leadership';
+counselorOverallCompositeScoreid[5] = '#counselor_rating_teamwork';
+counselorOverallCompositeScoreid[6] = '#counselor_rating_internal_contributions';
+
+var counselorOverallAverageScoreID = '#counselor_rating_all';
 
 /**
  * Core competencies vale change trigger event
  * 
  * */
-function counselor_core_competencies_value_change()
+function counselorCoreCompetenciesSelectChange()
 {
     var value;
-    for (var i = 0; i < counselor_score_id.length; i++)
+    for (var i = 0; i < counselorCoreRatingID.length; i++)
     {
-        value = getElementValue(jQuery(counselor_score_id[i]));
+        value = getElementValue(jQuery(counselorCoreRatingID[i]));
         if (IsNum(value) && value != '0')
         {
-            jQuery(counselor_composite_id[i]).html(value);
+            jQuery(counselorOverallCompositeScoreid[i]).html(value);
         }
         else
         {
-            jQuery(counselor_composite_id[i]).html('');
+            jQuery(counselorOverallCompositeScoreid[i]).html('N/A');
         }
     }
-    var rating = calculate_element_value_average(counselor_composite_id);
-    jQuery(counselor_composite_average_id).html(rating);
+    var rating = calculateAverageScore(counselorOverallCompositeScoreid);
+    jQuery(counselorOverallAverageScoreID).html(rating);
 }
 
 
-function self_review_internal_contributions()
+function CounselorInternalContributionsSelectChange()
 {
-    self_review_select_value_change(counselor_internal_score_id, 1);
+    var internalRating = calculateAverageScore(counselorInternalRatingID);
+    jQuery(counselorOverallCompositeScoreid[6]).html(internalRating);
 
-    var rating = calculate_element_value_average(counselor_composite_id);
-    jQuery(counselor_composite_average_id).html(rating);
+    var rating = calculateAverageScore(counselorOverallCompositeScoreid);
+    jQuery(counselorOverallAverageScoreID).html(rating);
 }
 
 
-/**
- * Calculate the overall score average 
- *
- * */
-function calculate_element_value_average(category)
-{
-    var i = 0, count = 0, sum = 0, value;
-    for (i = 0; i < category.length; i++)
-    {
-        value = jQuery(category[i]).html();
-        if (IsNum(value) && value != '0')
-        {
-            count++;
-            sum += parseFloat(value);
-        }
-    }
-
-    var score_rating = '';
-    if (count != 0)
-    {
-        score_rating = (sum / count).toFixed(2);
-//        jQuery(overall_self_scores_average_id).html(score_rating);
-    }
-    else
-    {
-//        jQuery(overall_self_scores_average_id).html('');
-    }
-    return  score_rating;
-}
-
-
-function initialize_self_score_rating()
+function initializeRating()
 {
     //self_score_id
     var value;
-    for (var i = 0; i < self_score_id.length; i++)
+    for (var i = 0; i < counseleeCoreRatingID.length; i++)
     {
-        value = getElementValue(jQuery(self_score_id[i]));
-        if ((IsNum(value)))
-            jQuery(overall_self_composite_scores_id[i]).html(value);
-        else
-            jQuery(overall_self_composite_scores_id[i]).html("");
-
+        value = getElementValue(jQuery(counseleeCoreRatingID[i]));
+        jQuery(counseleeOverallComositeScoreID[i]).html(value);
     }
 
-    var internal_rating = calculate_element_value_average(self_internal_score_id);
-    jQuery(overall_self_composite_scores_id[6]).html(internal_rating);
+    var internal_rating = calculateAverageScore(counseleeInternalRatingID);
+    jQuery(counseleeOverallComositeScoreID[6]).html(internal_rating);
 
-    var self_all_rating = calculate_element_value_average(overall_self_composite_scores_id);
-    jQuery(overall_self_scores_average_id).html(self_all_rating);
+    var self_all_rating = calculateAverageScore(counseleeOverallComositeScoreID);
+    jQuery(counseleeOverallAverageScoreID).html(self_all_rating);
 }
-
-
-
 
 
 //counselor-comment
@@ -218,23 +141,10 @@ function checkCounselorComment()
 
 
 
-function getSameFormKeyId(same, type)
-{
-    var id, idArr = new Array();
-    var arr = jQuery(type);
-    for (var i = 0; i < arr.length; i++)
-    {
-        id = arr[i].getAttribute("id");
-        formKey = arr[i].getAttribute("form-key");
-        if (formKey != null && formKey.indexOf(same) != -1)
-        {
-            idArr[idArr.length] = "#" + id;
-        }
-    }
-    return idArr;
-}
-
-
+/**
+ * Check Counselor Required Field
+ * 
+ * */
 function checkCounselorRequireField()
 {
     var comments = getSameFormKeyId("text", "textarea");
@@ -257,12 +167,11 @@ function checkCounselorRequireField()
     return isRight;
 }
 
-
-initialize_self_score_rating();
-register_self_form_select_onchange_event(counselor_score_id, counselor_core_competencies_value_change);
-register_self_form_select_onchange_event(counselor_internal_score_id, self_review_internal_contributions);
-counselor_core_competencies_value_change();
-self_review_internal_contributions();
+initializeRating();
+registerSelectOnchangeEvent(counselorCoreRatingID, counselorCoreCompetenciesSelectChange);
+registerSelectOnchangeEvent(counselorInternalRatingID, CounselorInternalContributionsSelectChange);
+counselorCoreCompetenciesSelectChange();
+CounselorInternalContributionsSelectChange();
 
 
 jQuery(document).ready(
