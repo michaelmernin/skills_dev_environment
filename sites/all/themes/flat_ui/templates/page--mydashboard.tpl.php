@@ -87,7 +87,19 @@
                     }, cellattr: function(rowId, val, rawObject) {
                       return rowhint(rowId, val, rawObject);
                     }},
-                  {name: 'status', index: 'status', width: 100, align: "center", stype: "select", searchoptions: {
+                  {name: 'status', index: 'status', width: 100, align: "center", formatter: function currencyFmatter(cellvalue, options, rowObject)
+                    {
+                      var rstatus = rowObject[8];
+                      var rreid = rowObject[6];
+                      if (rstatus === "0") {
+                        return '<a id="btnStartReview' + rreid + '" class="statusTableLink" onClick="startReview(' + rreid + ',\'<?php print $base_path?>\')">Start Rview</a>\n\
+                                  <img class="loading_img" id="status_loading_img'+rreid+'" title="loading..." style="width: 20px; height: 20px; display: none" src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">';
+
+                      } else {
+                        return cellvalue;
+                      }
+
+                    }, stype: "select", searchoptions: {
                       value: "-1:All Status;1:Review in Draft;2:Review by Counselor;3:Approved by Counselor;4:Joint review;5:GM Review;6:GM Approve",
                       defaultValue: "-1"
                     }, cellattr: function(rowId, val, rawObject) {
@@ -101,10 +113,21 @@
                 gridview: true,
                 rowattr: function(rd) {
 //                  console.log(rd);
-                  if (rd.counselor_flag === "1") { // verify that the testing is correct in your case
-                    return {"class": "myAltRowClass"};
+                  if (rd.status_num !== "0") {
+                    //review already started.
+                    if (rd.counselor_flag === "1") { // verify that the testing is correct in your case
+                      //my review records
+                      return {"class": "pointerClass myAltRowClass"};
+                    } else {
+                      //my counselee review records
+                      return {"class": "pointerClass"};
+                    }
                   } else {
-                    return {"class": "counseleeAltRowClass"};
+                    //review not start.
+                    if (rd.counselor_flag === "1") { // verify that the testing is correct in your case
+                      //my review records
+                      return {"class": "myAltRowClass"};
+                    }
                   }
                 },
                 onSelectRow: function(id, status) {
@@ -112,7 +135,12 @@
 //                  console.log(status);
                   var rowData = jQuery(this).getRowData(id);
                   var rreid = rowData.review_id;
-                  window.location.href = "<?php print $base_path . 'watchstatus/basicinfo/' ?>" + rreid;
+                  var rstatus = rowData.status_num;
+                  if (rstatus !== "0") {
+                    window.location.href = "<?php print $base_path . 'watchstatus/basicinfo/' ?>" + rreid;
+                  } else {
+                    return;
+                  }
 //                  console.log(rreid);
                 },
                 multiselect: false,
@@ -139,5 +167,3 @@
   </div>
 </div>
 <?php require_once 'footer.tpl.php'; ?>
-<!--    <div id="pr_mywokingstage_footer" class="pr_footer">
-    </div>-->

@@ -119,9 +119,12 @@ function rowhint(rowId, val, rawObject) {
     return 'title="Click to see more information about this review."';
 }
 function statusrowhint(rowId, val, rawObject) {
-    var status=rawObject[8];
-    var content='';
-     switch (status) {
+    var status = rawObject[8];
+    var content = '';
+    switch (status) {
+        case '0':
+            content = 'title="Click start review to start."';
+            break;
         case '1':
             //1 for review in draft;
             content = 'title="This review is in draft, reviewer can edit it before submit."';
@@ -148,4 +151,30 @@ function statusrowhint(rowId, val, rawObject) {
             break;
     }
     return content;
+}
+
+function startReview(rreid,baseurl) {
+    var url=baseurl+'newreview/startreview';
+    jQuery('#btnStartReview' + rreid).hide();
+    jQuery('#status_loading_img' + rreid).show();
+//    alert(url);
+    jQuery.ajax({
+        type: "POST",
+        data: {'review_id': rreid},
+        url: url,
+        success: function(text) {
+            if (text !== '-1') {
+                jQuery("#userStatusTable").trigger("reloadGrid");
+            } else {
+                window.location.href = baseurl + "mydashboard";
+                return;
+            }
+        },
+        error: function(text) {
+            window.location.href = baseurl + "mydashboard";
+            return;
+        }
+    });
+//    jQuery("#userStatusTable").trigger("reloadGrid");
+
 }

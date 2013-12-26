@@ -14325,13 +14325,14 @@ div.error {
 	white-space: nowrap !important;
 
 }
+.pointerClass{
+	cursor:pointer;
+}
+
 .myAltRowClass{
 	background:#FFFF99;
-	cursor:pointer;
 }
-.counseleeAltRowClass{
-	cursor:pointer;
-}
+
 /***user status table search table*/
 #userStatusSearch{
 	margin-top: 5px;
@@ -14372,4 +14373,14 @@ div.error {
 .ui-search-input select {
     height: 20px;
     padding: 0;
+}
+
+.statusTableLink {
+    color: #FF0000 !important;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.statusTableLink:hover{
+    cursor: pointer; 
 }

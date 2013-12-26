@@ -162,13 +162,13 @@ function submit_new_self_review() {
     }
     else {
       $rval = '-1';
-      $msg = 'Review creation attempt failed!';
+      $msg = 'Error:Review creation attempt failed!';
       drupal_set_message($msg, 'error');
     }
   }
   else {
     $rval = '-1';
-    $msg = 'Please ask HR for set your counselor first!';
+    $msg = 'Error:Please ask HR for set your counselor first!';
     drupal_set_message($msg, 'error');
   }
   echo $rval;
@@ -191,14 +191,15 @@ function start_new_review() {
       if (module_exists('common') && module_enable(array('common'))) {
         //counselee email
         $basic_info = get_basic_review_information($review_id);
-        $datetime_timestamp = unixTimestampToDateArray($basic_info[0]->period_end);
+        $rreid=$basic_info[0]->rreid;
+        $datetime_timestamp = unixTimestampToDateArray($basic_info[0]->time_frame_to);
         $my_address = select_email_from_prs_reviewers(array($basic_info[0]->employeeName));
         $address = $my_address[0]->mail;
         $datetime = $datetime_timestamp['month'] . '/' . $datetime_timestamp['day'] . '/' . $datetime_timestamp['year'];
-        $reviewurl = '';
+        $reviewurl = get_curPage_base_url() . 'watchstatus/selfassessment/' . $rreid;
         $counselee_parems = array('username' => $basic_info[0]->employeeName,
           'reviewname' => $basic_info[0]->description,
-          'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $basic_info[0]->rreid,
+          'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $rreid,
           'reviewurl' => $reviewurl,
           'datetime' => $datetime, 'type' => 'counselee');
         mail_sender_template_adapter($address, $counselee_parems, 0);
@@ -206,16 +207,10 @@ function start_new_review() {
         $counselor_name = my_counselor_gm_name($basic_info[0]->employeeName);
         $cur_counselor_name = $counselor_name[0]->counselorName;
         if (count($cur_counselor_name) != '0') {
-//              dd('$cur_counselor_name');
-//              dd($cur_counselor_name);
 //            counselor email
-          $my_counselor_address = select_email_from_prs_reviewers(array($basic_info[0]->employeeName));
+          $my_counselor_address = select_email_from_prs_reviewers(array($cur_counselor_name));
           $counselor_address = $my_counselor_address[0]->mail;
-//            dd('$counselor_address');
-//            dd($counselor_address);
           $counselor_parems = array('username' => $basic_info[0]->employeeName, 'reviewname' => $basic_info[0]->description, 'peersurl' => get_curPage_base_url() . 'watchstatus/selectpeers/' . $basic_info[0]->rreid, 'counselorname' => $cur_counselor_name, 'datetime' => $datetime, 'type' => 'counselor');
-//            dd('$counselor_parems');
-//            dd($counselor_parems);
           mail_sender_template_adapter($counselor_address, $counselor_parems, 0);
         }
       }
@@ -224,10 +219,14 @@ function start_new_review() {
     }
     else {
       $rval = '-1';
+      $msg = 'Error:Wrong review status!';
+    drupal_set_message($msg, 'error');
     }
   }
   else {
     $rval = '-1';
+    $msg = 'Error:Please select a review!';
+    drupal_set_message($msg, 'error');
   }
   echo $rval;
 }
