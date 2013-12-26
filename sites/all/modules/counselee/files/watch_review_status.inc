@@ -136,9 +136,10 @@ function load_self_assessment_content($rreid = NULL) {
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
   $review_status = get_review_status_from_db($rreid);
+  $review_basic_info = get_basic_review_information($rreid);
+  $review_type = $review_basic_info[0]->type;
 	
 	module_load_include('inc', 'common', 'defined_constants');
-
 	$allowed_roles = AccessRoles::getSelfAssessmentRead();
 	$allowed_status = AccessStatus::getSelfAssessmentRead();
 
@@ -162,30 +163,35 @@ function load_self_assessment_content($rreid = NULL) {
   $overall_rating = new stdClass();
   _matching_none_selection_items($none_selection_item, $self_dataset, $review_info, $self_comments_array, $overall_rating);
   $review_info_content_num = count($review_info['clientdate']);
-  $self_item_count = count($self_question_rating_comment_result);
-  $total_item_count = $self_item_count + count($self_comments_array);
+	$item_counting = calculate_counting($self_question_rating_comment_result, $self_comments_array);
 
   $pageContent = '';
   for ($i = 0; $i < $review_info_content_num; $i++) {
 		$proj_item = generate_project_roles_and_responsibilities_info($review_info, $i);
-    if (validate_numbers($review_info, $i)) {
-			$content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $proj_item, $i);
+		if (validate_numbers($review_info, $i)) {
+			$content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $proj_item, $i);
       $pageContent .= $content;
     }
   }
-  // dd($self_question_rating_comment_result, 'self_question_rating_comment_result');
+	$data_count = 0;
   foreach ($self_question_rating_comment_result as $key => $value) {
+		if (!isset($value->rating) && !isset($value->comment)) {
+			$content = thematize_subtitle($rreid, $nid, $reviewee, $value);
+			$pageContent .= $content;
+			continue;
+		}
     $content = theme('view_self_assessment_item', array(
-      'item_num' => $key,
+      'item_num' => $data_count,
       'self_dataset' => $value,
       'overall_rating' => $overall_rating,
     ));
     $pageContent .= $content;
+		$data_count++;
   }
 
   foreach ($self_comments_array as $key => $value) {
     $content = theme('view_self_assessment_comment_only', array(
-      'item_num' => $self_item_count + $key,
+      'item_num' => $item_counting->self_item_count + $key,
       'self_comment' => $value,
     ));
     $pageContent .= $content;
@@ -202,6 +208,8 @@ function load_review_content($rreid = NULL) {
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
   $review_status = get_review_status_from_db($rreid);
+  $review_basic_info = get_basic_review_information($rreid);
+  $review_type = $review_basic_info[0]->type;
 	
 	module_load_include('inc', 'common', 'defined_constants');
 
@@ -237,6 +245,10 @@ function load_review_content($rreid = NULL) {
 // Item below is for peers
 ////////////////////////////////////////////////////////
   $peer_information_set = get_peer_comment_information_array($rreid, $item_count);
+  $question_cid_array = array();
+	if ($review_type == PROJECT_REVIEW) {
+		$question_cid_array = _generate_question_id_from_form_key($peer_information_set->cid_formkey_type_array);
+	}
   ///////////////////////////////////////////////////////
   //Item below is for counselor
   ///////////////////////////////////////////////////////
@@ -267,6 +279,12 @@ function load_review_content($rreid = NULL) {
 	$is_read_only = TRUE;
   foreach ($self_question_rating_comment_result as $key => $value) {
 //=====================the question which have pie chart ============CONST===============================
+	if (!isset($value->rating) && !isset($value->comment)) {
+			$content = thematize_subtitle($rreid, $nid, $reviewee, $value);
+			$pageContent .= $content;
+			continue;
+	}
+	
     $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
     if (in_array($value->form_key, $pie_form_key_array)) {
       $form_key = $value->form_key . '_category';
@@ -288,7 +306,7 @@ function load_review_content($rreid = NULL) {
         $pie_data->have_peer_data = FALSE;
       }
 //=====================pie chart end=====================================================================
-      $content = thematize_review_content_full($key, $rreid, $nid, $reviewee, $value, NULL, $pie_data, $peer_json, $revised_comments, $total_item_count, $is_read_only);
+      $content = thematize_review_content_full($key, $rreid, $nid, $reviewee, $value, NULL, $pie_data, $peer_json, $revised_comments, $total_item_count, $overall_rating, $is_read_only);
       $pageContent .= $content;
     }
     else {

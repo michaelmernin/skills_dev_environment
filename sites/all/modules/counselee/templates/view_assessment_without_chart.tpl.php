@@ -69,8 +69,7 @@
           <textarea id="counselor-comment-<?php print $item_num; ?>"
                     cols="20" rows="5"
                     form-key="<?php print $self_dataset->form_key; ?>"
-                    style="margin: 4px 0px 0px; height: 112px; width: 98%;">
-                      <?php
+                    style="margin: 4px 0px 0px; height: 112px; width: 98%;"><?php
             if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
               print $clor_rating_comment->clor_comment;
             }

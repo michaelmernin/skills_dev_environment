@@ -1,11 +1,10 @@
-<?php ?>
-<span class="fieldset-legend">
+<?php
+ ?>
+<div class="sec-peerfieldset">
   <?php if ($review_info_content_num == 0): ?> 
-    <a class="fieldset-title">
-      <h6>  Project Roles And Responsibilities </h6>
-    </a>
+		<h6>  Project Roles And Responsibilities </h6>
   <?php endif; ?>
-</span>
+</div>
 <div class="fieldset-wrapper">
   <div id="webform-component-wfm" class="wfm-container form-wrapper">
     <div class="wfm-item">
@@ -13,7 +12,7 @@
         <div class="fieldset-wrapper">
           <div class="form-item webform-component webform-component-textfield webform-component--project-roles-and-responsibilities-category--wfm--0--clientdate" style="width: 30%">
             <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;width: 25%">·Client:</div>
-            <div class="color-rating-box" id="client-name" style="width: 60%"><?php print $clientdate; ?></div>
+            <div class="color-rating-box" id="client-name" style="width: 60%"><?php if($clientdate != '' && !isset($client)) print $clientdate; else print $client; ?></div>
           </div>					
           <div class="form-item webform-component webform-component-textfield webform-component--project-roles-and-responsibilities-category--wfm--0--startdate"  style="width: 25%">
             <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·StartDate:</div>
@@ -25,6 +24,13 @@
             <div class="color-rating-box" id="client-end-date"><?php print $enddate; ?></div>
           </div>					
         </div>
+				<?php if (isset($project) && $project != ''): ?>
+					<div class="form-item webform-component webform-component-textfield webform-component--project-roles-and-responsibilities-category--wfm--0--project" style="width: 25%">
+						<div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Project:</div>
+						<div class="color-rating-box" id="client-project"><?php print $project; ?></div>
+					</div>					
+				<?php endif; ?>
+
         <div class="form-item webform-component webform-component-textarea webform-component--project-roles-and-responsibilities-category--wfm--0--project-roles-and-responsibilities">
 
           <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">·Project Roles And Responsibilities</div>

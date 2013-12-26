@@ -5,7 +5,7 @@
 // dd($reviewee, 'reviewee');
 // dd($clor_rating_comment, '$clor_rating_comment');
 // dd($pie_data, 'pie_data');
-//
+// dd($peer_json, 'peer_json');
 ////sites/all/themes/flat_ui/assets/stylesheets/screen.css
 //
 //$screen_js_path = drupal_get_path('themes', 'flat_ui') . "/assets/stylesheets/screen.css";
@@ -231,18 +231,14 @@
       <!--<div class="additionalbubble">-->
       <div>
         <div style="padding: 0 10px 5px;margin-bottom: 5px;">
-          <textarea id="counselor-comment-<?php print $item_num; ?>"
-                    cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;"
-                    form-key="<?php print $self_dataset->form_key; ?>" >
-                      <?php
-                      if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
+				<textarea id="counselor-comment-<?php print $item_num; ?>" cols="20" rows="5" style="margin: 4px 0px 0px; height: 112px; width: 98%;" form-key="<?php print $self_dataset->form_key; ?>" ><?php
+											if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
                         print $clor_rating_comment->clor_comment;
                       }
                       else {
                         print '';
                       }
-                      ?>
-          </textarea>
+                      ?></textarea>
         </div>
       </div>
     </div>
@@ -252,6 +248,8 @@
   <input type="hidden" id="rreid-<?php print $item_num; ?>" value="<?php print $rreid ?>"/>
   <input type="hidden" id="nid-<?php print $item_num; ?>" value="<?php print $nid ?>"/>
   <input type="hidden" id="total_item_count-<?php print $item_num; ?>" value="<?php print $total_item_count ?>"/>
+  <input type="hidden" id="counselor-overall_rating-<?php print $item_num; ?>" value="<?php print $overall_rating->counselor_rating ?>"/>
+  <input type="hidden" id="counselee-overall_rating-<?php print $item_num; ?>" value="<?php print $overall_rating->counselee_rating ?>"/>
 
   <!--Display the peer comment message-->
   <div class="webform-submission-info clearfix">

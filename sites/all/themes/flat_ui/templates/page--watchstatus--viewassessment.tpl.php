@@ -149,7 +149,7 @@
   }
 
   function getCount() {
-    return jQuery("#total_item_count-0").val();
+    return jQuery("#total_item_count-1").val();
   }
 
   function getRreid() {

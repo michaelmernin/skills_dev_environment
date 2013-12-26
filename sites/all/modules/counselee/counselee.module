@@ -8,415 +8,429 @@
  * 
  */
 function counselee_menu() {
-  $items['mydashboard'] = array(
-    'title' => 'My Dashboard',
-    'page callback' => 'dashboard_display',
-    'page arguments' => array(),
-    'access arguments' => array('access to my dashboard'),
-    'file' => 'files/dashboard.pages.inc',
-  );
-  $items['newselfreview'] = array(
-    'title' => 'Create My Review',
-    'page callback' => 'show_pr_list',
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'files/dashboard.pages.inc',
-    'weight' => 5,
-  );
-  $items['accessdenied'] = array(
-    'title' => 'Access Denied',
-    'type' => MENU_CALLBACK,
-    'page callback' => 'accessdenied',
-    'page arguments' => array(),
-    'access callback' => TRUE,
-    'file' => 'files/dashboard.pages.inc',
-  );
+	$items['mydashboard'] = array(
+	  'title' => 'My Dashboard',
+	  'page callback' => 'dashboard_display',
+	  'page arguments' => array(),
+	  'access arguments' => array('access to my dashboard'),
+	  'file' => 'files/dashboard.pages.inc',
+	);
+	$items['newselfreview'] = array(
+	  'title' => 'Create My Review',
+	  'page callback' => 'show_pr_list',
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_NORMAL_ITEM,
+	  'file' => 'files/dashboard.pages.inc',
+	  'weight' => 5,
+	);
+	$items['accessdenied'] = array(
+	  'title' => 'Access Denied',
+	  'type' => MENU_CALLBACK,
+	  'page callback' => 'accessdenied',
+	  'page arguments' => array(),
+	  'access callback' => TRUE,
+	  'file' => 'files/dashboard.pages.inc',
+	);
 
-  $items['feedbacksubmitsuccess'] = array(
-    'title' => 'Feedback Submitted Successfully',
-    'type' => MENU_CALLBACK,
-    'page callback' => 'feedbacksubmitsuccess',
-    'page arguments' => array(),
-    'access callback' => TRUE,
-    'file' => 'files/dashboard.pages.inc',
-  );
-  $items['userstatus'] = array(
-    'title' => 'Watch status',
-    'page callback' => 'show_status_table',
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'files/watach_userstatus_for_jqgrid.inc',
-  );
+	$items['feedbacksubmitsuccess'] = array(
+	  'title' => 'Feedback Submitted Successfully',
+	  'type' => MENU_CALLBACK,
+	  'page callback' => 'feedbacksubmitsuccess',
+	  'page arguments' => array(),
+	  'access callback' => TRUE,
+	  'file' => 'files/dashboard.pages.inc',
+	);
+	$items['userstatus'] = array(
+	  'title' => 'Watch status',
+	  'page callback' => 'show_status_table',
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_CALLBACK,
+	  'file' => 'files/watach_userstatus_for_jqgrid.inc',
+	);
 
-  $items['watchstatus'] = array(
-    'title' => 'Watch status',
-    'page callback' => 'show_pr_list',
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'files/dashboard.pages.inc',
-  );
-  $items['watchstatus/basicinfo/%'] = array(
-    'title' => 'Basic Information',
-    'page callback' => 'watch_basic_information',
-    'page arguments' => array(2),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 0,
-    'file' => 'files/watch_review_status.inc',
-  );
-  $items['watchstatus/selectpeers/%'] = array(
-    'title' => 'Select Peers',
-    'page callback' => 'display_select_peers_page',
-    'page arguments' => array(2),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 1,
-    'file' => 'files/watch_review_status.inc',
-  );
-  $items['watchstatus/submitupdate'] = array(
-    'title' => 'Submit Updates',
-    'page callback' => 'submit_peer_update',
-    'page arguments' => array(),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'files/watch_review_status.inc',
-  );
-  $items['watchstatus/selfassessment/%'] = array(
-    'title' => 'Self Assessment',
-    'page callback' => 'display_self_assessment',
-    'page arguments' => array(2),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
-    'file' => 'files/watch_review_status.inc',
-  );
-  $items['watchstatus/viewselfassessmentcontent/%'] = array(
-    'title' => 'Self Assessment',
-    'page callback' => 'load_self_assessment_content',
-    'page arguments' => array(2),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 3,
-    'file' => 'files/watch_review_status.inc',
-  );
-  $items['watchstatus/viewassessment/%'] = array(
-    'title' => 'View Assessment',
-    'page callback' => 'load_self_assessment',
-    'page arguments' => array(2),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 4,
-    'file' => 'files/review_assessment_modification.inc',
-  );
-  $items['watchstatus/reviewcontent/%'] = array(
-    'title' => 'Review Content',
-    'page callback' => 'load_review_content',
-    'page arguments' => array(2),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 5,
-    'file' => 'files/watch_review_status.inc',
-  );
-  $items['watchstatus/submitcounselorassessment'] = array(
-    'title' => 'Save Counselor Assessment Draft',
-    'page callback' => 'save_counselor_assessment_draft',
-    'page arguments' => array(),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'files/review_assessment_modification.inc',
-  );
+	$items['watchstatus'] = array(
+	  'title' => 'Watch status',
+	  'page callback' => 'show_pr_list',
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_CALLBACK,
+	  'file' => 'files/dashboard.pages.inc',
+	);
+	$items['watchstatus/basicinfo/%'] = array(
+	  'title' => 'Basic Information',
+	  'page callback' => 'watch_basic_information',
+	  'page arguments' => array(2),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_LOCAL_TASK,
+	  'weight' => 0,
+	  'file' => 'files/watch_review_status.inc',
+	);
+	$items['watchstatus/selectpeers/%'] = array(
+	  'title' => 'Select Peers',
+	  'page callback' => 'display_select_peers_page',
+	  'page arguments' => array(2),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_LOCAL_TASK,
+	  'weight' => 1,
+	  'file' => 'files/watch_review_status.inc',
+	);
+	$items['watchstatus/submitupdate'] = array(
+	  'title' => 'Submit Updates',
+	  'page callback' => 'submit_peer_update',
+	  'page arguments' => array(),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_CALLBACK,
+	  'file' => 'files/watch_review_status.inc',
+	);
+	$items['watchstatus/selfassessment/%'] = array(
+	  'title' => 'Self Assessment',
+	  'page callback' => 'display_self_assessment',
+	  'page arguments' => array(2),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_LOCAL_TASK,
+	  'weight' => 2,
+	  'file' => 'files/watch_review_status.inc',
+	);
+	$items['watchstatus/viewselfassessmentcontent/%'] = array(
+	  'title' => 'Self Assessment',
+	  'page callback' => 'load_self_assessment_content',
+	  'page arguments' => array(2),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_LOCAL_TASK,
+	  'weight' => 3,
+	  'file' => 'files/watch_review_status.inc',
+	);
+	$items['watchstatus/viewassessment/%'] = array(
+	  'title' => 'View Assessment',
+	  'page callback' => 'load_self_assessment',
+	  'page arguments' => array(2),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_LOCAL_TASK,
+	  'weight' => 4,
+	  'file' => 'files/review_assessment_modification.inc',
+	);
+	$items['watchstatus/reviewcontent/%'] = array(
+	  'title' => 'Review Content',
+	  'page callback' => 'load_review_content',
+	  'page arguments' => array(2),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_LOCAL_TASK,
+	  'weight' => 5,
+	  'file' => 'files/watch_review_status.inc',
+	);
+	$items['watchstatus/submitcounselorassessment'] = array(
+	  'title' => 'Save Counselor Assessment Draft',
+	  'page callback' => 'save_counselor_assessment_draft',
+	  'page arguments' => array(),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_CALLBACK,
+	  'file' => 'files/review_assessment_modification.inc',
+	);
 
-  $items['watchstatus/rejectcounseleeassessment'] = array(
-    'title' => 'Reject Counselee\'s Assessment',
-    'page callback' => 'reject_counselee_assessment',
-    'page arguments' => array(),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'files/review_assessment_modification.inc',
-  );
-  $items['watchstatus/approvecounseleeassessment'] = array(
-    'title' => 'Approve Counselee\'s Assessment',
-    'page callback' => 'approve_counselee_assessment',
-    'page arguments' => array(),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'files/review_assessment_modification.inc',
-  );
+	$items['watchstatus/rejectcounseleeassessment'] = array(
+	  'title' => 'Reject Counselee\'s Assessment',
+	  'page callback' => 'reject_counselee_assessment',
+	  'page arguments' => array(),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_CALLBACK,
+	  'file' => 'files/review_assessment_modification.inc',
+	);
+	$items['watchstatus/approvecounseleeassessment'] = array(
+	  'title' => 'Approve Counselee\'s Assessment',
+	  'page callback' => 'approve_counselee_assessment',
+	  'page arguments' => array(),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_CALLBACK,
+	  'file' => 'files/review_assessment_modification.inc',
+	);
 
 
-  $items['watchstatus/counseleeconfirmresult/%'] = array(
-    'title' => 'Confirm Review Result',
-    'page callback' => 'counselee_confirm_review_result',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 6,
-    'page arguments' => array(2),
-    'access arguments' => array('access to my dashboard'),
-    'file' => 'files/page_audit_review.inc',
-  );
+	$items['watchstatus/counseleeconfirmresult/%'] = array(
+	  'title' => 'Confirm Review Result',
+	  'page callback' => 'counselee_confirm_review_result',
+	  'type' => MENU_LOCAL_TASK,
+	  'weight' => 6,
+	  'page arguments' => array(2),
+	  'access arguments' => array('access to my dashboard'),
+	  'file' => 'files/page_audit_review.inc',
+	);
 
 //counselor_submit_review_result
-  $items['watchstatus/submitreview/%'] = array(
-    'title' => 'Submit Review Result',
-    'page callback' => 'counselor_submit_review_result',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 7,
-    'page arguments' => array(2),
-    'access arguments' => array('access to my dashboard'),
-    'file' => 'files/page_audit_review.inc',
-  );
+	$items['watchstatus/submitreview/%'] = array(
+	  'title' => 'Submit Review Result',
+	  'page callback' => 'counselor_submit_review_result',
+	  'type' => MENU_LOCAL_TASK,
+	  'weight' => 7,
+	  'page arguments' => array(2),
+	  'access arguments' => array('access to my dashboard'),
+	  'file' => 'files/page_audit_review.inc',
+	);
 
 
-  $items['watchstatus/gm-audit-review/%'] = array(
-    'title' => 'Audit Review Result',
-    'page callback' => 'gm_audit_review_result',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 8,
-    'page arguments' => array(2),
-    'access arguments' => array('access to my dashboard'),
-    'file' => 'files/page_audit_review.inc',
-  );
+	$items['watchstatus/gm-audit-review/%'] = array(
+	  'title' => 'Audit Review Result',
+	  'page callback' => 'gm_audit_review_result',
+	  'type' => MENU_LOCAL_TASK,
+	  'weight' => 8,
+	  'page arguments' => array(2),
+	  'access arguments' => array('access to my dashboard'),
+	  'file' => 'files/page_audit_review.inc',
+	);
 
 
-  $items['audit-review/approve-review-result'] = array(
-    'title' => 'Counselee Approve Review Result',
-    'page callback' => 'approve_review_result',
-    'page arguments' => array(),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'files/page_audit_review.inc',
-  );
+	$items['audit-review/approve-review-result'] = array(
+	  'title' => 'Counselee Approve Review Result',
+	  'page callback' => 'approve_review_result',
+	  'page arguments' => array(),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_CALLBACK,
+	  'file' => 'files/page_audit_review.inc',
+	);
 
-  $items['audit-review/disapprove-review-result'] = array(
-    'title' => 'Counselee Disapprove Review Result',
-    'page callback' => 'disapprove_review_result',
-    'page arguments' => array(),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'files/page_audit_review.inc',
-  );
+	$items['audit-review/disapprove-review-result'] = array(
+	  'title' => 'Counselee Disapprove Review Result',
+	  'page callback' => 'disapprove_review_result',
+	  'page arguments' => array(),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_CALLBACK,
+	  'file' => 'files/page_audit_review.inc',
+	);
 
 
-  $items['audit-review/submit-review-result'] = array(
-    'title' => 'Counselor Submit Review Result',
-    'page callback' => 'submit_review_result',
-    'page arguments' => array(),
-    'access arguments' => array('access to my dashboard'),
-    'type' => MENU_CALLBACK,
-    'file' => 'files/page_audit_review.inc',
-  );
-  return $items;
+	$items['audit-review/submit-review-result'] = array(
+	  'title' => 'Counselor Submit Review Result',
+	  'page callback' => 'submit_review_result',
+	  'page arguments' => array(),
+	  'access arguments' => array('access to my dashboard'),
+	  'type' => MENU_CALLBACK,
+	  'file' => 'files/page_audit_review.inc',
+	);
+	return $items;
 }
 
 function counselee_permission() {
-  return array(
-    'access to my dashboard' => array(
-      'title' => t('Access to my dashboard'),
-    ),
+	return array(
+	  'access to my dashboard' => array(
+	    'title' => t('Access to my dashboard'),
+	  ),
 //    'access to peer review' => array(
 //      'title' => t('Access to peer review form'),
 //    ),
-  );
+	);
 }
 
 function counselee_block_info() {
-  $blocks['user_status'] = array(
-    'info' => t('User Status View'),
-  );
-  $blocks['my_work_stage'] = array(
-    'info' => t('My Working Stage'),
-    'cache' => DRUPAL_NO_CACHE,
-  );
+	$blocks['user_status'] = array(
+	  'info' => t('User Status View'),
+	);
+	$blocks['my_work_stage'] = array(
+	  'info' => t('My Working Stage'),
+	  'cache' => DRUPAL_NO_CACHE,
+	);
 // $blocks['select_peers'] = array(
 //   'info' => t('Select Peers'),
 // 'cache' => DRUPAL_NO_CACHE, // no cache
 //   'cache' => DRUPAL_NO_CACHE,
 // );
-  return $blocks;
+	return $blocks;
 }
 
 function counselee_block_view($delta = '') {
 //The $delta parameter tells us which block is being requested.
-  switch ($delta) {
-    case 'user_status':
-      appendCSSJS();
+	switch ($delta) {
+		case 'user_status':
+			appendCSSJS();
 //            $block['subject'] = render_subject_use_image('Configure Timeslot');
-      $status_info = select_reviewer_status_from_BD();
-      $block['content'] = theme('user_status_view', array('status_info' => $status_info));
-      break;
-    case 'my_work_stage':
-      $counseleePeers = counselee_select_peers('counselee', get_current_user_name());
-      $counselorPeers = counselee_select_peers('counselor', get_current_user_name());
-      $reviewList = counselee_do_peersreview(get_current_user_name());
-      $self_review_finished = get_self_review_finished_list(get_current_user_name());
-      $counselee_confirm_review = get_confirm_review_result(get_current_user_name());
-      $counselor_submit_review = get_counselor_submit_result(get_current_user_name());
-      $gm_audit_review_list = get_gm_audit_list(get_current_user_name());
-      $block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers,
-        'counselorPeers' => $counselorPeers,
-        'reviewList' => $reviewList,
-        'self_review_finished' => $self_review_finished,
-        'counselee_confirm_review' => $counselee_confirm_review,
-        'counselor_submit_review' => $counselor_submit_review,
-        'gm_audit_review_list' => $gm_audit_review_list,
-      ));
-      break;
-  }
-  return $block;
+			$status_info = select_reviewer_status_from_BD();
+			$block['content'] = theme('user_status_view', array('status_info' => $status_info));
+			break;
+		case 'my_work_stage':
+			$counseleePeers = counselee_select_peers('counselee', get_current_user_name());
+			$counselorPeers = counselee_select_peers('counselor', get_current_user_name());
+			$reviewList = counselee_do_peersreview(get_current_user_name());
+			$self_review_finished = get_self_review_finished_list(get_current_user_name());
+			$counselee_confirm_review = get_confirm_review_result(get_current_user_name());
+			$counselor_submit_review = get_counselor_submit_result(get_current_user_name());
+			$gm_audit_review_list = get_gm_audit_list(get_current_user_name());
+			$block['content'] = theme('my_working_list_view', array('counseleePeers' => $counseleePeers,
+			  'counselorPeers' => $counselorPeers,
+			  'reviewList' => $reviewList,
+			  'self_review_finished' => $self_review_finished,
+			  'counselee_confirm_review' => $counselee_confirm_review,
+			  'counselor_submit_review' => $counselor_submit_review,
+			  'gm_audit_review_list' => $gm_audit_review_list,
+			));
+			break;
+	}
+	return $block;
 }
 
 function counselee_theme() {
-  return array(
-    'user_status_view' => array(
-      'variables' => array('status_info' => NULL),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'user_status_view',),
-    'my_working_list_view' => array(
-      'variables' => array('counseleePeers' => NULL,
-        'counselorPeers' => NULL,
-        'reviewList' => NULL,
-        'self_review_finished' => NULL,
-        'counselee_confirm_review' => NULL,
-        'counselor_submit_review' => NULL,
-        'my_working_list_view' => NULL,
-      ),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'my_working_list',),
-    'select_peers' => array(
-      'variables' => array('all_employee_array' => NULL, 'selected_array' => NULL, 'unselected_array' => NULL, 'userId_flag' => NULL, 'peers_status' => NULL,),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'select_peers',),
-    'watch_basic_info' => array(
-      'variables' => array('basic_info' => NULL, 'myInfo' => NULL),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'watch_basic_info',),
-    'self_assessment' => array(
-      'variables' => array('rreid' => NULL, 'node' => NULL),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'self_assessment',),
-    'view_self_assessment_item' => array(
-      'variables' => array(
-        'item_num' => NULL,
-        'self_dataset' => NULL,
-        'overall_rating' => NULL,
-      ),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'view_self_assessment_item',),
-    'view_self_assessment_comment_only' => array(
-      'variables' => array(
-        'item_num' => NULL,
-        'self_comment' => NULL,
-      ),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'view_self_assessment_comment_only',),
-    'review_content' => array(
-      'variables' => array(
-        'item_num' => NULL,
-        'rreid' => NULL,
-        'nid' => NULL,
-        'reviewee' => NULL,
-        'self_dataset' => NULL,
-        'pie_data' => NULL,
-        'unread_comment' => NULL,
-        'total_item_count' => NULL,
-      ),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'review_content_item',),
-    'review_content_without_chart' => array(
-      'variables' => array(
-        'item_num' => NULL,
-        'rreid' => NULL,
-        'nid' => NULL,
-        'reviewee' => NULL,
-        'self_dataset' => NULL,
-        'self_item_count' => NULL,
-      ),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'review_content_without_chart',),
-    'review_content_comment_only' => array(
-      'variables' => array(
-        'item_num' => NULL,
-        'rreid' => NULL,
-        'nid' => NULL,
-        'reviewee' => NULL,
-        'self_comment' => NULL,
-        'total_item_count' => NULL,
-      ),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'review_content_comment_only',),
-    'project_roles_and_responsibilities' => array(
-      'variables' => array(
-        'rreid' => NULL,
-        'nid' => NULL,
-        'reviewee' => NULL,
-        'review_info_content_num' => NULL,
-        'clientdate' => NULL,
-        'project_roles_and_responsibilities' => NULL,
-        'rating' => NULL,
-      ),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'project_roles_and_responsibilities',),
-    'view_assessment' => array(
-      'variables' => array(
-        'item_num' => NULL,
-        'rreid' => NULL,
-        'nid' => NULL,
-        'reviewee' => NULL,
-        'self_dataset' => NULL,
-        'pie_data' => NULL,
-        'unread_comment' => NULL,
-        'total_item_count' => NULL,
-        'peer_json' => NULL,
-        'json_count' => NULL,
-      ),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'view_assessment_item',),
-    'view_assessment_without_chart' => array(
-      'variables' => array(
-        'item_num' => NULL,
-        'rreid' => NULL,
-        'nid' => NULL,
-        'reviewee' => NULL,
-        'self_dataset' => NULL,
-        'self_item_count' => NULL,
-      ),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'view_assessment_without_chart',),
-    'view_assessment_comment_only' => array(
-      'variables' => array(
-        'item_num' => NULL,
-        'rreid' => NULL,
-        'nid' => NULL,
-        'reviewee' => NULL,
-        'self_comment' => NULL,
-        'total_item_count' => NULL,
-      ),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'view_assessment_comment_only',),
-    'page_audit_review_question' => array(
-      'variables' => array(
-        'node' => NULL,),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'page_audit_review_question',),
-    'page_audit_review_summay_description' => array(
-      'variables' => array(
-        'node' => NULL,),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'page_audit_review_summay_description',),
-    'page_audit_review_btn_approve' => array(
-      'variables' => array(
-        'rreid' => NULL,),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'page_audit_review_btn_approve',),
-    'page_audit_review_btn_submit' => array(
-      'variables' => array(
-        'rreid' => NULL,),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'page_audit_review_btn_submit',),
-    'page_audit_review_score' => array(
-      'variables' => array(),
-      'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'page_audit_review_score',),
-  );
+	return array(
+	  'user_status_view' => array(
+	    'variables' => array('status_info' => NULL),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'user_status_view',),
+	  'my_working_list_view' => array(
+	    'variables' => array('counseleePeers' => NULL,
+	      'counselorPeers' => NULL,
+	      'reviewList' => NULL,
+	      'self_review_finished' => NULL,
+	      'counselee_confirm_review' => NULL,
+	      'counselor_submit_review' => NULL,
+	      'my_working_list_view' => NULL,
+	    ),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'my_working_list',),
+	  'select_peers' => array(
+	    'variables' => array('all_employee_array' => NULL, 'selected_array' => NULL, 'unselected_array' => NULL, 'userId_flag' => NULL, 'peers_status' => NULL,),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'select_peers',),
+	  'watch_basic_info' => array(
+	    'variables' => array('basic_info' => NULL, 'myInfo' => NULL),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'watch_basic_info',),
+	  'self_assessment' => array(
+	    'variables' => array('rreid' => NULL, 'node' => NULL),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'self_assessment',),
+	  'view_self_assessment_item' => array(
+	    'variables' => array(
+	      'item_num' => NULL,
+	      'self_dataset' => NULL,
+	      'overall_rating' => NULL,
+	    ),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'view_self_assessment_item',),
+	  'view_self_assessment_comment_only' => array(
+	    'variables' => array(
+	      'item_num' => NULL,
+	      'self_comment' => NULL,
+	    ),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'view_self_assessment_comment_only',),
+	  'review_content' => array(
+	    'variables' => array(
+	      'item_num' => NULL,
+	      'rreid' => NULL,
+	      'nid' => NULL,
+	      'reviewee' => NULL,
+	      'self_dataset' => NULL,
+	      'pie_data' => NULL,
+	      'unread_comment' => NULL,
+	      'total_item_count' => NULL,
+	      'overall_rating' => NULL,
+	    ),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'review_content_item',),
+	  'review_content_without_chart' => array(
+	    'variables' => array(
+	      'item_num' => NULL,
+	      'rreid' => NULL,
+	      'nid' => NULL,
+	      'reviewee' => NULL,
+	      'self_dataset' => NULL,
+	      'self_item_count' => NULL,
+	    ),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'review_content_without_chart',),
+	  'review_content_comment_only' => array(
+	    'variables' => array(
+	      'item_num' => NULL,
+	      'rreid' => NULL,
+	      'nid' => NULL,
+	      'reviewee' => NULL,
+	      'self_comment' => NULL,
+	      'total_item_count' => NULL,
+	    ),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'review_content_comment_only',),
+	  'project_roles_and_responsibilities' => array(
+	    'variables' => array(
+	      'rreid' => NULL,
+	      'nid' => NULL,
+	      'reviewee' => NULL,
+	      'review_info_content_num' => NULL,
+	      'project' => NULL,
+	      'client' => NULL,
+	      'clientdate' => NULL,
+	      'project_roles_and_responsibilities' => NULL,
+	      'startdate' => NULL,
+	      'enddate' => NULL,
+	    ),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'project_roles_and_responsibilities',),
+	  'review_subtitle' => array(
+	    'variables' => array(
+	      'rreid' => NULL,
+	      'nid' => NULL,
+	      'reviewee' => NULL,
+	      'subtitle' => NULL,
+	    ),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'review_subtitle',),
+	  'view_assessment' => array(
+	    'variables' => array(
+	      'item_num' => NULL,
+	      'rreid' => NULL,
+	      'nid' => NULL,
+	      'reviewee' => NULL,
+	      'self_dataset' => NULL,
+	      'pie_data' => NULL,
+	      'unread_comment' => NULL,
+	      'total_item_count' => NULL,
+	      'peer_json' => NULL,
+	      'json_count' => NULL,
+	      'overall_rating' => NULL,
+	    ),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'view_assessment_item',),
+	  'view_assessment_without_chart' => array(
+	    'variables' => array(
+	      'item_num' => NULL,
+	      'rreid' => NULL,
+	      'nid' => NULL,
+	      'reviewee' => NULL,
+	      'self_dataset' => NULL,
+	      'self_item_count' => NULL,
+	    ),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'view_assessment_without_chart',),
+	  'view_assessment_comment_only' => array(
+	    'variables' => array(
+	      'item_num' => NULL,
+	      'rreid' => NULL,
+	      'nid' => NULL,
+	      'reviewee' => NULL,
+	      'self_comment' => NULL,
+	      'total_item_count' => NULL,
+	    ),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'view_assessment_comment_only',),
+	  'page_audit_review_question' => array(
+	    'variables' => array(
+	      'node' => NULL,),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'page_audit_review_question',),
+	  'page_audit_review_summay_description' => array(
+	    'variables' => array(
+	      'node' => NULL,),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'page_audit_review_summay_description',),
+	  'page_audit_review_btn_approve' => array(
+	    'variables' => array(
+	      'rreid' => NULL,),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'page_audit_review_btn_approve',),
+	  'page_audit_review_btn_submit' => array(
+	    'variables' => array(
+	      'rreid' => NULL,),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'page_audit_review_btn_submit',),
+	  'page_audit_review_score' => array(
+	    'variables' => array(),
+	    'path' => drupal_get_path('module', 'counselee') . '/templates',
+	    'template' => 'page_audit_review_score',),
+	);
 }
 
 /**
@@ -425,31 +439,31 @@ function counselee_theme() {
  * @author Mars
  */
 function select_reviewer_status_from_BD() {
-  $status_info = array();
-  $cur_user_name = get_current_user_name();
-  if (module_exists('counsellor') && module_enable(array('counsellor'))) {
-    $result = get_counselees_from_db();
+	$status_info = array();
+	$cur_user_name = get_current_user_name();
+	if (module_exists('counsellor') && module_enable(array('counsellor'))) {
+		$result = get_counselees_from_db();
 // counselee login
-    $my_name = array($cur_user_name);
-    $my_review_status = get_status_from_db($my_name);
-    if (count($result) != '0') {
+		$my_name = array($cur_user_name);
+		$my_review_status = get_status_from_db($my_name);
+		if (count($result) != '0') {
 
 // counsellor login
-      $counselee_name_array = generate_selected_participant_array($result);
-      $counselee_status = get_status_from_db($counselee_name_array);
-      foreach ($counselee_status as $key => $status) {
-        array_push($my_review_status, $status);
-      }
+			$counselee_name_array = generate_selected_participant_array($result);
+			$counselee_status = get_status_from_db($counselee_name_array);
+			foreach ($counselee_status as $key => $status) {
+				array_push($my_review_status, $status);
+			}
 
 //// counsellor login
 //      $employee_name_array = generate_selected_participant_array($result);
-    }
-    else {
+		}
+		else {
 // counselee login
-    }
-  }
-  $status_info = $my_review_status;
-  return $status_info;
+		}
+	}
+	$status_info = $my_review_status;
+	return $status_info;
 }
 
 /**
@@ -463,49 +477,49 @@ function select_reviewer_status_from_BD() {
  */
 function counselee_select_peers($userType, $userName) {
 
-  if ($userType === 'counselee') {
-    $selPeersStatus = array(0, 2);
-    $counselee_query = db_select('prs_rel_review_employee', 'review');
-    $counselee_query->join('prs_general', 'general', 'general.prid=review.prid');
-    $counselee_query->addField('review', 'employeeName');
-    $counselee_query->addField('review', 'rreid');
-    $counselee_query->addField('general', 'type');
-    $counselee_query->addField('general', 'description');
-    $counselee_query->condition('review.employeeName', $userName);
-    $counselee_query->condition('review.rstatus', 1);
+	if ($userType === 'counselee') {
+		$selPeersStatus = array(0, 2);
+		$counselee_query = db_select('prs_rel_review_employee', 'review');
+		$counselee_query->join('prs_general', 'general', 'general.prid=review.prid');
+		$counselee_query->addField('review', 'employeeName');
+		$counselee_query->addField('review', 'rreid');
+		$counselee_query->addField('general', 'type');
+		$counselee_query->addField('general', 'description');
+		$counselee_query->condition('review.employeeName', $userName);
+		$counselee_query->condition('review.rstatus', 1);
 //$counselee_query->condition('general.type', $reviewType);
-    $counselee_query->condition('review.spstatus', $selPeersStatus, 'in');
+		$counselee_query->condition('review.spstatus', $selPeersStatus, 'in');
 
-    $dataset = $counselee_query->execute()->fetchAll();
-  }
-  else if ($userType === 'counselor') {
-    $selPeersStatus = array(0, 1);
-    $counselor_query = db_select('prs_rel_employee_counselor_gm', 'relation');
-    $counselor_query->join('prs_rel_review_employee', 'review', 'relation.employeeName = review.employeeName');
-    $counselor_query->join('prs_general', 'general', 'general.prid=review.prid');
-    $counselor_query->addField('relation', 'employeeName');
-    $counselor_query->addField('review', 'rreid');
-    $counselor_query->addField('general', 'type');
-    $counselor_query->addField('general', 'description');
-    $counselor_query->condition('relation.counselorName', $userName);
-    $counselor_query->condition('review.rstatus', 1);
+		$dataset = $counselee_query->execute()->fetchAll();
+	}
+	else if ($userType === 'counselor') {
+		$selPeersStatus = array(0, 1);
+		$counselor_query = db_select('prs_rel_employee_counselor_gm', 'relation');
+		$counselor_query->join('prs_rel_review_employee', 'review', 'relation.employeeName = review.employeeName');
+		$counselor_query->join('prs_general', 'general', 'general.prid=review.prid');
+		$counselor_query->addField('relation', 'employeeName');
+		$counselor_query->addField('review', 'rreid');
+		$counselor_query->addField('general', 'type');
+		$counselor_query->addField('general', 'description');
+		$counselor_query->condition('relation.counselorName', $userName);
+		$counselor_query->condition('review.rstatus', 1);
 //$counselor_query->condition('general.type', $reviewType);
-    $counselor_query->condition('review.spstatus', $selPeersStatus, 'in');
+		$counselor_query->condition('review.spstatus', $selPeersStatus, 'in');
 
-    $dataset = $counselor_query->execute()->fetchAll();
-  }
+		$dataset = $counselor_query->execute()->fetchAll();
+	}
 
-  $result = array();
-  $index = 0;
-  foreach ($dataset as $node) {
-    $employeeName = $node->employeeName;
-    $rreid = $node->rreid;
-    $reviewtype = $node->type;
-    $description = $node->description;
-    $temp = array('employeeName' => $employeeName, 'rreid' => $rreid, 'reviewType' => $reviewtype, 'description' => $description);
-    $result[$index++] = $temp;
-  }
-  return $result;
+	$result = array();
+	$index = 0;
+	foreach ($dataset as $node) {
+		$employeeName = $node->employeeName;
+		$rreid = $node->rreid;
+		$reviewtype = $node->type;
+		$description = $node->description;
+		$temp = array('employeeName' => $employeeName, 'rreid' => $rreid, 'reviewType' => $reviewtype, 'description' => $description);
+		$result[$index++] = $temp;
+	}
+	return $result;
 }
 
 /**
@@ -517,17 +531,17 @@ function counselee_select_peers($userType, $userName) {
  */
 function get_status_from_db($employeeName) {
 //   $cur_user_name = get_current_user_name();
-  $query = db_select('prs_rel_review_employee', 're');
-  $query->join('prs_general', 'pg', 'pg.prid=re.prid');
-  $query->fields('re', array('employeeName', 'rreid', 'rstatus'));
-  $query->addField('pg', 'period_start');
-  $query->addField('pg', 'period_end');
-  $query->addField('pg', 'type');
-  $query->addField('pg', 'description');
-  $query->condition('re.employeeName', $employeeName, 'in');
-  $query->orderBy('re.rstatus', 'ASC');
-  $result = $query->execute()->fetchAll();
-  return $result;
+	$query = db_select('prs_rel_review_employee', 're');
+	$query->join('prs_general', 'pg', 'pg.prid=re.prid');
+	$query->fields('re', array('employeeName', 'rreid', 'rstatus'));
+	$query->addField('pg', 'period_start');
+	$query->addField('pg', 'period_end');
+	$query->addField('pg', 'type');
+	$query->addField('pg', 'description');
+	$query->condition('re.employeeName', $employeeName, 'in');
+	$query->orderBy('re.rstatus', 'ASC');
+	$result = $query->execute()->fetchAll();
+	return $result;
 }
 
 /**
@@ -596,14 +610,14 @@ function counselee_do_peersreview($userName) {
  * @return type
  */
 function get_all_employees_from_db() {
-  $cur_user_name = get_current_user_name();
-  $query = db_select('prs_rel_employee_counselor_gm', 'precg');
-  $query->fields('precg', array('employeeName'));
-  $query->condition('precg.employeeName', $cur_user_name, '!=');
-  $query->orderBy('precg.employeeName', 'ASC');
-  $result = $query->execute()->fetchAll();
-  $employees = generate_array($result, 'employeeName');
-  return $employees;
+	$cur_user_name = get_current_user_name();
+	$query = db_select('prs_rel_employee_counselor_gm', 'precg');
+	$query->fields('precg', array('employeeName'));
+	$query->condition('precg.employeeName', $cur_user_name, '!=');
+	$query->orderBy('precg.employeeName', 'ASC');
+	$result = $query->execute()->fetchAll();
+	$employees = generate_array($result, 'employeeName');
+	return $employees;
 }
 
 /**
@@ -613,14 +627,14 @@ function get_all_employees_from_db() {
  * @return array $candidates
  * */
 function get_all_peer_candidates_from_db($rreid) {
-  $reviewee = get_reviewee_from_db($rreid);
-  $query = db_select('prs_rel_employee_counselor_gm', 'precg');
-  $query->fields('precg', array('employeeName'));
-  $query->condition('precg.employeeName', $reviewee, '!=');
-  $query->orderBy('precg.employeeName', 'ASC');
-  $result = $query->execute()->fetchAll();
-  $candidates = generate_array($result, 'employeeName');
-  return $candidates;
+	$reviewee = get_reviewee_from_db($rreid);
+	$query = db_select('prs_rel_employee_counselor_gm', 'precg');
+	$query->fields('precg', array('employeeName'));
+	$query->condition('precg.employeeName', $reviewee, '!=');
+	$query->orderBy('precg.employeeName', 'ASC');
+	$result = $query->execute()->fetchAll();
+	$candidates = generate_array($result, 'employeeName');
+	return $candidates;
 }
 
 /**
@@ -629,14 +643,14 @@ function get_all_peer_candidates_from_db($rreid) {
  * @return $selected_array
  * */
 function get_selected_peers_from_db($rreid) {
-  $query = db_select('prs_rel_provider_employee');
-  $query->fields('prs_rel_provider_employee', array('providerName'));
-  $query->condition('prs_rel_provider_employee.rreid', $rreid, '=');
-  $query->where('prs_rel_provider_employee.providerName!=prs_rel_provider_employee.employeeName');
-  $query->orderBy('prs_rel_provider_employee.providerName', 'ASC');
-  $result = $query->execute()->fetchAll();
-  $selected_array = generate_array($result, 'providerName');
-  return $selected_array;
+	$query = db_select('prs_rel_provider_employee');
+	$query->fields('prs_rel_provider_employee', array('providerName'));
+	$query->condition('prs_rel_provider_employee.rreid', $rreid, '=');
+	$query->where('prs_rel_provider_employee.providerName!=prs_rel_provider_employee.employeeName');
+	$query->orderBy('prs_rel_provider_employee.providerName', 'ASC');
+	$result = $query->execute()->fetchAll();
+	$selected_array = generate_array($result, 'providerName');
+	return $selected_array;
 }
 
 /**
@@ -645,17 +659,17 @@ function get_selected_peers_from_db($rreid) {
  * @return array $selected_array
  * */
 function get_unselected_peers_from_db($reviewee, $selected_array) {
-  $count = count($selected_array);
-  $query = db_select('prs_reviewers');
-  $query->fields('prs_reviewers', array('login_name'));
-  $query->condition('prs_reviewers.login_name', $reviewee, '!=');
-  if ($count != 0) {
-    $query->condition('prs_reviewers.login_name', $selected_array, 'not in');
-  }
-  $query->orderBy('prs_reviewers.login_name', 'ASC');
-  $result = $query->execute()->fetchAll();
-  $unselected_array = generate_array($result, 'login_name');
-  return $unselected_array;
+	$count = count($selected_array);
+	$query = db_select('prs_reviewers');
+	$query->fields('prs_reviewers', array('login_name'));
+	$query->condition('prs_reviewers.login_name', $reviewee, '!=');
+	if ($count != 0) {
+		$query->condition('prs_reviewers.login_name', $selected_array, 'not in');
+	}
+	$query->orderBy('prs_reviewers.login_name', 'ASC');
+	$result = $query->execute()->fetchAll();
+	$unselected_array = generate_array($result, 'login_name');
+	return $unselected_array;
 }
 
 /**
@@ -664,11 +678,11 @@ function get_unselected_peers_from_db($reviewee, $selected_array) {
  * @return type $reviewee
  * */
 function get_reviewee_from_db($rreid) {
-  $query = db_select('prs_rel_review_employee', 'prre');
-  $query->fields('prre', array('employeeName'));
-  $query->condition('prre.rreid', $rreid, '=');
-  $result = $query->execute()->fetchAll();
-  return $result['0']->employeeName;
+	$query = db_select('prs_rel_review_employee', 'prre');
+	$query->fields('prre', array('employeeName'));
+	$query->condition('prre.rreid', $rreid, '=');
+	$result = $query->execute()->fetchAll();
+	return $result['0']->employeeName;
 }
 
 /**
@@ -677,11 +691,11 @@ function get_reviewee_from_db($rreid) {
  * @return type $spstatus
  * */
 function get_review_spstatus_from_db($rreid) {
-  $query = db_select('prs_rel_review_employee', 'prre');
-  $query->fields('prre', array('spstatus'));
-  $query->condition('prre.rreid', $rreid, '=');
-  $result = $query->execute()->fetchAll();
-  return $result['0']->spstatus;
+	$query = db_select('prs_rel_review_employee', 'prre');
+	$query->fields('prre', array('spstatus'));
+	$query->condition('prre.rreid', $rreid, '=');
+	$result = $query->execute()->fetchAll();
+	return $result['0']->spstatus;
 }
 
 /**
@@ -693,14 +707,14 @@ function get_review_spstatus_from_db($rreid) {
  * */
 function print_render_tabs($tabs) {
 // fetch the review id from the tab info
-  $tmp = $tabs['tabs']['output']['2']['#link']['href'];
-  $pos = strrpos($tmp, '/');
+	$tmp = $tabs['tabs']['output']['2']['#link']['href'];
+	$pos = strrpos($tmp, '/');
 // prepare the arguments
-  $rreid = substr($tmp, $pos + 1);
-  $userId_flag = get_user_identity($rreid);
-  $rstatus = get_review_status_from_db($rreid);
-  print render($tabs['tabs']['output']['0']);
-  print render($tabs['tabs']['output']['1']);
+	$rreid = substr($tmp, $pos + 1);
+	$userId_flag = get_user_identity($rreid);
+	$rstatus = get_review_status_from_db($rreid);
+	print render($tabs['tabs']['output']['0']);
+	print render($tabs['tabs']['output']['1']);
 // identify the user and review status
   if (_is_assessment_editable($userId_flag, $rstatus)) {
     print render($tabs['tabs']['output']['2']);
@@ -732,13 +746,13 @@ function print_render_tabs($tabs) {
  * @return bool
  * */
 function _is_assessment_editable($userId_flag, $rstatus) {
-  // while login user is the counselee of review and status is REVIEW_IN_DRAFT
-  if ($userId_flag == 0 && $rstatus == REVIEW_IN_DRAFT) {
-    return TRUE;
-  }
-  else {
-    return FALSE;
-  }
+	// while login user is the counselee of review and status is REVIEW_IN_DRAFT
+	if ($userId_flag == 0 && $rstatus == REVIEW_IN_DRAFT) {
+		return TRUE;
+	}
+	else {
+		return FALSE;
+	}
 }
 
 /**
@@ -747,12 +761,12 @@ function _is_assessment_editable($userId_flag, $rstatus) {
  * REVIEW_IN_DRAFT, the result is no
  * */
 function _is_assessment_visible_for_counselor($userId_flag, $rstatus) {
-  if (($rstatus == REVIEW_BY_COUNSELOR) && ($userId_flag == 1)) {
-    return TRUE;
-  }
-  else {
-    return FALSE;
-  }
+	if (($rstatus == REVIEW_BY_COUNSELOR) && ($userId_flag == 1)) {
+		return TRUE;
+	}
+	else {
+		return FALSE;
+	}
 }
 
 /**
@@ -761,20 +775,20 @@ function _is_assessment_visible_for_counselor($userId_flag, $rstatus) {
  * @param type $submission 
  */
 function counselee_webform_submission_update($node, $submission) {
-  _alert_after_submited($node, $submission);
+	_alert_after_submited($node, $submission);
 }
 
 function counselee_webform_validation_validators() {
 
-  return array(
-    'check_comment' => array(
-      'name' => "Check Comment",
-      'component_types' => array(
-        'select',
-        'textarea',
-      ),
-    )
-  );
+	return array(
+	  'check_comment' => array(
+	    'name' => "Check Comment",
+	    'component_types' => array(
+	      'select',
+	      'textarea',
+	    ),
+	  )
+	);
 }
 
 /**
@@ -783,61 +797,61 @@ function counselee_webform_validation_validators() {
  */
 function counselee_webform_validation_validate($validator_name, $items, $components, $rule) {
 
-  if ($items) {
-    switch ($validator_name) {
-      case 'check_comment':
-        $select_arr = array();
-        $comment_arr = array();
+	if ($items) {
+		switch ($validator_name) {
+			case 'check_comment':
+				$select_arr = array();
+				$comment_arr = array();
 
-        foreach ($items as $key => $val) {
-          if ($components[$key]['type'] == 'select') {
-            $select_arr[$components[$key]['form_key']] = $val;
-          }
-          else if ($components[$key]['type'] == 'textarea') {
-            $comment_arr[$components[$key]['form_key']] = array('key' => $key, 'val' => $val);
-          }
-        }
+				foreach ($items as $key => $val) {
+					if ($components[$key]['type'] == 'select') {
+						$select_arr[$components[$key]['form_key']] = $val;
+					}
+					else if ($components[$key]['type'] == 'textarea') {
+						$comment_arr[$components[$key]['form_key']] = array('key' => $key, 'val' => $val);
+					}
+				}
 
-        foreach ($select_arr as $key => $val) {
-          if (isset($comment_arr[$key . '_comments'])) {
-            $comment_val = $comment_arr[$key . '_comments']['val'];
-            $comment_key = $comment_arr[$key . '_comments']['key'];
-          }
-          else if (isset($comment_arr[$key . '_comment'])) {
-            $comment_val = $comment_arr[$key . '_comment']['val'];
-            $comment_key = $comment_arr[$key . '_comment']['key'];
-          }
-          else {
-            $comment_val = 'Don\'t need to check';
-          }
-          $select_val = $val;
-          if (($select_val != '3' || $select_val != 3) && ($comment_val == '')) {
-            $field_name = get_field_name($key);
-            $errors[$comment_key] = t('%item Comment field is required,because its score is not 3 point.', array('%item' => $field_name));
-          }
-        }
-        if (isset($errors))
-          return $errors;
-        break;
-    }
-  }
+				foreach ($select_arr as $key => $val) {
+					if (isset($comment_arr[$key . '_comments'])) {
+						$comment_val = $comment_arr[$key . '_comments']['val'];
+						$comment_key = $comment_arr[$key . '_comments']['key'];
+					}
+					else if (isset($comment_arr[$key . '_comment'])) {
+						$comment_val = $comment_arr[$key . '_comment']['val'];
+						$comment_key = $comment_arr[$key . '_comment']['key'];
+					}
+					else {
+						$comment_val = 'Don\'t need to check';
+					}
+					$select_val = $val;
+					if (($select_val != '3' || $select_val != 3) && ($comment_val == '')) {
+						$field_name = get_field_name($key);
+						$errors[$comment_key] = t('%item Comment field is required,because its score is not 3 point.', array('%item' => $field_name));
+					}
+				}
+				if (isset($errors))
+					return $errors;
+				break;
+		}
+	}
 }
 
 function get_field_name($form_key) {
-  $field_name = '';  //strtoupper() 
-  $form_key = ucfirst($form_key);
+	$field_name = '';  //strtoupper() 
+	$form_key = ucfirst($form_key);
 
-  for ($i = 0; $i < strlen($form_key); $i++) {
-    $char = substr($form_key, $i, 1);
-    if ($char == '_') {
-      $i++;
-      $field_name .= ' ' . ucfirst(substr($form_key, $i, 1));
-    }
-    else {
-      $field_name.=$char;
-    }
-  }
-  return $field_name;
+	for ($i = 0; $i < strlen($form_key); $i++) {
+		$char = substr($form_key, $i, 1);
+		if ($char == '_') {
+			$i++;
+			$field_name .= ' ' . ucfirst(substr($form_key, $i, 1));
+		}
+		else {
+			$field_name.=$char;
+		}
+	}
+	return $field_name;
 }
 
 /**
@@ -846,103 +860,103 @@ function get_field_name($form_key) {
  * @param type $submission 
  */
 function counselee_webform_submission_insert($node, $submission) {
-  _alert_after_submited($node, $submission);
+	_alert_after_submited($node, $submission);
 }
 
 function _alert_after_submited($node, $submission) {
-  if (is_selfreview($node->webform['nid'])) {
+	if (is_selfreview($node->webform['nid'])) {
 //self review
-    if (has_submitted($node)) {
-      if (modify_feedback_status($node->webform['nid'])) {
-        if (modify_review_status($node->webform['nid'], $rreid)) {
+		if (has_submitted($node)) {
+			if (modify_feedback_status($node->webform['nid'])) {
+				if (modify_review_status($node->webform['nid'], $rreid)) {
 //======================================send email===============
-          $cur_counselee_name = get_current_user_name();
-          $counselor_name = my_counselor_gm_name($cur_counselee_name);
-          $cur_counselor_name = $counselor_name[0]->counselorName;
+					$cur_counselee_name = get_current_user_name();
+					$counselor_name = my_counselor_gm_name($cur_counselee_name);
+					$cur_counselor_name = $counselor_name[0]->counselorName;
 //  dd('$cur_counselor_name');
 //  dd($cur_counselor_name);
-          if ($cur_counselor_name != '') {
-            $my_counselor_address = select_email_from_prs_reviewers(array($cur_counselor_name));
+					if ($cur_counselor_name != '') {
+						$my_counselor_address = select_email_from_prs_reviewers(array($cur_counselor_name));
 //            dd($my_counselor_address,'$my_counselor_address');
-            foreach ($my_counselor_address as $counseloraddress) {
-              $counselor_address = $counseloraddress->mail;
-            }
-            $reviews = get_basic_review_information($rreid);
+						foreach ($my_counselor_address as $counseloraddress) {
+							$counselor_address = $counseloraddress->mail;
+						}
+						$reviews = get_basic_review_information($rreid);
 //            dd($review,'$review');
 //            dd($rreid,'$rreid');
-            foreach ($reviews as $review) {
-              $description = $review->description;
-            }
-            $counselor_parems = array('username' => format_login_name($cur_counselor_name), 'reviewname' => $description, 'url' => get_curPage_base_url() . 'watchstatus/viewassessment/' . $rreid, 'counselee' => format_login_name($cur_counselee_name));
+						foreach ($reviews as $review) {
+							$description = $review->description;
+						}
+						$counselor_parems = array('username' => format_login_name($cur_counselor_name), 'reviewname' => $description, 'url' => get_curPage_base_url() . 'watchstatus/viewassessment/' . $rreid, 'counselee' => format_login_name($cur_counselee_name));
 
-            mail_sender_template_adapter($counselor_address, $counselor_parems, 2);
+						mail_sender_template_adapter($counselor_address, $counselor_parems, 2);
 //======================================send email end============
-          }
-        }
-      }
-    }
-  }
-  else {
+					}
+				}
+			}
+		}
+	}
+	else {
 // peer review
-    if (has_submitted($node)) {
-      modify_feedback_status($node->webform['nid']);
-    }
-  }
+		if (has_submitted($node)) {
+			modify_feedback_status($node->webform['nid']);
+		}
+	}
 }
 
 function has_submitted($node) {
-  $query = db_select('webform_submissions', 's');
-  $query->fields('s');
-  $query->condition('s.nid', $node->webform['nid']);
-  $result = $query->execute()->fetchAll();
-  foreach ($result as $submit) {
-    if ($submit->is_draft == 0) {
-      return true;
-    }
-  }
-  return false;
+	$query = db_select('webform_submissions', 's');
+	$query->fields('s');
+	$query->condition('s.nid', $node->webform['nid']);
+	$result = $query->execute()->fetchAll();
+	foreach ($result as $submit) {
+		if ($submit->is_draft == 0) {
+			return true;
+		}
+	}
+	return false;
 }
 
 function modify_feedback_status($nid) {
-  $count = db_update('prs_rel_provider_employee')
-      ->fields(array(
-        'status' => 1,
-      ))
-      ->condition('nid', $nid)
-      ->execute();
+	$count = db_update('prs_rel_provider_employee')
+	    ->fields(array(
+	      'status' => 1,
+	    ))
+	    ->condition('nid', $nid)
+	    ->execute();
 //  dd($count,'$count');
-  if ($count > 0) {
-    return TRUE;
-  }
-  else {
-    return FALSE;
-  }
+	if ($count > 0) {
+		return TRUE;
+	}
+	else {
+		return FALSE;
+	}
 }
 
 function modify_review_status($nid, &$rreid_rev) {
-  $query = db_select('prs_rel_provider_employee', 'prre');
-  $query->fields('prre');
-  $query->condition('prre.nid', $nid);
-  $results = $query->execute()->fetchAll();
-  foreach ($results as $result) {
+	$query = db_select('prs_rel_provider_employee', 'prre');
+	$query->fields('prre');
+	$query->condition('prre.nid', $nid);
+	$results = $query->execute()->fetchAll();
+	foreach ($results as $result) {
 
-    $rreid = $result->rreid;
-    $rreid_rev = $rreid;
-  }
+		$rreid = $result->rreid;
+		$rreid_rev = $rreid;
+	}
 
-  $count = db_update('prs_rel_review_employee')
-      ->fields(array(
-        'rstatus' => 2,
-      ))
-      ->condition('rreid', $rreid)
-      ->execute();
+	$count = db_update('prs_rel_review_employee')
+	    ->fields(array(
+	      'rstatus' => 2,
+	    ))
+	    ->condition('rreid', $rreid)
+	    ->execute();
 //  dd($count, '$count');
-  if ($count > 0) {
-    return TRUE;
-  }
-  else {
-    return FALSE;
-  }
+	if ($count > 0) {
+		return TRUE;
+	}
+	else {
+		return FALSE;
+	}
 }
 
 /**
@@ -989,42 +1003,42 @@ function get_self_review_finished_list($counselor) {
 }
 
 function get_review_token_from_db($rreid) {
-  $reviewee = get_reviewee_from_db($rreid);
-  $query = db_select('prs_rel_provider_employee', 'prpe')
-          ->fields('prpe', array('providerName', 'token'))
-          ->condition('prpe.rreid', $rreid)
-          ->condition('prpe.providerName', $reviewee, '!=')
-          ->orderBy('prpe.providerName', 'ASC')
-          ->execute()->fetchAll();
-  $tuple = array();
-  foreach ($query as $item) {
-    $temp = array(
-      $item['providerName'] => $item['token']);
-    array_push($tuple, $temp);
-  }
-  return $query;
+	$reviewee = get_reviewee_from_db($rreid);
+	$query = db_select('prs_rel_provider_employee', 'prpe')
+		->fields('prpe', array('providerName', 'token'))
+		->condition('prpe.rreid', $rreid)
+		->condition('prpe.providerName', $reviewee, '!=')
+		->orderBy('prpe.providerName', 'ASC')
+		->execute()->fetchAll();
+	$tuple = array();
+	foreach ($query as $item) {
+		$temp = array(
+		  $item['providerName'] => $item['token']);
+		array_push($tuple, $temp);
+	}
+	return $query;
 }
 
 function get_counselor_submittion_from_db($rreid) {
-  if (module_exists('common') && module_enable(array('common'))) {
-    $nid = get_provider_info($rreid);
-    $csiid = get_last_sid_by_nid($nid);
-  }
-  $query = db_select('prs_counselor_submit_info', 'pcsi')
-      ->join('prs_counselor_submit_data', 'pcsd', 'pcsd.csiid=pcsi.csiid')
-      ->fields('pcsi', array('pcsi.csiid'))
-      ->addField('pcsi', 'nid')
-      ->addField('pcsi', 'submitTimestamp')
-      ->addField('pcsi', 'isDraft')
-      ->addField('pcsd', 'count')
-      ->addField('pcsd', 'header')
-      ->addField('pcsd', 'rating')
-      ->addField('pcsd', 'comment')
-      ->condition('pcsi.nid', $nid)
-      ->condition('pcsi.csiid', $csiid)
-      ->orderBy('pcsd.count', 'ASC');
-  $result = $query->execute()->fetchAll();
-  return $result;
+	if (module_exists('common') && module_enable(array('common'))) {
+		$nid = get_provider_info($rreid);
+		$csiid = get_last_sid_by_nid($nid);
+	}
+	$query = db_select('prs_counselor_submit_info', 'pcsi')
+	    ->join('prs_counselor_submit_data', 'pcsd', 'pcsd.csiid=pcsi.csiid')
+	    ->fields('pcsi', array('pcsi.csiid'))
+	    ->addField('pcsi', 'nid')
+	    ->addField('pcsi', 'submitTimestamp')
+	    ->addField('pcsi', 'isDraft')
+	    ->addField('pcsd', 'count')
+	    ->addField('pcsd', 'header')
+	    ->addField('pcsd', 'rating')
+	    ->addField('pcsd', 'comment')
+	    ->condition('pcsi.nid', $nid)
+	    ->condition('pcsi.csiid', $csiid)
+	    ->orderBy('pcsd.count', 'ASC');
+	$result = $query->execute()->fetchAll();
+	return $result;
 }
 
 /**
@@ -1033,85 +1047,85 @@ function get_counselor_submittion_from_db($rreid) {
  */
 function get_confirm_review_result($username) {
 
-  $query = db_select('prs_rel_review_employee', 'review');
-  $query->join('prs_general', 'general', 'general.prid = review.prid');
-  $query->addField('review', 'prid');
-  $query->addField('review', 'rreid');
-  $query->addField('general', 'description');
-  $query->addField('general', 'type');
-  $query->condition('review.employeeName', $username);
-  $query->condition('review.rstatus', 3); // 3 stand for counselor has approved the review
+	$query = db_select('prs_rel_review_employee', 'review');
+	$query->join('prs_general', 'general', 'general.prid = review.prid');
+	$query->addField('review', 'prid');
+	$query->addField('review', 'rreid');
+	$query->addField('general', 'description');
+	$query->addField('general', 'type');
+	$query->condition('review.employeeName', $username);
+	$query->condition('review.rstatus', 3); // 3 stand for counselor has approved the review
 
-  $dataset = $query->execute()->fetchAll();
+	$dataset = $query->execute()->fetchAll();
 
-  $result = array();
-  $index = 0;
-  foreach ($dataset as $node) {
-    $prid = $node->prid;
-    $rreid = $node->rreid;
-    $reviewtype = $node->type;
-    $description = $node->description;
-    $temp = array('prid' => $prid, 'rreid' => $rreid, 'reviewType' => $reviewtype, 'description' => $description);
-    $result[$index++] = $temp;
-  }
-  return $result;
+	$result = array();
+	$index = 0;
+	foreach ($dataset as $node) {
+		$prid = $node->prid;
+		$rreid = $node->rreid;
+		$reviewtype = $node->type;
+		$description = $node->description;
+		$temp = array('prid' => $prid, 'rreid' => $rreid, 'reviewType' => $reviewtype, 'description' => $description);
+		$result[$index++] = $temp;
+	}
+	return $result;
 }
 
 function get_counselor_submit_result($username) {
 
-  $query = db_select('prs_rel_review_employee', 'review');
-  $query->innerJoin('prs_general', 'general', 'general.prid = review.prid');
-  $query->innerJoin('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName = review.employeeName');
-  $query->addField('review', 'prid');
-  $query->addField('review', 'rreid');
-  $query->addField('general', 'description');
-  $query->addField('general', 'type');
-  $query->addField('review', 'employeeName');
-  $query->condition('relation.counselorName', $username);
-  $query->condition('review.rstatus', 4); // 5 stand for counselor should submit the review
+	$query = db_select('prs_rel_review_employee', 'review');
+	$query->innerJoin('prs_general', 'general', 'general.prid = review.prid');
+	$query->innerJoin('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName = review.employeeName');
+	$query->addField('review', 'prid');
+	$query->addField('review', 'rreid');
+	$query->addField('general', 'description');
+	$query->addField('general', 'type');
+	$query->addField('review', 'employeeName');
+	$query->condition('relation.counselorName', $username);
+	$query->condition('review.rstatus', 4); // 5 stand for counselor should submit the review
 
-  $dataset = $query->execute()->fetchAll();
+	$dataset = $query->execute()->fetchAll();
 
-  $result = array();
-  $index = 0;
-  foreach ($dataset as $node) {
-    $prid = $node->prid;
-    $rreid = $node->rreid;
-    $reviewtype = $node->type;
-    $description = $node->description;
-    $counselee = $node->employeeName;
-    $temp = array('prid' => $prid,
-      'rreid' => $rreid,
-      'reviewType' => $reviewtype,
-      'description' => $description,
-      'counselee' => $counselee,
-    );
-    $result[$index++] = $temp;
-  }
-  return $result;
+	$result = array();
+	$index = 0;
+	foreach ($dataset as $node) {
+		$prid = $node->prid;
+		$rreid = $node->rreid;
+		$reviewtype = $node->type;
+		$description = $node->description;
+		$counselee = $node->employeeName;
+		$temp = array('prid' => $prid,
+		  'rreid' => $rreid,
+		  'reviewType' => $reviewtype,
+		  'description' => $description,
+		  'counselee' => $counselee,
+		);
+		$result[$index++] = $temp;
+	}
+	return $result;
 }
 
 function save_draft_for_anonymous_user($nid) {
-  if (is_selfreview($nid) == false) {
-    global $user;
-    $uid = $user->uid;
-    if ($uid != 0) {
-      $query = db_query("update {webform_submissions} set uid = $uid where nid = $nid")->execute();
-    }
-    else if ($uid == 0) {
-      $user->uid = get_webform_submissions_uid($nid);
-      $user->name = 'anonymous user for peer review form';
-    }
-  }
+	if (is_selfreview($nid) == false) {
+		global $user;
+		$uid = $user->uid;
+		if ($uid != 0) {
+			$query = db_query("update {webform_submissions} set uid = $uid where nid = $nid")->execute();
+		}
+		else if ($uid == 0) {
+			$user->uid = get_webform_submissions_uid($nid);
+			$user->name = 'anonymous user for peer review form';
+		}
+	}
 }
 
 function get_webform_submissions_uid($nid) {
-  $dataset = db_query("select uid from {webform_submissions} where nid = $nid")->fetchAll();
-  if (count($dataset) == 1) {
-    return $dataset[0]->uid;
-  }
-  else
-    return 2;
+	$dataset = db_query("select uid from {webform_submissions} where nid = $nid")->fetchAll();
+	if (count($dataset) == 1) {
+		return $dataset[0]->uid;
+	}
+	else
+		return 2;
 }
 
 /**
@@ -1121,12 +1135,12 @@ function get_webform_submissions_uid($nid) {
  */
 function display_comment($comment) {
 
-  if (strlen($comment) < 1) {
-    return NO_COMMENT;
-  }
-  else {
-    return filter_xss_and_check_plain($comment);
-  }
+	if (strlen($comment) < 1) {
+		return NO_COMMENT;
+	}
+	else {
+		return filter_xss_and_check_plain($comment);
+	}
 }
 
 /**
@@ -1134,48 +1148,48 @@ function display_comment($comment) {
  * 
  */
 function display_rating($rate) {
-  if ($rate == '0' || $rate == 0) {
-    return 'N/A';
-  }
-  else
-    return $rate;
+	if ($rate == '0' || $rate == 0) {
+		return 'N/A';
+	}
+	else
+		return $rate;
 }
 
 function get_gm_audit_list($name) {
-  $query = db_select('prs_rel_review_employee', 'review');
-  $query->innerJoin('prs_general', 'general', 'general.prid = review.prid');
-  $query->innerJoin('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName = review.employeeName');
-  $query->addField('review', 'prid');
-  $query->addField('review', 'rreid');
-  $query->addField('general', 'description');
-  $query->addField('general', 'type');
-  $query->addField('review', 'employeeName');
-  $query->addField('relation', 'counselorName');
-  $query->condition('relation.gmName', $name);
-  $query->condition('review.rstatus', 5);
+	$query = db_select('prs_rel_review_employee', 'review');
+	$query->innerJoin('prs_general', 'general', 'general.prid = review.prid');
+	$query->innerJoin('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName = review.employeeName');
+	$query->addField('review', 'prid');
+	$query->addField('review', 'rreid');
+	$query->addField('general', 'description');
+	$query->addField('general', 'type');
+	$query->addField('review', 'employeeName');
+	$query->addField('relation', 'counselorName');
+	$query->condition('relation.gmName', $name);
+	$query->condition('review.rstatus', 5);
 
-  $dataset = $query->execute()->fetchAll();
+	$dataset = $query->execute()->fetchAll();
 
-  $result = array();
-  $index = 0;
-  foreach ($dataset as $node) {
-    $prid = $node->prid;
-    $rreid = $node->rreid;
-    $reviewtype = $node->type;
-    $description = $node->description;
-    $counselee = $node->employeeName;
-    $counselor = $node->counselorName;
-    $temp = array('prid' => $prid,
-      'rreid' => $rreid,
-      'reviewType' => $reviewtype,
-      'description' => $description,
-      'counselee' => $counselee,
-      'counselor' => $counselor,
-    );
-    $result[$index++] = $temp;
-  }
+	$result = array();
+	$index = 0;
+	foreach ($dataset as $node) {
+		$prid = $node->prid;
+		$rreid = $node->rreid;
+		$reviewtype = $node->type;
+		$description = $node->description;
+		$counselee = $node->employeeName;
+		$counselor = $node->counselorName;
+		$temp = array('prid' => $prid,
+		  'rreid' => $rreid,
+		  'reviewType' => $reviewtype,
+		  'description' => $description,
+		  'counselee' => $counselee,
+		  'counselor' => $counselor,
+		);
+		$result[$index++] = $temp;
+	}
 
-  return $result;
+	return $result;
 }
 
 function get_overall_rating_part($url) {

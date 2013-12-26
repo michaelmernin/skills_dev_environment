@@ -3,13 +3,12 @@
 // dd($rreid, 'rreid');
 // dd($nid, 'nid');
 // dd($reviewee, 'reviewee');
-// dd($self_comment, 'self_comment');
 ?>
 <div class="webform-submission-info clearfix">
   <!--Self comment-->
   <div class="webform-submission-info clearfix">
-    <div id="header-<?php print $item_num; ?>" value="<?php print $self_comment->form_key; ?>"  >
-      <?php print $self_comment->question; ?> 
+    <div id="header-<?php print $item_num; ?>" value="<?php if (isset($self_comment->form_key)) print $self_comment->form_key; ?>"  >
+      <?php if (isset($self_comment->question)) print $self_comment->question; ?> 
     </div>
     <br>
 
@@ -46,9 +45,7 @@
         <textarea id="counselor-comment-<?php print $item_num; ?>"
                   cols="20" rows="5"
                   style="margin: 4px 0px 0px; height: 112px; width: 98%;"
-                  form-key="<?php print $self_comment->form_key; ?>">
-
-          <?php
+                  form-key="<?php print $self_comment->form_key; ?>"><?php
           if (isset($clor_rating_comment) && isset($clor_rating_comment->clor_comment)) {
             print $clor_rating_comment->clor_comment;
           }
