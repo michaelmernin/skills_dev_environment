@@ -1,0 +1,61 @@
+<?php
+
+function custom_webform_field_install() {
+  drupal_set_message('DB table project with custom_webform_field module create successfully.');
+}
+
+function custom_webform_field_uninstall() {
+  drupal_set_message('DB table project with custom_webform_field module delete successfully.');
+}
+
+function custom_webform_field_schema() {
+  $schema['prs_annual_projects'] = array(
+    'fields' => array(
+      'id' => array(
+        'description' => 'Primary Key: Unique id for prs_annual_projects.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'nid' => array(
+        'description' => 'The node identifier of a webform.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'client' => array(
+        'description' => 'The project client',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'rating' => array(
+        'description' => 'The project overall rating',
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'roles' => array(
+        'description' => 'The project roles and responsebilities',
+        'type' => 'varchar',
+        'length' => '512',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'pnid' => array(
+        'description' => 'The mapping project review nid.-1 stand for that no mapping',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+
+  return $schema;
+}
+
+?>

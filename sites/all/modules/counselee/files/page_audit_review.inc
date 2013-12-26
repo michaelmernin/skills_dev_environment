@@ -43,11 +43,18 @@ function counselee_confirm_review_result($rreid) {
       $pageContent .= get_project_message_part($self_review);
       $pageContent .= get_performance_evaluation($self_review, $counselor_review, $peer_comment_info_set);
       $pageContent .= get_extend_description_part($self_review, $counselor_review);
-      $pageContent .= get_overall_rating_part($self_review, $counselor_review);
+      $pageContent .= get_overall_rating_part_audit($self_review, $counselor_review);
       $pageContent .= theme('page_audit_review_score', array());
       $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
       break;
     case PROJECT_REVIEW:
+
+      $pageContent = get_page_review_content($rreid);
+      $filename = drupal_get_path('module', 'counselee') . '/templates/' . 'overall_rating_project.tpl.php';
+      $pageContent .= file_get_contents($filename);
+      $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
+
+
       break;
     case THREE_MONTH_REVIEW:
       break;
@@ -303,11 +310,11 @@ function disapprove_review_result_by_gm($rreid, $disapprove_reason) {
 
 function submit_review_result() {
   $rreid = $_POST['rreid'];
-  
+
   $fields = array(
     'rstatus' => 5
   );
-  
+
   audit_review_result_update($rreid, 5, $fields);
   $msg = 'You had submitted the review result.';
   drupal_set_message($msg, 'status');
@@ -506,11 +513,16 @@ function counselor_submit_review_result($rreid) {
       $pageContent .= get_project_message_part($self_review);
       $pageContent .= get_performance_evaluation($self_review, $counselor_review, $peer_comment_info_set);
       $pageContent .= get_extend_description_part($self_review, $counselor_review);
-      $pageContent .= get_overall_rating_part($self_review, $counselor_review);
+      $pageContent .= get_overall_rating_part_audit($self_review, $counselor_review);
       $pageContent .= theme('page_audit_review_score', array());
       $pageContent .= theme('page_audit_review_btn_submit', array('rreid' => $rreid));
       break;
     case PROJECT_REVIEW:
+
+      $pageContent = get_page_review_content($rreid);
+      $pageContent .= theme('page_audit_review_btn_submit', array('rreid' => $rreid));
+
+
       break;
     case THREE_MONTH_REVIEW:
       break;
@@ -520,7 +532,7 @@ function counselor_submit_review_result($rreid) {
   return $pageContent;
 }
 
-function get_overall_rating_part($self_review, $counselor_review) {
+function get_overall_rating_part_audit($self_review, $counselor_review) {
 
   $extend_description['description'] = $self_review['overall_rating']->name;
   $extend_description['self_description'] = $self_review['overall_rating']->data;
@@ -545,17 +557,162 @@ function gm_audit_review_result($rreid) {
 
   $nid = get_nid_by_rreid($rreid);
   $pageContent = '';
-  $self_review = get_self_review_comment($nid);
-  $counselor_review = get_counselor_review_comment($nid);
+
+  $review_type = get_review_type_by_rreid($rreid);
+  switch ($review_type) {
+    case ANNUAL_REVIEW:
+
+      $self_review = get_self_review_comment($nid);
+      $counselor_review = get_counselor_review_comment($nid);
+      module_load_include('inc', 'counselee', 'files/review_assessment_modification');
+      $peer_comment_info_set = get_peer_comment_information_array($rreid);
+
+      $pageContent .= get_project_message_part($self_review);
+      $pageContent .= get_performance_evaluation($self_review, $counselor_review, $peer_comment_info_set);
+      $pageContent .= get_extend_description_part($self_review, $counselor_review);
+      $pageContent .= get_overall_rating_part_audit($self_review, $counselor_review);
+      $pageContent .= theme('page_audit_review_score', array());
+      $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
+
+      break;
+    case PROJECT_REVIEW:
+
+      $pageContent = get_page_review_content($rreid);
+      $filename = drupal_get_path('module', 'counselee') . '/templates/' . 'overall_rating_project.tpl.php';
+      $pageContent .= file_get_contents($filename);
+
+      dd(file_get_contents($filename), 'file_get_contents($filename)');
+      $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
+
+
+      break;
+    case THREE_MONTH_REVIEW:
+      break;
+    default:
+      ;
+  }
+
+  return $pageContent;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  return $pageContent;
+}
+
+function get_page_review_content($rreid) {
+
+
+  module_load_include('inc', 'counselee', 'files/watch_review_status');
+
+  $cur_user_name = get_current_user_name();
+  $reviewee = get_reviewee_from_db($rreid);
+  $counselor = get_counselor($reviewee);
+  $review_status = get_review_status_from_db($rreid);
+
+  module_load_include('inc', 'common', 'defined_constants');
+
   module_load_include('inc', 'counselee', 'files/review_assessment_modification');
-  $peer_comment_info_set = get_peer_comment_information_array($rreid);
+  $provider_info = get_provider_info($rreid, $reviewee);
+  $nid = $provider_info[0]->nid;
+  $sid = get_last_sid_by_nid($nid);
 
-  $pageContent .= get_project_message_part($self_review);
-  $pageContent .= get_performance_evaluation($self_review, $counselor_review, $peer_comment_info_set);
-  $pageContent .= get_extend_description_part($self_review, $counselor_review);
-  $pageContent .= get_overall_rating_part($self_review, $counselor_review);
-  $pageContent .= theme('page_audit_review_score', array());
-  $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
+////////////////////////////////////////////////////////
+// Item below is for self assessment
+////////////////////////////////////////////////////////
 
+  $self_dataset = get_latest_submitted_data_from_db($nid, $sid);
+  $item_count = count($self_dataset);
+  $self_cid_formkey_type_array = array();
+  $self_question_rating_comment_result = process_self_assessment_data($self_dataset, $self_cid_formkey_type_array);
+  $none_selection_item = _fetch_all_none_selection_items($self_cid_formkey_type_array);
+  $review_info = init_review_info_content();
+  $self_comments_array = array();
+  $overall_rating = new stdClass();
+  _matching_none_selection_items($none_selection_item, $self_dataset, $review_info, $self_comments_array, $overall_rating);
+  $review_info_content_num = count($review_info['clientdate']);
+  $self_item_count = count($self_question_rating_comment_result);
+  $total_item_count = $self_item_count + count($self_comments_array);
+////////////////////////////////////////////////////////
+// Item below is for peers
+////////////////////////////////////////////////////////
+  $peer_information_set = get_peer_comment_information_array($rreid, $item_count);
+  ///////////////////////////////////////////////////////
+  //Item below is for counselor
+  ///////////////////////////////////////////////////////
+  $csiid = get_counselor_latest_submissionID($nid);
+  if ($csiid != -1) {
+    $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
+    $revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
+    $overall_rating->counselor_rating = _fetch_counselor_overall_rating($revised_comments);
+  }
+  else {
+    $have_counselor_data = FALSE;
+    $revised_comments = array();
+    for ($i = 0; $i < $total_item_count + 1; $i++) {
+      $revised_comments[$i] = new stdClass();
+    }
+    $overall_rating->counselor_rating = 0;
+  }
+
+  $pageContent = '';
+  for ($i = 0; $i < $review_info_content_num; $i++) {
+    $proj_item = generate_project_roles_and_responsibilities_info($review_info, $i);
+    if (validate_numbers($review_info, $i)) {
+      $content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $proj_item, $i);
+      $pageContent .= $content;
+    }
+  }
+
+  $is_read_only = TRUE;
+  foreach ($self_question_rating_comment_result as $key => $value) {
+//=====================the question which have pie chart ============CONST===============================
+    $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
+    if (in_array($value->form_key, $pie_form_key_array)) {
+      $form_key = $value->form_key . '_category';
+      if ($peer_information_set->have_peer_data) {
+        $fieldset_cid = get_fieldset_key_in_peer_table($form_key, $peer_information_set->cid_formkey_type_array);
+        $children_array = get_children_array_by_cid($fieldset_cid, $peer_information_set->adj_list);
+        $peer_name = array();
+//        $comment_name = array();
+        $peer_json = '';
+        _manage_data_return_three_array_readonly($children_array, $peer_information_set->peer_question_rating_comment_result, $peer_name, $peer_json);
+        $pie_data = _manage_pie_chart($peer_name, $form_key);
+//        dd($peer_json, '$peer_json');
+      }
+      else {
+        $peer_json = '';
+        $pie_data = new stdClass();
+        $pie_data->id = $form_key;
+        $pie_data->all_avg = NO_DATA;
+        $pie_data->have_peer_data = FALSE;
+      }
+//=====================pie chart end=====================================================================
+      $content = thematize_review_content_full($key, $rreid, $nid, $reviewee, $value, NULL, $pie_data, $peer_json, $revised_comments, $total_item_count, $is_read_only);
+      $pageContent .= $content;
+    }
+    else {
+      $content = thematize_review_content_without_chart($key, $rreid, $nid, $reviewee, $value, $revised_comments, $total_item_count, $overall_rating, $is_read_only);
+      $pageContent .= $content;
+    }
+  }
+  foreach ($self_comments_array as $key => $value) {
+    $content = thematize_review_content_comment_only($key, $self_item_count, $rreid, $nid, $reviewee, $value, $revised_comments, $total_item_count, $is_read_only);
+    $pageContent .= $content;
+  }
   return $pageContent;
 }

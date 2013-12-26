@@ -1,14 +1,15 @@
 <?php $base_path = get_curPage_base_url() ?>
 <?php $base_relatively_path = base_path() ?>
 <?php $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui') ?>
-<?php $calculate_path = get_curPage_base_url() . drupal_get_path('module', 'counselee') ?>
+<?php $counselee_path = get_curPage_base_url() . drupal_get_path('module', 'counselee') ?>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/highcharts.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/hightchart-no-data.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/modules/exporting.js"></script>
 
 <script src="<?php echo $module_path ?>/assets/javascripts/grid.locale-en.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/jquery.jqGrid.min.js"></script>
-<script src="<?php echo $calculate_path ?>/js/calculate.js"></script>
+<script src="<?php echo $counselee_path ?>/js/calculate.js"></script>
+<script src="<?php echo $counselee_path ?>/js/checkCounselorSubmit.js"></script>
 
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $module_path ?>/assets/stylesheets/ui.jqgrid.css" />
 
@@ -54,7 +55,7 @@
           // jQuery('#submit_button').removeAttr("disabled");
         }
         // else {
-        //   window.location.href = "<?php // print base_path() . 'viewassessment'               ?>";
+        //   window.location.href = "<?php // print base_path() . 'viewassessment'                ?>";
         //   return;
         // }
       });
@@ -243,7 +244,7 @@
 
             <a href="#" id="gotoTopBtn" style="display: none">click here to go to page top</a>
             <div class='page-title'></div>
-            
+
             <?php print render($page['content']) ?>
 
             <div class="view-self-comment-title">
@@ -265,91 +266,9 @@
             <br />
             <br />
 
-            <div>
-              <table class="table">
+            <!--Add the overall rating display part-->
+            <?php print get_overall_rating_part(current_path()); ?>
 
-                <thead id="peer-review-form-overall-thead">
-                  <tr><th>Reviewer Composite Scores</th>
-                    <th>Self</th>
-                    <th>Counselor</th>
-                  </tr></thead>
-
-                <tbody id="peer-review-form-overall-tbody">
-                  <tr><td>Client Engagements</td>
-                    <td id="rating_client_engagements">3</td>
-                    <td id="counselor_rating_client_engagements">3</td>
-                  </tr>
-                  <tr><td>Technical Abilities</td>
-                    <td id="rating_technical_abilities">3</td>
-                    <td id="counselor_rating_technical_abilities">3</td>
-
-                  </tr>
-                  <tr><td>Consulting Skills</td>
-                    <td id="rating_consulting_skills">3</td>
-                    <td id="counselor_rating_consulting_skills">3</td>
-                  </tr>
-                  <tr><td>Professionalism</td>
-                    <td id="rating_professionalism">3</td>
-                    <td id="counselor_rating_professionalism">3</td>
-                  </tr>
-                  <tr><td>Leadership</td>
-                    <td id="rating_leadership">3</td>
-                    <td id="counselor_rating_leadership">3</td>
-                  </tr>
-                  <tr><td>Teamwork</td>
-                    <td id="rating_teamwork">3</td>
-                    <td id="counselor_rating_teamwork">3</td>
-                  </tr>
-                  <tr><td>Internal Contributions</td>
-                    <td id="rating_internal_contributions">3.00</td>
-                    <td id="counselor_rating_internal_contributions">3.00</td>
-                  </tr>
-                  <tr><td>All</td>
-                    <td id="rating_all">3.00</td>
-                    <td id="counselor_rating_all">3.00</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-
-
-
-            <script type="text/javascript">
-              var basePath = '<?php print get_curPage_base_url() ?>';
-              var js_path = basePath + "sites/all/modules/counselee/js/annual_review_approve_overall.js";
-              var new_element = document.createElement("script");
-              new_element.setAttribute("type", "text/javascript");
-              new_element.setAttribute("src", js_path);
-              document.body.appendChild(new_element);
-
-              // jQuery(document).ready(function() {
-              //   var isCounselor = '<?php // print $identity                 ?>';
-              //   if (isCounselor == "counselee") {
-              //     jQuery(".draftbutton").hide();
-              //   }
-              // });
-              setCounselorOverallRating();
-              setCounseleeOverallRating();
-
-              function setCounselorOverallRating() {
-                var overallRating = jQuery("#counselor-overall_rating-0").val();
-                if (overallRating != "undefined" && overallRating != 0) {
-                  jQuery("#counselor-overall_rating-content").val(overallRating);
-                }
-                else {
-                  jQuery("#counselor-overall_rating-content").val(3);
-                }
-
-              }
-
-              function setCounseleeOverallRating() {
-                var overallRating = jQuery("#counselee-overall_rating-0").val();
-                if (overallRating != "undefined") {
-                  jQuery("#counselee-overall_rating-content").append(overallRating);
-                }
-              }
-            </script>
             <div>
               <div class="draftbutton" style="float: left; margin-right: 15px;">
                 <input class="webform-draft form-submit btn btn-large" type="submit" value="Save As Draft" name="op" formnovalidate="formnovalidate" onclick="submitCounselorAssessment()">
@@ -431,11 +350,11 @@
 
 <script>
 
-              function textareaLimitWord(ta, maxLength)
-              {
-                if (ta.value.length > maxLength) {
-                  ta.value = ta.value.substring(0, maxLength);
-                }
-              }
+  function textareaLimitWord(ta, maxLength)
+  {
+    if (ta.value.length > maxLength) {
+      ta.value = ta.value.substring(0, maxLength);
+    }
+  }
 
 </script>

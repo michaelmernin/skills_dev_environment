@@ -570,7 +570,7 @@ function counselee_do_peersreview($userName) {
       'description' => $description,
       'token' => $token,
       'isApproved' => $ispproved,
-      'rreid'=>$rreid,
+      'rreid' => $rreid,
     );
     $result[$index++] = $temp;
   }
@@ -720,9 +720,8 @@ function print_render_tabs($tabs) {
   else if ($userId_flag == 1 && $rstatus == JOINT_REVIEW) {
     print render($tabs['tabs']['output']['7']);
   }
-  else if($userId_flag == 2 && $rstatus == GM_REVIEW )
-  {
-    print render($tabs['tabs']['output']['8']); 
+  else if ($userId_flag == 2 && $rstatus == GM_REVIEW) {
+    print render($tabs['tabs']['output']['8']);
   }
 }
 
@@ -959,8 +958,8 @@ function get_self_review_finished_list($counselor) {
   $query->addField('review', 'employeename');
   $query->addField('general', 'description');
   $query->addField('review', 'isCounseleeApproved');
-  $query->addField('review','isGmApproved');
-  $query->addField('relation','gmName');
+  $query->addField('review', 'isGmApproved');
+  $query->addField('relation', 'gmName');
   $query->condition('relation.counselorname', $counselor);
   $query->condition('review.rstatus', 2); // 2 Stand for self reivew has finished
 
@@ -974,15 +973,15 @@ function get_self_review_finished_list($counselor) {
     $reviewtype = $node->type;
     $description = $node->description;
     $isCounseleeApproved = $node->isCounseleeApproved;
-    $gmName =$node->gmName;
+    $gmName = $node->gmName;
     $isGmApproved = $node->isGmApproved;
     $temp = array('employeeName' => $employeeName,
       'rreid' => $rreid,
       'reviewType' => $reviewtype,
       'description' => $description,
       'isCounseleeApproved' => $isCounseleeApproved,
-      'gmName' =>$gmName,
-      'isGmApproved' =>$isGmApproved,
+      'gmName' => $gmName,
+      'isGmApproved' => $isGmApproved,
     );
     $result[$index++] = $temp;
   }
@@ -1177,4 +1176,27 @@ function get_gm_audit_list($name) {
   }
 
   return $result;
+}
+
+function get_overall_rating_part($url) {
+  $params = explode('/', $url);
+  $rreid = $params[count($params) - 1];
+  return get_overall_rating_part_by_rreid($rreid);
+}
+
+function get_overall_rating_part_by_rreid($rreid) {
+  $review_type = get_review_type_by_rreid($rreid);
+
+  switch ($review_type) {
+    case ANNUAL_REVIEW:
+      $filename = drupal_get_path('module', 'counselee') . '/templates/' . 'overall_rating_annual.tpl.php';
+      return file_get_contents($filename);
+    case PROJECT_REVIEW:
+      $filename = drupal_get_path('module', 'counselee') . '/templates/' . 'overall_rating_project.tpl.php';
+      return file_get_contents($filename);
+    case THREE_MONTH_REVIEW:
+      ;
+    default :
+      break;
+  }
 }

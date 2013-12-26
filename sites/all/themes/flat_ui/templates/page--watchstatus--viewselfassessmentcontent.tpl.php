@@ -53,69 +53,12 @@
             <br />
             <br />
 
-            <div>
-              <table class="table">
-
-                <thead id="peer-review-form-overall-thead">
-                  <tr><th>Reviewer Composite Scores</th>
-                    <th>Self</th>
-                  </tr></thead>
-
-                <tbody id="peer-review-form-overall-tbody">
-                  <tr><td>Client Engagements</td>
-                    <td id="rating_client_engagements">3</td>
-                  </tr>
-                  <tr><td>Technical Abilities</td>
-                    <td id="rating_technical_abilities">3</td>
-
-                  </tr>
-                  <tr><td>Consulting Skills</td>
-                    <td id="rating_consulting_skills">3</td>
-                  </tr>
-                  <tr><td>Professionalism</td>
-                    <td id="rating_professionalism">3</td>
-                  </tr>
-                  <tr><td>Leadership</td>
-                    <td id="rating_leadership">3</td>
-                  </tr>
-                  <tr><td>Teamwork</td>
-                    <td id="rating_teamwork">3</td>
-                  </tr>
-                  <tr><td>Internal Contributions</td>
-                    <td id="rating_internal_contributions">3.00</td>
-                  </tr>
-                  <tr><td>All</td>
-                    <td id="rating_all">3.00</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
 
 
+            <!--Add the overall rating display part-->
+            <?php print get_overall_rating_part(current_path()); ?>
 
 
-            <script type="text/javascript">
-              var basePath = '<?php print get_curPage_base_url() ?>';
-              var js_path = basePath + "sites/all/modules/counselee/js/annual_review_approve_overall.js";
-              var new_element = document.createElement("script");
-              new_element.setAttribute("type", "text/javascript");
-              new_element.setAttribute("src", js_path);
-              document.body.appendChild(new_element);
-
-              setCounseleeOverallRating();
-
-              function setCounseleeOverallRating() {
-                var overallRating = jQuery("#counselee-overall_rating-0").val();
-                if (overallRating != "undefined") {
-									if (overallRating != 0) {
-										jQuery("#counselee-overall_rating-content").append(overallRating);
-									}
-									else {
-										jQuery("#counselee-overall_rating-content").append("N/A");
-									}	
-                }
-              }
-            </script>
           </div>
         </div>
       </div>

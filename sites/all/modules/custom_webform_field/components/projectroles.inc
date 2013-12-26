@@ -51,16 +51,19 @@ function _webform_edit_projectroles($component) {
   return $form;
 }
 
-
 /**
  * Implements _webform_render_component().
  */
 function _webform_render_projectroles($component, $value = NULL, $filter = TRUE) {
   $node = isset($component['nid']) ? node_load($component['nid']) : NULL;
   $nid = $component['nid'];
-  $content = theme('project-roles-and-responsebilities',array());
+  $project_roles = get_project_roles($nid);
+  $project_role_add = get_added_project_roles($nid);
 
-  
+  $content = theme('project-roles-and-responsebilities', array(
+    'projects' => $project_roles,
+  ));
+
   $element = array(
     '#type' => 'Project Roles',
     '#title' => $filter ? webform_filter_xss($component['name']) : $component['name'],
@@ -107,7 +110,113 @@ function _webform_display_projectroles($component, $value, $format = 'html') {
   return $element;
 }
 
-function get_project_roles($nid)
+function get_project_roles($nid) {
+
+  $period = get_annual_review_period($nid);
+  $query_nid = get_project_roles_nid($period);
+  $project_roles = get_project_roles_array($query_nid);
+  return $project_roles;
+}
+
+function get_annual_review_period($nid) {
+  $query = db_query("SELECT annual.time_frame_from,annual.time_frame_to 
+    FROM prs_rel_provider_employee provider INNER JOIN prs_general annual
+        ON provider.prid = annual.prid WHERE provider.nid = $nid");
+
+  $result = $query->fetchAll();
+  if (count($result) == 1) {
+    return $result[0];
+  }
+}
+
+function get_project_roles_nid($period) {
+  $query = db_query("SELECT pro.nid FROM
+    prs_general project INNER JOIN prs_rel_review_employee review
+        ON project.prid = review.prid INNER JOIN prs_rel_provider_employee pro
+        ON pro.prid = project.prid
+    WHERE project.type = 1  AND review.rstatus = 6
+    AND project.time_frame_from >=$period->time_frame_from 
+    AND project.time_frame_to <= $period->time_frame_to");
+  $result = $query->fetchAll();
+
+  if (count($result) == 0)
+    return null;
+
+  $query_nid = '';
+  foreach ($result as $node) {
+    if ($query_nid == '')
+      $query_nid .= $node->nid;
+    else
+      $query_nid .= ',' . $node->nid;
+  }
+  $query_nid = '(' . $query_nid . ')';
+
+  return $query_nid;
+}
+
+function get_project_roles_array($query_nid) {
+
+  if ($query_nid == null)
+    return null;
+//  dd($query_nid,'$query_nid');
+
+  $query_sql = "SELECT component.nid,component.cid ,
+    component.form_key ,  component.name ,
+    component.type , data.data 
+    FROM
+    {webform_component} component 
+    LEFT JOIN {webform_submitted_data} data ON component.cid = data.cid
+    AND data.nid = component.nid 
+    WHERE component.nid in $query_nid
+    AND component.form_key IN(
+        'client' ,
+        'project' ,
+        'start_date' ,
+        'end_date' ,
+        'project_roles_and_responsibilities',
+        'overall_rating'
+    )";
+
+  $result = db_query($query_sql)->fetchAll();
+  $project_roles = array();
+
+  foreach ($result as $node) {
+    $key = $node->nid;
+    $form_key = $node->form_key;
+    $date = $node->data;
+    $project_roles[$key][$form_key] = $date;
+  }
+
+  return $project_roles;
+}
+
+function get_added_project_roles($nid) {
+  $query = db_query("SELECT nid, client, rating, roles, pnid
+         FROM {prs_annual_projects} where nid=$nid and pnid=-1");
+
+  $result = $query->fetchAll();
+  if (count($result) == 0)
+    return null;
+}
+
+function insert_into_project_roles($values) {
+  $query = db_insert('prs_annual_projects')
+      ->fields(array('nid', 'client', 'rating', 'roles', 'pnid'));
+  foreach ($values as $value)
+    $query->values($value);
+  $query->execute();
+}
+
+function delete_from_project_roles($nid) {
+  $num_deleted = db_delete('prs_annual_projects')
+      ->condition('nid', $nid)
+      ->execute();
+}
+
+
+
+function save_project_roles($nid,$values)
 {
-  
+  delete_from_project_roles($nid);
+  insert_into_project_roles($values);
 }

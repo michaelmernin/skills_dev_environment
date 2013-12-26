@@ -89,9 +89,23 @@ function custom_webform_field_theme() {
       'path' => drupal_get_path('module', 'custom_webform_field') . '/templates',
       'template' => 'peer-review-form-overall',),
     'project-roles-and-responsebilities' => array(
-      'variables' => array(),
+      'variables' => array(
+        'projects' => null,
+      ),
       'path' => drupal_get_path('module', 'custom_webform_field') . '/templates',
       'template' => 'project-roles-and-responsebilities'),
   );
 }
 
+function custom_webform_field_menu() {
+
+  $items['annual/save-project-roles'] = array(
+    'title' => 'Save Project Roles',
+    'page callback' => 'save_project_roles',
+    'page arguments' => array(),
+    'access arguments' => array('access to my dashboard'),
+    'type' => MENU_CALLBACK,
+    'file' => 'components/projectroles.inc',);
+
+  return $items;
+}

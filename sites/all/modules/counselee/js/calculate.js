@@ -191,6 +191,13 @@ function getSamePrefixID(prefix)
     return samePrefixArr;
 }
 
+
+/**
+ * Get the id have comment part id.
+ * @param {string} same The same part of the id
+ * @param {string} type The element type
+ * 
+ * */
 function getCommonNameId(same, type)
 {
     var id, idArr = new Array();
@@ -354,8 +361,8 @@ function addErrorMessageArea()
 
 
 /**
- * 
- * 
+ *Calculate category average,and set the average to the destArr
+ *  
  * */
 function modifyCategoryValue(category, destArr)
 {

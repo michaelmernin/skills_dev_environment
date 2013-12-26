@@ -147,19 +147,47 @@
 
 
 <script>
+
+              function initializeProjectRoles()
+              {
+                var projects_json = '<?php print json_encode($projects); ?>';
+                var projects = JSON.parse(projects_json);
+                var client, rating, roles, obj, tr, tbody;
+
+                var tbody = jQuery("#project-roles-body").html();
+                for (attribute in projects)
+                {
+                  obj = projects[attribute];
+                  client = obj.client;
+                  rating = obj.overall_rating;
+                  roles = obj.project_roles_and_responsibilities;
+
+                  tr = "<tr title='Click to watch this review\'s status.'  onclick='location.href=\"https://localhost/EnterpriseReview/watchstatus/selfassessment/19\"' style='cursor:pointer'><td>"
+                          + client
+                          + "</td><td>"
+                          + rating
+                          + "</td><td>"
+                          + roles
+                          + "</td> <td>"
+                          + ''
+                          + "</td></tr>";
+
+                  tbody += tr;
+                }
+                jQuery("#project-roles-body").html(tbody);
+              }
+
+
               function addProjectRoles()
               {
                 var client = getElementValue(jQuery('#client'));
                 var rating = getElementValue(jQuery('#rating'));
                 var roles = getElementValue(jQuery('#project-roles-and-responsibilities'));
                 var errorMsg = '';
-
                 if (client.trim().length < 1)
                   errorMsg += 'Client field is required.\n';
-
                 if (roles.trim().length < 1)
                   errorMsg += 'Project Roles And responsibilities field is required.';
-
                 if (errorMsg.length > 1)
                 {
                   alert(errorMsg);
@@ -167,7 +195,6 @@
                 }
 
                 var tbody = jQuery("#project-roles-body").html();
-
                 var tr = "<tr><td>"
                         + client
                         + "</td><td>"
@@ -177,23 +204,16 @@
                         + "</td> <td>"
                         + '<a onclick="deleteRoles(this)">Delete</a>'
                         + "</td></tr>";
-
                 jQuery("#project-roles-body").html(tbody + tr);
-                
                 var cancelBtn = jQuery("#cancel-add-roles-button");
                 jQuery('#client').val("");
                 jQuery('#rating').val("3")
                 jQuery('#project-roles-and-responsibilities').val("");
-
                 cancelBtn.click();
-
               }
-
-
               function deleteRoles(obj)
               {
                 var bln = window.confirm("Are you sure to delete?");
-
                 if (bln)
                 {
                   var temp = jQuery(obj);
@@ -201,5 +221,40 @@
                   par.remove();
                 }
               }
+
+
+              function save_project_roles()
+              {
+                var basepath = '<?php print get_curPage_base_url(); ?>';
+
+                jQuery("#project-roles-body").find("tr").each(
+                        function() {
+
+                          var value = new Array();
+                          jQuery(this).find("td").each(
+                                  function() {
+                                    value.push(jQuery(this).text());
+                                  });
+
+
+                          alert(value);
+                        });
+
+
+
+                jQuery.ajax({
+                  type: "POST",
+                  url: basepath + 'annual/save-project-roles',
+                  data: {'nid': nid, 'values': values},
+                  success: function(date) {
+                  }
+                });
+
+              }
+
+
+
+              initializeProjectRoles();
+              save_project_roles();
 </script>
 
