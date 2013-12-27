@@ -50,9 +50,21 @@
   var counselorOverall = getCommonNameId("counselor_rating", 'td');
   var counseleeRating = getCommonNameId("assessment-content-value", 'div');
   var counselorRating = getCommonNameId("counselor-rating-", 'div');
+  /**
+   * srcSequence array desciption the items of the category
+   * the first 4 stand for that technical_abilities have 4 items
+   * */
   var srcSequence = new Array(4, 4, 4, 2, 2);
   var destSequence = new Array(1, 1, 1, 1, 1);
 
+
+  /**
+   * Set value for Reviewer Composite Scores
+   * @param {array} rating The page rating id array 
+   * @param {array} overall The Reviewer Composite Scores id array
+   * @param {array} arcSequenc The category of the
+   * 
+   * */
   function calculateCatetoryRating(rating, overall, srcSequence, destSequence)
   {
     var srcStart = 0, destStart = 0;
@@ -65,6 +77,9 @@
     }
   }
 
+/**
+ * Change the Reviewer Composite Scores value
+ * */
   function projectReviewRatingOnchage()
   {
     calculateCatetoryRating(counseleeRating, counseleeOverall, srcSequence, destSequence);
@@ -83,17 +98,19 @@
     }
   }
 
-
+  /**
+   * Hide the counselor overall rating column
+   * When the page is viewselfassessmentcontent
+   * There is no counselor rating column
+   * */
   function hideCounselorRating()
   {
-
     var url = window.location.href;
     if (url.indexOf("viewselfassessmentcontent") != -1)
     {
       jQuery("#project-review-overall-thead tr th:nth-child(3)").hide();
       jQuery("#project-review-overall-tbody tr td:nth-child(3)").hide();
     }
-
   }
 
   setCounselorOverallRating();
@@ -101,6 +118,5 @@
   hideCounselorRating();
   addChangeEventForSelect();
   projectReviewRatingOnchage();
-
 
 </script>

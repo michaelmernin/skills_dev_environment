@@ -7,8 +7,6 @@
 
 /**
  * Click the anchor to back to top
- * 
- * 
  * */
 function goTopEx() {
 //window.scrollTo(0, 0)
@@ -31,7 +29,7 @@ function IsNum(str)
 
 /**
  * Get the category item name
- * 
+ * @param {string} idValue The catagory id
  * */
 function getCategoryChildName(idValue)
 {
@@ -362,7 +360,8 @@ function addErrorMessageArea()
 
 /**
  *Calculate category average,and set the average to the destArr
- *  
+ *@param {array} category The category id array 
+ *@param {array} destArr  The modified element id array 
  * */
 function modifyCategoryValue(category, destArr)
 {
@@ -392,6 +391,9 @@ function setCounselorOverallRating() {
 
 function setCounseleeOverallRating() {
     var overallRating = jQuery("#counselee-overall_rating-0").val();
+
+    if (overallRating == "undefined")
+        jQuery("#counselee-overall_rating-content").append("3");
 
     if (jQuery("#counselee-overall_rating-content")[0].tagName == 'SELECT')
         jQuery("#counselee-overall_rating-content").val(3);

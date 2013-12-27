@@ -729,25 +729,54 @@ function print_render_tabs($tabs) {
   print render($tabs['tabs']['output']['0']);
   print render($tabs['tabs']['output']['1']);
 // identify the user and review status
+//  if (_is_assessment_editable($userId_flag, $rstatus)) {
+//    print render($tabs['tabs']['output']['2']);
+//  }
+//  else if ($userId_flag == 0 && $rstatus == REVIEW_BY_COUNSELOR) {
+//    print render($tabs['tabs']['output']['3']);
+//  }
+//  else if (_is_assessment_visible_for_counselor($userId_flag, $rstatus)) {
+//    print render($tabs['tabs']['output']['4']);
+//  }
+//  else if ($userId_flag == 0 && $rstatus == APPROVED_BY_COUNSELOR) {
+//    print render($tabs['tabs']['output']['6']);
+//  }
+//  else if ($userId_flag == 1 && $rstatus == APPROVED_BY_COUNSELOR) {
+//    print render($tabs['tabs']['output']['5']);
+//  }
+//  else if ($userId_flag == 1 && $rstatus == JOINT_REVIEW) {
+//    print render($tabs['tabs']['output']['7']);
+//  }
+//  else if ($userId_flag == 2 && $rstatus == GM_REVIEW) {
+//    print render($tabs['tabs']['output']['8']);
+//  }
+
+
+
+
   if (_is_assessment_editable($userId_flag, $rstatus)) {
     print render($tabs['tabs']['output']['2']);
   }
-  else if ($userId_flag == 0 && $rstatus == REVIEW_BY_COUNSELOR) {
+  if ($userId_flag == 0 && $rstatus == REVIEW_BY_COUNSELOR) {
     print render($tabs['tabs']['output']['3']);
   }
-  else if (_is_assessment_visible_for_counselor($userId_flag, $rstatus)) {
+  if (_is_assessment_visible_for_counselor($userId_flag, $rstatus)) {
     print render($tabs['tabs']['output']['4']);
   }
-  else if ($userId_flag == 0 && $rstatus == APPROVED_BY_COUNSELOR) {
+  if ($userId_flag == 0 && $rstatus == APPROVED_BY_COUNSELOR) {
     print render($tabs['tabs']['output']['6']);
   }
-  else if ($userId_flag == 1 && $rstatus == APPROVED_BY_COUNSELOR) {
+//  if ($userId_flag == 1 && $rstatus == APPROVED_BY_COUNSELOR) {
+//    print render($tabs['tabs']['output']['5']);
+//  }
+
+  if (tab_accessibility($userId_flag, AccessStatus::getReviewContent(), $rstatus))
     print render($tabs['tabs']['output']['5']);
-  }
-  else if ($userId_flag == 1 && $rstatus == JOINT_REVIEW) {
+
+  if ($userId_flag == 1 && $rstatus == JOINT_REVIEW) {
     print render($tabs['tabs']['output']['7']);
   }
-  else if ($userId_flag == 2 && $rstatus == GM_REVIEW) {
+  if ($userId_flag == 2 && $rstatus == GM_REVIEW) {
     print render($tabs['tabs']['output']['8']);
   }
 }
@@ -1211,6 +1240,17 @@ function get_overall_rating_part($url) {
   return get_overall_rating_part_by_rreid($rreid);
 }
 
+
+/**
+ * Get the overall rating part of the page:
+ *      viewselfassessmentcontent
+ *      viewassessment
+ *      submitreview
+ *      selfassessment
+ *      reviewcontent
+ * 
+ * @param int $rreid The review id
+ */
 function get_overall_rating_part_by_rreid($rreid) {
   $review_type = get_review_type_by_rreid($rreid);
 

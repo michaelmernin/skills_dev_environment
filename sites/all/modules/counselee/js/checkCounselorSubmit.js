@@ -1,4 +1,7 @@
-
+/**
+ * When the score is not equal 3,check whether the counselor comment filled
+ * 
+ * */
 function checkCounselorComment()
 {
     var ratings = getCommonNameId("counselor-rating", "select");
@@ -26,7 +29,7 @@ function checkCounselorComment()
 
 
 /**
- * Check Counselor Required Field
+ * Check Counselor Required Field is filled
  * 
  * */
 function checkCounselorRequireField()
@@ -51,8 +54,11 @@ function checkCounselorRequireField()
     return isRight;
 }
 
+/**
+ * Add data validation when the counselor ssapprove the reivew
+ * */
 jQuery(document).ready(
-        function() {
+        function() {           
             jQuery("input[name='op'][value='Approve']").click(
                     function() {
                         jQuery(".messages.error").remove();

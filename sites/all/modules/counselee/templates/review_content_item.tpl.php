@@ -5,6 +5,12 @@
 // dd($reviewee, 'reviewee');
 // dd($pie_data, 'pie_data');
 ?>
+
+
+<input type="hidden" id="counselor-overall_rating-<?php print $item_num; ?>" value="<?php print $overall_rating->counselor_rating ?>"/>
+<input type="hidden" id="counselee-overall_rating-<?php print $item_num; ?>" value="<?php print $overall_rating->counselee_rating ?>"/>
+
+
 <div class="webform-ssion-info clearfix">
   <!--Self comment-->
   <div class="webform-submission-info clearfix">
@@ -20,8 +26,7 @@
           <div id="pie-chart-<?php print $pie_data->id ?>" style="height: 200px; width: 100%;"></div>
           <?php // print $pie_data->hiddenvalue ?>
           <input type="hidden" id="pie-chart-all-avg-<?php print $item_num; ?>" value="<?php print $pie_data->all_avg ?>"/>
-					<input type="hidden" id="counselor-overall_rating-<?php print $item_num; ?>" value="<?php print $overall_rating->counselor_rating ?>"/>
-					<input type="hidden" id="counselee-overall_rating-<?php print $item_num; ?>" value="<?php print $overall_rating->counselee_rating ?>"/>
+				
           <script>
             // Build the chart
             jQuery('#pie-chart-<?php print $pie_data->id ?>').highcharts({
