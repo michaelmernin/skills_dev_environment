@@ -821,6 +821,11 @@ function get_review_status_string($status) {
   return $content;
 }
 
+/**
+ * Get the review type by rreid
+ * @param int $rreid The review id
+ * @return int The review type
+ */
 function get_review_type_by_rreid($rreid) {
   $query = db_query("select ge.type from {prs_rel_review_employee} rev,{prs_general} ge where rev.prid= ge.prid and rev.rreid=$rreid");
   $result = $query->fetchAll();
@@ -865,3 +870,18 @@ function get_gm_counselee_from_db_by_username($cur_user_name) {
   }
   return $result;
 }
+/**
+ * The tab access ability
+ * @param int $user_identity Thr current user identity
+ */
+function tab_accessibility($user_identity, $allowed_status, $review_status) {
+  
+  if ($user_identity == -1)
+    return false;
+  if (in_array($review_status, $allowed_status[$user_identity])) {
+    return true;
+  }
+  return false;
+}
+
+

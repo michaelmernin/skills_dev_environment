@@ -61,13 +61,7 @@
             <?php print get_overall_rating_part(current_path()); ?>
             
             
-            
-            
-            <script type="text/javascript">
-              setCounselorOverallRating();
-              setCounseleeOverallRating();
-            </script>
-            
+
 
           </div>
         </div>

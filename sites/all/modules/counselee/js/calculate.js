@@ -377,7 +377,12 @@ function modifyCategoryValue(category, destArr)
 function setCounselorOverallRating() {
     var overallRating = jQuery("#counselor-overall_rating-0").val();
     if (overallRating != "undefined" && overallRating != 0) {
-        jQuery("#counselor-overall_rating-content").val(overallRating);
+
+        if (jQuery("#counselor-overall_rating-content")[0].tagName == 'SELECT')
+            jQuery("#counselor-overall_rating-content").val(overallRating);
+        else
+            jQuery("#counselor-overall_rating-content").append(overallRating);
+
     }
     else {
         jQuery("#counselor-overall_rating-content").val(3);
@@ -387,8 +392,11 @@ function setCounselorOverallRating() {
 
 function setCounseleeOverallRating() {
     var overallRating = jQuery("#counselee-overall_rating-0").val();
-    if (overallRating != "undefined") {
+
+    if (jQuery("#counselee-overall_rating-content")[0].tagName == 'SELECT')
+        jQuery("#counselee-overall_rating-content").val(3);
+    else
         jQuery("#counselee-overall_rating-content").append(overallRating);
-    }
+
 }
          
