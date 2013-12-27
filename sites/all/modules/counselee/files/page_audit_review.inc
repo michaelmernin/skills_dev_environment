@@ -724,3 +724,30 @@ function get_page_review_content($rreid) {
   }
   return $pageContent;
 }
+
+
+/**
+ * The menu callback of the project review,
+ *     To get the project name,period by rreid; 
+ */
+function get_project_review_projett_msg() {
+  $rreid = $_POST['rreid'];
+
+  $query = db_query("SELECT
+    general.project_name ,
+    general.time_frame_from ,
+    general.time_frame_to FROM
+    {prs_general} GENERAL INNER JOIN {prs_rel_provider_employee} provider
+        ON general.prid = provider.prid
+    AND provider.employeename = provider.providername 
+    WHERE provider.rreid = $rreid");
+
+  $result = $query->fetchAll();
+
+  if (count($result) == 1) {
+    $result[0]->time_frame_from = date_to_format(unixTimestampToDateArray($result[0]->time_frame_from));
+    $result[0]->time_frame_to = date_to_format(unixTimestampToDateArray($result[0]->time_frame_to));
+    print json_encode($result[0]);
+  }
+  print false;
+}

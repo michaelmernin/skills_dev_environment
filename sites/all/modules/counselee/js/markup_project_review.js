@@ -29,19 +29,74 @@ function addJavaScript(jsPath)
     document.body.appendChild(new_element);
 }
 
-
+/**
+ * Convert Textfield to Date Input 
+ * 
+ * */
 function convertTextfieldToDateInput()
 {
     var startDate = getCommonNameId("start-date", 'input');
     var endDate = getCommonNameId("end-date", 'input');
-    textfieldToDateInput(startDate);
-    textfieldToDateInput(endDate);
+    var project = getCommonNameId("edit-submitted-engagement-summary-category-project",'input');
+    textFieldReadOnly(startDate);
+    textFieldReadOnly(endDate);
+    textFieldReadOnly(project);
 }
 
-var bathpath = getRootPath();
-var jsPath = bathpath + "EnterpriseReview/sites/all/modules/counselee/js/peer_review_form.js";
+/**
+ * Make date input field read only
+ * */
+function textFieldReadOnly(idArr)
+{
+    for (var i = 0; i < idArr.length; i++)
+    {
+        jQuery(idArr[i]).attr("readonly", true);
+        jQuery(idArr[i]).css('color', '#34495E');
+        jQuery(idArr[i]).css('background', '#ffffff');
+    }
+}
+
+
+
+var rootPath = getRootPath();
+var jsPath = rootPath + "EnterpriseReview/sites/all/modules/counselee/js/peer_review_form.js";
 addJavaScript(jsPath);
 convertTextfieldToDateInput();
+
+
+
+/**
+ * initial project start Date and End date
+ * 
+ * */
+function initialStartEndDate()
+{
+    var href = window.location.href;
+    var params = href.split('/');
+    var rreid = 0;
+    for (var i = 0; i < params.length; i++)
+    {
+        if (params[i] == 'selfassessment')
+        {
+            rreid = params[i + 1]
+        }
+    }
+    
+    jQuery.ajax({
+        type: "POST",
+        url: rootPath + 'EnterpriseReview/watchstatus/get-projects-msg',
+        data: {'rreid': rreid},
+        success: function(date) {
+            var obj = JSON.parse(date);  
+            jQuery("#edit-submitted-engagement-summary-category-project").val(obj.project_name);
+            jQuery('#edit-submitted-engagement-summary-category-start-date').val(obj.time_frame_from);
+            jQuery('#edit-submitted-engagement-summary-category-end-date').val(obj.time_frame_to);
+            
+        }
+    });
+}
+
+initialStartEndDate()
 
 
 jQuery(document).ajaxComplete(
