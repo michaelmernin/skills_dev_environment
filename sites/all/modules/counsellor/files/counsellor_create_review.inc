@@ -275,15 +275,10 @@ function insert_to_general_DB($general_info,$counselor_name) {
  * @author Mars
  */
 function set_fields_array($general_info,$counselor_name, &$fields_array) {
-//  $starttime = NULL;
-//  $endtime = NULL;
   $periodFtime = NULL;
   $periodTTime = NULL;
   $flag = TRUE;
   $review_type = NULL;
-//  if (strpos($general_info, '-')) {
-//    $tmp = explode('-', $general_info);
-//  }
   //type
   if (isset($general_info['review_type'])) {
     $type = check_plain($general_info['review_type']);
@@ -303,35 +298,10 @@ function set_fields_array($general_info,$counselor_name, &$fields_array) {
         break;
     }
   }
-  
   if(isset($counselor_name)){
     $counselor_name_check=  check_plain($counselor_name);
     $fields_array['counselor_name'] = $counselor_name_check;
-    
   }
-
-//  //start time
-//  if (isset($general_info['review_start_date'])) {
-//    $stime = explode_time($general_info['review_start_date']);
-//    $starttime = explode_time_stand($stime);
-//    $startTime = dateArrayTounixTimestamp($stime);
-//    $fields_array['period_start'] = check_plain($startTime);
-//  }
-//  else {
-//
-//    return FALSE;
-//  }
-//  //end time
-//  if (isset($general_info['review_end_date'])) {
-//    $etime = explode_time($general_info['review_end_date']);
-//    $endtime = explode_time_stand($etime);
-//    $endTime = dateArrayTounixTimestamp($etime);
-//    $fields_array['period_end'] = check_plain($endTime);
-//  }
-//  else {
-//
-//    return FALSE;
-//  }
   //period from
   if (isset($general_info['review_from_date'])) {
     $pftime = explode_time($general_info['review_from_date']);
@@ -340,10 +310,8 @@ function set_fields_array($general_info,$counselor_name, &$fields_array) {
     $fields_array['time_frame_from'] = check_plain($periodFrom);
   }
   else {
-
     return FALSE;
   }
-
   //period to
   if (isset($general_info['review_to_date'])) {
     $pttime = explode_time($general_info['review_to_date']);
@@ -355,30 +323,15 @@ function set_fields_array($general_info,$counselor_name, &$fields_array) {
 
     return FALSE;
   }
-//  if (isset($form_state['values']['review_status'])) {
-//    $status = $form_state['values']['review_status'];
-//    $fields_array['active'] = $status;
-//  }
-  //description
-//  if (isset($general_info['review_from_description'])) {
-//  $end_year = substr($general_info['review_to_date'], 6, 9);
-//  $description = check_plain($end_year . '_' . $review_type);
-
   $description = return_review_name($general_info);
   $fields_array['description'] = $description;
-//  }
   if ( isset($periodFtime) && isset($periodTTime)) {
-//    if ($starttime >= $endtime) {
-//
-//      $flag = FALSE;
-//    }
     if ($periodFtime >= $periodTTime) {
 
       $flag = FALSE;
     }
   }
   else {
-
     $flag = FALSE;
   }
   return $flag;
