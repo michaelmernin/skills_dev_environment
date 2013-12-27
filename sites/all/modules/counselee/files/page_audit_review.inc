@@ -620,6 +620,9 @@ function gm_audit_review_result($rreid) {
  * remove the tab_accessibility part
  */
 function get_page_review_content($rreid) {
+  
+   module_load_include('inc', 'counselee', 'files/watch_review_status');
+  
   $cur_user_name = get_current_user_name();
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
