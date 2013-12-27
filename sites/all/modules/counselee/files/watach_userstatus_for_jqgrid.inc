@@ -28,78 +28,70 @@ function show_status_table() {
  * @author Mars
  */
 function get_user_status_table_data($get_data) {
-  $page = $get_data['page']; // get the requested page
-  $limit = $get_data['rows']; // get how many rows we want to have into the grid
-  $sidx = $get_data['sidx']; // get index row - i.e. user click to sort
-  $sord = $get_data['sord']; // get the direction
-  if (!$sidx) {
-    $sidx = -1;
+  $page_arg = new stdClass();
+  $page_arg->page = $get_data['page']; // get the requested page
+  $page_arg->limit = $get_data['rows']; // get how many rows we want to have into the grid
+  $page_arg->sidx = $get_data['sidx']; // get index row - i.e. user click to sort
+  $page_arg->sord = $get_data['sord']; // get the direction
+  if (!$page_arg->sidx) {
+    $page_arg->sidx = -1;
   }
-  $cur_user_name = get_current_user_name();
-  $my_counselee_names = get_counselees_from_db_with_username($cur_user_name);
-  $is_gm = is_gm();
+  $page_arg->cur_user_name = get_current_user_name();
+  $page_arg->my_counselee_names = get_counselees_from_db_with_username($page_arg->cur_user_name);
+  $page_arg->is_counselor = is_counselor_by_counselee_names($page_arg->my_counselee_names);
+  $page_arg->gm_counselee_names = get_gm_counselee_from_db_by_username($page_arg->cur_user_name);
+  $page_arg->is_gm = is_gm_by_counselee_names($page_arg->gm_counselee_names);
   if ($get_data['_search'] == 'true') {
     $swhere = '';
-    if(isset($get_data['type'])&&$get_data['type']!=-1){
-      
+    if (isset($get_data['type']) && $get_data['type'] != -1) {
+
       $swhere .='type=' . $get_data['type'];
-      
-    }else{
+    }
+    else {
       $swhere .='1=1';
     }
-//    $type = isset($get_data['type']) ? ($swhere .='type=' . $get_data['type'] ) : '';
-    if(isset($get_data['status'])&&$get_data['status']!=-1){
-      
+    if (isset($get_data['status']) && $get_data['status'] != -1) {
+
       $swhere .=' and rstatus=' . $get_data['status'];
-      
     }
-    
-//    $status = isset($get_data['status']) ? ($swhere .= ' and rstatus=' . $get_data['status'] ) : '';
+
     if (isset($get_data['employeeName'])) {
       $employeename_unformat = str_replace(" ", ".", $get_data['employeeName']);
       $swhere .= ' and employeeName like \'%' . $employeename_unformat . '%\'';
     }
     $review_name = isset($get_data['review_name']) ? ( $swhere .= ' and description like \'%' . $get_data['review_name'] . '%\'') : '';
-//    dd($swhere, 'swhere');
-    $records_count = get_user_status_table_page_count($cur_user_name, $my_counselee_names, $is_gm, $swhere);
-//    dd($records_count, '$records_count');
-    if ($records_count > 0) {
-      $total_pages = ceil($records_count / $limit);
+    $page_arg->records_count = get_user_status_table_page_count($page_arg, $swhere);
+    if ($page_arg->records_count > 0) {
+      $page_arg->total_pages = ceil($page_arg->records_count / $page_arg->limit);
     }
     else {
-      $total_pages = 0;
+      $page_arg->total_pages = 0;
     }
-//    dd($total_pages, '$total_pages');
-//    dd($page, '$page');
-    if ($page > $total_pages) {
-      $page = $total_pages;
+    if ($page_arg->page > $page_arg->total_pages) {
+      $page_arg->page = $page_arg->total_pages;
     }
-    $start = $limit * $page - $limit; // do not put $limit*($page - 1), start index
-
-    $json_data = get_user_status_table_json($page, $total_pages, $records_count, $sidx, $sord, $start, $limit, $cur_user_name, $my_counselee_names, $is_gm, $swhere);
+    $page_arg->start = $page_arg->limit * $page_arg->page - $page_arg->limit; // do not put $limit*($page - 1), start index
 
 
-
-//    $json_data = '';
+    $json_data = get_user_status_table_json($page_arg, $swhere);
   }
   else {
     /**
      * total page count number
      */
-    $records_count = get_user_status_table_page_count($cur_user_name, $my_counselee_names, $is_gm);
-    if ($records_count > 0) {
-      $total_pages = ceil($records_count / $limit);
+    $page_arg->records_count = get_user_status_table_page_count($page_arg);
+    if ($page_arg->records_count > 0) {
+      $page_arg->total_pages = ceil($page_arg->records_count / $page_arg->limit);
     }
     else {
-      $total_pages = 0;
+      $page_arg->total_pages = 0;
     }
-    if ($page > $total_pages) {
-      $page = $total_pages;
+    if ($page_arg->page > $page_arg->total_pages) {
+      $page_arg->page = $page_arg->total_pages;
     }
-    $start = $limit * $page - $limit; // do not put $limit*($page - 1), start index
-//  dd($total_pages,'$total_pages');
+    $page_arg->start = $page_arg->limit * $page_arg->page - $page_arg->limit; // do not put $limit*($page - 1), start index
 
-    $json_data = get_user_status_table_json($page, $total_pages, $records_count, $sidx, $sord, $start, $limit, $cur_user_name, $my_counselee_names, $is_gm);
+    $json_data = get_user_status_table_json($page_arg);
   }
   return $json_data;
 }
@@ -108,24 +100,25 @@ function get_user_status_table_data($get_data) {
  * get data from database
  * @return type
  */
-function get_user_status_table_json($page, $total_pages, $records_count, $sidx, $sord, $start, $limit, $cur_user_name, $my_counselee_names, $is_gm, $swhere = NULL) {
-  if ($sidx != -1) {
-    $orderby = ' ' . $sidx . ' ' . $sord . ',';
+function get_user_status_table_json($page_arg, $swhere = NULL) {
+  dd($page_arg, '$page_arg');
+  if ($page_arg->sidx != -1) {
+    $orderby = ' ' . $page_arg->sidx . ' ' . $page_arg->sord . ',';
   }
   else {
     $orderby = '';
   }
 //  dd($orderby, '$orderby');
   $responce = new stdClass();
-  $responce->page = $page;
-  $responce->total = $total_pages;
-  $responce->records = $records_count;
+  $responce->page = $page_arg->page;
+  $responce->total = $page_arg->total_pages;
+  $responce->records = $page_arg->records_count;
   /**
    * get user status data from db (include counselor data and counselee data)
    */
   $results = array();
-  if ($start >= 0) {
-    $results = get_user_data_db($start, $limit, $cur_user_name, $my_counselee_names, $orderby, $is_gm, $swhere);
+  if ($page_arg->start >= 0) {
+    $results = get_user_data_db($page_arg, $orderby, $swhere);
   }
   $i = 0;
 //  dd($results, '$results');
@@ -151,8 +144,8 @@ function get_user_status_table_json($page, $total_pages, $records_count, $sidx, 
  * get user status table's total pages number.
  * @return type
  */
-function get_user_status_table_page_count($my_name, $my_counselee_names, $is_gm, $swhere = NULL, $gm_mod = TRUE) {
-  $results = get_pages_count_from_db($my_name, $my_counselee_names, $is_gm, $swhere, $gm_mod);
+function get_user_status_table_page_count($page_arg, $swhere = NULL, $gm_mode = TRUE) {
+  $results = get_pages_count_from_db($page_arg, $swhere, $gm_mode);
   foreach ($results as $result) {
     $records_count = $result->count;
   }
@@ -165,64 +158,70 @@ function get_user_status_table_page_count($my_name, $my_counselee_names, $is_gm,
  * @param type $my_name
  * @param type $my_counselee_names
  * @param type $is_gm
- * @param type $gm_mod
+ * @param type $gm_mode
  * @return type
  */
-function get_pages_count_from_db($my_name, $my_counselee_names, $is_gm, $swhere = NULL, $gm_mod = TRUE) {
-//  dd($is_gm,'$is_gm');
-  if ($is_gm && $gm_mod) {
+function get_pages_count_from_db($page_arg, $swhere = NULL, $gm_mode = TRUE) {
+
+//  dd($page_arg, '$page_arg');
+  if ($page_arg->is_gm && $gm_mode) {
     //gm
     $sql = get_user_status_pages_count_gm_sql($swhere);
-//      dd($sql, '$sql');
-    $results = db_query($sql)->fetchAll();
+//    dd($sql, '$sql');
+    $results = db_query($sql, array(':counselees' => $page_arg->gm_counselee_names))->fetchAll();
 //    dd($results,'$results');
   }
   else {
-    if (count($my_counselee_names)) {
+    if ($page_arg->is_counselor) {
 //counselor
       $sql = get_user_status_pages_count_counselor_sql($swhere);
-      $results = db_query($sql, array(':myname' => $my_name, ':counselees' => $my_counselee_names))->fetchAll();
+//      dd($sql, '$sql');
+      $results = db_query($sql, array(':myname' => $page_arg->cur_user_name, ':counselees' => $page_arg->my_counselee_names))->fetchAll();
+//      dd($results,'$results');
     }
     else {
       //counselee
       $sql = get_user_status_pages_count_counselee_sql($swhere);
-      $results = db_query($sql, array(':myname' => $my_name))->fetchAll();
+//      dd($sql, '$sql');
+      $results = db_query($sql, array(':myname' => $page_arg->cur_user_name))->fetchAll();
+//      dd($results,'$results');
     }
   }
   return $results;
 }
 
-function get_user_data_db($start, $limit, $cur_user_name, $my_counselee_names, $orderby, $is_gm, $swhere, $gm_mod = TRUE) {
-  if ($is_gm && $gm_mod) {
+function get_user_data_db($page_arg, $orderby, $swhere, $gm_mode = TRUE) {
+  if ($page_arg->is_gm && $gm_mode) {
     //gm
     $sql = get_user_status_gm_data_from_db_sql($orderby, $swhere);
-    $results = db_query_range($sql, $start, $limit)->fetchAll();
+//    dd($sql,'$sql');
+    $results = db_query_range($sql, $page_arg->start, $page_arg->limit, array(':counselees' => $page_arg->gm_counselee_names))->fetchAll();
+//    dd($results,'$results');
   }
   else {
     //is not GM
-    if (count($my_counselee_names)) {
+    if ($page_arg->is_counselor) {
       //counselor
       $sql = get_user_status_counselor_data_from_db_sql($orderby, $swhere);
-//      dd($sql,'$sql');
-      $results = db_query_range($sql, $start, $limit, array(':myname' => $cur_user_name, ':counselees' => $my_counselee_names))->fetchAll();
+      $results = db_query_range($sql, $page_arg->start, $page_arg->limit, array(':myname' => $page_arg->cur_user_name, ':counselees' => $page_arg->my_counselee_names))->fetchAll();
     }
     else {
       $sql = get_user_status_counselee_data_from_db_sql($orderby, $swhere);
-      $results = db_query_range($sql, $start, $limit, array(':myname' => $cur_user_name,))->fetchAll();
+      $results = db_query_range($sql, $page_arg->start, $page_arg->limit, array(':myname' => $page_arg->cur_user_name))->fetchAll();
     }
   }
   return $results;
 }
 
 function get_user_status_pages_count_gm_sql($swhere) {
-  $where_sql = isset($swhere) ? (' where ' . $swhere) : '';
+  $where_sql = isset($swhere) ? (' and ' . $swhere) : '';
   return '
 		SELECT
 COUNT(p1.rreid) AS count
-			
 			FROM
 				{prs_rel_review_employee} p1
-			LEFT JOIN {prs_general} pg ON p1.prid = pg.prid'
+			LEFT JOIN {prs_general} pg ON p1.prid = pg.prid
+      WHERE p1.employeeName IN (:counselees)'
       . $where_sql;
 }
 
@@ -283,7 +282,7 @@ COUNT(p1.rreid) AS count
 }
 
 function get_user_status_gm_data_from_db_sql($orderby, $swhere) {
-  $where_sql = isset($swhere) ? (' where ' . $swhere) : '';
+  $where_sql = isset($swhere) ? (' and ' . $swhere) : '';
   return 'SELECT
 		p1.employeeName,
 		p1.rreid,
@@ -295,7 +294,9 @@ function get_user_status_gm_data_from_db_sql($orderby, $swhere) {
 		\'0\' AS counselorflag
 	FROM
 		prs_rel_review_employee p1
-	LEFT JOIN prs_general pg ON p1.prid = pg.prid' . $where_sql . '
+	LEFT JOIN prs_general pg ON p1.prid = pg.prid 
+  WHERE
+			p1.employeeName IN (:counselees)' . $where_sql . '
   ORDER BY' . $orderby . ' counselorflag ASC, rreid DESC';
 }
 

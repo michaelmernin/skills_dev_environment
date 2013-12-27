@@ -830,3 +830,38 @@ function get_review_type_by_rreid($rreid) {
   else
     return -1;
 }
+
+function is_counselor_by_counselee_names($my_counselee_names) {
+  if (count($my_counselee_names)) {
+
+    return TRUE;
+  }
+  else {
+
+    return FALSE;
+  }
+}
+
+function is_gm_by_counselee_names($gm_counselee_names) {
+  if (count($gm_counselee_names)) {
+
+    return TRUE;
+  }
+  else {
+
+    return FALSE;
+  }
+}
+
+function get_gm_counselee_from_db_by_username($cur_user_name) {
+  $query = db_select('prs_rel_employee_counselor_gm', 'precg');
+  $query->fields('precg', array('employeeName'));
+  $query->condition('precg.gmName', $cur_user_name, '=');
+  $query->orderBy('precg.employeeName', 'ASC');
+  $results = $query->execute()->fetchAll();
+  $result = array();
+  foreach ($results as $one_result) {
+    array_push($result, $one_result->employeeName);
+  }
+  return $result;
+}
