@@ -737,7 +737,7 @@ function get_project_review_projett_msg() {
     general.project_name ,
     general.time_frame_from ,
     general.time_frame_to FROM
-    {prs_general} GENERAL INNER JOIN {prs_rel_provider_employee} provider
+    {prs_general} general INNER JOIN {prs_rel_provider_employee} provider
         ON general.prid = provider.prid
     AND provider.employeename = provider.providername 
     WHERE provider.rreid = $rreid");
