@@ -50,6 +50,7 @@ function counselee_confirm_review_result($rreid) {
     case PROJECT_REVIEW:
 
       $pageContent = get_page_review_content($rreid);
+      $pageContent .= get_counselee_counselor_overall_rating_display();
       $filename = drupal_get_path('module', 'counselee') . '/templates/' . 'overall_rating_project.tpl.php';
       $pageContent .= file_get_contents($filename);
       $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
@@ -519,6 +520,7 @@ function counselor_submit_review_result($rreid) {
       break;
     case PROJECT_REVIEW:
       $pageContent = get_page_review_content($rreid);
+      $pageContent .= get_counselee_counselor_overall_rating_display();
       $pageContent .= get_overall_rating_part_by_rreid($rreid);
       $pageContent .= theme('page_audit_review_btn_submit', array('rreid' => $rreid));
 
@@ -577,6 +579,7 @@ function gm_audit_review_result($rreid) {
     case PROJECT_REVIEW:
 
       $pageContent = get_page_review_content($rreid);
+      $pageContent .= get_counselee_counselor_overall_rating_display();
       $pageContent .= get_overall_rating_part_by_rreid($rreid);
       $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
 
@@ -805,4 +808,15 @@ function get_project_review_projett_msg() {
     print json_encode($result[0]);
   }
   print false;
+}
+
+function get_counselee_counselor_overall_rating_display() {
+  return '<div class="view-self-comment-title">
+              <div style="font-weight: 600;float: left">·Counselor Overall Rating:  </div>
+              <div class="color-rating-box" id="counselor-overall_rating-content"></div>
+              <div style="font-weight: 600;float: left;padding-right: 5px;padding-left: 5px;">| ·Self Overall Rating: </div>
+              <div class="color-rating-box" id="counselee-overall_rating-content"></div>
+            </div>
+            <br />
+            <br />';
 }
