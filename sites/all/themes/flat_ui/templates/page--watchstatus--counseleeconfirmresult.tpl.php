@@ -15,7 +15,7 @@
   
   
   
-  <?php require_once 'header.tpl.php'; ?>
+<?php require_once 'header.tpl.php'; ?>
 <div class="minheight">
   <div id="pr_mywokingstage_page" class="container">
     <div id="pr_mywokingstage_content" class="row">
