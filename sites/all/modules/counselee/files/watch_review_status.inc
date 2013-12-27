@@ -341,7 +341,7 @@ function load_review_content($rreid = NULL) {
           $peer_name = array();
           $peer_json = '';
           $json_count = 0;
-          _manage_data_return_three_array($children_array, $peer_information_set->peer_question_rating_comment_result, $peer_name, $peer_json, $json_count);
+          _manage_data_return_three_array_readonly($children_array, $peer_information_set->peer_question_rating_comment_result, $peer_name, $peer_json, $json_count);
           $pie_data = _manage_pie_chart($peer_name, $form_key);
         }
         else {
@@ -367,7 +367,8 @@ function load_review_content($rreid = NULL) {
       if ($peer_information_set->have_peer_data) {
         $peer_name = array();
         $peer_json = array();
-        $peer_name_and_rating = _generate_peer_json_data($peer_information_set->peer_question_rating_comment_result, $value->form_key, $peer_json);
+				$is_readonly = TRUE;
+        $peer_name_and_rating = _generate_peer_json_data($peer_information_set->peer_question_rating_comment_result, $value->form_key, $peer_json, $is_readonly);
         $json_count = count($peer_json);
         $peer_json_context = drupal_json_encode($peer_json);
         $pie_data = _manage_pie_chart($peer_name_and_rating, $value->form_key);
