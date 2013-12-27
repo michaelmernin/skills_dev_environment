@@ -191,7 +191,6 @@ function load_self_assessment($rreid = NULL) {
 }
 
 function _generate_question_id_from_form_key($cid_formkey_type_array) {
-	dd($cid_formkey_type_array, 'cid_formkey');
 	$question_array = array();
 	foreach ($cid_formkey_type_array as $key => $item) {
 		if ($item['type'] == 'select' && $item['form_key'] != 'overall_rating') {

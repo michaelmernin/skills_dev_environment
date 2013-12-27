@@ -101,7 +101,6 @@ function get_user_status_table_data($get_data) {
  * @return type
  */
 function get_user_status_table_json($page_arg, $swhere = NULL) {
-  dd($page_arg, '$page_arg');
   if ($page_arg->sidx != -1) {
     $orderby = ' ' . $page_arg->sidx . ' ' . $page_arg->sord . ',';
   }
