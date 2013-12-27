@@ -1,12 +1,14 @@
 <?php $base_path = get_curPage_base_url() ?>
 <?php $base_relatively_path = base_path() ?>
 <?php $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui') ?>
+<?php $counselee_path = get_curPage_base_url() . drupal_get_path('module', 'counselee') ?>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/highcharts.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/hightchart-no-data.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/highcharts/modules/exporting.js"></script>
 
 <script src="<?php echo $module_path ?>/assets/javascripts/grid.locale-en.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/jquery.jqGrid.min.js"></script>
+<script src="<?php echo $counselee_path ?>/js/calculate.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $module_path ?>/assets/stylesheets/ui.jqgrid.css" />
 
 <script type="text/javascript">
@@ -53,11 +55,8 @@
             <br />
             <br />
 
-
-
             <!--Add the overall rating display part-->
             <?php print get_overall_rating_part(current_path()); ?>
-
 
           </div>
         </div>

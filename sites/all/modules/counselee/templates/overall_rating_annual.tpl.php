@@ -165,20 +165,21 @@
   {
 
     var url = window.location.href;
-    if (url.indexOf(viewselfassessmentcontent) != -1)
+    if (url.indexOf('viewselfassessmentcontent') != -1)
     {
       jQuery("#peer-review-form-overall-thead tr th:nth-child(3)").hide();
       jQuery("#peer-review-form-overall-tbody tr td:nth-child(3)").hide();
     }
 
   }
-
+  setCounselorOverallRating();
+  setCounseleeOverallRating();
+  hideCounselorRating();
   initializeRating();
   registerSelectOnchangeEvent(counselorCoreRatingID, counselorCoreCompetenciesSelectChange);
   registerSelectOnchangeEvent(counselorInternalRatingID, CounselorInternalContributionsSelectChange);
   counselorCoreCompetenciesSelectChange();
   CounselorInternalContributionsSelectChange();
-  hideCounselorRating();
 
 </script>
 

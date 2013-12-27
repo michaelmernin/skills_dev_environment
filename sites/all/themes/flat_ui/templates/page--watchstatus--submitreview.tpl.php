@@ -1,7 +1,9 @@
-<?php $base_path = get_curPage_base_url()  ?>
+<?php $base_path = get_curPage_base_url() ?>
 <?php $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui') ?>
+<?php $counselee_path = get_curPage_base_url() . drupal_get_path('module', 'counselee') ?>
 <script src="<?php echo $module_path ?>/assets/javascripts/grid.locale-en.js"></script>
 <script src="<?php echo $module_path ?>/assets/javascripts/jquery.jqGrid.min.js"></script>
+<script src="<?php echo $counselee_path ?>/js/calculate.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $module_path ?>/assets/stylesheets/ui.jqgrid.css" />
 
 <?php require_once 'header.tpl.php'; ?>
@@ -33,7 +35,7 @@
               ?></ul></div><?php endif; ?>
 
             <?php print render($page['content']) ?>
-          </div>
+         </div>
         </div>
       </div>
     </div>

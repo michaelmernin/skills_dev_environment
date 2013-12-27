@@ -59,7 +59,15 @@
 
             <!--Add the overall rating display part-->
             <?php print get_overall_rating_part(current_path()); ?>
-
+            
+            
+            
+            
+            <script type="text/javascript">
+              setCounselorOverallRating1();
+              setCounseleeOverallRating1();
+            </script>
+            
 
           </div>
         </div>

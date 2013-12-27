@@ -370,3 +370,25 @@ function modifyCategoryValue(category, destArr)
     modifyElementValue(destArr, averageScore);
 }
 
+
+/**
+ *Set counselee and counselor overall rating
+ * */
+function setCounselorOverallRating() {
+    var overallRating = jQuery("#counselor-overall_rating-0").val();
+    if (overallRating != "undefined" && overallRating != 0) {
+        jQuery("#counselor-overall_rating-content").val(overallRating);
+    }
+    else {
+        jQuery("#counselor-overall_rating-content").val(3);
+    }
+
+}
+
+function setCounseleeOverallRating() {
+    var overallRating = jQuery("#counselee-overall_rating-0").val();
+    if (overallRating != "undefined") {
+        jQuery("#counselee-overall_rating-content").append(overallRating);
+    }
+}
+         

@@ -55,7 +55,7 @@
           // jQuery('#submit_button').removeAttr("disabled");
         }
         // else {
-        //   window.location.href = "<?php // print base_path() . 'viewassessment'                ?>";
+        //   window.location.href = "<?php // print base_path() . 'viewassessment'                 ?>";
         //   return;
         // }
       });
@@ -350,11 +350,11 @@
 
 <script>
 
-  function textareaLimitWord(ta, maxLength)
-  {
-    if (ta.value.length > maxLength) {
-      ta.value = ta.value.substring(0, maxLength);
-    }
-  }
+              function textareaLimitWord(ta, maxLength)
+              {
+                if (ta.value.length > maxLength) {
+                  ta.value = ta.value.substring(0, maxLength);
+                }
+              }
 
 </script>

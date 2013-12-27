@@ -88,7 +88,7 @@
   {
 
     var url = window.location.href;
-    if (url.indexOf(viewselfassessmentcontent) != -1)
+    if (url.indexOf("viewselfassessmentcontent") != -1)
     {
       jQuery("#project-review-overall-thead tr th:nth-child(3)").hide();
       jQuery("#project-review-overall-tbody tr td:nth-child(3)").hide();
@@ -96,8 +96,11 @@
 
   }
 
+  setCounselorOverallRating();
+  setCounseleeOverallRating();
+  hideCounselorRating();
   addChangeEventForSelect();
   projectReviewRatingOnchage();
-  hideCounselorRating();
+
 
 </script>

@@ -518,10 +518,9 @@ function counselor_submit_review_result($rreid) {
       $pageContent .= theme('page_audit_review_btn_submit', array('rreid' => $rreid));
       break;
     case PROJECT_REVIEW:
-
       $pageContent = get_page_review_content($rreid);
+      $pageContent .= get_overall_rating_part_by_rreid($rreid);
       $pageContent .= theme('page_audit_review_btn_submit', array('rreid' => $rreid));
-
 
       break;
     case THREE_MONTH_REVIEW:
@@ -578,12 +577,8 @@ function gm_audit_review_result($rreid) {
     case PROJECT_REVIEW:
 
       $pageContent = get_page_review_content($rreid);
-      $filename = drupal_get_path('module', 'counselee') . '/templates/' . 'overall_rating_project.tpl.php';
-      $pageContent .= file_get_contents($filename);
-
-      dd(file_get_contents($filename), 'file_get_contents($filename)');
+      $pageContent .= get_overall_rating_part_by_rreid($rreid);
       $pageContent .= theme('page_audit_review_btn_approve', array('rreid' => $rreid));
-
 
       break;
     case THREE_MONTH_REVIEW:
@@ -623,8 +618,11 @@ function get_page_review_content($rreid) {
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
   $review_status = get_review_status_from_db($rreid);
+  $review_basic_info = get_basic_review_information($rreid);
+  $review_type = $review_basic_info[0]->type;
 
   module_load_include('inc', 'common', 'defined_constants');
+
 
   module_load_include('inc', 'counselee', 'files/review_assessment_modification');
   $provider_info = get_provider_info($rreid, $reviewee);
@@ -651,6 +649,10 @@ function get_page_review_content($rreid) {
 // Item below is for peers
 ////////////////////////////////////////////////////////
   $peer_information_set = get_peer_comment_information_array($rreid, $item_count);
+  $question_cid_array = array();
+  if ($review_type == PROJECT_REVIEW) {
+    $question_cid_array = _generate_question_id_from_form_key($peer_information_set->cid_formkey_type_array);
+  }
   ///////////////////////////////////////////////////////
   //Item below is for counselor
   ///////////////////////////////////////////////////////
@@ -681,6 +683,12 @@ function get_page_review_content($rreid) {
   $is_read_only = TRUE;
   foreach ($self_question_rating_comment_result as $key => $value) {
 //=====================the question which have pie chart ============CONST===============================
+    if (!isset($value->rating) && !isset($value->comment)) {
+      $content = thematize_subtitle($rreid, $nid, $reviewee, $value);
+      $pageContent .= $content;
+      continue;
+    }
+
     $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
     if (in_array($value->form_key, $pie_form_key_array)) {
       $form_key = $value->form_key . '_category';
@@ -702,7 +710,7 @@ function get_page_review_content($rreid) {
         $pie_data->have_peer_data = FALSE;
       }
 //=====================pie chart end=====================================================================
-      $content = thematize_review_content_full($key, $rreid, $nid, $reviewee, $value, NULL, $pie_data, $peer_json, $revised_comments, $total_item_count, $is_read_only);
+      $content = thematize_review_content_full($key, $rreid, $nid, $reviewee, $value, NULL, $pie_data, $peer_json, $revised_comments, $total_item_count, $overall_rating, $is_read_only);
       $pageContent .= $content;
     }
     else {

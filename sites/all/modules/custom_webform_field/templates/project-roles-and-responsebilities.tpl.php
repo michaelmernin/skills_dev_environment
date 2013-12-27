@@ -9,6 +9,7 @@
         <th>Client(Dates)</th>
         <th>Rating</th>
         <th>Project Roles And Responsibilities</th>
+        <th>Status</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -145,12 +146,14 @@
 </div>
 
 
-
 <script>
+
+
 
               function initializeProjectRoles()
               {
                 var projects_json = '<?php print json_encode($projects); ?>';
+                projects_json = projects_json.replace("\r\n", "<br/>");
                 var projects = JSON.parse(projects_json);
                 var client, rating, roles, obj, tr, tbody;
 
@@ -170,6 +173,7 @@
                           + roles
                           + "</td> <td>"
                           + ''
+                          + "</td> <td>"
                           + "</td></tr>";
 
                   tbody += tr;
@@ -255,6 +259,6 @@
 
 
               initializeProjectRoles();
-              save_project_roles();
+//              save_project_roles();
 </script>
 
