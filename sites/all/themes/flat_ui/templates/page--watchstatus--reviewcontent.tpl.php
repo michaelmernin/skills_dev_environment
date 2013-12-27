@@ -64,8 +64,8 @@
             
             
             <script type="text/javascript">
-              setCounselorOverallRating1();
-              setCounseleeOverallRating1();
+              setCounselorOverallRating();
+              setCounseleeOverallRating();
             </script>
             
 

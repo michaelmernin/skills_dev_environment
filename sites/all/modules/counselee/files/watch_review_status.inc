@@ -275,10 +275,6 @@ function load_review_content($rreid = NULL) {
 // Item below is for peers
 ////////////////////////////////////////////////////////
 	$peer_information_set = get_peer_comment_information_array($rreid, $item_count);
-	$question_cid_array = array();
-	if ($review_type == PROJECT_REVIEW) {
-		$question_cid_array = _generate_question_id_from_form_key($peer_information_set->cid_formkey_type_array);
-	}
 	///////////////////////////////////////////////////////
 	//Item below is for counselor
 	///////////////////////////////////////////////////////

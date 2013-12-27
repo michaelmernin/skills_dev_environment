@@ -61,10 +61,6 @@ function load_self_assessment($rreid = NULL) {
 	// Item below is for peers
 	////////////////////////////////////////////////////////
 	$peer_information_set = get_peer_comment_information_array($rreid, $item_count);
-	$question_cid_array = array();
-	if ($review_type == PROJECT_REVIEW) {
-		$question_cid_array = _generate_question_id_from_form_key($peer_information_set->cid_formkey_type_array);
-	}
 	///////////////////////////////////////////////////////
 	//Item below is for counselor
 	///////////////////////////////////////////////////////
@@ -153,9 +149,9 @@ function load_self_assessment($rreid = NULL) {
 			}
 			else {
 				$json_count = 0;
-				$peer_json = '';
+				$peer_json_context = '';
 				$pie_data = new stdClass();
-				$pie_data->id = $form_key;
+				$pie_data->id = $value->form_key;
 				$pie_data->all_avg = NO_DATA;
 				$pie_data->have_peer_data = FALSE;
 			}
@@ -189,6 +185,7 @@ function load_self_assessment($rreid = NULL) {
 }
 
 function _generate_question_id_from_form_key($cid_formkey_type_array) {
+	dd($cid_formkey_type_array, 'cid_formkey');
 	$question_array = array();
 	foreach ($cid_formkey_type_array as $key => $item) {
 		if ($item['type'] == 'select' && $item['form_key'] != 'overall_rating') {
@@ -491,6 +488,9 @@ function _generate_peer_json_data(&$peer_question_rating_comment_result, $cur_fo
 		if ($item->form_key == $cur_form_key) {
 			$number = 0;
 			foreach ($item->ratings as $key => $value) {
+				if ($value['rating'] == 'N/A') {
+					continue;
+				}
 				if ($value['rating'] != 'N/A' && $value['rating'] != 0) {
 					$peer_name_and_rating[$key] = array();
 					$peer_name_and_rating[$key]['avgrating'] = $value['rating'];
