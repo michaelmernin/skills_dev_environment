@@ -94,6 +94,21 @@ function modifyProjectStyle()
     var position = jQuery(".webform-component-fieldset.webform-component--project-roles-and-responsibilities-category.form-wrapper");
     position.removeClass().addClass('wfm-item');
 }
+/**
+ * initial project name
+ * 
+ * */
+function initialProjectName()
+{
+    var title = jQuery("#hidWebFormTitle").val();
+    if (title.indexOf('_PROJECT_REVIEW') > 0)
+    {
+        var projectName = title.split('_PROJECT_REVIEW');
+        jQuery('#edit-submitted-project').val(projectName[0]);
+    } else {
+        return;
+    }
+}
 
 
 jQuery(document).ready(
@@ -114,6 +129,7 @@ jQuery(document).ready(
                             goTopEx();
                         return result;
                     });
+            initialProjectName();
         }
 );
 

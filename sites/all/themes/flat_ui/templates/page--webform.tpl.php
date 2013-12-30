@@ -27,7 +27,12 @@ appendCSSJS();
 
 
 <div id="wrap" style="padding-top: 20px;" class="container">
-  <?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
+  <?php if ($title): ?>
+
+    <h1 class="page-title"><?php print $title; ?></h1>
+    <input id="hidWebFormTitle" type="hidden" value="<?php print $title; ?>"/>
+
+  <?php endif; ?>
   <?php print $messages; ?>
   <?php
 //dd($node,'node');

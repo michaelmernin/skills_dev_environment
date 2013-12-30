@@ -78,7 +78,7 @@ function initialStartEndDate()
     {
         if (params[i] == 'selfassessment')
         {
-            rreid = params[i + 1]
+            rreid = params[i + 1];
         }
     }
     
@@ -96,7 +96,7 @@ function initialStartEndDate()
     });
 }
 
-initialStartEndDate()
+initialStartEndDate();
 
 
 jQuery(document).ajaxComplete(
