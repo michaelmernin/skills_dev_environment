@@ -383,7 +383,7 @@ function counselor_audit_review_remind($address, $counselee_name, $counselor_nam
 
 function counselor_submit_review_result_remind($rreid) {
 
-  dd('counselor_submit_review_result_remind');
+//  dd('counselor_submit_review_result_remind');
   $query = db_select('prs_rel_review_employee', 'review');
   $query->join('prs_general', 'general', 'general.prid = review.prid');
   $query->join('prs_rel_employee_counselor_gm', 'relation', 'relation.employeeName= review.employeeName');

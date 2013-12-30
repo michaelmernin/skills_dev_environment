@@ -620,9 +620,9 @@ function gm_audit_review_result($rreid) {
  * remove the tab_accessibility part
  */
 function get_page_review_content($rreid) {
-  
-   module_load_include('inc', 'counselee', 'files/watch_review_status');
-  
+
+  module_load_include('inc', 'counselee', 'files/watch_review_status');
+
   $cur_user_name = get_current_user_name();
   $reviewee = get_reviewee_from_db($rreid);
   $counselor = get_counselor($reviewee);
@@ -636,7 +636,7 @@ function get_page_review_content($rreid) {
   $allowed_status = AccessStatus::getReviewContent();
 
 
- 
+
 
 
 //  if (!identify_accessibility($cur_user_name, $reviewee, $counselor, $allowed_roles, $allowed_status, $review_status)) {
@@ -674,45 +674,45 @@ function get_page_review_content($rreid) {
 ////////////////////////////////////////////////////////
 // Item below is for peers
 ////////////////////////////////////////////////////////
-	$peer_information_set = get_peer_comment_information_array($rreid, $item_count);
-	///////////////////////////////////////////////////////
-	//Item below is for counselor
-	///////////////////////////////////////////////////////
-	$have_counselor_data = TRUE;
-	$csiid = get_counselor_latest_submissionID($nid);
-	if ($csiid != -1) {
-		$counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
-		$revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
-		$overall_rating->counselor_rating = _fetch_counselor_overall_rating($revised_comments);
-	}
-	else {
-		$have_counselor_data = FALSE;
-		$revised_comments = array();
-		for ($i = 0; $i < $item_counting->total_item_count + 1; $i++) {
-			$revised_comments[$i] = new stdClass();
-		}
-		$overall_rating->counselor_rating = 0;
-	}
+  $peer_information_set = get_peer_comment_information_array($rreid, $item_count);
+  ///////////////////////////////////////////////////////
+  //Item below is for counselor
+  ///////////////////////////////////////////////////////
+  $have_counselor_data = TRUE;
+  $csiid = get_counselor_latest_submissionID($nid);
+  if ($csiid != -1) {
+    $counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
+    $revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
+    $overall_rating->counselor_rating = _fetch_counselor_overall_rating($revised_comments);
+  }
+  else {
+    $have_counselor_data = FALSE;
+    $revised_comments = array();
+    for ($i = 0; $i < $item_counting->total_item_count + 1; $i++) {
+      $revised_comments[$i] = new stdClass();
+    }
+    $overall_rating->counselor_rating = 0;
+  }
 
-	$pageContent = '';
-	appendCSSJS();
-	if ($review_type == ANNUAL_REVIEW) {
-		for ($i = 0; $i < $review_info_content_num; $i++) {
-			$proj_item = generate_project_roles_and_responsibilities_info($review_info, $i);
-			if (validate_numbers($review_info, $i)) {
-				$content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $proj_item, $i);
-				$pageContent .= $content;
-			}
-		}
-	}
-	else if ($review_type == PROJECT_REVIEW) {
-		$content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $review_info);
-		$pageContent .= $content;
-	}
-	$pageContent .= '<hr>';
-	$is_read_only = TRUE;
-	$data_count = 0;
-	foreach ($self_question_rating_comment_result as $key => $value) {
+  $pageContent = '';
+  appendCSSJS();
+  if ($review_type == ANNUAL_REVIEW) {
+    for ($i = 0; $i < $review_info_content_num; $i++) {
+      $proj_item = generate_project_roles_and_responsibilities_info($review_info, $i);
+      if (validate_numbers($review_info, $i)) {
+        $content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $proj_item, $i);
+        $pageContent .= $content;
+      }
+    }
+  }
+  else if ($review_type == PROJECT_REVIEW) {
+    $content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $review_info);
+    $pageContent .= $content;
+  }
+  $pageContent .= '<hr>';
+  $is_read_only = TRUE;
+  $data_count = 0;
+  foreach ($self_question_rating_comment_result as $key => $value) {
 //=====================the question which have pie chart ============CONST===============================
     if (!isset($value->rating) && !isset($value->comment)) {
       $content = thematize_subtitle($rreid, $nid, $reviewee, $value);
@@ -756,7 +756,7 @@ function get_page_review_content($rreid) {
       if ($peer_information_set->have_peer_data) {
         $peer_name = array();
         $peer_json = array();
-				$is_readonly = TRUE;
+        $is_readonly = TRUE;
         $peer_name_and_rating = _generate_peer_json_data($peer_information_set->peer_question_rating_comment_result, $value->form_key, $peer_json, $is_readonly);
         $json_count = count($peer_json);
         $peer_json_context = drupal_json_encode($peer_json);
