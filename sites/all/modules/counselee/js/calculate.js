@@ -391,7 +391,6 @@ function setCounselorOverallRating() {
 
 function setCounseleeOverallRating() {
     var overallRating = jQuery("#counselee-overall_rating-0").val();
-
     if (overallRating == "undefined")
         jQuery("#counselee-overall_rating-content").append("3");
 

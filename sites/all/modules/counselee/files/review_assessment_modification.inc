@@ -228,7 +228,7 @@ function get_peer_json($children_array, $question_and_answer) {
           if ($one_ratings['rating'] != 'N/A') {
             if ($one_ratings['isDisplay'] == 0 && $one_ratings['isRead']) {
               $title = get_title_form_peer_array($one_question_answer);
-              $peer_json_std = get_peer_json_without_peer_name_std($one_ratings['rating'], $one_ratings['comment'], $one_ratings['nid'], $one_question_answer->cid, $title, $number);
+              $peer_json_std = get_peer_json_without_peer_name_std($one_ratings['rating'], $one_ratings['comment'], $one_ratings['nid'], $one_question_answer->cid, $title, NULL);
               array_push($peer_json_array, $peer_json_std);
             }
           }
