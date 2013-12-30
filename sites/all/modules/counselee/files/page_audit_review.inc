@@ -764,9 +764,9 @@ function get_page_review_content($rreid) {
       }
       else {
         $json_count = 0;
-        $peer_json = '';
+        $peer_json_context = '';
         $pie_data = new stdClass();
-        $pie_data->id = $form_key;
+        $pie_data->id = $value->form_key;
         $pie_data->all_avg = NO_DATA;
         $pie_data->have_peer_data = FALSE;
       }
