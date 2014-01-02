@@ -741,15 +741,16 @@ function print_render_tabs($tabs) {
   else if ($userId_flag == 0 && $rstatus == APPROVED_BY_COUNSELOR) {
     print render($tabs['tabs']['output']['6']);
   }
-  else if ($userId_flag == 1 && $rstatus == APPROVED_BY_COUNSELOR) {
-    print render($tabs['tabs']['output']['5']);
-  }
   else if ($userId_flag == 1 && $rstatus == JOINT_REVIEW) {
     print render($tabs['tabs']['output']['7']);
   }
   else if ($userId_flag == 2 && $rstatus == GM_REVIEW) {
     print render($tabs['tabs']['output']['8']);
   }
+
+  $allowed_status = AccessStatus::getReviewContent();
+  if (tab_accessibility($userId_flag, $allowed_status, $rstatus))
+    print render($tabs['tabs']['output']['5']);
 }
 
 /**
@@ -1210,7 +1211,6 @@ function get_overall_rating_part($url) {
   $rreid = $params[count($params) - 1];
   return get_overall_rating_part_by_rreid($rreid);
 }
-
 
 /**
  * Get the overall rating part of the page:

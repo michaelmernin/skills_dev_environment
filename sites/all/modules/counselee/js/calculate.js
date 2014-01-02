@@ -374,19 +374,23 @@ function modifyCategoryValue(category, destArr)
  *Set counselee and counselor overall rating
  * */
 function setCounselorOverallRating() {
-    var overallRating = jQuery("#counselor-overall_rating-0").val();
-    if (overallRating != "undefined" && overallRating != 0) {
 
-        if (jQuery("#counselor-overall_rating-content")[0].tagName == 'SELECT')
-            jQuery("#counselor-overall_rating-content").val(overallRating);
+    var counselorSrc = jQuery("#counselor-overall_rating-0");
+    var counselorDest = jQuery("#counselor-overall_rating-content");
+    var overallRating;
+
+    if (counselorSrc.length < 0)
+        overallRating = 3;
+    else
+        overallRating = counselorSrc.val();
+    
+    if (counselorDest.length > 0)
+    {
+        if (counselorDest[0].tagName == 'SELECT')
+            counselorDest.val(overallRating);
         else
-            jQuery("#counselor-overall_rating-content").append(overallRating);
-
+            counselorDest.append(overallRating);
     }
-    else {
-        jQuery("#counselor-overall_rating-content").val(3);
-    }
-
 }
 
 function setCounseleeOverallRating() {
