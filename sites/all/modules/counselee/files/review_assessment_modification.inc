@@ -736,7 +736,7 @@ function counselor_sv_validation($decoded_data, $overall_rating, $is_approval, $
     $result_val = INVALID_OVERALL;
     $error_msg = 'Invalid overall rating. Overall rating has to be in the range of 1 to 5.';
   }
-  if ((is_approval == FALSE) && (is_NULL($reject_comments) == TRUE)) {
+  if (($is_approval == FALSE) && (is_NULL($reject_comments) == TRUE)) {
     $result_val = REJECT_COMMENT_REQUIRED;
     $error_msg = 'Reject comments is required.';
   }
