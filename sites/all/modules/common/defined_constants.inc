@@ -81,8 +81,8 @@ class AccessStatus {
     '2' => array());
   
   private static $review_content = array(
-    '0' => array(JOINT_REVIEW,GM_REVIEW,GM_APPROVED),
-    '1' => array(APPROVED_BY_COUNSELOR,GM_REVIEW),
+    '0' => array(JOINT_REVIEW, GM_REVIEW, GM_APPROVED),
+    '1' => array(APPROVED_BY_COUNSELOR, GM_REVIEW, GM_APPROVED),
     '2' => array(GM_APPROVED));
 
   public static function getSelfAssessment() {

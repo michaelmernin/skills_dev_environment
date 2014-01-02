@@ -18,13 +18,10 @@ defined('3_M_REVIEW') or define('3_M_REVIEW', 2);
  * Page callback function for view assessment.
  * */
 function load_self_assessment($rreid = NULL) {
-	$cur_user_name = get_current_user_name();
 	$reviewee = get_reviewee_from_db($rreid);
-	$counselor = get_counselor($reviewee);
 	$review_status = get_review_status_from_db($rreid);
 	$review_basic_info = get_basic_review_information($rreid);
 	$review_type = $review_basic_info[0]->type;
-	$allowed_roles = AccessRoles::getViewAssessment();
 	$allowed_status = AccessStatus::getViewAssessment();
 
   
