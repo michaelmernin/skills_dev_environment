@@ -162,33 +162,12 @@ function load_self_assessment_content($rreid = NULL) {
 
   $self_comments_array = array();
   $overall_rating = new stdClass();
-  $review_info_content_num = 0;
-  if ($review_type == ANNUAL_REVIEW) {
-    _matching_none_selection_items($none_selection_item, $self_dataset, $review_info, $self_comments_array, $overall_rating);
-    $review_info_content_num = count($review_info['project_roles_and_responsibilities']);
-  }
-  else if ($review_type == PROJECT_REVIEW) {
-    $review_info = _generate_engagement_and_evaluation($self_dataset, $self_comments_array, $overall_rating);
-    $review_info_content_num = 1;
-  }
+  $review_info_content_num = generate_review_header($review_type, $self_dataset, $self_cid_formkey_type_array, $review_info, $self_comments_array, $overall_rating);
   $item_counting = calculate_counting($self_question_rating_comment_result, $self_comments_array);
 
   $pageContent = '';
   appendCSSJS();
-  if ($review_type == ANNUAL_REVIEW) {
-    for ($i = 0; $i < $review_info_content_num; $i++) {
-      $proj_item = generate_project_roles_and_responsibilities_info($review_info, $i);
-      if (validate_numbers($review_info, $i)) {
-        $content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $proj_item, $i);
-        $pageContent .= $content;
-      }
-    }
-  }
-  else if ($review_type == PROJECT_REVIEW) {
-    $content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $review_info);
-    $pageContent .= $content;
-  }
-  $pageContent .= '<hr>';
+	$pageContent .= render_project_roles_and_responsibilities($review_type, $review_info, $rreid, $nid, $reviewee, $review_info_content_num);
   $data_count = 0;
   foreach ($self_question_rating_comment_result as $key => $value) {
     if (!isset($value->rating) && !isset($value->comment)) {
@@ -266,15 +245,8 @@ function load_review_content($rreid = NULL) {
 
   $self_comments_array = array();
   $overall_rating = new stdClass();
-  $review_info_content_num = 0;
-  if ($review_type == ANNUAL_REVIEW) {
-    _matching_none_selection_items($none_selection_item, $self_dataset, $review_info, $self_comments_array, $overall_rating);
-    $review_info_content_num = count($review_info['project_roles_and_responsibilities']);
-  }
-  else if ($review_type == PROJECT_REVIEW) {
-    $review_info = _generate_engagement_and_evaluation($self_dataset, $self_comments_array, $overall_rating);
-    $review_info_content_num = 1;
-  }
+  $review_info_content_num = generate_review_header($review_type, $self_dataset, $self_cid_formkey_type_array, $review_info, $self_comments_array, $overall_rating);
+
   $item_counting = calculate_counting($self_question_rating_comment_result, $self_comments_array);
 ////////////////////////////////////////////////////////
 // Item below is for peers
@@ -283,38 +255,16 @@ function load_review_content($rreid = NULL) {
 	///////////////////////////////////////////////////////
 	//Item below is for counselor
 	///////////////////////////////////////////////////////
-	$have_counselor_data = TRUE;
-	$csiid = get_counselor_latest_submissionID($nid);
-	if ($csiid != -1) {
-		$counselor_submit_data = get_synthesized_provider_comment_from_db($nid, $csiid);
-		$revised_comments = _fetch_counselor_revised_comments($counselor_submit_data);
-		$overall_rating->counselor_rating = _fetch_counselor_overall_rating($revised_comments);
-	}
-	else {
-		$have_counselor_data = FALSE;
-		$revised_comments = array();
-		for ($i = 0; $i < $item_counting->total_item_count + 1; $i++) {
-			$revised_comments[$i] = new stdClass();
-		}
-		$overall_rating->counselor_rating = 0;
-	}
+	$revised_comments = generate_counselor_ratings_and_comments($nid, $overall_rating, $item_counting);
 
 	$pageContent = '';
 	appendCSSJS();
-	if ($review_type == ANNUAL_REVIEW) {
-		for ($i = 0; $i < $review_info_content_num; $i++) {
-			$proj_item = generate_project_roles_and_responsibilities_info($review_info, $i);
-			if (validate_numbers($review_info, $i)) {
-				$content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $proj_item, $i);
-				$pageContent .= $content;
-			}
-		}
-	}
-	else if ($review_type == PROJECT_REVIEW) {
-		$content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $review_info);
-		$pageContent .= $content;
-	}
-	$pageContent .= '<hr>';
+
+	///////////////////////////////////////////////////////
+	//  Render review header: project roles and responsibilities.
+	///////////////////////////////////////////////////////  
+	$pageContent .= render_project_roles_and_responsibilities($review_type, $review_info, $rreid, $nid, $reviewee, $review_info_content_num);
+
 	$is_read_only = TRUE;
 	$data_count = 0;
 	foreach ($self_question_rating_comment_result as $key => $value) {
@@ -324,83 +274,61 @@ function load_review_content($rreid = NULL) {
       $pageContent .= $content;
       continue;
     }
-    if ($review_type == ANNUAL_REVIEW) {
-      $pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
-      if (in_array($value->form_key, $pie_form_key_array)) {
-        $form_key = $value->form_key . '_category';
+		switch($review_type){
+		case ANNUAL_REVIEW:
+			$pie_form_key_array = array('technical_abilities', 'consulting_skills', 'professionalism', 'leadership', 'teamwork');
+			if (in_array($value->form_key, $pie_form_key_array)) {
+				$form_key = $value->form_key . '_category';
+				$peer_json = '';
+				$json_count = 0;
+				$pie_data = generate_annual_peer_data($peer_information_set, $form_key, $peer_json, $json_count, $is_read_only);
+				//=====================pie chart end=====================================================================
+				$content = thematize_review_content_full($data_count, $rreid, $nid, $reviewee, $value, $json_count, $pie_data, $peer_json, $revised_comments, $item_counting->total_item_count, $overall_rating, $is_read_only);
+				$pageContent .= $content;
+				$data_count++;
+			}
+			else {
+				$content = thematize_review_content_without_chart($data_count, $rreid, $nid, $reviewee, $value, $revised_comments, $item_counting->total_item_count, $overall_rating, $is_read_only);
+				$pageContent .= $content;
+				$data_count++;
+			}
+			break;
 
-        if ($peer_information_set->have_peer_data) {
-          $fieldset_cid = get_fieldset_key_in_peer_table($form_key, $peer_information_set->cid_formkey_type_array);
-          $children_array = get_children_array_by_cid($fieldset_cid, $peer_information_set->adj_list);
-          $peer_name = array();
-          $peer_json = '';
-          $json_count = 0;
-          _manage_data_return_three_array_readonly($children_array, $peer_information_set->peer_question_rating_comment_result, $peer_name, $peer_json, $json_count);
-          $pie_data = _manage_pie_chart($peer_name, $form_key);
-        }
-        else {
-          $json_count = 0;
-          $peer_json = '';
-          $pie_data = new stdClass();
-          $pie_data->id = $form_key;
-          $pie_data->all_avg = NO_DATA;
-          $pie_data->have_peer_data = FALSE;
-        }
-        //=====================pie chart end=====================================================================
-        $content = thematize_review_content_full($data_count, $rreid, $nid, $reviewee, $value, $json_count, $pie_data, $peer_json, $revised_comments, $item_counting->total_item_count, $overall_rating, $is_read_only);
-        $pageContent .= $content;
-        $data_count++;
-      }
-      else {
-        $content = thematize_review_content_without_chart($data_count, $rreid, $nid, $reviewee, $value, $revised_comments, $item_counting->total_item_count, $overall_rating, $is_read_only);
-        $pageContent .= $content;
-        $data_count++;
-      }
-    }
-    else if ($review_type == PROJECT_REVIEW) {
-      if ($peer_information_set->have_peer_data) {
-        $peer_name = array();
-        $peer_json = array();
-				$is_readonly = TRUE;
-        $peer_name_and_rating = _generate_peer_json_data($peer_information_set->peer_question_rating_comment_result, $value->form_key, $peer_json, $is_readonly);
-        $json_count = count($peer_json);
-        $peer_json_context = drupal_json_encode($peer_json);
-        $pie_data = _manage_pie_chart($peer_name_and_rating, $value->form_key);
-      }
-      else {
-        $json_count = 0;
-        $peer_json_context = '';
-        $pie_data = new stdClass();
-        $pie_data->id = $value->form_key;
-        $pie_data->all_avg = NO_DATA;
-        $pie_data->have_peer_data = FALSE;
-      }
-      $content = thematize_review_content_full($data_count, $rreid, $nid, $reviewee, $value, $json_count, $pie_data, $peer_json_context, $revised_comments, $item_counting->total_item_count, $overall_rating, $is_read_only);
-      $pageContent .= $content;
-      $data_count++;
-    }
-  }
-  if ($review_type == PROJECT_REVIEW) {
-    foreach ($self_comments_array as $key => $value) {
-      if ($value->form_key == 'overall_evaluation_category') {
-        $content = thematize_subtitle($rreid, $nid, $reviewee, $value);
-        $pageContent .= $content;
-      }
-    }
-  }
-  foreach ($self_comments_array as $key => $value) {
-    if ($review_type == PROJECT_REVIEW) {
-      if ($value->form_key == 'overall_evaluation_category') {
-        continue;
-      }
-      $content = thematize_review_content_comment_only($key, $item_counting->self_item_count, $rreid, $nid, $reviewee, $value, $revised_comments, $item_counting->total_item_count, $is_read_only);
-      $pageContent .= $content;
-    }
-    else if ($review_type == ANNUAL_REVIEW) {
-      $content = thematize_review_content_comment_only($key, $item_counting->self_item_count, $rreid, $nid, $reviewee, $value, $revised_comments, $item_counting->total_item_count, $is_read_only);
-      $pageContent .= $content;
-    }
-  }
+		case PROJECT_REVIEW:
+			$json_count = 0;
+			$peer_json_context = '';
+			$pie_data = generate_project_peer_data($peer_information_set, $value->form_key, $peer_json_context, $json_count);
+			$content = thematize_review_content_full($data_count, $rreid, $nid, $reviewee, $value, $json_count, $pie_data, $peer_json_context, $revised_comments, $item_counting->total_item_count, $overall_rating, $is_read_only);
+			$pageContent .= $content;
+			$data_count++;
+			break;
+
+		default:
+			break;
+		}
+	}
+	switch($review_type) {
+	case ANNUAL_REVIEW:
+		foreach($self_comments_array as $key => $value) {
+			$content = thematize_review_content_comment_only($key, $item_counting->self_item_count, $rreid, $nid, $reviewee, $value, $revised_comments, $item_counting->total_item_count, $is_read_only);
+			$pageContent .= $content;
+		}
+		break;
+
+	case PROJECT_REVIEW:
+		foreach($self_comments_array as $key => $value){
+			if ($value->form_key == 'overall_evaluation_category') {
+				$content = thematize_subtitle($rreid, $nid, $reviewee, $value);
+				$pageContent .= $content;
+				unset($self_comments_array[$key]);
+			}
+		}
+		foreach($self_comments_array as $key => $value){
+			$content = thematize_review_content_comment_only($key, $item_counting->self_item_count, $rreid, $nid, $reviewee, $value, $revised_comments, $item_counting->total_item_count, $is_read_only);
+			$pageContent .= $content;
+		}
+		break;
+	}
   return $pageContent;
 }
 
