@@ -764,9 +764,8 @@ function generate_annual_peer_data(&$peer_information_set, $form_key, &$peer_jso
 
 function generate_project_peer_data($peer_information_set, $form_key, &$peer_json_context, &$json_count) {
 	if ($peer_information_set->have_peer_data) {
-		$peer_name = array();
 		$peer_json = array();
-		$peer_name_and_rating = _generate_peer_json_data($peer_information_set->peer_question_rating_comment_result, $value->form_key, $peer_json);
+		$peer_name_and_rating = _generate_peer_json_data($peer_information_set->peer_question_rating_comment_result, $form_key, $peer_json);
 		$json_count = count($peer_json);
 		$peer_json_context = drupal_json_encode($peer_json);
 		$pie_data = _manage_pie_chart($peer_name_and_rating, $form_key);
@@ -1015,7 +1014,7 @@ function thematize_subtitle($rreid, $nid, $reviewee, $value) {
 }
 
 function thematize_review_content_full($key, $rreid, $nid, $reviewee, $value, $json_count = NULL, $pie_data, $peer_json, $revised_comments, $total_item_count, $overall_rating, $is_read_only) {
-  if ($is_read_only == FALSE) {
+	if ($is_read_only == FALSE) {
     $content = theme('view_assessment', array(
       'item_num' => $key,
       'rreid' => $rreid,

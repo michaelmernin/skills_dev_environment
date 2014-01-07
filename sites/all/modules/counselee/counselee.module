@@ -372,6 +372,21 @@ function counselee_theme() {
       ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'project_roles_and_responsibilities',),
+		'project_roles_and_responsibilities_jqgrid' => array(
+      'variables' => array(
+        'rreid' => NULL,
+        'nid' => NULL,
+        'reviewee' => NULL,
+        'review_info_content_num' => NULL,
+        'project' => NULL,
+        'client' => NULL,
+        'clientdate' => NULL,
+        'project_roles_and_responsibilities' => NULL,
+        'startdate' => NULL,
+        'enddate' => NULL,
+      ),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'project_roles_and_responsibilities_jqgrid',),
     'review_subtitle' => array(
       'variables' => array(
         'rreid' => NULL,
@@ -1238,3 +1253,23 @@ function get_overall_rating_part_by_rreid($rreid) {
       break;
   }
 }
+
+/**
+ * Get all the project reviews from db.
+ * return the review id .
+ * @param string $employeeName
+ * @return array of $rreid.
+ */
+function get_employee_all_project_review_id_from_db($employeeName) {
+	$rreid_array = db_query('
+SELECT
+rreid
+FROM
+prs_rel_review_employee
+JOIN prs_general ON prs_rel_review_employee.prid = prs_general.prid
+WHERE
+employeeName =:employeeName and type = 1'
+			, array(':employeeName' => $employeeName))->fetchAll();
+	return $rreid_array;
+}
+

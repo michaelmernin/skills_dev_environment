@@ -6,7 +6,9 @@
   <table class="table table-hover" id="status_review">
     <thead>
       <tr>
-        <th>Client(Dates)</th>
+        <th>Client</th>
+				<th>Start Date</th>
+				<th>End Date</th>
         <th>Rating</th>
         <th>Project Roles And Responsibilities</th>
         <th>Status</th>
@@ -111,15 +113,11 @@
             </div>-->
 
       <div class="form-item webform-component webform-component-textarea webform-component--engagement-summary-catetory--project-roles-and-responsibilities">
-        <label for="project-roles-and-responsibilities">Project Roles And Responsibilities 
-          <span class="form-required" title="This field is required.">*
+        <label for="project-roles-and-responsibilities">Project Roles And Responsibilities<span class="form-required" title="This field is required.">*
           </span>
         </label>
         <div class="form-textarea-wrapper resizable textarea-processed resizable-textarea">
-          <textarea id="project-roles-and-responsibilities" 
-
-                    cols="60" rows="5" class="form-textarea required">
-          </textarea>
+          <textarea id="project-roles-and-responsibilities" cols="60" rows="5" class="form-textarea required"></textarea>
           <div class="grippie"></div>
         </div>
       </div>
@@ -211,7 +209,7 @@
                 jQuery("#project-roles-body").html(tbody + tr);
                 var cancelBtn = jQuery("#cancel-add-roles-button");
                 jQuery('#client').val("");
-                jQuery('#rating').val("3")
+                jQuery('#rating').val("3");
                 jQuery('#project-roles-and-responsibilities').val("");
                 cancelBtn.click();
               }
