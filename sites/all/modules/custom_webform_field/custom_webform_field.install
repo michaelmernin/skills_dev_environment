@@ -11,7 +11,7 @@ function custom_webform_field_uninstall() {
 function custom_webform_field_schema() {
   $schema['prs_annual_projects'] = array(
     'fields' => array(
-      'id' => array(
+      'pid' => array(
         'description' => 'Primary Key: Unique id for prs_annual_projects.',
         'type' => 'serial',
         'unsigned' => TRUE,
@@ -47,11 +47,10 @@ function custom_webform_field_schema() {
       'pnid' => array(
         'description' => 'The mapping project review nid.-1 stand for that no mapping',
         'type' => 'int',
-        'not null' => TRUE,
         'default' => 0,
       ),
     ),
-    'primary key' => array('id'),
+    'primary key' => array('pid'),
   );
 
 

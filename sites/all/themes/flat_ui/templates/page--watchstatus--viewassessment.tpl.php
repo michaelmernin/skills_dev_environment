@@ -140,11 +140,10 @@
         "comment": comment,
         "peerAvgRating": peerAvgRating,
         "revisedComment": revisedComment,
-      }
+      };
       var jsonString = JSON.stringify(content);
       items[i] = jsonString;
     }
-    ;
     return items;
   }
 

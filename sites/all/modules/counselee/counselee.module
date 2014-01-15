@@ -804,7 +804,8 @@ function _is_assessment_visible_for_counselor($userId_flag, $rstatus) {
  * @param type $submission 
  */
 function counselee_webform_submission_update($node, $submission) {
-  _alert_after_submited($node, $submission);
+//  dd($submission, 'update_submit');
+	_alert_after_submited($node, $submission);
 }
 
 function counselee_webform_validation_validators() {
@@ -889,10 +890,11 @@ function get_field_name($form_key) {
  * @param type $submission 
  */
 function counselee_webform_submission_insert($node, $submission) {
-  _alert_after_submited($node, $submission);
+//  dd($submission, 'insert_submit');
+	_alert_after_submited($node, $submission);
 }
 
-function _alert_after_submited($node, $submission) {
+function	_alert_after_submited($node, $submission) {
   if (is_selfreview($node->webform['nid'])) {
 //self review
     if (has_submitted($node)) {

@@ -13970,7 +13970,7 @@ div.error {
     font-weight: bold;
     /*   line-height: 30px; */
     text-align: center;
-
+    vertical-align: middle;
 }
 
 #status_review td a{

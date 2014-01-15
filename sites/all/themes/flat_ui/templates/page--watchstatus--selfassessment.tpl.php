@@ -30,7 +30,8 @@
               ?><div class="tab"><ul class="pr360-tabs"><?php print_render_tabs($tabs);
               ?></ul></div><?php endif; ?>
 
-            <?php print render($page['content']) ?>
+            <?php appendCSSJS();
+	    print render($page['content']) ?>
 
           </div>
         </div>

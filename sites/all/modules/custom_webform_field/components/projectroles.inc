@@ -55,13 +55,17 @@ function _webform_edit_projectroles($component) {
  * Implements _webform_render_component().
  */
 function _webform_render_projectroles($component, $value = NULL, $filter = TRUE) {
-  $node = isset($component['nid']) ? node_load($component['nid']) : NULL;
+	$node = isset($component['nid']) ? node_load($component['nid']) : NULL;
   $nid = $component['nid'];
   $project_roles = get_project_roles($nid);
   $project_role_add = get_added_project_roles($nid);
+//	dd($project_role_add, 'project_added');
+  appendCSSJS();
 
   $content = theme('project-roles-and-responsebilities', array(
     'projects' => $project_roles,
+		'added_projects' => $project_role_add,
+    'nid' => $nid,
   ));
   
   $element = array(
@@ -77,7 +81,6 @@ function _webform_render_projectroles($component, $value = NULL, $filter = TRUE)
     '#pre_render' => array('webform_fieldset_prerender', 'webform_element_title_display'),
     '#translatable' => array('title', 'description'),
   );
-
   return $element;
 }
 
@@ -119,39 +122,43 @@ function get_project_roles($nid) {
 }
 
 function get_annual_review_period($nid) {
-  $query = db_query("SELECT annual.time_frame_from,annual.time_frame_to 
+  $result = db_query('SELECT annual.time_frame_from,annual.time_frame_to 
     FROM prs_rel_provider_employee provider INNER JOIN prs_general annual
-        ON provider.prid = annual.prid WHERE provider.nid = $nid");
-
-  $result = $query->fetchAll();
+        ON provider.prid = annual.prid WHERE provider.nid = :nid', array(':nid' => $nid))->fetchAll();
   if (count($result) == 1) {
     return $result[0];
   }
 }
 
 function get_project_roles_nid($period) {
-  $query = db_query("SELECT pro.nid ,review.rstatus,review.rreid  FROM
-    prs_general project INNER JOIN prs_rel_review_employee review
-        ON project.prid = review.prid INNER JOIN prs_rel_provider_employee pro
-        ON pro.prid = project.prid
-    WHERE project.type = 1  AND review.rstatus in (1,2,3,4,5,6)
-    AND project.time_frame_from >=$period->time_frame_from 
-    AND project.time_frame_to <= $period->time_frame_to");
-  $result = $query->fetchAll();
-
-  if (count($result) == 0)
+  if ((!isset($period->time_frame_from)) || (!isset($period->time_frame_to))) {
+		return NULL;
+	}
+  $result= db_query('SELECT
+	pro.nid,
+	review.rstatus,
+	review.rreid,
+	project.time_frame_from,
+	project.time_frame_to
+FROM
+	prs_general project
+INNER JOIN prs_rel_review_employee review ON project.prid = review.prid
+INNER JOIN prs_rel_provider_employee pro ON pro.prid = project.prid
+WHERE
+	project.type = 1
+AND pro.employeeName = pro.providerName
+AND review.rstatus IN (1, 2, 3, 4, 5, 6)
+AND project.time_frame_to >= :starttime
+AND project.time_frame_to <= :endtime', array(':starttime' => $period->time_frame_from, ':endtime' => $period->time_frame_to))->fetchAll();
+  if (count($result) == 0) 
     return null;
-
   return $result;
 }
 
 function get_project_roles_array($query_nid) {
-
   if ($query_nid == null)
     return null;
-  
 //  dd($query_nid,'$query_nid');
-  
   $query_nid_period = '';
   foreach ($query_nid as $node) {
     if ($query_nid_period == '')
@@ -208,20 +215,18 @@ function get_project_roles_array($query_nid) {
 }
 
 function get_added_project_roles($nid) {
-  $query = db_query("SELECT nid, client, rating, roles, pnid
-         FROM {prs_annual_projects} where nid=$nid and pnid=-1");
-
-  $result = $query->fetchAll();
-  if (count($result) == 0)
-    return null;
-}
-
-function insert_into_project_roles($values) {
-  $query = db_insert('prs_annual_projects')
-      ->fields(array('nid', 'client', 'rating', 'roles', 'pnid'));
-  foreach ($values as $value)
-    $query->values($value);
-  $query->execute();
+	$result = db_select('prs_annual_projects')
+			->fields('prs_annual_projects', array(
+				'nid', 'client', 'rating', 'roles', 'pnid'
+			))
+			->condition('nid', $nid)
+			->condition('pnid', 0, '=')
+			->execute()->fetchAll();
+  if (count($result) == 0){
+		return NULL;
+	} else {
+		return $result;
+	}
 }
 
 function delete_from_project_roles($nid) {
@@ -230,8 +235,141 @@ function delete_from_project_roles($nid) {
       ->execute();
 }
 
-function save_project_roles($nid, $values) {
-  delete_from_project_roles($nid);
-  insert_into_project_roles($values);
+/**
+ *  Page callback of annual/save-project-roles
+ */
+function save_project_roles() {
+	$eval = 1;
+	$nid = $_POST['nid'];
+	$proj_roles= $_POST['proj_roles'];
+//  delete_from_project_roles($nid);
+	module_load_include('inc', 'counselee', 'files/review_assessment_modification');
+  $decoded_items = decode_json_object($proj_roles);
+	$pid_array = _insert_project_roles_into_annual_table($nid, $decoded_items);
+  echo $eval;
 }
 
+function _insert_project_roles_into_annual_table($nid, $decoded_items){
+  $pid_array = array();
+  foreach($decoded_items as $key => $item) {
+    if (isset($item->isAdded) && $item->isAdded == 1){
+      $pid = db_merge('prs_annual_projects')
+					->key(array('nid'=>$nid, 'client'=>$item->client, 'roles'=>$item->project_roles_and_responsibilities, 'rating'=>$item->rating))
+          ->insertFields(array(
+            'nid' => $nid,
+            'client' => $item->client,
+            'roles' => $item->project_roles_and_responsibilities,
+            'rating' => $item->rating,
+          ))
+					->updateFields(array(
+            'nid' => $nid,
+            'client' => $item->client,
+            'roles' => $item->project_roles_and_responsibilities,
+            'rating' => $item->rating,
+          ))
+					->execute();
+			} else if (isset($item->isAdded) && $item->isAdded == 0) {
+			$pid =db_merge('prs_annual_projects')
+					->key(array('nid'=>$nid, 'pnid'=>$item->nid))
+					->insertFields(array(
+						'nid' => $nid,
+						'client' => $item->client,
+						'roles' => $item->project_roles_and_responsibilities,
+						'rating' => $item->rating,
+						'pnid' => $item->nid,
+					))
+					->updateFields(array(
+						'nid' => $nid,
+						'client' => $item->client,
+						'roles' => $item->project_roles_and_responsibilities,
+						'rating' => $item->rating,
+						'pnid' => $item->nid,
+					))->execute();
+			}
+			if ($pid != -1) {
+				array_push($pid_array, $pid);
+			}
+  }
+	dd($pid_array, 'pid_array');
+  if(count($pid_array) != 0){
+    return $pid_array;
+  } else {
+    $msg = t("You did not update any project review information.");
+    drupal_set_message($msg, 'status');
+    return;
+  }
+}
+
+function render_project_info_table($project) {
+	if (!isset($project)) {
+		print '<tr><td>No Project Review was found!</td></tr>';
+		return;
+	}
+	$content = '';
+	foreach ($project as $key => $value) {
+		if (array_key_exists('client', $value)) {
+			$content .= '<tr><td>' . $value['client'] . '</td>';
+		}
+		else {
+			$content .= '<tr><td></td>';
+		}
+		if (array_key_exists('start_date', $value)) {
+			$content .= '<td>' . $value['start_date'] . '</td>';
+		}
+		else {
+			$content .= '<td></td>';
+		}
+		if (array_key_exists('end_date', $value)) {
+			$content .= '<td>' . $value['end_date'] . '</td>';
+		}
+		else {
+			$content .= '<td></td>';
+		}
+		if (array_key_exists('project_roles_and_responsibilities', $value)) {
+			$content .= '<td>' . $value['project_roles_and_responsibilities'] . '</td>';
+		}
+		else {
+			$content .= '<td></td>';
+		}
+		if (array_key_exists('status', $value)) {
+			$content .= print_review_status($value['status']);
+		}
+		else {
+			$content .= '<td></td>';
+		}
+		if (array_key_exists('overall_rating', $value)) {
+			$content .= '<td>' . $value['overall_rating'] . '</td>';
+		}
+		else {
+			$content .= '<td></td>';
+		}
+		$content .= '<td class="is-adding-proj">0</td></tr>';
+	}
+	print $content;
+}
+
+function print_review_status($review_status_num){
+  switch ($review_status_num) {
+    case '1':
+      $status = 'REVIEW IN DRAFT';
+      break;
+    case '2':
+      $status = 'REVIEWED_BY_COUNSELOR';
+      break;
+    case '3':
+      $status = 'APPROVED_BY_COUNSELOR';
+      break;
+    case '4':
+      $status = 'JOINT REVIEW';
+      break;
+    case '5':
+      $status = 'GM_REVIEW';
+      break;
+    case '6':
+      $status = 'GM_APPROVED';
+      break;
+    default:
+      break;
+  }
+  return '<td>' . $status . '</td>';
+}

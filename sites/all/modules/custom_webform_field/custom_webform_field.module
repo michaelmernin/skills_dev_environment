@@ -91,6 +91,7 @@ function custom_webform_field_theme() {
     'project-roles-and-responsebilities' => array(
       'variables' => array(
         'projects' => null,
+        'nid' => NULL,
       ),
       'path' => drupal_get_path('module', 'custom_webform_field') . '/templates',
       'template' => 'project-roles-and-responsebilities'),
@@ -98,7 +99,6 @@ function custom_webform_field_theme() {
 }
 
 function custom_webform_field_menu() {
-
   $items['annual/save-project-roles'] = array(
     'title' => 'Save Project Roles',
     'page callback' => 'save_project_roles',

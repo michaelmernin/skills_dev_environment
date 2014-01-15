@@ -53,7 +53,6 @@ function display_self_assessment($rreid = NULL) {
   else {
     $type = 0;
   }
-//  dd($type,'$type');
 //  dd(get_user_identity_by_nid($node->nid));
   if ($type == 0 && get_user_identity($rreid) != 0) {
     drupal_goto('accessdenied');
@@ -64,7 +63,7 @@ function display_self_assessment($rreid = NULL) {
     $node = node_load($nid);
 //    dd($node,'$node');
   }
-
+  appendCSSJS();
   $pageContent = theme('self_assessment', array(
     'rreid' => $rreid,
     'node' => $node
