@@ -352,7 +352,6 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
       url: basepath + 'annual/save-project-roles',
       data: {'nid': nid, 'proj_roles': proj_roles},
       success: function(text) {
-
       }
     });
 
@@ -362,7 +361,10 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
   initializeProjectRoles();
 //  display_added_project_roles();
   jQuery(document).ready(function() {
-    jQuery(".form-submit").bind("click", function() {
+    jQuery("input[name='op'][value='Submit']").bind("click", function() {
+      save_project_roles();
+    });
+    jQuery("input[name='op'][value='Save Draft']").bind("click", function() {
       save_project_roles();
     });
   });
