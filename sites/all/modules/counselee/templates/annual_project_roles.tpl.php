@@ -91,7 +91,7 @@
 			case "Review in draft":
 				return "<tr>";
       case "Review by counselor":
-        status = "viewselfassessment/";
+        status = "viewassessment/";
         break;
       case "Approved by counselor":
         status = "reviewcontent/";
