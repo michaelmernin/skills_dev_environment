@@ -953,13 +953,15 @@ function render_project_roles_and_responsibilities($review_type, $review_info, $
 	$pageContent = '';
 	switch($review_type) {
 	case ANNUAL_REVIEW:
-		for ($i = 0; $i < $review_info_content_num; $i++) {
-			$proj_item = generate_project_roles_and_responsibilities_info($review_info, $i);
-			if (validate_numbers($review_info, $i)) {
-				$content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $proj_item, $i);
-				$pageContent .= $content;
-			}
-		}
+    $content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type);
+    $pageContent .= $content;
+//		for ($i = 0; $i < $review_info_content_num; $i++) {
+//			$proj_item = generate_project_roles_and_responsibilities_info($review_info, $i);
+//			if (validate_numbers($review_info, $i)) {
+//				$content = thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $proj_item, $i);
+//				$pageContent .= $content;
+//			}
+//		}
 		break;
 
 	case PROJECT_REVIEW:
@@ -974,18 +976,27 @@ function render_project_roles_and_responsibilities($review_type, $review_info, $
 	return $pageContent;
 }
 
-function thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $project_item, $index = NULL) {
+function thematize_project_roles_and_responsibilities($rreid, $nid, $reviewee, $review_type, $project_item=NULL, $index = NULL) {
   if ($review_type == ANNUAL_REVIEW) {
-    $content = theme('project_roles_and_responsibilities', array(
-      'rreid' => $rreid,
+		$project_roles = get_project_roles($nid, $reviewee);
+		$added_project_roles = get_added_project_roles($nid);
+    $content = theme('annual_project_roles', array(
       'nid' => $nid,
       'reviewee' => $reviewee,
-      'review_info_content_num' => $index,
-      'clientdate' => $project_item->clientdate,
-      'project_roles_and_responsibilities' => $project_item->project_roles_and_responsibilities,
-      'startdate' => $project_item->startdate,
-      'enddate' => $project_item->enddate,
+      'rreid' => $rreid,
+      'project_roles' => $project_roles,
+      'added_project_roles' => $added_project_roles,
     ));
+//    $content = theme('project_roles_and_responsibilities', array(
+//      'rreid' => $rreid,
+//      'nid' => $nid,
+//      'reviewee' => $reviewee,
+//      'review_info_content_num' => $index,
+//      'clientdate' => $project_item->clientdate,
+//      'project_roles_and_responsibilities' => $project_item->project_roles_and_responsibilities,
+//      'startdate' => $project_item->startdate,
+//      'enddate' => $project_item->enddate,
+//    ));
   }
   else if ($review_type == PROJECT_REVIEW) {
     $content = theme('project_roles_and_responsibilities', array(

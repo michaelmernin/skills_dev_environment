@@ -372,7 +372,7 @@ function counselee_theme() {
       ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'project_roles_and_responsibilities',),
-		'project_roles_and_responsibilities_jqgrid' => array(
+		'annual_project_roles' => array(
       'variables' => array(
         'rreid' => NULL,
         'nid' => NULL,
@@ -386,7 +386,7 @@ function counselee_theme() {
         'enddate' => NULL,
       ),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
-      'template' => 'project_roles_and_responsibilities_jqgrid',),
+      'template' => 'annual_project_roles',),
     'review_subtitle' => array(
       'variables' => array(
         'rreid' => NULL,

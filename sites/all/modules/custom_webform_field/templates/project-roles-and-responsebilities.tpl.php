@@ -352,6 +352,7 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
       url: basepath + 'annual/save-project-roles',
       data: {'nid': nid, 'proj_roles': proj_roles},
       success: function(text) {
+
       }
     });
 
