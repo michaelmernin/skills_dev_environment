@@ -57,7 +57,9 @@ function _webform_edit_projectroles($component) {
 function _webform_render_projectroles($component, $value = NULL, $filter = TRUE) {
 	$node = isset($component['nid']) ? node_load($component['nid']) : NULL;
   $nid = $component['nid'];
-  $project_roles = get_project_roles($nid);
+	$current_user_name = get_current_user_name();
+  $project_roles = get_project_roles($nid, $current_user_name);
+//	dd($project_roles, 'project_roles');
   $project_role_add = get_added_project_roles($nid);
 //	dd($project_role_add, 'project_added');
   appendCSSJS();
@@ -113,10 +115,9 @@ function _webform_display_projectroles($component, $value, $format = 'html') {
   return $element;
 }
 
-function get_project_roles($nid) {
-
+function get_project_roles($nid, $employeeName) {
   $period = get_annual_review_period($nid);
-  $query_nid = get_project_roles_nid($period);
+  $query_nid = get_project_roles_nid($employeeName, $period);
   $project_roles = get_project_roles_array($query_nid);
   return $project_roles;
 }
@@ -130,7 +131,7 @@ function get_annual_review_period($nid) {
   }
 }
 
-function get_project_roles_nid($period) {
+function get_project_roles_nid($employeeName, $period) {
   if ((!isset($period->time_frame_from)) || (!isset($period->time_frame_to))) {
 		return NULL;
 	}
@@ -139,17 +140,21 @@ function get_project_roles_nid($period) {
 	review.rstatus,
 	review.rreid,
 	project.time_frame_from,
-	project.time_frame_to
+	project.time_frame_to,
+	project.project_name,
+	project.client
 FROM
 	prs_general project
 INNER JOIN prs_rel_review_employee review ON project.prid = review.prid
 INNER JOIN prs_rel_provider_employee pro ON pro.prid = project.prid
 WHERE
 	project.type = 1
+AND pro.employeeName = :employeename
+AND review.employeeName= :employeename
 AND pro.employeeName = pro.providerName
 AND review.rstatus IN (1, 2, 3, 4, 5, 6)
 AND project.time_frame_to >= :starttime
-AND project.time_frame_to <= :endtime', array(':starttime' => $period->time_frame_from, ':endtime' => $period->time_frame_to))->fetchAll();
+AND project.time_frame_to <= :endtime', array(':employeename'=>$employeeName, ':starttime' => $period->time_frame_from, ':endtime' => $period->time_frame_to))->fetchAll();
   if (count($result) == 0) 
     return null;
   return $result;
@@ -158,7 +163,6 @@ AND project.time_frame_to <= :endtime', array(':starttime' => $period->time_fram
 function get_project_roles_array($query_nid) {
   if ($query_nid == null)
     return null;
-//  dd($query_nid,'$query_nid');
   $query_nid_period = '';
   foreach ($query_nid as $node) {
     if ($query_nid_period == '')
@@ -181,10 +185,6 @@ function get_project_roles_array($query_nid) {
     AND data.nid = component.nid 
     WHERE component.nid in $query_nid_period
     AND component.form_key IN(
-        'client' ,
-        'project' ,
-        'start_date' ,
-        'end_date' ,
         'project_roles_and_responsibilities',
         'overall_rating'
     )";
@@ -198,16 +198,26 @@ function get_project_roles_array($query_nid) {
     $date = $node->data;
     $project_roles[$key][$form_key] = $date;
   }
-  
-  
   foreach ($query_nid as $node) {
     $key = $node->nid;
     $status = $node->rstatus;
     $rreid = $node->rreid;
-    
+    $client = $node->client;
+    $project_name = $node->project_name;
+    $start_date_timestamp = $node->time_frame_from;
+    $end_date_timestamp = $node->time_frame_to;
+    if(module_exists('common') && module_enable(array('common'))) {
+			$start_date = date_to_format(unixTimestampToDateArray($start_date_timestamp));
+			$end_date = date_to_format(unixTimestampToDateArray($end_date_timestamp));
+    }
+
     $project_roles[$key]['status'] = $status;
     $project_roles[$key]['nid'] = $key;
     $project_roles[$key]['rreid'] = $rreid;
+    $project_roles[$key]['client'] = $client;
+    $project_roles[$key]['project_name'] = $project_name;
+    $project_roles[$key]['startdate'] = $start_date;
+    $project_roles[$key]['enddate'] = $end_date;
   }
 //  dd($project_roles,'$project_roles');
   
@@ -245,6 +255,7 @@ function save_project_roles() {
 //  delete_from_project_roles($nid);
 	module_load_include('inc', 'counselee', 'files/review_assessment_modification');
   $decoded_items = decode_json_object($proj_roles);
+//	dd($decoded_items, 'decoded_item');
 	$pid_array = _insert_project_roles_into_annual_table($nid, $decoded_items);
   echo $eval;
 }
@@ -252,7 +263,8 @@ function save_project_roles() {
 function _insert_project_roles_into_annual_table($nid, $decoded_items){
   $pid_array = array();
   foreach($decoded_items as $key => $item) {
-    if (isset($item->isAdded) && $item->isAdded == 1){
+//		dd($item, 'item');
+		if (isset($item->isAdded) && $item->isAdded == 1){
       $pid = db_merge('prs_annual_projects')
 					->key(array('nid'=>$nid, 'client'=>$item->client, 'roles'=>$item->project_roles_and_responsibilities, 'rating'=>$item->rating))
           ->insertFields(array(
@@ -268,29 +280,29 @@ function _insert_project_roles_into_annual_table($nid, $decoded_items){
             'rating' => $item->rating,
           ))
 					->execute();
-			} else if (isset($item->isAdded) && $item->isAdded == 0) {
+      } else if (isset($item->isAdded) && $item->isAdded == 0) {
 			$pid =db_merge('prs_annual_projects')
 					->key(array('nid'=>$nid, 'pnid'=>$item->nid))
 					->insertFields(array(
 						'nid' => $nid,
 						'client' => $item->client,
 						'roles' => $item->project_roles_and_responsibilities,
-						'rating' => $item->rating,
+						'rating' =>($item->rating == 'N/A')?0:$item->rating,
 						'pnid' => $item->nid,
 					))
 					->updateFields(array(
 						'nid' => $nid,
 						'client' => $item->client,
 						'roles' => $item->project_roles_and_responsibilities,
-						'rating' => $item->rating,
+						'rating' => ($item->rating == 'N/A')?0:$item->rating,
 						'pnid' => $item->nid,
 					))->execute();
+			} else {
 			}
 			if ($pid != -1) {
 				array_push($pid_array, $pid);
 			}
   }
-	dd($pid_array, 'pid_array');
   if(count($pid_array) != 0){
     return $pid_array;
   } else {

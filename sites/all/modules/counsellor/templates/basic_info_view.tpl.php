@@ -17,13 +17,28 @@
     </tr>
     <tr>
       <td>
+        <h6>Period From<span class="form-required" title="This field is required.">*</span>:</h6>
+      </td>
+      <td><input type="text" value="" id="review_from_date" class="datetimepicker"  readonly="readonly" style="color:#34495E;background-color:#ffffff"></td>
+      <td><h6>Period To<span class="form-required" title="This field is required.">*</span>:</h6></td>
+      <td><input type="text" value="" id="review_to_date" class="datetimepicker"  readonly="readonly" style="color:#34495E;background-color:#ffffff"></td>
+    </tr>
+    <tr>
+      <td>
         <h6>Type<span class="form-required" title="This field is required.">*</span>:</h6>
       </td>
       <td><select class="form-select" id="review_type" name="review_type"><option value="0" selected>Annual Review</option><option value="1">Project Review</option><option value="2">Three-Month Review</option></select></td>
+      <td></td><td></td>
+    </tr>
+    <tr>
       <td>
         <h6 id="Project_Name_Lable">Project Name<span class="form-required" title="This field is required.">*</span>:</h6>
       </td>
       <td><input placeholder="Type Project Name…" type="text" id="Project_Name_Text" /></td>
+      <td>
+        <h6 id="Project_Client_Lable">Client<span class="form-required" title="This field is required.">*</span>:</h6>
+      </td>
+      <td><input placeholder="Type Client…" type="text" id="Project_Client_Text" /></td>
     </tr>
 <!--    <tr>
       <td>
@@ -35,14 +50,6 @@
       <td><h6>End Date<span class="form-required" title="This field is required.">*</span>:</h6></td>
       <td><input type="text" value="" id="review_end_date" class="datetimepicker"  readonly="readonly" style="color:#34495E;background-color:#ffffff"></td>
     </tr>-->
-    <tr>
-      <td>
-        <h6>Period From<span class="form-required" title="This field is required.">*</span>:</h6>
-      </td>
-      <td><input type="text" value="" id="review_from_date" class="datetimepicker"  readonly="readonly" style="color:#34495E;background-color:#ffffff"></td>
-      <td><h6>Period To<span class="form-required" title="This field is required.">*</span>:</h6></td>
-      <td><input type="text" value="" id="review_to_date" class="datetimepicker"  readonly="readonly" style="color:#34495E;background-color:#ffffff"></td>
-    </tr>
   </tbody>
 </table>
 <hr />

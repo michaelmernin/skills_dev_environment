@@ -2,14 +2,14 @@
 drupal_add_library('system', 'ui.datepicker');
 drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-roles-and-responsibilities.css');
 ?>
-<fieldset class="webform-component-fieldset webform-catalogue webform-component--project-roles-and-responsibilities-category form-wrapper"><legend><span class="fieldset-legend">Project Roles and Responsibilities</span></legend><div class="fieldset-wrapper"><div class="form-item webform-component webform-component-textarea webform-component--opportunities-for-improvement-category--opportunities-for-improvement-text">
+<!--<fieldset class="webform-component-fieldset webform-catalogue webform-component--project-roles-and-responsibilities-category form-wrapper"><legend><span class="fieldset-legend">Project Roles and Responsibilities</span></legend><div class="fieldset-wrapper"><div class="form-item webform-component webform-component-textarea webform-component--opportunities-for-improvement-category--opportunities-for-improvement-text">
       <label class="element-invisible" for="edit-submitted-project-roles-and-responsibilities-category-project-roles-and-responsibilities-text">Project Roles and Responsibilities</label>
     </div>
-  </div>
+  </div>-->
   <div>
-    <caption>
+<!--    <caption>
       <h3>Project Roles And Responsibilities</h3>
-    </caption>
+    </caption>-->
     
     <table class="table table-hover" id="status_review">
       <thead>
@@ -37,7 +37,7 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
       Add Project
     </a>
   </div>
-</fieldset>
+<!--</fieldset>-->
 
 <input type="hidden" id="project_node_id" value="<?php print $nid ?>">
 
@@ -132,20 +132,20 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
 
     var tbody = jQuery("#project-roles-body").html();
     //    console.log(tbody);
-    for (attribute in projects)
-    {
+    for (attribute in projects) {
       obj = projects[attribute];
+//      console.log(obj);
       client = obj.client;
-      startDate = obj.start_date;
-      endDate = obj.end_date;
+      startDate = obj.startdate;
+      endDate = obj.enddate;
       rreid = obj.rreid;
-      rating = obj.overall_rating;
-      roles = obj.project_roles_and_responsibilities;
+      rating = (obj.overall_rating == null)?"N/A":obj.overall_rating;
+      roles = (obj.project_roles_and_responsibilities == null)?"N/A":obj.project_roles_and_responsibilities;
       nid = obj.nid;
       status = displayReviewStatus(obj.status);
-
-	    var content = display_project_review_url_from_status(rreid, status);
-      content += client
+			
+      var content = display_project_review_url_from_status(rreid, status);
+      content += "<td>" + client
         + "</td><td>"
         + startDate
         + "</td><td>"
@@ -168,8 +168,8 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
 
 	function display_added_project_roles() {
   	var content = "";
-		var text = <?php $projects = json_encode($added_projects);
-  print $projects; ?>;
+		var text = <?php $projects = json_encode($added_projects); 
+		print $projects; ?>;
 		var add_proj_json = JSON.stringify(text);
     var projects = JSON.parse(add_proj_json);
     for(attribute in projects){
@@ -200,7 +200,7 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
         status = "reviewcontent/";
         break;
   	}
-	  var content = "<tr title=\"Click to watch this review\'s status.\"  onclick=\"location.href='" + '<?php print get_curPage_base_url() ?>' + "watchstatus/" + status + rreid + "'\"" + " style='cursor:pointer'><td>";
+	  var content = "<tr title=\"Click to watch this review\'s status.\"  onclick=\"window.open('" + '<?php print get_curPage_base_url() ?>' + "watchstatus/" + status + rreid + "')\"" + " style='cursor:pointer'>";
 		return content;
   }
 
@@ -346,7 +346,7 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
       };
       proj_roles[i] = JSON.stringify(tmp);
     }
-
+//		console.log(proj_roles);
     jQuery.ajax({
       type: "POST",
       url: basepath + 'annual/save-project-roles',

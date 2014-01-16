@@ -38,18 +38,18 @@ function convertTextfieldToDateInput()
     var startDate = getCommonNameId("start-date", 'input');
     var endDate = getCommonNameId("end-date", 'input');
     var project = getCommonNameId("edit-submitted-engagement-summary-category-project",'input');
+    var client = getCommonNameId("edit-submitted-engagement-summary-category-client", 'input');
     textFieldReadOnly(startDate);
     textFieldReadOnly(endDate);
     textFieldReadOnly(project);
+    textFieldReadOnly(client);
 }
 
 /**
  * Make date input field read only
  * */
-function textFieldReadOnly(idArr)
-{
-    for (var i = 0; i < idArr.length; i++)
-    {
+function textFieldReadOnly(idArr) {
+    for (var i = 0; i < idArr.length; i++) {
         jQuery(idArr[i]).attr("readonly", true);
         jQuery(idArr[i]).css('color', '#34495E');
         jQuery(idArr[i]).css('background', '#ffffff');
@@ -88,10 +88,11 @@ function initialStartEndDate()
         data: {'rreid': rreid},
         success: function(date) {
             var obj = JSON.parse(date);  
+	    console.log(obj);
             jQuery("#edit-submitted-engagement-summary-category-project").val(obj.project_name);
             jQuery('#edit-submitted-engagement-summary-category-start-date').val(obj.time_frame_from);
             jQuery('#edit-submitted-engagement-summary-category-end-date').val(obj.time_frame_to);
-            
+            jQuery("#edit-submitted-engagement-summary-category-client").val(obj.client);
         }
     });
 }

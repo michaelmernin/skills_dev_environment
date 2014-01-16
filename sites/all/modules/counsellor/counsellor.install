@@ -67,6 +67,13 @@ function counsellor_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'client' => array(
+	'description' => 'If type is 1, there must be a client info here.',
+	'type' => 'varchar',
+	'length' => '255',
+	'not null' => TRUE,
+	'default' => '',
+      ),
       'counselor_name' => array(
         'description' => 'this field save this review\'s counselor',
         'type' => 'varchar',

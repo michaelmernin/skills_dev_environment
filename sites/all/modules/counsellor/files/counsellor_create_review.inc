@@ -291,7 +291,9 @@ function set_fields_array($general_info,$counselor_name, &$fields_array) {
       case '1':
         $review_type = 'PROJECT_REVIEW';
         $projectName = check_plain($general_info['Project_Name_Text']);
+	$projectClient = check_plain($general_info['project_client']);
         $fields_array['project_name'] = $projectName;
+	$fields_array['client'] = $projectClient;
         break;
       case '2':
         $review_type = 'THREE_MONTH_REVIEW';

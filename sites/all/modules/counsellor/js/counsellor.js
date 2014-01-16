@@ -32,10 +32,14 @@ function switchProjectName(flag) {
     if (flag == 1) {
         jQuery('#Project_Name_Lable').show();
         jQuery('#Project_Name_Text').show();
+				jQuery("#Project_Client_Lable").show();
+				jQuery("#Project_Client_Text").show();
     } else {
 
         jQuery('#Project_Name_Lable').hide();
         jQuery('#Project_Name_Text').hide();
+				jQuery("#Project_Client_Lable").hide();
+				jQuery("#Project_Client_Text").hide();
     }
 }
 

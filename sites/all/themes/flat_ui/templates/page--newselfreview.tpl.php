@@ -6,6 +6,8 @@
     var review_type = jQuery('#review_type').val();
     var Project_Name_Text_Not_Trim = jQuery('#Project_Name_Text').val();
     var Project_Name_Text = jQuery.trim(Project_Name_Text_Not_Trim);
+    var projectClientText = jQuery("#Project_Client_Text").val();
+    var projectClient = jQuery.trim(projectClientText);
 //    var review_start_date = jQuery('#review_start_date').val();
 //    var review_end_date = jQuery('#review_end_date').val();
     var review_from_date = jQuery('#review_from_date').val();
@@ -38,10 +40,15 @@
     }
 
     if (review_type == '1') {
-      if (Project_Name_Text == '') {
+      if (projectClient == '') {
         alert('please enter a project name!');
         hideConfirmdialog();
         return;
+      }
+      if (Project_Client_Text == '') {
+	      alert('Please enter project client!');
+	      hideConfirmdialog();
+	      return;
       }
     }
 //    if (review_from_description == '') {
@@ -74,7 +81,7 @@
 
     jQuery.ajax({
       type: "POST",
-      data: {'review_type': review_type,  'review_from_date': review_from_date, 'review_to_date': review_to_date, 'Project_Name_Text': Project_Name_Text, 'self_draft_flag': flag},
+      data: {'review_type': review_type,  'review_from_date': review_from_date, 'review_to_date': review_to_date, 'Project_Name_Text': Project_Name_Text, 'project_client': projectClient, 'self_draft_flag': flag},
       url: '<?php echo $base_relatively_path ?>newreview/submitselfreview',
       success: function(text) {
         if (text != '-1') {
