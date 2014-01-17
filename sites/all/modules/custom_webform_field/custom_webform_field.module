@@ -99,13 +99,12 @@ function custom_webform_field_theme() {
 }
 
 function custom_webform_field_menu() {
-  $items['annual/save-project-roles'] = array(
+  $items['annual/save_project_roles'] = array(
     'title' => 'Save Project Roles',
     'page callback' => 'save_project_roles',
     'page arguments' => array(),
     'access arguments' => array('access to my dashboard'),
     'type' => MENU_CALLBACK,
     'file' => 'components/projectroles.inc',);
-
   return $items;
 }

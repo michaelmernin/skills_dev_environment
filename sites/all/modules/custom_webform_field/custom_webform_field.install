@@ -49,12 +49,21 @@ function custom_webform_field_schema() {
         'type' => 'int',
         'default' => 0,
       ),
+      'ultimate_status' => array(
+        'description' => 'The ultimate review status of pnid corresponding project review when GM approve this annual review.',
+	'type' => 'int',
+	'size' => 'tiny',
+	'default' => 0,
+      ),
+      'ultimate_rating' => array(
+        'description' => 'The ultimate review rating of pnid corresponding project review when GM approve this annual review.',
+	'type' => 'int',
+	'size' => 'tiny',
+	'default' => 0,
+      ),
     ),
     'primary key' => array('pid'),
   );
-
-
   return $schema;
 }
 
-?>

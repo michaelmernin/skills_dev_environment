@@ -1,6 +1,7 @@
 <?php
 //	dd($project_roles, 'project_roles');
 //	dd($added_project_roles, 'added_project_roles');
+//dd($userRole, 'user_role');
 ?>
 <div>
 <caption>
@@ -31,6 +32,7 @@
 		var projects_json_text = <?php print json_encode($project_roles) ?>;
     var projects_json = JSON.stringify(projects_json_text);
     var projects = JSON.parse(projects_json.replace("\r\n", "<br/>"));	
+		var userRole = <?php print $userRole ?>;
 
 	var tableContent = jQuery("#project-roles-body").html();
     for (attribute in projects) {
@@ -45,7 +47,7 @@
       nid = obj.nid;
       status = displayReviewStatus(obj.status);
 			
-      var content = display_project_review_url_from_status(rreid, status);
+      var content = display_project_review_url_from_status(rreid, userRole, status);
       content += "<td>" + client
         + "</td><td>"
         + startDate
@@ -86,20 +88,56 @@
     return content;
 	}
 
-  function display_project_review_url_from_status(rreid, status) {
-		switch(status){
+function display_project_review_url_from_status(rreid, userRole, status) {
+  if(userRole == 1){
+	  // Counselor
+    switch(status){
 			case "Review in draft":
 				return "<tr>";
       case "Review by counselor":
         status = "viewassessment/";
         break;
-      case "Approved by counselor":
-        status = "reviewcontent/";
+      case "Joint Review":
+        status = "submitreview/";
         break;
       default:
         status = "reviewcontent/";
         break;
   	}
+  } else if(userRole == 0) {
+    // Counselee
+    switch(status){
+      case "Review in draft":
+				status = "selfassessment/";
+        break;
+      case "Review by counselor":
+        status = "viewselfassessment/";
+				break;
+      case "Approved by counselor":
+        status = "counseleeconfirmresult/";
+				break;
+			default:
+				status = "reviewcontent/";
+				break;
+    }
+  } else if (userRole == 2){
+	  // GM
+	  switch(status){
+		  case "Review in draft":
+		  	return "<tr>";
+			case "Review by counselor":
+				status = "viewselfassessment/"; 
+				break;
+		  case "GM review":
+			  status = "gm-audit-review/";
+			  break;
+			default:
+				status = "reviewcontent/";
+				break;
+			}
+		} else {
+			return;
+		}
 	  var content = "<tr title=\"Click to watch this review\'s status.\"  onclick=\"window.open('" + '<?php print get_curPage_base_url() ?>' + "watchstatus/" + status + rreid + "')\"" + " style='cursor:pointer'>";
 		return content;
   }

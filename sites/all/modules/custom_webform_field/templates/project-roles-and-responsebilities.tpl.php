@@ -279,7 +279,10 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
     return jQuery("#project_node_id").val();
   }
 
-  function save_project_roles() {
+/*
+ *  onclick Save Draft and Submit button binding function.
+ */
+  function save_project_roles(isDraft) {
     var basepath = '<?php print get_curPage_base_url(); ?>';
     var nid = getNodeIdFromContent();
     var context = new Array();
@@ -347,26 +350,39 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
       proj_roles[i] = JSON.stringify(tmp);
     }
 //		console.log(proj_roles);
+	try{
     jQuery.ajax({
       type: "POST",
-      url: basepath + 'annual/save-project-roles',
-      data: {'nid': nid, 'proj_roles': proj_roles},
-      success: function(text) {
-
+      url: basepath + 'annual/save_project_roles',
+      data: {'nid':nid, 'proj_roles':proj_roles},
+    //      data: {'nid':nid},
+    	success: function(text) {
+        jQuery('.webform-client-form').submit();
+      },
+      error:function(e){
+    		return false;
       }
     });
-
-  }
+    } catch(err){
+    }
+    if (isDraft){
+      return false;
+    } else {
+    return true;
+    }
+}
 
   initDatePicker();
   initializeProjectRoles();
 //  display_added_project_roles();
   jQuery(document).ready(function() {
     jQuery("input[name='op'][value='Submit']").bind("click", function() {
-      save_project_roles();
+      var isDraft = 0;
+     return save_project_roles(isDraft);
     });
     jQuery("input[name='op'][value='Save Draft']").bind("click", function() {
-      save_project_roles();
+      var isDraft = 1;
+     return save_project_roles(isDraft);
     });
   });
 </script>

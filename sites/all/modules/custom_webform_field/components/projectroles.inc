@@ -123,7 +123,7 @@ function delete_from_project_roles($nid) {
 }
 
 /**
- *  Page callback of annual/save-project-roles
+ *  Page callback of annual/save_project_roles
  */
 function save_project_roles() {
 	$eval = 1;
@@ -132,7 +132,6 @@ function save_project_roles() {
 //  delete_from_project_roles($nid);
 	module_load_include('inc', 'counselee', 'files/review_assessment_modification');
   $decoded_items = decode_json_object($proj_roles);
-//	dd($decoded_items, 'decoded_item');
 	$pid_array = _insert_project_roles_into_annual_table($nid, $decoded_items);
   echo $eval;
 }
@@ -140,7 +139,6 @@ function save_project_roles() {
 function _insert_project_roles_into_annual_table($nid, $decoded_items){
   $pid_array = array();
   foreach($decoded_items as $key => $item) {
-//		dd($item, 'item');
 		if (isset($item->isAdded) && $item->isAdded == 1){
       $pid = db_merge('prs_annual_projects')
 					->key(array('nid'=>$nid, 'client'=>$item->client, 'roles'=>$item->project_roles_and_responsibilities, 'rating'=>$item->rating))

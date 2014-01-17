@@ -166,7 +166,7 @@ function load_self_assessment_content($rreid = NULL) {
 
   $pageContent = '';
   appendCSSJS();
-	$pageContent .= render_project_roles_and_responsibilities($review_type, $review_info, $rreid, $nid, $reviewee, $review_info_content_num);
+	$pageContent .= render_project_roles_and_responsibilities($user_identity, $review_type, $review_info, $rreid, $nid, $reviewee, $review_info_content_num);
   $data_count = 0;
   foreach ($self_question_rating_comment_result as $key => $value) {
     if (!isset($value->rating) && !isset($value->comment)) {
@@ -262,7 +262,7 @@ function load_review_content($rreid = NULL) {
 	///////////////////////////////////////////////////////
 	//  Render review header: project roles and responsibilities.
 	///////////////////////////////////////////////////////  
-	$pageContent .= render_project_roles_and_responsibilities($review_type, $review_info, $rreid, $nid, $reviewee, $review_info_content_num);
+	$pageContent .= render_project_roles_and_responsibilities($user_identity, $review_type, $review_info, $rreid, $nid, $reviewee, $review_info_content_num);
 
 	$is_read_only = TRUE;
 	$data_count = 0;

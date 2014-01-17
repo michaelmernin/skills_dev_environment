@@ -1008,3 +1008,11 @@ function get_added_project_roles($nid) {
 	}
 }
 
+function get_none_added_project_info($nid){
+	$result = db_select('prs_annual_projects')
+	    ->fields('prs_annual_projects', array('pnid', 'ultimate_status', 'ultimate_rating'))
+	    ->condition('nid', $nid)
+	    ->condition('pnid', 0, '!=')
+	    ->execute()->fetchAll();
+	return $result;
+}
