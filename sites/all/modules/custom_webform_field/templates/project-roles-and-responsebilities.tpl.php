@@ -36,6 +36,12 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
        data-toggle="modal">
       Add Project
     </a>
+    <a id="modal-89761" 
+       role="button"
+       class="btn btn-small btn-primary" 
+       data-toggle="modal">
+      Save
+    </a>
   </div>
 <!--</fieldset>-->
 
@@ -282,7 +288,7 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
 /*
  *  onclick Save Draft and Submit button binding function.
  */
-  function save_project_roles(isDraft) {
+  function save_project_roles() {
     var basepath = '<?php print get_curPage_base_url(); ?>';
     var nid = getNodeIdFromContent();
     var context = new Array();
@@ -350,40 +356,48 @@ drupal_add_css(drupal_get_path('module', 'custom_webform_field'), '/css/project-
       proj_roles[i] = JSON.stringify(tmp);
     }
 //		console.log(proj_roles);
-	try{
+//	try{
     jQuery.ajax({
       type: "POST",
       url: basepath + 'annual/save_project_roles',
+//      asyn: false,
       data: {'nid':nid, 'proj_roles':proj_roles},
-    //      data: {'nid':nid},
     	success: function(text) {
-        jQuery('.webform-client-form').submit();
+//        jQuery('.webform-client-form').submit();
+				console.log("success");
+//        console.log(text);
       },
       error:function(e){
-    		return false;
+	  		console.log("fail");
       }
     });
-    } catch(err){
-    }
-    if (isDraft){
-      return false;
-    } else {
-    return true;
-    }
+//    if (testSome )
 }
 
   initDatePicker();
   initializeProjectRoles();
 //  display_added_project_roles();
   jQuery(document).ready(function() {
-    jQuery("input[name='op'][value='Submit']").bind("click", function() {
-      var isDraft = 0;
-     return save_project_roles(isDraft);
-    });
-    jQuery("input[name='op'][value='Save Draft']").bind("click", function() {
-      var isDraft = 1;
-     return save_project_roles(isDraft);
+  	jQuery("#modal-89761").bind("click", function(){
+      save_project_roles();
     });
   });
+//    jQuery(".webform-client-form").submit();
+//  	jQuery(".webform-client-form").submit(function(event){
+//			try{
+//        var flag = save_project_roles();
+////        console.log(flag);
+//      } catch(error){
+////        console.log(error);
+//      }
+//    });
+//    jQuery("input[name='op'][value='Submit']").bind("click", function() {
+//      var isDraft = 0;
+//      return save_project_roles(isDraft);
+//    });
+//    jQuery("input[name='op'][value='Save Draft']").bind("click", function() {
+//      var isDraft = 1;
+//      return save_project_roles(isDraft);
+//    });
 </script>
 

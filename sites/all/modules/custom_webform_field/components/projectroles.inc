@@ -126,7 +126,7 @@ function delete_from_project_roles($nid) {
  *  Page callback of annual/save_project_roles
  */
 function save_project_roles() {
-	$eval = 1;
+	$eval = 'save project role OK';
 	$nid = $_POST['nid'];
 	$proj_roles= $_POST['proj_roles'];
 //  delete_from_project_roles($nid);
