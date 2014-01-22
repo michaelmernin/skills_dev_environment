@@ -142,8 +142,6 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'files/review_assessment_modification.inc',
   );
-
-
   $items['watchstatus/counseleeconfirmresult/%'] = array(
     'title' => 'Confirm Review Result',
     'page callback' => 'counselee_confirm_review_result',
@@ -153,7 +151,6 @@ function counselee_menu() {
     'access arguments' => array('access to my dashboard'),
     'file' => 'files/page_audit_review.inc',
   );
-
 //counselor_submit_review_result
   $items['watchstatus/submitreview/%'] = array(
     'title' => 'Submit Review Result',
@@ -164,8 +161,6 @@ function counselee_menu() {
     'access arguments' => array('access to my dashboard'),
     'file' => 'files/page_audit_review.inc',
   );
-
-
   $items['watchstatus/gm-audit-review/%'] = array(
     'title' => 'Audit Review Result',
     'page callback' => 'gm_audit_review_result',
@@ -175,8 +170,6 @@ function counselee_menu() {
     'access arguments' => array('access to my dashboard'),
     'file' => 'files/page_audit_review.inc',
   );
-
-
   $items['audit-review/approve-review-result'] = array(
     'title' => 'Counselee Approve Review Result',
     'page callback' => 'approve_review_result',
@@ -185,7 +178,6 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'files/page_audit_review.inc',
   );
-
   $items['audit-review/disapprove-review-result'] = array(
     'title' => 'Counselee Disapprove Review Result',
     'page callback' => 'disapprove_review_result',
@@ -194,8 +186,6 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'files/page_audit_review.inc',
   );
-
-
   $items['audit-review/submit-review-result'] = array(
     'title' => 'Counselor Submit Review Result',
     'page callback' => 'submit_review_result',
@@ -204,8 +194,6 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'files/page_audit_review.inc',
   );
-
-
   $items['watchstatus/get-projects-msg'] = array(
     'title' => 'Get Project Review project msg',
     'page callback' => 'get_project_review_projett_msg',
@@ -214,9 +202,22 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'files/page_audit_review.inc',
   );
-
-
-
+  $items['relationship'] = array(
+    'title' => 'Manage Roles',
+    'page callback' => 'manage_relationship',
+    'page arguments' => array(),
+    'access arguments' => array('access to relationship management'),
+    'weight' => 6,
+    'file' => 'files/manage_relationship.inc',
+  );
+    $items['loadrelationship'] = array(
+    'title' => 'Load role relationship',
+    'page callback' => 'load_relationship',
+    'page arguments' => array(),
+    'access arguments' => array('access to relationship management'),
+    'type' => MENU_CALLBACK,
+    'file' => 'files/manage_relationship.inc',
+  );
   return $items;
 }
 
@@ -228,6 +229,9 @@ function counselee_permission() {
 //    'access to peer review' => array(
 //      'title' => t('Access to peer review form'),
 //    ),
+    'access to relationship management' => array(
+      'title' => t('Access to relationship management'),
+    ),
   );
 }
 
@@ -458,6 +462,10 @@ function counselee_theme() {
       'variables' => array(),
       'path' => drupal_get_path('module', 'counselee') . '/templates',
       'template' => 'page_audit_review_score',),
+    'relationship_management' => array(
+      'variables' => array(),
+      'path' => drupal_get_path('module', 'counselee') . '/templates',
+      'template' => 'relationship_management',),
   );
 }
 
