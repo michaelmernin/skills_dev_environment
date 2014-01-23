@@ -82,14 +82,13 @@ modal-89760
       jQuery("#employeeCounselorGmTable").jqGrid({
     url: '<?php print $base_path . 'loadrelationship' ?>',
     datatype: "json",
-    height: 400,
+//    height: 400,
 //        width: 800,
-    colNames: ['Employee Name', 'Counselor', 'GM', 'Number', 'recgid'],
+    colNames: ['Employee Name', 'Counselor', 'GM', 'recgid'],
 		    colModel: [
 			    {name: 'employeeName', index: 'employeeName', width: 60, align: 'center', sorttype: "text", editable:true, editoptions:{size:25}},
 			    {name: 'counselorName', index: 'counselorName', width: 60, align: 'center', sorttype: "text", editable:true, editoptions:{size:25}},
 			    {name: 'gmName', index: 'gmName', width: 60, align: 'center', sorttype: "text", editable:true, editoptions:{size:25}},
-			    {name: 'number', index: 'number', hidden: true},
 			    {name: 'recgid', index: 'recgid', hidden: true}
 		    ],
 		    multiselect: false,
@@ -97,22 +96,24 @@ modal-89760
 		    rownumbers: true,
 		    autowidth: true,
 		    caption: "·Manage Roles",
-		    pager: 'employeeCounselorGmTableBar',
-		    rowNum: 20,
-		    rowList: [20, 30],
+		    pager: '#employeeCounselorGmTableBar',
+		    rowNum: 10,
+		    pgbuttons: true,
+		    rowList: [10, 20, 30],
 		    pginput: false,
+		    sortname: 'employeeName',
 		    viewrecords: true,
-				sortorder: "desc",
-				ondblClickRow: function(id) {
-				   var gr = jQuery("#editgrid").jqGrid('getGridParam','selrow'); 
-				   jQuery("#editgrid").jqGrid('editGridRow',gr,{height:280, width:300, reloadAfterSubmit:false});  
-        }
+		    editurl: '<?php print $base_path . 'editjqgridrow'?>'
+//				sortorder: "desc"
+//				ondblClickRow: function(id) {
+//				   var gr = jQuery("#editgrid").jqGrid('getGridParam','selrow'); 
+//				   jQuery("#editgrid").jqGrid('editGridRow',gr,{height:280, width:300, reloadAfterSubmit:false});  
+//        }
 //		    editurl: 'clientArray'
 //	    ondblClickRow: function(id) {
 //		    }
 	    });
-	    jQuery("#employeeCounselorGmTable").jqGrid('navGrid','#employeeCounselorGmTableBar',{edit:true,add:true,del:true});
-      jQuery("#employeeCounselorGmTable").jqGrid('inlineNav',"#employeeCounselorGmTable");
+	    jQuery("#employeeCounselorGmTable").jqGrid('navGrid','#employeeCounselorGmTableBar',{view:false,edit:true,add:true,del:true,search:false});
 	    jQuery("#employeeCounselorGmTable").jqGrid('filterToolbar',{searchOnEnter: false});
 	    jQuery("#add_employeeCounselorGmTable").click(function(){
 		    jQuery("#editgrid").jqGrid('editGridRow',"new",{height:280, width:300, reloadAfterSubmit:false});
@@ -124,7 +125,7 @@ modal-89760
 		    else
 			    alert("Please select row!");
 	    });
-	    });
+    });
 //	    navGrid('#peer-div-?php print $item_num ?>',
 //		{view: false, add: false, edit: false, del: false, search: false},
 //	    {}, // use default settings for edit  

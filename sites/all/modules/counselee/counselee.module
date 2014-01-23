@@ -218,6 +218,14 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'files/manage_relationship.inc',
   );
+    $items['editjqgridrow'] = array(
+    'title' => 'Edit role relationship',
+    'page callback' => 'edit_relation_row',
+    'page arguments' => array(),
+    'access arguments' => array('access to relationship management'),
+    'type' => MENU_CALLBACK,
+    'file' => 'files/manage_relationship.inc',
+  );
   return $items;
 }
 
