@@ -11,7 +11,7 @@ function manage_relationship(){
 	$relation_result = get_all_employee_counselor_gm_relation_info_from_db();
 	$result_json = json_encode($relation_result);
 	$pageContent = theme('relationship_management', array(
-		'roles_json' => $result_json,
+	'roles_json' => $result_json,
 	));
 	return $pageContent;
 }
@@ -21,13 +21,11 @@ function manage_relationship(){
  */
 function jqgrid_auto_complete(){
 	$POST = $_POST;
-//	dd($POST, 'POST');
 	$params = new stdClass();
 	$params->query = $_POST['q'];
 	$params->page = $_POST['p'];
 	$params->count = $_POST['s'];
 	$search_result = get_employees_login_name_from_db($params);
-//	dd($search_result, 'result');
 	$employee_array =generate_auto_complete_candidates($search_result);
 	echo $employee_array;
 }
@@ -39,26 +37,29 @@ function edit_relation_row(){
 	$params = $_POST;
 	$operation = $_POST['oper'];
 	$update_item = new stdClass();
-	$update_item->recgid = $_POST['recgid'];
+	$update_item->recgid = (array_key_exists('recgid', $_POST))?$_POST['recgid']:'';
 	$update_item->employeeName = array_key_exists('employeeName', $_POST)?$_POST['employeeName']:'';
 	$update_item->counselorName = $_POST['counselorName'];
 	$update_item->gmName = $_POST['gmName'];
+	if ($operation == 'del'){
+		$update_item->recgid = $_POST['id'];
+	}
 	switch($operation){
 		case 'add':
-//      $isValid = validate_employee($update_item);
 			$result = update_relationship_into_db($update_item);
 			break;
-    case 'edit':
+		case 'edit':
 			$result = update_relationship_into_db($update_item);
-      break;
-    default:
-      break;
+			break;
+		case 'del':
+			$result = delete_item_from_relation_table($update_item);
+		default:
+			break;
 	}
 	echo 1;
 }
 
 function load_relationship(){
-//	dd($_GET, 'GET');
   $params = new stdClass();
   $params->sidx = $_GET['sidx'];
   $params->sord = $_GET['sord'];
@@ -265,4 +266,9 @@ ORDER BY
 	prs_reviewers.login_name ASC
 LIMIT $start, $params->count";
 	return db_query($query_statement, array(':employee' => "%" . $params->query . "%"))->fetchAll();
+}
+
+function delete_item_from_relation_table($updated_item){
+	$number_deleted = db_delete('prs_rel_employee_counselor_gm')->condition('recgid', $updated_item->recgid)->execute();
+	return $number_deleted;
 }

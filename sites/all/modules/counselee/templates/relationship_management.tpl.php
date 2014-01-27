@@ -33,7 +33,7 @@ $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui')
 		jQuery("#gridMain").jqGrid({
 			url: '<?php print $base_path . 'loadrelationship' ?>',
 			datatype: "json",
-			gridview: true,
+//			gridview: true,
 			rownumbers: true,
 			autowidth: true,
 			pager: '#pagernav',
@@ -63,7 +63,7 @@ $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui')
 			],
 			caption: "·Manage Roles"
 		});
-		jQuery("#gridMain").jqGrid('navGrid', '#pagernav', {add: false, edit: false, del: false});
+		jQuery("#gridMain").jqGrid('navGrid', '#pagernav', {add: false, edit: false, del:true, search:false});
 		jQuery("#gridMain").jqGrid('filterToolbar', {searchOnEnter: false});
 	});
 
