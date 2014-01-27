@@ -39,8 +39,8 @@ function edit_relation_row(){
 	$update_item = new stdClass();
 	$update_item->recgid = (array_key_exists('recgid', $_POST))?$_POST['recgid']:'';
 	$update_item->employeeName = array_key_exists('employeeName', $_POST)?$_POST['employeeName']:'';
-	$update_item->counselorName = $_POST['counselorName'];
-	$update_item->gmName = $_POST['gmName'];
+	$update_item->counselorName = (array_key_exists('counselorName', $_POST))?$_POST['counselorName']:'';
+	$update_item->gmName = (array_key_exists('gmName', $_POST))?$_POST['gmName']:'';
 	if ($operation == 'del'){
 		$update_item->recgid = $_POST['id'];
 	}
@@ -80,7 +80,7 @@ function load_relationship(){
       $gmName = str_replace(" ", ".", $_GET['gmName']);
       $params->gmName = $gmName;
     }
-    $params->record_count = search_relation_quantity_from_names($params);
+    $params->record_count = count(search_relation_quantity_from_names($params));
     if ($params->record_count > 0){
 	    $params->total_page = ceil($params->record_count / $params->limit);
     } else {
