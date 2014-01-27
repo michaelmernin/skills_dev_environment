@@ -11,6 +11,7 @@
 <script src="<?php echo $counselee_path ?>/js/calculate.js"></script>
 <script src="<?php echo $counselee_path ?>/js/checkCounselorSubmit.js"></script>
 
+
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $module_path ?>/assets/stylesheets/ui.jqgrid.css" />
 
 <script type="text/javascript">

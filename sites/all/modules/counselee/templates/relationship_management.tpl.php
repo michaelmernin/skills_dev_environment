@@ -1,143 +1,113 @@
 <?php $base_path = get_curPage_base_url();
- $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui') ?>
-<script src="<?php echo $module_path ?>/assets/javascripts/grid.locale-en.js"></script>
-<script src="<?php echo $module_path ?>/assets/javascripts/jquery.jqGrid.min.js"></script>
+$module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui')
+?>
+<script type="text/javascript" src="<?php echo $module_path ?>/assets/javascripts/grid.locale-en.js"></script>
+<script type="text/javascript" src="<?php echo $module_path ?>/assets/javascripts/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="<?php echo $module_path ?>/assets/javascripts/jquery.flexbox.js"></script>
+<script type="text/javascript" src="<?php echo $module_path ?>/assets/javascripts/jquery.flexbox.min.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $module_path ?>/assets/stylesheets/ui.jqgrid.css" />
-<div class="jQgrid-center">
-    <table id="employeeCounselorGmTable"></table>
-    <div id="employeeCounselorGmTableBar"></div>
-</div>
+<link rel="stylesheet" type="text/css" href="<?php echo $module_path ?>/assets/stylesheets/jquery.flexbox.css" />
+<style type="text/css">
+	/*body{
+	text-align:center;
+	}*/
+	#gridMain td.countryHolder{
+		overflow:visible;
+		margin-bottom:20px;
+	}
+	#gridMain .ffb{
+		margin-top:22px;
+	}
+	.ui-jqgrid{
+		margin:0 auto;
+	}
+</style>
+<table id="gridMain"></table>
+<div id="pagernav"></div>
+<div id="testData" style="margin:0 auto"></div>
 <br />
-<!--<a id="modal-89760" 
-   href="#modal-container-89760" 
-   role="button"
-   class="btn btn-small btn-primary" 
-   data-toggle="modal">
-	Add Employee
-</a>
-modal-89760
-!-->
-<div id="modal-container-89760" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" 
-            data-dismiss="modal" 
-            aria-hidden="true" 
-            id="close_btn" 
-            value="0">×</button>
-    <h3 id="myModalLabel">
-	    Add and manage roles.
-    </h3>
-  </div>
-  
-  <div class="modal-body">
-      <div class="form-item webform-component webform-component-textfield webform-component--engagement-summary-catetory--client webform-container-above">
-        <label for="client">Client
-          <span class="form-required" 
-                title="This field is required.">*
-          </span>
-        </label>
-        <input type="text" id="client" name="submitted[client]" value="" size="60" maxlength="128" class="form-text required">
-      </div>
-      <div class="form-item webform-component webform-component-select webform-component--rating">
-        <label for="rating">Rating </label>
-        <select id="rating" name="submitted[rating]" 
-                class="form-select">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3" selected="selected">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-      </div>
-      <div class="form-item webform-component webform-component-textarea webform-component--engagement-summary-catetory--project-roles-and-responsibilities">
-        <label>Project Roles And Responsibilities<span class="form-required" title="This field is required.">*</span></label>
-        <div class="form-textarea-wrapper resizable textarea-processed resizable-textarea">
-          <textarea id="project-roles-and-responsibilities" cols="60" rows="5" class="form-textarea required"></textarea>
-          <div class="grippie"></div>
-        </div>
-      </div>
-    
-  </div>
-  <div class="modal-footer">
-    <img class="loading_img" id="status_loading_img_89760" 
-         title="loading..." 
-         style="width: 25px; height: 25px; display: none"
-         src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/loading.gif' ?>">
-    <button class="btn"
-            data-dismiss="modal" 
-            id="cancel-add-roles-button"
-            aria-hidden="true">Cancel
-    </button> 
-    
-    <button class="btn btn-danger" type="button"
-            id="add-roles-button"
-            onclick="addProjectRoles()">
-      Submit
-    </button>
-  </div>
-</div>
 <script>
-	var lastsel;
-  jQuery(document).ready(function(){
-      jQuery("#employeeCounselorGmTable").jqGrid({
-    url: '<?php print $base_path . 'loadrelationship' ?>',
-    datatype: "json",
-//    height: 400,
-//        width: 800,
-    colNames: ['Employee Name', 'Counselor', 'GM', 'recgid'],
-		    colModel: [
-			    {name: 'employeeName', index: 'employeeName', width: 60, align: 'center', sorttype: "text", editable:true, editoptions:{size:25}},
-			    {name: 'counselorName', index: 'counselorName', width: 60, align: 'center', sorttype: "text", editable:true, editoptions:{size:25}},
-			    {name: 'gmName', index: 'gmName', width: 60, align: 'center', sorttype: "text", editable:true, editoptions:{size:25}},
-			    {name: 'recgid', index: 'recgid', hidden: true}
-		    ],
-		    multiselect: false,
-		    gridview: true,
-		    rownumbers: true,
-		    autowidth: true,
-		    caption: "·Manage Roles",
-		    pager: '#employeeCounselorGmTableBar',
-		    rowNum: 10,
-		    pgbuttons: true,
-		    rowList: [10, 20, 30],
-		    pginput: false,
-		    sortname: 'employeeName',
-		    viewrecords: true,
-		    editurl: '<?php print $base_path . 'editjqgridrow'?>'
-//				sortorder: "desc"
-//				ondblClickRow: function(id) {
-//				   var gr = jQuery("#editgrid").jqGrid('getGridParam','selrow'); 
-//				   jQuery("#editgrid").jqGrid('editGridRow',gr,{height:280, width:300, reloadAfterSubmit:false});  
-//        }
-//		    editurl: 'clientArray'
-//	    ondblClickRow: function(id) {
-//		    }
-	    });
-	    jQuery("#employeeCounselorGmTable").jqGrid('navGrid','#employeeCounselorGmTableBar',{view:false,edit:true,add:true,del:true,search:false});
-	    jQuery("#employeeCounselorGmTable").jqGrid('filterToolbar',{searchOnEnter: false});
-	    jQuery("#add_employeeCounselorGmTable").click(function(){
-		    jQuery("#editgrid").jqGrid('editGridRow',"new",{height:280, width:300, reloadAfterSubmit:false});
-	    });
-	    jQuery("#add_employeeCounselorGmTable").click(function(){
-		    var gr = jQuery("#editgrid").jqGrid('getGridParam','selrow');
-		    if( gr != null )
-			    jQuery("#editgrid").jqGrid('editGridRow',gr,{height:280, width:300, reloadAfterSubmit:false}); 
-		    else
-			    alert("Please select row!");
-	    });
-    });
-//	    navGrid('#peer-div-?php print $item_num ?>',
-//		{view: false, add: false, edit: false, del: false, search: false},
-//	    {}, // use default settings for edit  
-//
-//		{}, // use default settings for add  
-//
-//		{}, // delete instead that del:false we need this  
-//
-//		{} // enable the advanced searching  
-//
-//
-	   
+
+	jQuery(document).ready(function() {
+		var lastsel2;
+		jQuery("#gridMain").jqGrid({
+			url: '<?php print $base_path . 'loadrelationship' ?>',
+			datatype: "json",
+			gridview: true,
+			rownumbers: true,
+			autowidth: true,
+			pager: '#pagernav',
+			rowNum: 20,
+			pgbuttons: true,
+			rowList: [20, 30],
+			pginput: true,
+			sortname: 'employeeName',
+			sortorder: "asc",
+			sortable: true,
+			height: 300,
+			editurl: '<?php print $base_path . 'editjqgridrow' ?>',
+			onSelectRow: function(id) {
+				if (id && id !== lastsel2) {
+					jQuery('#gridMain').restoreRow(lastsel2);
+					jQuery('#gridMain').editRow(id, true);
+					lastsel2 = id;
+					jQuery('#saveBtn').attr('disabled', false);
+				}
+			},
+			colNames: ['Index', 'Employee Name', 'Counselor', 'GM'],
+			colModel: [
+				{name: 'recgid', index: 'recgid', key: true, width: 40, hidden: true},
+				{name: 'employeeName', index: 'employeeName', width: 60, align: 'center', sorttype: "text", editable: false},
+				{name: 'counselorName', index: 'counselorName', width: 60, classes: "countryHolder", align: 'center', editable: true, edittype: 'custom', editoptions: {custom_element: myelem, custom_value: myval}},
+				{name: 'gmName', index: 'gmName', width: 60, classes: "countryHolder", align: 'center', editable: true, edittype: 'custom', editoptions: {custom_element: yourelem, custom_value: yourval}}
+			],
+			caption: "·Manage Roles"
+		});
+		jQuery("#gridMain").jqGrid('navGrid', '#pagernav', {add: false, edit: false, del: false});
+		jQuery("#gridMain").jqGrid('filterToolbar', {searchOnEnter: false});
+	});
+
+	function fetchCounselor(data) {
+		var index = "#" + data.recgid + "_counselorName";
+		var content = jQuery(index).find(".ffb-sel");
+		return content.attr("val");
+	}
+
+	function fetchGM(data) {
+		var index = "#" + data.recgid + "_gmName";
+		var content = jQuery(index).find(".ffb-sel");
+		return content.attr("val");
+	}
+
+	function myelem(value, options) {
+		var ret = jQuery('<div id="country"></div>');
+		ret.flexbox('autocomplete', {
+			method: 'post',
+			initialValue: value,
+			paging: {
+				pageSize: 10, // acts as a threshold.  if <= pageSize results, paging doesn't appear  
+			}
+		});
+		return ret;
+	}
+
+	function myval(elem) {
+		return jQuery('#country_input').val();
+	}
+
+	function yourelem(value, options) {
+		var ret = jQuery('<div id="gmName-autocomplete"></div>');
+		ret.flexbox('autocomplete', {
+			method: 'post',
+			initialValue: value,
+			paging: {
+				pageSize: 10, // acts as a threshold.  if <= pageSize results, paging doesn't appear  
+			}
+		});
+		return ret;
+	}
+
+	function yourval(elem) {
+		return jQuery('#gmName-autocomplete_input').val();
+	}
 </script>
-
-

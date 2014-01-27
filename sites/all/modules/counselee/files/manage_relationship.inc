@@ -16,26 +16,40 @@ function manage_relationship(){
 	return $pageContent;
 }
 
+/*
+ *  Page callback of autocomplete
+ */
+function jqgrid_auto_complete(){
+	$POST = $_POST;
+//	dd($POST, 'POST');
+	$params = new stdClass();
+	$params->query = $_POST['q'];
+	$params->page = $_POST['p'];
+	$params->count = $_POST['s'];
+	$search_result = get_employees_login_name_from_db($params);
+//	dd($search_result, 'result');
+	$employee_array =generate_auto_complete_candidates($search_result);
+	echo $employee_array;
+}
+
 /* 
- *  Page Callback function of 
+ *  Page Callback function of adding editing and delete row
  */
 function edit_relation_row(){
 	$params = $_POST;
-//	dd($params, 'POST');
 	$operation = $_POST['oper'];
 	$update_item = new stdClass();
-	$update_item->employeeName = $_POST['employeeName'];
+	$update_item->recgid = $_POST['recgid'];
+	$update_item->employeeName = array_key_exists('employeeName', $_POST)?$_POST['employeeName']:'';
 	$update_item->counselorName = $_POST['counselorName'];
 	$update_item->gmName = $_POST['gmName'];
 	switch($operation){
 		case 'add':
 //      $isValid = validate_employee($update_item);
 			$result = update_relationship_into_db($update_item);
-      dd($result, 'result');
 			break;
     case 'edit':
 			$result = update_relationship_into_db($update_item);
-      dd($result, 'result');
       break;
     default:
       break;
@@ -66,7 +80,7 @@ function load_relationship(){
       $params->gmName = $gmName;
     }
     $params->record_count = search_relation_quantity_from_names($params);
-    if ($params->record_count>0){
+    if ($params->record_count > 0){
 	    $params->total_page = ceil($params->record_count / $params->limit);
     } else {
 	    $params->total_page = 0;
@@ -103,7 +117,7 @@ function generate_search_result($params){
 	}
 	$count = 0;
 	foreach($range_result as $item){
-		$response->rows[$count]['cell'] = array($item->employeeName, $item->counselorName, $item->gmName, $item->recgid);
+		$response->rows[$count]['cell'] = array($item->recgid, $item->employeeName, $item->counselorName, $item->gmName);
 		$count++;
 	}
 	$range_result_json = json_encode($response);
@@ -147,48 +161,6 @@ function get_relation_from_db($params, $order){
       break;
 	}
 }
-
-//function search_relationship_from_names($params=NULL){
-//	if(!isset($params)){
-//		$result = get_all_employee_counselor_gm_relation_info_from_db();
-//    return $result;
-//	} else {
-//    $signal = select_db_statement($params);
-//    switch ($signal){
-//      case 1:
-//        $query_statement = 'SELECT * FROM `prs_rel_employee_counselor_gm` WHERE gmName LIKE  :gm';
-//        return db_query($query_statement, array(':gm' => "%" . $params->gmName . "%"))->fetchAll();
-//        break;
-//      case 2:
-//        $query_statement = 'SELECT * FROM `prs_rel_employee_counselor_gm` WHERE counselorName LIKE  :counselor';
-//        return db_query($query_statement, array(':counselor' => "%" . $params->counselorName . "%"))->fetchAll();
-//        break;
-//      case 3:
-//        $query_statement = 'SELECT * FROM `prs_rel_employee_counselor_gm` WHERE counselorName LIKE :counselor AND gmName LIKE  :gm';
-//        return db_query($query_statement, array(':counselor' => "%" . $params->counselorName . "%", ':gm' => "%" . $params->gmName . "%"))->fetchAll();
-//        break;
-//      case 4:
-//        $query_statement = 'SELECT * FROM `prs_rel_employee_counselor_gm` WHERE employeeName LIKE  :employee';
-//        return db_query($query_statement, array(':employee' => "%" . $params->employeeName . "%"))->fetchAll();
-//        break;
-//      case 5:
-//        $query_statement = 'SELECT * FROM `prs_rel_employee_counselor_gm` WHERE employeeName LIKE :employee AND gmName LIKE  :gm';
-//        return db_query($query_statement, array(':employee' => "%" . $params->employeeName . "%", ':gm' => "%" . $params->gmName . "%"))->fetchAll();
-//        break;
-//      case 6:
-//        $query_statement = 'SELECT * FROM `prs_rel_employee_counselor_gm` WHERE employeeName LIKE  :employee AND counselorName LIKE :counselor';
-//        return db_query($query_statement, array(':employee' => "%" . $params->employeeName . "%", ':counselor' => "%" . $params->counselorName . "%"))->fetchAll();
-//        break;
-//      case 7:
-//        $query_statement = 'SELECT * FROM `prs_rel_employee_counselor_gm` WHERE employeeName LIKE  :employee AND counselorName LIKE :counselor AND gmName LIKE :gm';
-//        return db_query($query_statement, array(':employee' => "%" . $params->employeeName . "%", ':counselor' => "%" . $params->counselorName . "%", ':gm' => "%" . $params->gmName . "%"))->fetchAll();
-//        break;
-//      default:
-//        break;
-//      }
-//  }
-//}
-
 function select_db_statement($params){
 		$flag_a = 0;
 		$flag_b = 0;
@@ -255,7 +227,7 @@ function get_all_employee_counselor_gm_relation_info_from_db(){
 }
 
 function update_relationship_into_db($updated_item){
-  $result = db_merge('prs_rel_employee_counselor_gm')->key(array('employeeName' => $updated_item->employeeName))
+  $result = db_merge('prs_rel_employee_counselor_gm')->key(array('recgid' => $updated_item->recgid))
       ->insertFields(array(
 	'employeeName' => $updated_item->employeeName,
 	'counselorName' => $updated_item->counselorName,
@@ -266,4 +238,31 @@ function update_relationship_into_db($updated_item){
 	'gmName' => $updated_item->gmName
       ))->execute();
   return $result;
+}
+
+function generate_auto_complete_candidates($candidates_array){
+	$json_array = array();
+	$json_array['results'] = array();
+	foreach($candidates_array as $candidate){
+		$item = array("id"=> $candidate->recgid, "name"=>$candidate->login_name); 
+		array_push($json_array['results'], $item);
+	}
+	$json_array['total'] = count($candidates_array);
+	return json_encode($json_array);
+}
+
+function get_employees_login_name_from_db($params){
+	$start = $params->count * $params->page - $params->count;
+	$query_statement = "SELECT
+	prs_reviewers.login_name,
+	prs_rel_employee_counselor_gm.recgid
+FROM
+	prs_reviewers
+JOIN prs_rel_employee_counselor_gm ON prs_reviewers.login_name = prs_rel_employee_counselor_gm.employeeName
+WHERE
+	login_name LIKE :employee
+ORDER BY
+	prs_reviewers.login_name ASC
+LIMIT $start, $params->count";
+	return db_query($query_statement, array(':employee' => "%" . $params->query . "%"))->fetchAll();
 }

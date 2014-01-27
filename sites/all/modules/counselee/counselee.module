@@ -210,7 +210,7 @@ function counselee_menu() {
     'weight' => 6,
     'file' => 'files/manage_relationship.inc',
   );
-    $items['loadrelationship'] = array(
+  $items['loadrelationship'] = array(
     'title' => 'Load role relationship',
     'page callback' => 'load_relationship',
     'page arguments' => array(),
@@ -218,9 +218,17 @@ function counselee_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'files/manage_relationship.inc',
   );
-    $items['editjqgridrow'] = array(
+  $items['editjqgridrow'] = array(
     'title' => 'Edit role relationship',
     'page callback' => 'edit_relation_row',
+    'page arguments' => array(),
+    'access arguments' => array('access to relationship management'),
+    'type' => MENU_CALLBACK,
+    'file' => 'files/manage_relationship.inc',
+  );
+  $items['autocomplete'] = array(
+    'title' => 'JQgrid auto complete',
+    'page callback' => 'jqgrid_auto_complete',
     'page arguments' => array(),
     'access arguments' => array('access to relationship management'),
     'type' => MENU_CALLBACK,
