@@ -13,6 +13,10 @@ function getRootPath() {
     var curWwwPath = window.document.location.href;
     var pos = curWwwPath.indexOf('EnterpriseReview');
     var localhostPath = curWwwPath.substring(0, pos);
+    if(pos <1) {
+	    pos=curWwwPath.indexOf('com') +4;
+    }
+    var localhostPath=curWwwPath.substring(0,pos);
     return localhostPath;
 }
 
@@ -88,7 +92,7 @@ function initialStartEndDate()
         data: {'rreid': rreid},
         success: function(date) {
             var obj = JSON.parse(date);  
-	    console.log(obj);
+//	    console.log(obj);
             jQuery("#edit-submitted-engagement-summary-category-project").val(obj.project_name);
             jQuery('#edit-submitted-engagement-summary-category-start-date').val(obj.time_frame_from);
             jQuery('#edit-submitted-engagement-summary-category-end-date').val(obj.time_frame_to);
