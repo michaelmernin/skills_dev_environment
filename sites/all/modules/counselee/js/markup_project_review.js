@@ -12,7 +12,6 @@
 function getRootPath() {
     var curWwwPath = window.document.location.href;
     var pos = curWwwPath.indexOf('EnterpriseReview');
-    var localhostPath = curWwwPath.substring(0, pos);
     if(pos <1) {
 	    pos=curWwwPath.indexOf('com') +4;
     }
