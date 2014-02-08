@@ -147,12 +147,14 @@ function _insert_project_roles_into_annual_table($nid, $decoded_items){
             'client' => $item->client,
             'roles' => $item->project_roles_and_responsibilities,
             'rating' => $item->rating,
+						'pnid' => 0,
           ))
 					->updateFields(array(
             'nid' => $nid,
             'client' => $item->client,
             'roles' => $item->project_roles_and_responsibilities,
             'rating' => $item->rating,
+						'pnid' => 0,
           ))
 					->execute();
       } else if (isset($item->isAdded) && $item->isAdded == 0) {

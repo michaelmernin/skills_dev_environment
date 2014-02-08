@@ -378,7 +378,6 @@ function setCounselorOverallRating() {
 
     var counselorSrc = jQuery("#counselor-overall_rating-0");
     var counselorDest = jQuery("#counselor-overall_rating-content");
-		console.log(counselorDest.text());
     var overallRating;
 
     if (counselorSrc.length <= 0)

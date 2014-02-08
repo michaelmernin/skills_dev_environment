@@ -269,8 +269,9 @@ function approve_review_result_by_gm($rreid) {
 	  'isGmApproved' => 1,);
 	$reviewee = get_reviewee_from_db($rreid);
 	$provider_info = get_provider_info($rreid, $reviewee);
+//	dd($provider_info, 'provider_info');
 	$nid = $provider_info[0]->nid;
-	$result = snapshot_annual_review_project_info($nid, $reviewee);
+	$snap_result = snapshot_annual_review_project_info($nid, $reviewee);
 	audit_review_result_update($rreid, 6, $fields);
 	$msg = 'You had approved the review result.';
 	drupal_set_message($msg, 'status');
@@ -605,27 +606,8 @@ function gm_audit_review_result($rreid) {
 		case THREE_MONTH_REVIEW:
 			break;
 		default:
-			;
+			break;
 	}
-
-	return $pageContent;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	return $pageContent;
 }
@@ -866,6 +848,9 @@ function snapshot_annual_review_project_info($nid, $reviewee) {
 }
 
 function snapshot_project_roles_into_db($nid, $project_roles, $added_project_roles) {
+	dd($nid, 'nid');
+	dd($project_roles, 'proj_roles');
+	dd($added_project_roles, 'added');
 	$result_array = array();
 	foreach ($project_roles as $role) {
 		$result = db_merge('prs_annual_projects')
@@ -889,9 +874,10 @@ function snapshot_project_roles_into_db($nid, $project_roles, $added_project_rol
 			  'client' => $project->client,
 			  'roles' => $project->roles,
 			  'rating' => $project->rating,
-			  'pnid'=>$pnid,
+//			  'pnid'=> 0,
 			))->execute();
 		array_push($result_array, $result);
 	}
+	dd($result_array, 'result_array');
 	return $result_array;
 }
