@@ -294,6 +294,7 @@ function getElementContentLength(obj)
  * */
 function getElementValue(obj) {
     var type = obj[0].tagName;
+//    console.log(type);
 
     if (type == "INPUT")
         return obj.val();
@@ -377,31 +378,43 @@ function setCounselorOverallRating() {
 
     var counselorSrc = jQuery("#counselor-overall_rating-0");
     var counselorDest = jQuery("#counselor-overall_rating-content");
+		console.log(counselorDest.text());
     var overallRating;
 
-    if (counselorSrc.length < 0)
+    if (counselorSrc.length <= 0)
         overallRating = 3;
-    else
+    else { 
         overallRating = counselorSrc.val();
-    
+				if (overallRating < 1 || overallRating > 5) {
+					overallRating = 3;
+				}
+		}
     if (counselorDest.length > 0)
     {
         if (counselorDest[0].tagName == 'SELECT')
             counselorDest.val(overallRating);
-        else
-            counselorDest.append(overallRating);
+        else if (counselorDest.text() == '') {
+						counselorDest.append(overallRating);
+				}
+				else {
+						// Nothing to do, preventing duplicated appending score.
+				}
     }
 }
 
 function setCounseleeOverallRating() {
     var overallRating = jQuery("#counselee-overall_rating-0").val();
+		var counseleeDest = jQuery("#counselee-overall_rating-content");
     if (overallRating == "undefined")
-        jQuery("#counselee-overall_rating-content").append("3");
+        counseleeDest.append("3");
 
-    if (jQuery("#counselee-overall_rating-content")[0].tagName == 'SELECT')
-        jQuery("#counselee-overall_rating-content").val(3);
-    else
-        jQuery("#counselee-overall_rating-content").append(overallRating);
-
+    if (counseleeDest[0].tagName == 'SELECT')
+        counseleeDest.val(3);
+    else if (counseleeDest.text() == '') {
+        counseleeDest.append(overallRating);
+		}
+		else {
+			// Nothing to do, preventing duplicate appending score.
+		}
 }
          

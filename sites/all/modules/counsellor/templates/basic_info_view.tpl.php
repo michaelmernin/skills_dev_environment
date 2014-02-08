@@ -30,15 +30,15 @@
       <td><select class="form-select" id="review_type" name="review_type"><option value="0" selected>Annual Review</option><option value="1">Project Review</option><option value="2">Three-Month Review</option></select></td>
       <td></td><td></td>
     </tr>
-    <tr>
-      <td>
+    <tr class="project_review">
+      <td class="project_review">
         <h6 id="Project_Name_Lable">Project Name<span class="form-required" title="This field is required.">*</span>:</h6>
       </td>
-      <td><input placeholder="Type Project Name…" type="text" id="Project_Name_Text" /></td>
-      <td>
+      <td class="project_review"><input placeholder="Type Project Name…" type="text" id="Project_Name_Text" /></td>
+      <td class="project_review">
         <h6 id="Project_Client_Lable">Client<span class="form-required" title="This field is required.">*</span>:</h6>
       </td>
-      <td><input placeholder="Type Client…" type="text" id="Project_Client_Text" /></td>
+      <td class="project_review"><input placeholder="Type Client…" type="text" id="Project_Client_Text" /></td>
     </tr>
 <!--    <tr>
       <td>

@@ -206,7 +206,7 @@ function load_self_assessment_content($rreid = NULL) {
 /**
  * Page callback function of review content.
  * */
-function load_review_content($rreid = NULL) {
+function load_review_content($rreid = NULL, $access_check=TRUE) {
   $reviewee = get_reviewee_from_db($rreid);
   $review_status = get_review_status_from_db($rreid);
   $review_basic_info = get_basic_review_information($rreid);
@@ -218,8 +218,11 @@ function load_review_content($rreid = NULL) {
 
 
   $user_identity = get_user_identity($rreid);
-  if (!tab_accessibility($user_identity, $allowed_status, $review_status))
-    drupal_goto('accessdenied');
+	if ($access_check) {
+		if (!tab_accessibility($user_identity, $allowed_status, $review_status)) {
+				drupal_goto('accessdenied');
+		}
+	}
 
 
 //  if (!identify_accessibility($cur_user_name, $reviewee, $counselor, $allowed_roles, $allowed_status, $review_status)) {

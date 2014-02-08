@@ -30,10 +30,6 @@ function load_self_assessment($rreid = NULL) {
 	if (!tab_accessibility($user_identity, $allowed_status, $review_status))
 		drupal_goto('accessdenied');
 
-//	if (!identify_accessibility($cur_user_name, $reviewee, $counselor, $allowed_roles, $allowed_status, $review_status)) {
-//		drupal_goto('accessdenied');
-//	}
-
 	$provider_info = get_provider_info($rreid, $reviewee);
 	$nid = $provider_info[0]->nid;
 	$sid = get_last_sid_by_nid($nid);
@@ -985,8 +981,12 @@ function thematize_project_roles_and_responsibilities($user_identity, $rreid, $n
 			$key = $item->pnid;
 			$overall_rating = $item->ultimate_rating;
 			$status = $item->ultimate_status;
-			$project_roles[$key]['overall_rating'] = $overall_rating;
-			$project_roles[$key]['status'] = $status;
+			if ($overall_rating != 0) {
+				$project_roles[$key]['overall_rating'] = $overall_rating;
+			}
+			if ($status != 0) {
+				$project_roles[$key]['status'] = $status;
+			}
 		}
 		$added_project_roles = get_added_project_roles($nid);
 		$content = theme('annual_project_roles', array(

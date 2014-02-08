@@ -34,12 +34,14 @@ function switchProjectName(flag) {
         jQuery('#Project_Name_Text').show();
 				jQuery("#Project_Client_Lable").show();
 				jQuery("#Project_Client_Text").show();
+				jQuery(".project_review").show();
     } else {
 
         jQuery('#Project_Name_Lable').hide();
         jQuery('#Project_Name_Text').hide();
 				jQuery("#Project_Client_Lable").hide();
 				jQuery("#Project_Client_Text").hide();
+				jQuery(".project_review").hide();
     }
 }
 
