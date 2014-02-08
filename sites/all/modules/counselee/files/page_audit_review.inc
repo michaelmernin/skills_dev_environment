@@ -269,7 +269,6 @@ function approve_review_result_by_gm($rreid) {
 	  'isGmApproved' => 1,);
 	$reviewee = get_reviewee_from_db($rreid);
 	$provider_info = get_provider_info($rreid, $reviewee);
-//	dd($provider_info, 'provider_info');
 	$nid = $provider_info[0]->nid;
 	$snap_result = snapshot_annual_review_project_info($nid, $reviewee);
 	audit_review_result_update($rreid, 6, $fields);
@@ -424,15 +423,12 @@ function get_category_content($self_review, $counselor_review, $catetory_map, $p
 //    $problem_node['peer_comment'] = $counselor_review[$review['selfkey']]->peer_comments;
 		$problem_node['peer_rating'] = $counselor_review[$review['selfkey']]->peer_avg_rating;
 		if ($review['exist_peer']) {
-//  dd($review['selfkey'],'$review[selfkey]');
-//  dd($peer_comment_info_set,'$peer_comment_info_set');
 //      module_load_include('inc', 'counselee', 'files/review_assessment_modification');
 			$problem_node['peer_comment'] = get_peer_comment_information_json($review['selfkey'], $peer_comment_info_set);
 		}
 		else {
 			$problem_node['peer_comment'] = '';
 		}
-//    dd($problem_node, '$problem_node');
 		$content .= theme('page_audit_review_question', array('node' => $problem_node));
 	}
 
@@ -848,9 +844,6 @@ function snapshot_annual_review_project_info($nid, $reviewee) {
 }
 
 function snapshot_project_roles_into_db($nid, $project_roles, $added_project_roles) {
-	dd($nid, 'nid');
-	dd($project_roles, 'proj_roles');
-	dd($added_project_roles, 'added');
 	$result_array = array();
 	foreach ($project_roles as $role) {
 		$result = db_merge('prs_annual_projects')
@@ -878,6 +871,5 @@ function snapshot_project_roles_into_db($nid, $project_roles, $added_project_rol
 			))->execute();
 		array_push($result_array, $result);
 	}
-	dd($result_array, 'result_array');
 	return $result_array;
 }
