@@ -13600,7 +13600,7 @@ body.vjs-full-window {
     padding: 24px 23px 20px;
     position: relative;
     left:50px;
-    width:380px;
+    width:280px;
 }
 /* line 48, ../sass/modules/_login.sass */
 .login-form:before {
@@ -13627,7 +13627,7 @@ body.vjs-full-window {
     padding-bottom: 11px;
     padding-top: 11px;
     text-indent: 3px;
-    width: 360px;
+    width: 260px;
 }
 
 /* line 73, ../sass/modules/_login.sass */
@@ -14383,4 +14383,17 @@ div.error {
 
 .statusTableLink:hover{
     cursor: pointer; 
+}
+
+.structWebHeaderContainer {
+    background-position: left top;
+    background-repeat: repeat-x;
+}
+
+.structWebMainMenu { 
+    height: 31px; 
+    margin: 0 auto 1px; 
+    padding: 0;
+    width: 98%; 
+    background-color: rgb(167, 8, 5);
 }

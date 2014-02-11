@@ -67,59 +67,78 @@
 
 <header id="header" class="header" role="header">
   <hgroup>
-  <div class="container">
-    <div id="navigation" class="navbar navbar-inverse">
-      <div class="navbar-inner">
-        <div class="container clearfix">
-          <?php if ($logo): ?>
-              <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>"  class="pull-left brand"><img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" /></a>
+    <div class="container">
+      <div id="navigation" class="navbar navbar-inverse">
+        <div class="navbar-inner">
+          <div class="container clearfix">
+            <?php if ($logo): ?>
+            <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>"  class="pull-left brand"><img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" /></a>
           <?php endif; ?>
-            
-            
-            <div class="nav-collapse nav-menu-collapse">
+
+
+          <div class="nav-collapse nav-menu-collapse">
             <div class="inner">
               <h2><a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" class="pull-left brand"><?php print $site_name; ?></a></h2>
               
-            <p><?php if ($site_slogan): ?><?php print $site_slogan; ?><?php endif; ?></p>
+              <p><?php if ($site_slogan): ?><?php print $site_slogan; ?><?php endif; ?></p>
             </div>
           </div>
-              
-        
-
-      </div>
-    </div> 
-  </div> <!-- /#navigation -->
- </hgroup>
+        </div> 
+      </div> <!-- /#navigation -->
+    </div>
+  </div>  <!-- /#main-wrapper -->
+</hgroup>
 </header>
+<div class="structWebHeaderContainer">
+ <div id="navMain" class="structWebMainMenu"></div>
+</div>
 
-<div id="main-wrapper">
-  <div id="main" class="main <?php print (!$is_panel) ? 'container' : ''; ?>"
-    <div id="content">
-       <div class="login">
-        <div class="login-screen">
-          <div class="login-icon">
-            <img src="<?php print base_path() . drupal_get_path('theme', 'flat_ui') . '/assets/images/login/icon.png' ?>" alt="Welcome to <?php print $site_name; ?>" />
-            <h4>Welcome to <small><?php print $site_name; ?></small></h4>
-          </div>
-          <div class="login-form">
-            <?php print render($page['user_login']); ?>
-          </div>
-        </div>
+<!--Test code start -->
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12">
+      <h3>
+        Welcome to Perficient Review System!
+      </h3>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span8">
+      <!-- <div class="custom-content"> -->
+      <?php print render($page['custom_content']); ?>
+      <!-- </div> -->
+    </div>
+    <div class="span4">
+      <div class="login-form">
+        <?php print render($page['user_login']); ?>
       </div>
     </div>
-
-
-          
-      
-      
   </div>
-</div> <!-- /#main-wrapper -->
+</div>
+
 
 <footer id="footer" class="footer" role="footer">
   <div class="container">
     <?php if ($copyright): ?>
-      <small class="copyright pull-left"><?php print $copyright; ?></small>
-    <?php endif; ?>
-    <small class="pull-right"><a href="#"><?php print t('Back to Top'); ?></a></small>
-  </div>
+    <small class="copyright pull-left"><?php print $copyright; ?></small>
+  <?php endif; ?>
+  <small class="pull-right"><a href="#"><?php print t('Back to Top'); ?></a></small>
+</div>
 </footer>
+
+<script>
+$ = jQuery.noConflict();
+$(document).ready(function(){
+  var contentHeader = $(".title").closest("header");
+  var contentFooter = $(".field-name-field-tags").closest("footer");
+  var fieldLabel = $(".field-label");
+  hideElement(contentHeader);
+  hideElement(contentFooter);
+  hideElement(fieldLabel);
+  $(".row").css("margin-left", "30px");
+});
+
+function hideElement(elem) {
+  elem.hide();
+}
+</script>
