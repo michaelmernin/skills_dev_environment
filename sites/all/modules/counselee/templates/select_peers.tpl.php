@@ -9,7 +9,7 @@
 
 <h3 colspan="4">Select Peer(s)</h3>
 
-<h6>You can select peers for feedback from the right list box below</h6>
+<h6>You can select peers for feedback from the left list box below</h6>
 
 <div style="width:800px;">
 
@@ -129,7 +129,7 @@
 
 
 <script type="text/javascript">
-          jQuery(function() {
+          jQuery(document).ready(function() {
             renderMultiselect();
           });
 
@@ -141,7 +141,7 @@
             jQuery(".multiselect").multiselect({
               sortable: true,
               searchable: true,
-              dividerLocation: 0.6
+              dividerLocation: 0.4
             });
           }
 

@@ -15,7 +15,7 @@ regions[basic_info] = Basic Info View
 regions[user_status] = User Status View
 regions[my_working_stage] = My Working Stage
 regions[select_participates] = Select Participates
-
+regions[custom_content] = Custom Content
 
 
 ; CSS - General

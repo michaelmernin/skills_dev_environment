@@ -21,7 +21,7 @@
           </div>
        <?php if($logged_in):?>
         <div id="login_user" style="float: right; padding: 30px 0 0 10px;">
-            Hi, <?php global $user; 
+            Welcome, <?php global $user; 
             $format_name= format_login_name($user->name);
             echo $format_name; ?>
         </div>

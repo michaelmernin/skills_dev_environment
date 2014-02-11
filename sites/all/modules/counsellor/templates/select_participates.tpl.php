@@ -9,7 +9,7 @@
 
 <h3 colspan="4">Select Counselee(s)</h3>
 
-<h6>You can select people from the right list box below</h6>
+<h6>You can select people from the left list box below</h6>
 
 <div style="width:800px;">
   <select id="users" class="multiselect" multiple="multiple" name="users[]" style="display: none; width:600px;height:257px;" >
@@ -36,9 +36,9 @@
   <br >
 
   <script type="text/javascript">
-    jQuery(function() {
+		jQuery(document).ready(function(){
       renderMultiselect();
-    });
+		});
 
     function destoryMultiselect() {
       jQuery('.multiselect').multiselect('destroy');
@@ -48,7 +48,7 @@
       jQuery(".multiselect").multiselect({
         sortable: true,
         searchable: true,
-        dividerLocation: 0.6
+        dividerLocation: 0.4
       });
     }
 
@@ -69,4 +69,4 @@ function display_counselees($counselees) {
 }
 ?>
 
-  </script>
+</script>
