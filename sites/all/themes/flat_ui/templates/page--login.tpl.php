@@ -98,7 +98,7 @@
   <div class="row-fluid">
     <div class="span12">
       <h3>
-        Welcome to Perficient Review System!
+        
       </h3>
     </div>
   </div>
@@ -135,7 +135,7 @@ $(document).ready(function(){
   hideElement(contentHeader);
   hideElement(contentFooter);
   hideElement(fieldLabel);
-  $(".row").css("margin-left", "30px");
+  $(".row").css("margin-left", "80px");
 });
 
 function hideElement(elem) {

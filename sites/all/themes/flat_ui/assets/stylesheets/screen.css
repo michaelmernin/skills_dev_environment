@@ -13599,7 +13599,7 @@ body.vjs-full-window {
     border-radius: 6px;
     padding: 24px 23px 20px;
     position: relative;
-    left:50px;
+    left:-30px;
     width:280px;
 }
 /* line 48, ../sass/modules/_login.sass */
@@ -14392,8 +14392,8 @@ div.error {
 
 .structWebMainMenu { 
     height: 31px; 
-    margin: 0 auto 1px; 
-    padding: 0;
-    width: 98%; 
+    margin: 2px auto 1px; 
+    padding: 4px;
+    width: 92%; 
     background-color: rgb(167, 8, 5);
 }
