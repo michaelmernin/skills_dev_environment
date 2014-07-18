@@ -33,7 +33,7 @@ $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui')
 		jQuery("#gridMain").jqGrid({
 			url: '<?php print $base_path . 'loadrelationship' ?>',
 			datatype: "json",
-//			gridview: true,
+			gridview: true,
 			rownumbers: true,
 			autowidth: true,
 			pager: '#pagernav',
