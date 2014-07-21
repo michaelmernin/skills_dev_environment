@@ -85,12 +85,9 @@ $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui')
 			method: 'post',
 			initialValue: value,
 			onSelect: function() {
-				jQuery('#country_input').blur();
-				jQuery('#'+options.id).parent().parent().focus();
-				jQuery('#'+options.id).parent().parent().click();
 				var id=options.id;
 				var rowId=id.split('_')[0];
-				jQuery('#gridMain').jqGrid('setSelection',rowId); 
+				jQuery('#gridMain').jqGrid('saveRow',rowId); 
 			},
 			paging: {
 				pageSize: 10, // acts as a threshold.  if <= pageSize results, paging doesn't appear  
@@ -109,12 +106,9 @@ $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui')
 			method: 'post',
 			initialValue: value,
 			onSelect: function() {
-				jQuery('#gmName-autocomplete_input').blur();
-				jQuery('#'+options.id).parent().parent().focus();
-				jQuery('#'+options.id).parent().parent().click();
 				var id=options.id;
 				var rowId=id.split('_')[0];
-				jQuery('#gridMain').jqGrid('setSelection',rowId); 
+				jQuery('#gridMain').jqGrid('saveRow',rowId); 
 			},
 			paging: {
 				pageSize: 10, // acts as a threshold.  if <= pageSize results, paging doesn't appear  
