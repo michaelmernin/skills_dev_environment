@@ -87,6 +87,7 @@ $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui')
 			onSelect: function() {
 				jQuery('#'+options.id).click();
 				jQuery('#'+options.id).focus();
+				jQuery('#country_input').blur();
 			},
 			paging: {
 				pageSize: 10, // acts as a threshold.  if <= pageSize results, paging doesn't appear  
@@ -107,6 +108,7 @@ $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui')
 			onSelect: function() {
 				jQuery('#'+options.id).click();
 				jQuery('#'+options.id).focus();
+				jQuery('#gmName-autocomplete_input').blur();
 			},
 			paging: {
 				pageSize: 10, // acts as a threshold.  if <= pageSize results, paging doesn't appear  
