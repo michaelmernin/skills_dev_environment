@@ -86,6 +86,8 @@ $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui')
 			initialValue: value,
 			onSelect: function() {
 				jQuery('#country_input').blur();
+				jQuery('#'+options.id).parent().parent().focus();
+				jQuery('#'+options.id).parent().parent().click();
 				var id=options.id;
 				var rowId=id.split('_')[0];
 				jQuery('#gridMain').jqGrid('setSelection',rowId); 
@@ -108,6 +110,8 @@ $module_path = get_curPage_base_url() . drupal_get_path('theme', 'flat_ui')
 			initialValue: value,
 			onSelect: function() {
 				jQuery('#gmName-autocomplete_input').blur();
+				jQuery('#'+options.id).parent().parent().focus();
+				jQuery('#'+options.id).parent().parent().click();
 				var id=options.id;
 				var rowId=id.split('_')[0];
 				jQuery('#gridMain').jqGrid('setSelection',rowId); 
