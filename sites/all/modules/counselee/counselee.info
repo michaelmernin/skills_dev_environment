@@ -1,8 +1,0 @@
-name = Counselee
-description = Perficient Review System Counselee module
-package = "PerficientReviewSystem"
-core = 7.x
-version = 7.x-1.0-dev
-
-;dependencies[] = smtp
-;dependencies[] = pr360_mail

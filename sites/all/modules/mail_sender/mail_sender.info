@@ -1,8 +1,0 @@
-name = Mail_sender
-description = Perficient Review Send Mail Module
-package = Mail
-core = 7.x
-version = 7.x-1.0-dev
-
-dependencies[] = phpmailer
-;dependencies[] = pr360_mail

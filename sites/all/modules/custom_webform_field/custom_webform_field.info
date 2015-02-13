@@ -1,8 +1,0 @@
-; $Id: $
-name = Custom Webform field
-description = Custom PRS webfrom field here
-version = "7.x-1.0"
-core = 7.x
-package = Webform
-
-dependencies[] = webform
