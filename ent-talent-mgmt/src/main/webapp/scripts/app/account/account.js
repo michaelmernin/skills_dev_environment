@@ -1,10 +1,8 @@
 'use strict';
 
-angular.module('etmApp')
-    .config(function ($stateProvider) {
-        $stateProvider
-            .state('account', {
-                abstract: true,
-                parent: 'site'
-            });
-    });
+angular.module('etmApp').config(function ($stateProvider) {
+  $stateProvider.state('account', {
+    abstract: true,
+    parent: 'site'
+  });
+});

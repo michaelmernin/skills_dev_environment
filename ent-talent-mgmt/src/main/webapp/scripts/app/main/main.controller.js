@@ -1,9 +1,8 @@
 'use strict';
 
-angular.module('etmApp')
-    .controller('MainController', function ($scope, Principal) {
-        Principal.identity().then(function(account) {
-            $scope.account = account;
-            $scope.isAuthenticated = Principal.isAuthenticated;
-        });
-    });
+angular.module('etmApp').controller('MainController', function ($scope, Principal) {
+  Principal.identity().then(function(account) {
+    $scope.account = account;
+    $scope.isAuthenticated = Principal.isAuthenticated;
+  });
+});

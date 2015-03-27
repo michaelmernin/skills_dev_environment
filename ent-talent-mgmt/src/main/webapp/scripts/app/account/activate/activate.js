@@ -1,27 +1,26 @@
 'use strict';
 
 angular.module('etmApp')
-    .config(function ($stateProvider) {
-        $stateProvider
-            .state('activate', {
-                parent: 'account',
-                url: '/activate?key',
-                data: {
-                    roles: [],
-                    pageTitle: 'activate.title'
-                },
-                views: {
-                    'content@': {
-                        templateUrl: 'scripts/app/account/activate/activate.html',
-                        controller: 'ActivationController'
-                    }
-                },
-                resolve: {
-                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                        $translatePartialLoader.addPart('activate');
-                        return $translate.refresh();
-                    }]
-                }
-            });
-    });
+  .config(function ($stateProvider) {
+  $stateProvider.state('activate', {
+    parent: 'account',
+    url: '/activate?key',
+    data: {
+      roles: [],
+      pageTitle: 'activate.title'
+    },
+    views: {
+      'content@': {
+        templateUrl: 'scripts/app/account/activate/activate.html',
+        controller: 'ActivationController'
+      }
+    },
+    resolve: {
+      translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+        $translatePartialLoader.addPart('activate');
+        return $translate.refresh();
+      }]
+    }
+  });
+});
 
