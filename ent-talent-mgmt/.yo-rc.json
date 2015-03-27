@@ -1,0 +1,19 @@
+{
+  "generator-jhipster": {
+    "baseName": "etm",
+    "packageName": "com.perficient.etm",
+    "packageFolder": "com/perficient/etm",
+    "authenticationType": "session",
+    "hibernateCache": "ehcache",
+    "clusteredHttpSession": "no",
+    "websocket": "no",
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "mysql",
+    "useCompass": false,
+    "buildTool": "gradle",
+    "frontendBuilder": "grunt",
+    "javaVersion": "7",
+    "rememberMeKey": "7417cc43744a5c99091ec7307dcead53d2ddcdb0"
+  }
+}
