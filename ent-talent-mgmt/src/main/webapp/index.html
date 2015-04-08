@@ -13,17 +13,18 @@
   <!-- build:css assets/styles/vendor.css -->
   <!-- bower:css -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css assets/styles/main.css -->
   <link rel="stylesheet" href="assets/styles/main.css">
   <!-- endbuild -->
 </head>
-<body ng-app="etmApp">
+<body ng-app="etmApp" class="etm">
   <!--[if lt IE 10]>
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
-  <div ng-show="{{ENV === 'dev'}}" class="development" ng-cloak=""></div>
   <div ui-view="navbar" ng-cloak=""></div>
   <div class="container">
     <div class="well" ui-view="content"></div>
@@ -54,6 +55,9 @@ ga('create','UA-XXXXX-X');ga('send','pageview');
   <script src="bower_components/angular-resource/angular-resource.js"></script>
   <script src="bower_components/angular-cookies/angular-cookies.js"></script>
   <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/angular-aria/angular-aria.js"></script>
+  <script src="bower_components/angular-material/angular-material.js"></script>
   <script src="bower_components/angular-translate/angular-translate.js"></script>
   <script src="bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js"></script>
   <script src="bower_components/angular-translate-loader-partial/angular-translate-loader-partial.js"></script>

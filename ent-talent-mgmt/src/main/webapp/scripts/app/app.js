@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etmApp', [
-  'LocalStorageModule', 'tmh.dynamicLocale', 'ngResource', 'ui.router', 'ngCookies', 'pascalprecht.translate', 'ngCacheBuster'
+  'LocalStorageModule', 'tmh.dynamicLocale', 'ngResource', 'ui.router', 'ngCookies', 'pascalprecht.translate', 'ngCacheBuster', 'ngMaterial'
 ]).run(function ($rootScope, $location, $window, $http, $state, $translate, Auth, Principal, Language, ENV, VERSION) {
   $rootScope.ENV = ENV;
   $rootScope.VERSION = VERSION;
@@ -43,7 +43,30 @@ angular.module('etmApp', [
       $state.go($rootScope.previousStateName, $rootScope.previousStateParams);
     }
   };
-}).config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, httpRequestInterceptorCacheBusterProvider) {
+}).config(["$mdThemingProvider", function($mdThemingProvider) {
+    $mdThemingProvider.definePalette('prft-red', {
+      '50': 'fae2e2',
+      '100': 'efb9ba',
+      '200': 'e68e90',
+      '300': 'db6161',
+      '400': 'd33f41',
+      '500': 'cc1f20',
+      '600': 'b91b1b',
+      '700': 'a51819',
+      '800': '911514',
+      '900': '6a0f0e',
+      'A100': 'efb9ba',
+      'A200': 'e68e90',
+      'A400': 'd33f41',
+      'A700': 'a51819',
+      'contrastDefaultColor': 'light',
+      'contrastDarkColors': ['50', '100', '200', '300', '400', 'A100'],
+      'contrastLightColors': undefined
+    });
+    $mdThemingProvider.theme('default')
+      .primaryPalette('prft-red')
+      .accentPalette('grey');
+  }]).config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, httpRequestInterceptorCacheBusterProvider) {
 
   //enable CSRF
   $httpProvider.defaults.xsrfCookieName = 'CSRF-TOKEN';
@@ -57,7 +80,7 @@ angular.module('etmApp', [
     'abstract': true,
     views: {
       'navbar@': {
-        templateUrl: 'scripts/components/navbar/navbar.html',
+        templateUrl: 'scripts/components/navbar/toolbar.html',
         controller: 'NavbarController'
       }
     },
