@@ -1,0 +1,19 @@
+{
+    "etmApp": {
+        "reviewType" : {
+            "home": {
+                "title": "ReviewTypes",
+                "createLabel": "Create a new ReviewType",
+                "createOrEditLabel": "Create or edit a ReviewType"
+            },
+            "delete": {
+                "question": "Are you sure you want to delete ReviewType {{ id }}?"
+            },
+            "detail": {
+                "title": "ReviewType"
+            },
+            "name": "Name",
+            "description": "Description"
+        }
+    }
+}
