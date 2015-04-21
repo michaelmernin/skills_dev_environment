@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- origin at X=-210.0 Y=-250.0 -->
-<bpmn2:definitions xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.1.0.201409091530" targetNamespace="http://org.eclipse.bpmn2/default/collaboration">
+<!-- origin at X=0.0 Y=0.0 -->
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.1.0.201409091530" targetNamespace="http://org.eclipse.bpmn2/default/collaboration">
   <bpmn2:collaboration id="Collaboration_1" name="Default Collaboration">
     <bpmn2:participant id="Participant_1" name="Counselor" processRef="Process_1"/>
     <bpmn2:participant id="Participant_2" name="Peers" processRef="Process_2"/>
@@ -182,9 +182,14 @@
     <bpmn2:sequenceFlow id="SequenceFlow_42" sourceRef="StartEvent_2" targetRef="UserTask_4"/>
     <bpmn2:receiveTask id="ReceiveTask_17" name="Email received by Counselee"/>
     <bpmn2:receiveTask id="ReceiveTask_18" name="New item added to Counselee To Do List"/>
-    <bpmn2:userTask id="UserTask_22" name="Counselee Updates Review"/>
-    <bpmn2:scriptTask id="ScriptTask_13" name="Set status to Initiated"/>
+    <bpmn2:userTask id="UserTask_22" name="Counselee Updates Review">
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:scriptTask id="ScriptTask_13" name="Set status to Initiated">
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+    </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_51" sourceRef="UserTask_4" targetRef="UserTask_6"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="UserTask_22" targetRef="ScriptTask_13"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Collaboration Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_4">
@@ -495,15 +500,15 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_UserTask_18" bpmnElement="UserTask_22">
-        <dc:Bounds height="50.0" width="110.0" x="1010.0" y="185.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="690.0" y="80.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_102" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="30.0" width="90.0" x="1020.0" y="195.0"/>
+          <dc:Bounds height="30.0" width="90.0" x="700.0" y="90.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_9" bpmnElement="ScriptTask_13">
-        <dc:Bounds height="50.0" width="110.0" x="680.0" y="195.0"/>
+        <dc:Bounds height="50.0" width="110.0" x="690.0" y="192.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_103" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="30.0" width="71.0" x="699.0" y="205.0"/>
+          <dc:Bounds height="30.0" width="71.0" x="709.0" y="202.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_UserTask_3" targetElement="BPMNShape_ScriptTask_1">
@@ -763,6 +768,11 @@
         <di:waypoint xsi:type="dc:Point" x="565.0" y="102.0"/>
         <di:waypoint xsi:type="dc:Point" x="565.0" y="73.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_105" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_UserTask_18" targetElement="BPMNShape_ScriptTask_9">
+        <di:waypoint xsi:type="dc:Point" x="745.0" y="130.0"/>
+        <di:waypoint xsi:type="dc:Point" x="745.0" y="192.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_11" labelStyle="BPMNLabelStyle_1"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
