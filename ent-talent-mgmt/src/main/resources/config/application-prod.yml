@@ -38,6 +38,13 @@ spring:
     thymeleaf:
         mode: XHTML
         cache: true
+        
+    ldap:
+        root: dc=perficient,dc=com
+        domain: STLCOLODC01.perficient.com
+        port: 636
+        account: PERFICIENT\stl.svc.EmpRev
+        accountdn: cn=LDAP Enterprise Review,ou=System Accounts
 
 metrics:
     jmx.enabled: true

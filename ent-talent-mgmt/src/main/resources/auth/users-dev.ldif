@@ -1,0 +1,59 @@
+dn: ou=groups,dc=perficient,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: groups
+
+dn: ou=people,dc=perficient,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: people
+
+dn: uid=dev.user1,ou=people,dc=perficient,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Dev UserOne
+sn: UserOne
+uid: dev.user1
+userPassword: password!D1
+
+dn: uid=dev.user2,ou=people,dc=perficient,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Dev UserTwo
+sn: UserTwo
+uid: dev.user2
+userPassword: password!D2
+
+dn: uid=dev.user3,ou=people,dc=perficient,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Dev UserThree
+sn: UserThree
+uid: dev.user3
+userPassword: password!D3
+
+dn: uid=dev.user4,ou=people,dc=perficient,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Dev UserFour
+sn: UserFour
+uid: dev.user4
+userPassword: password!D4
+
+dn: uid=dev.user5,ou=people,dc=perficient,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Dev UserFive
+sn: UserFive
+uid: dev.user5
+userPassword: password!D5

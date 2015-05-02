@@ -2,10 +2,10 @@ package com.perficient.etm.config;
 
 import com.perficient.etm.security.*;
 import com.perficient.etm.web.filter.CsrfCookieGeneratorFilter;
-import org.springframework.context.annotation.Bean;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
@@ -13,9 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.csrf.CsrfFilter;
 
@@ -41,21 +38,44 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private Http401UnauthorizedEntryPoint authenticationEntryPoint;
 
     @Inject
-    private UserDetailsService userDetailsService;
-
-    @Inject
     private RememberMeServices rememberMeServices;
+    
+    @Value("${spring.ldap.domain}")
+    private String ldapDomain;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Value("${spring.ldap.port}")
+    private int ldapPort;
+    
+    @Value("${spring.ldap.root}")
+    private String ldapRoot;
+    
+    @Value("${spring.ldap.account}")
+    private String ldapAccount;
+    
+    @Value("${spring.ldap.accountdn}")
+    private String ldapAccountDn;
+    
+    @Value("${spring.ldap.password}")
+    private String ldapPassword;
 
     @Inject
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
+    	if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
+    		auth.ldapAuthentication()
+					.userDnPatterns("uid={0},ou=Employees")
+					.contextSource()
+						.url("ldaps://" + ldapDomain + ":" + ldapPort + "/")
+						.root(ldapRoot)
+						.managerDn("uid=" + ldapAccount + "," + ldapAccountDn)
+						.managerPassword(ldapPassword);
+    	} else {
+    		auth.ldapAuthentication()
+    				.userDnPatterns("uid={0},ou=people")
+    				.groupSearchBase("ou=groups")
+    				.contextSource()
+    					.root(ldapRoot)
+    					.ldif("classpath:auth/users-dev.ldif");
+    	}
     }
 
     @Override
