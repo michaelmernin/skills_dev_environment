@@ -11,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing ReviewType.
@@ -57,13 +57,13 @@ public class ReviewTypeResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<ReviewType> get(@PathVariable Long id, HttpServletResponse response) {
+    public ResponseEntity<ReviewType> get(@PathVariable Long id) {
         log.debug("REST request to get ReviewType : {}", id);
-        ReviewType reviewType = reviewTypeRepository.findOne(id);
-        if (reviewType == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(reviewType, HttpStatus.OK);
+        return Optional.ofNullable(reviewTypeRepository.findOne(id))
+        	.map(reviewType -> new ResponseEntity<>(
+        		reviewType,
+        		HttpStatus.OK))
+        	.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
