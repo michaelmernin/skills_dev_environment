@@ -3,11 +3,9 @@ package com.perficient.etm.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Authority;
 import com.perficient.etm.domain.PersistentToken;
-import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.PersistentTokenRepository;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.security.SecurityUtils;
-import com.perficient.etm.service.MailService;
 import com.perficient.etm.service.UserService;
 import com.perficient.etm.web.rest.dto.UserDTO;
 import org.apache.commons.lang.StringUtils;
@@ -44,9 +42,6 @@ public class AccountResource {
     @Inject
     private PersistentTokenRepository persistentTokenRepository;
 
-    @Inject
-    private MailService mailService;
-
     /**
      * POST  /register -> register the user.
      */
@@ -54,25 +49,9 @@ public class AccountResource {
             method = RequestMethod.POST,
             produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
+    @Deprecated //TODO Remove
     public ResponseEntity<?> registerAccount(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request) {
-        return userRepository.findOneByLogin(userDTO.getLogin())
-            .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
-            .orElseGet(() -> userRepository.findOneByEmail(userDTO.getEmail())
-                .map(user -> new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST))
-                .orElseGet(() -> {
-                    User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
-                    userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
-                    userDTO.getLangKey());
-                    String baseUrl = request.getScheme() + // "http"
-                    "://" +                                // "://"
-                    request.getServerName() +              // "myhost"
-                    ":" +                                  // ":"
-                    request.getServerPort();               // "80"
-
-                    mailService.sendActivationEmail(user, baseUrl);
-                    return new ResponseEntity<>(HttpStatus.CREATED);
-                })
-        );
+    	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     /**
      * GET  /activate -> activate the registered user.
@@ -81,10 +60,9 @@ public class AccountResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @Deprecated //TODO Remove
     public ResponseEntity<String> activateAccount(@RequestParam(value = "key") String key) {
-        return Optional.ofNullable(userService.activateRegistration(key))
-            .map(user -> new ResponseEntity<String>(HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -146,12 +124,9 @@ public class AccountResource {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @Deprecated //TODO Remove
     public ResponseEntity<?> changePassword(@RequestBody String password) {
-        if (StringUtils.isEmpty(password)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-        userService.changePassword(password);
-        return new ResponseEntity<>(HttpStatus.OK);
+    	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
