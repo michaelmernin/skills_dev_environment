@@ -94,18 +94,6 @@ public class AccountResource {
     }
 
     /**
-     * POST  /change_password -> changes the current user's password
-     */
-    @RequestMapping(value = "/account/change_password",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    @Deprecated //TODO Remove
-    public ResponseEntity<?> changePassword(@RequestBody String password) {
-    	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    /**
      * GET  /account/sessions -> get the current open sessions.
      */
     @RequestMapping(value = "/account/sessions",

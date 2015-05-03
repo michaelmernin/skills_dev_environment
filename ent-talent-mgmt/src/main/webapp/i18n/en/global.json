@@ -33,10 +33,6 @@
     "form": {
       "username": "Login",
       "username.placeholder": "Your login",
-      "newpassword": "New password",
-      "newpassword.placeholder": "New password",
-      "confirmpassword": "New password confirmation",
-      "confirmpassword.placeholder": "Confirm the new password",
       "email": "E-mail",
       "email.placeholder": "Your e-mail"
     },
@@ -44,21 +40,7 @@
       "info": {
         "authenticated": "You are not logged in. <a href=\"#/login\">Log in</a>"
       },
-      "error": {
-        "dontmatch" : "The password and its confirmation do not match!"
-      },
       "validate": {
-        "newpassword": {
-          "required": "Your password is required.",
-          "minlength": "Your password is required to be at least 5 characters",
-          "maxlength": "Your password cannot be longer than 50 characters",
-          "strength": "Password strength:"
-        },
-        "confirmpassword": {
-          "required": "Your confirmation password is required.",
-          "minlength": "Your confirmation password is required to be at least 5 characters",
-          "maxlength": "Your confirmation password cannot be longer than 50 characters"
-        },
         "email": {
           "required": "Your e-mail is required.",
           "invalid": "Your e-mail is invalid.",
