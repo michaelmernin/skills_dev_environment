@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
@@ -41,18 +40,6 @@ public class AccountResource {
 
     @Inject
     private PersistentTokenRepository persistentTokenRepository;
-
-    /**
-     * GET  /activate -> activate the registered user.
-     */
-    @RequestMapping(value = "/activate",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    @Deprecated //TODO Remove
-    public ResponseEntity<String> activateAccount(@RequestParam(value = "key") String key) {
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
     /**
      * GET  /authenticate -> check if the user is authenticated, and return its login.

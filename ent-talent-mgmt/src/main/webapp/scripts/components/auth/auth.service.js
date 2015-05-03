@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').factory('Auth', function Auth($rootScope, $state, $q, $translate, Principal, AuthServerProvider, Account, Activate, Password) {
+angular.module('etmApp').factory('Auth', function Auth($rootScope, $state, $q, $translate, Principal, AuthServerProvider, Account, Password) {
   return {
     login: function (credentials, callback) {
       var cb = callback || angular.noop;
@@ -59,18 +59,6 @@ angular.module('etmApp').factory('Auth', function Auth($rootScope, $state, $q, $
       return Account.save(account,
                           function () {
         return cb(account);
-      },
-                          function (err) {
-        return cb(err);
-      }.bind(this)).$promise;
-    },
-
-    activateAccount: function (key, callback) {
-      var cb = callback || angular.noop;
-
-      return Activate.get(key,
-                          function (response) {
-        return cb(response);
       },
                           function (err) {
         return cb(err);
