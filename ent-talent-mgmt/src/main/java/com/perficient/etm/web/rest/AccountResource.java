@@ -43,17 +43,6 @@ public class AccountResource {
     private PersistentTokenRepository persistentTokenRepository;
 
     /**
-     * POST  /register -> register the user.
-     */
-    @RequestMapping(value = "/register",
-            method = RequestMethod.POST,
-            produces = MediaType.TEXT_PLAIN_VALUE)
-    @Timed
-    @Deprecated //TODO Remove
-    public ResponseEntity<?> registerAccount(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request) {
-    	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-    /**
      * GET  /activate -> activate the registered user.
      */
     @RequestMapping(value = "/activate",
