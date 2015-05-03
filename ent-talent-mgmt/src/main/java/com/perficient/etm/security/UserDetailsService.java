@@ -43,10 +43,13 @@ public class UserDetailsService implements org.springframework.security.core.use
     }
 
     private UserDetails mapUserDetails(User user) {
-        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
+        return new org.springframework.security.core.userdetails.User(user.getLogin().toLowerCase(),
+                "NotNull", getGrantedAuthorities(user));
+    }
+
+    public static List<GrantedAuthority> getGrantedAuthorities(User user) {
+        return user.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getName()))
                 .collect(Collectors.toList());
-        return new org.springframework.security.core.userdetails.User(user.getLogin().toLowerCase(),
-                "NotNull", grantedAuthorities);
     }
 }

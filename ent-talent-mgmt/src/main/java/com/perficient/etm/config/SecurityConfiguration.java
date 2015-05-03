@@ -42,6 +42,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Inject
     private RememberMeServices rememberMeServices;
     
+    @Inject
+    private CustomLdapUserDetailsMapper ldapUserDetailsMapper;
+    
     @Value("${spring.ldap.domain}")
     private String ldapDomain;
 
@@ -63,7 +66,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Inject
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         LdapAuthenticationProviderConfigurer<AuthenticationManagerBuilder> ldapAuthentication = auth.ldapAuthentication();
-        ldapAuthentication.userDetailsContextMapper(new CustomLdapUserDetailsMapper());
+        ldapAuthentication.userDetailsContextMapper(ldapUserDetailsMapper);
     	
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
             ldapAuthentication
