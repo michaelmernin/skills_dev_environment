@@ -6,14 +6,19 @@ import com.perficient.etm.repository.AuthorityRepository;
 import com.perficient.etm.repository.PersistentTokenRepository;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.security.SecurityUtils;
+
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.ldap.userdetails.LdapUserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,8 +39,16 @@ public class UserService {
 
     @Inject
     private AuthorityRepository authorityRepository;
+    
+    private User createUserInformation(String login) {
+    	return createUserInformation(login, null, null);
+    }
+    
+    private User createUserInformation(String login, String firstName, String lastName) {
+    	return createUserInformation(login, firstName, lastName, null, "en");
+    }
 
-    public User createUserInformation(String login, String firstName, String lastName, String email,
+    private User createUserInformation(String login, String firstName, String lastName, String email,
                                       String langKey) {
         User newUser = new User();
         Authority authority = authorityRepository.findOne("ROLE_USER");
@@ -47,7 +60,7 @@ public class UserService {
         newUser.setLangKey(langKey);
         authorities.add(authority);
         newUser.setAuthorities(authorities);
-        userRepository.save(newUser);
+        userRepository.saveAndFlush(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
@@ -62,11 +75,38 @@ public class UserService {
         });
     }
 
-    @Transactional(readOnly = true)
+    private User eagerLoad(User user) {
+        user.getAuthorities().size();
+        return user;
+    }
+
     public User getUserWithAuthorities() {
-        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
-        currentUser.getAuthorities().size(); // eagerly load the association
-        return currentUser;
+        return (User) userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())
+            .map(this::eagerLoad)
+            .orElseGet(() -> {
+                return eagerLoad(this.createFromLdapDetails());
+            });
+    }
+    
+    public User createFromLdapDetails() {
+        LdapUserDetails ldapDetails = SecurityUtils.getLdapUserDetails().get();
+        try {
+            LdapName dn = new LdapName(ldapDetails.getDn());
+            return dn.getRdns().stream().filter(rdn -> {
+                return rdn.getType().equals("cn");
+            }).findFirst().map(cn -> {
+                String fullName = (String) cn.getValue();
+                String[] splitName = fullName.split(" ");
+                if (splitName.length > 1) {
+                    return createUserInformation(ldapDetails.getUsername(), splitName[0], splitName[1]);
+                }
+                return createUserInformation(ldapDetails.getUsername());
+            }).orElseGet(() -> {
+                return createUserInformation(ldapDetails.getUsername());
+            });
+        } catch (InvalidNameException e) {
+            return createUserInformation(ldapDetails.getUsername());
+		}
     }
 
     /**

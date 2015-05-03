@@ -1,12 +1,14 @@
 package com.perficient.etm.config;
 
 import com.perficient.etm.security.*;
+import com.perficient.etm.security.ldap.CustomLdapUserDetailsMapper;
 import com.perficient.etm.web.filter.CsrfCookieGeneratorFilter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.ldap.LdapAuthenticationProviderConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -60,21 +62,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Inject
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    	if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
-    		auth.ldapAuthentication()
-					.userDnPatterns("uid={0},ou=Employees")
-					.contextSource()
-						.url("ldaps://" + ldapDomain + ":" + ldapPort + "/")
-						.root(ldapRoot)
-						.managerDn("uid=" + ldapAccount + "," + ldapAccountDn)
-						.managerPassword(ldapPassword);
+        LdapAuthenticationProviderConfigurer<AuthenticationManagerBuilder> ldapAuthentication = auth.ldapAuthentication();
+        ldapAuthentication.userDetailsContextMapper(new CustomLdapUserDetailsMapper());
+    	
+        if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
+            ldapAuthentication
+                .userDnPatterns("uid={0},ou=Employees")
+                .contextSource()
+                    .url("ldaps://" + ldapDomain + ":" + ldapPort + "/")
+                    .root(ldapRoot)
+                    .managerDn("uid=" + ldapAccount + "," + ldapAccountDn)
+                    .managerPassword(ldapPassword);
     	} else {
-    		auth.ldapAuthentication()
-    				.userDnPatterns("uid={0},ou=people")
-    				.groupSearchBase("ou=groups")
-    				.contextSource()
-    					.root(ldapRoot)
-    					.ldif("classpath:auth/users-dev.ldif");
+    	    ldapAuthentication
+    	        .userDnPatterns("uid={0},ou=people")
+    	        .groupSearchBase("ou=groups")
+    	        .contextSource()
+    	            .root(ldapRoot)
+    	            .ldif("classpath:auth/users-dev.ldif");
     	}
     }
 

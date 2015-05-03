@@ -5,8 +5,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.ldap.userdetails.LdapUserDetails;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Utility class for Spring Security.
@@ -14,6 +16,32 @@ import java.util.Collection;
 public final class SecurityUtils {
 
     private SecurityUtils() {
+    }
+
+    /**
+     * Get the current user.
+     */
+    public static Optional<UserDetails> getPrincipal() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        UserDetails springSecurityUser = null;
+        if(authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            springSecurityUser = (UserDetails) authentication.getPrincipal();
+        }
+        return Optional.ofNullable(springSecurityUser);
+    }
+
+    /**
+     * Get the ldap details of the current user.
+     */
+    public static Optional<LdapUserDetails> getLdapUserDetails() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        LdapUserDetails ldapUser = null;
+        if(authentication != null && authentication.getPrincipal() instanceof LdapUserDetails) {
+            ldapUser = (LdapUserDetails) authentication.getPrincipal();
+        }
+        return Optional.ofNullable(ldapUser);
     }
 
     /**

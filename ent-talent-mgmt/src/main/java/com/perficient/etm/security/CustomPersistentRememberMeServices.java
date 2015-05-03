@@ -1,8 +1,11 @@
 package com.perficient.etm.security;
 
 import com.perficient.etm.domain.PersistentToken;
+import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.PersistentTokenRepository;
 import com.perficient.etm.repository.UserRepository;
+import com.perficient.etm.service.UserService;
+
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +13,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.CookieTheftException;
@@ -22,8 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.function.Function;
 
 /**
  * Custom implementation of Spring Security's RememberMeServices.
@@ -71,6 +75,9 @@ public class CustomPersistentRememberMeServices extends
 
     @Inject
     private UserRepository userRepository;
+    
+    @Inject 
+    private UserService userService;
 
     @Inject
     public CustomPersistentRememberMeServices(Environment env, org.springframework.security.core.userdetails.UserDetailsService userDetailsService) {
@@ -102,11 +109,27 @@ public class CustomPersistentRememberMeServices extends
     }
 
     @Override
+    @Transactional
     protected void onLoginSuccess(HttpServletRequest request, HttpServletResponse response, Authentication successfulAuthentication) {
         String login = successfulAuthentication.getName();
-
         log.debug("Creating new persistent login for user {}", login);
-        PersistentToken token = userRepository.findOneByLogin(login).map(u -> {
+        
+        PersistentToken token = userRepository.findOneByLogin(login)
+            .map(userTokenMapper(request))
+            .orElseGet(() -> {
+                User user = userService.createFromLdapDetails();
+                return userTokenMapper(request).apply(user);
+            });
+        try {
+            persistentTokenRepository.saveAndFlush(token);
+            addCookie(token, request, response);
+        } catch (DataAccessException e) {
+            log.error("Failed to save persistent token ", e);
+        }
+    }
+
+    private Function<? super User, ? extends PersistentToken> userTokenMapper(HttpServletRequest request) {
+        return u -> {
             PersistentToken t = new PersistentToken();
             t.setSeries(generateSeriesData());
             t.setUser(u);
@@ -115,13 +138,7 @@ public class CustomPersistentRememberMeServices extends
             t.setIpAddress(request.getRemoteAddr());
             t.setUserAgent(request.getHeader("User-Agent"));
             return t;
-        }).orElseThrow(() -> new UsernameNotFoundException("User " + login + " was not found in the database"));
-        try {
-            persistentTokenRepository.saveAndFlush(token);
-            addCookie(token, request, response);
-        } catch (DataAccessException e) {
-            log.error("Failed to save persistent token ", e);
-        }
+        };
     }
 
     /**
