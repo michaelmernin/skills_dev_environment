@@ -1,0 +1,7 @@
+# file: uat
+
+[appservers]
+stlerappuat.perficient.com
+
+[dbservers]
+stlerdbuat.perficient.com

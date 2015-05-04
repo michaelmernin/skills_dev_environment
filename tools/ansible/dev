@@ -1,0 +1,7 @@
+# file: dev
+
+[appservers]
+stlerappdev.perficient.com
+
+[dbservers]
+stlerdbdev.perficient.com

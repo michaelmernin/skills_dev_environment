@@ -1,0 +1,7 @@
+# file: prod
+
+[appservers]
+stlerapp.perficient.com
+
+[dbservers]
+stlerdb.perficient.com
