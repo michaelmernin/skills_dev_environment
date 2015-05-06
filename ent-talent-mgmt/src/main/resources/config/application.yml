@@ -23,6 +23,13 @@ spring:
         tls: false
         auth: false
         from: etm@localhost
+        
+    ldap:
+        root: dc=perficient,dc=com
+        domain:
+        port: 0
+        accountdn:
+        password:
 
     messageSource:
         cacheSeconds: 1

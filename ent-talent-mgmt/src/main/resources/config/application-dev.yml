@@ -34,14 +34,6 @@ spring:
         mode: XHTML
         cache: false
 
-    ldap:
-        root: dc=perficient,dc=com
-        domain:
-        port: 0
-        account:
-        accountdn:
-        password:
-
 metrics:
     jmx.enabled: true
     spark:

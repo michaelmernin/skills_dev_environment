@@ -7,6 +7,7 @@ import com.perficient.etm.web.filter.CsrfCookieGeneratorFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.ldap.LdapAuthenticationProviderConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.ldap.authentication.AbstractLdapAuthenticator;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.csrf.CsrfFilter;
 
@@ -23,6 +25,8 @@ import javax.inject.Inject;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    
+    private final String[] USER_ATTRIBUTES = new String[] {"mail", "givenName", "sn"};
 
     @Inject
     private Environment env;
@@ -54,9 +58,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${spring.ldap.root}")
     private String ldapRoot;
     
-    @Value("${spring.ldap.account}")
-    private String ldapAccount;
-    
     @Value("${spring.ldap.accountdn}")
     private String ldapAccountDn;
     
@@ -67,15 +68,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         LdapAuthenticationProviderConfigurer<AuthenticationManagerBuilder> ldapAuthentication = auth.ldapAuthentication();
         ldapAuthentication.userDetailsContextMapper(ldapUserDetailsMapper);
+        ldapAuthentication.addObjectPostProcessor(new ObjectPostProcessor<AbstractLdapAuthenticator>() {
+            @Override
+            public <O extends AbstractLdapAuthenticator> O postProcess(O object) {
+                AbstractLdapAuthenticator authenticator = (AbstractLdapAuthenticator) object;
+                authenticator.setUserAttributes(USER_ATTRIBUTES);
+                return object;
+            }
+        });
     	
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
             ldapAuthentication
-                .userDnPatterns("uid={0},ou=Employees")
+                .userDnPatterns("cn={0},ou=Employees," + ldapRoot, "cn={0},ou=Test,ou=IT," + ldapRoot)
+                .groupSearchBase("ou=Groups," + ldapRoot)
                 .contextSource()
                     .url("ldaps://" + ldapDomain + ":" + ldapPort + "/")
-                    .root(ldapRoot)
-                    .managerDn("uid=" + ldapAccount + "," + ldapAccountDn)
+                    .managerDn(ldapAccountDn + "," + ldapRoot)
                     .managerPassword(ldapPassword);
+            
     	} else {
     	    ldapAuthentication
     	        .userDnPatterns("uid={0},ou=people")
