@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').factory('Auth', function Auth($rootScope, $state, $q, $translate, Principal, AuthServerProvider, Account, Register, Activate, Password) {
+angular.module('etmApp').factory('Auth', function Auth($rootScope, $state, $q, $translate, Principal, AuthServerProvider, Account) {
   return {
     login: function (credentials, callback) {
       var cb = callback || angular.noop;
@@ -52,18 +52,6 @@ angular.module('etmApp').factory('Auth', function Auth($rootScope, $state, $q, $
         }
       });
     },
-    createAccount: function (account, callback) {
-      var cb = callback || angular.noop;
-
-      return Register.save(account,
-                           function () {
-        return cb(account);
-      },
-                           function (err) {
-        this.logout();
-        return cb(err);
-      }.bind(this)).$promise;
-    },
 
     updateAccount: function (account, callback) {
       var cb = callback || angular.noop;
@@ -75,28 +63,6 @@ angular.module('etmApp').factory('Auth', function Auth($rootScope, $state, $q, $
                           function (err) {
         return cb(err);
       }.bind(this)).$promise;
-    },
-
-    activateAccount: function (key, callback) {
-      var cb = callback || angular.noop;
-
-      return Activate.get(key,
-                          function (response) {
-        return cb(response);
-      },
-                          function (err) {
-        return cb(err);
-      }.bind(this)).$promise;
-    },
-
-    changePassword: function (newPassword, callback) {
-      var cb = callback || angular.noop;
-
-      return Password.save(newPassword, function () {
-        return cb();
-      }, function (err) {
-        return cb(err);
-      }).$promise;
     }
   };
 });

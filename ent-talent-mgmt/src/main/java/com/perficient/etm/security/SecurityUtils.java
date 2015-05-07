@@ -5,8 +5,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Utility class for Spring Security.
@@ -14,6 +14,32 @@ import java.util.Collection;
 public final class SecurityUtils {
 
     private SecurityUtils() {
+    }
+
+    /**
+     * Get the current user.
+     */
+    public static Optional<UserDetails> getPrincipal() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        UserDetails springSecurityUser = null;
+        if(authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            springSecurityUser = (UserDetails) authentication.getPrincipal();
+        }
+        return Optional.ofNullable(springSecurityUser);
+    }
+
+    /**
+     * Get the details of the current user.
+     */
+    public static Optional<AppUserDetails> getAppUserDetails() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        AppUserDetails appUserDetails = null;
+        if(authentication != null && authentication.getPrincipal() instanceof AppUserDetails) {
+            appUserDetails = (AppUserDetails) authentication.getPrincipal();
+        }
+        return Optional.ofNullable(appUserDetails);
     }
 
     /**

@@ -26,16 +26,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private Long id;
 
     @NotNull
-    @Pattern(regexp = "^[a-z0-9]*$")
+    @Pattern(regexp = "^[a-z0-9\\.]*$")
     @Size(min = 1, max = 50)
     @Column(length = 50, unique = true, nullable = false)
     private String login;
-
-    @JsonIgnore
-    @NotNull
-    @Size(min = 5, max = 100)
-    @Column(length = 100)
-    private String password;
 
     @Size(max = 50)
     @Column(name = "first_name", length = 50)
@@ -50,16 +44,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(length = 100, unique = true)
     private String email;
 
-    @Column(nullable = false)
-    private boolean activated = false;
-
     @Size(min = 2, max = 5)
     @Column(name = "lang_key", length = 5)
     private String langKey;
-
-    @Size(max = 20)
-    @Column(name = "activation_key", length = 20)
-    private String activationKey;
 
     @JsonIgnore
     @ManyToMany
@@ -91,14 +78,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.login = login;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -121,22 +100,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public boolean getActivated() {
-        return activated;
-    }
-
-    public void setActivated(boolean activated) {
-        this.activated = activated;
-    }
-
-    public String getActivationKey() {
-        return activationKey;
-    }
-
-    public void setActivationKey(String activationKey) {
-        this.activationKey = activationKey;
     }
 
     public String getLangKey() {
@@ -190,13 +153,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public String toString() {
         return "User{" +
                 "login='" + login + '\'' +
-                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", activated='" + activated + '\'' +
                 ", langKey='" + langKey + '\'' +
-                ", activationKey='" + activationKey + '\'' +
                 "}";
     }
 }

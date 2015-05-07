@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+        Remove unnecessary User columns.
+    -->
+    <changeSet id="20150502171400" author="donovan">
+    	<dropColumn tableName="T_USER" columnName="password"/>
+        <dropColumn tableName="T_USER" columnName="activated"/>
+        <dropColumn tableName="T_USER" columnName="activation_key"/>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/users.csv"
+                  separator=";"
+                  tableName="T_USER">
+            <column name="created_date" type="timestamp"/>
+        </loadData>
+        <dropDefaultValue tableName="T_USER" columnName="created_date" columnDataType="datetime"/>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/authorities.csv"
+                  separator=";"
+                  tableName="T_AUTHORITY"/>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/users_authorities.csv"
+                  separator=";"
+                  tableName="T_USER_AUTHORITY"/>
+    </changeSet>
+</databaseChangeLog>
