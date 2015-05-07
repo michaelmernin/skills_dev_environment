@@ -1,11 +1,10 @@
 {
   "login": {
-    "title": "Authentication",
+    "title": "Log In",
     "form": {
       "password": "Password",
-      "password.placeholder": "Your password",
-      "rememberme": "Automatic Login",
-      "button": "Authenticate"
+      "rememberme": "Automatic Log In",
+      "button": "Log In"
     },
     "messages": {
       "error": {

@@ -31,10 +31,8 @@
       "language": "Language"
     },
     "form": {
-      "username": "Login",
-      "username.placeholder": "Your login",
-      "email": "E-mail",
-      "email.placeholder": "Your e-mail"
+      "username": "User Name",
+      "email": "E-mail"
     },
     "messages": {
       "info": {
