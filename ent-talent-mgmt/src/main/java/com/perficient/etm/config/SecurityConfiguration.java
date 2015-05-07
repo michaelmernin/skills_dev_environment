@@ -88,7 +88,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             
     	} else {
     	    ldapAuthentication
-    	        .userDnPatterns("uid={0},ou=people")
+    	        .userDnPatterns("cn={0},ou=people")
     	        .groupSearchBase("ou=groups")
     	        .contextSource()
     	            .root(ldapRoot)
