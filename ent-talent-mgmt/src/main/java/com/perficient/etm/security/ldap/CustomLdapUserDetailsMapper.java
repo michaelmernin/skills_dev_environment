@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import javax.naming.InvalidNameException;
-import javax.naming.ldap.LdapName;
-import javax.naming.ldap.Rdn;
 
+import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.DirContextOperations;
@@ -17,21 +14,19 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.ppolicy.PasswordPolicyControl;
 import org.springframework.security.ldap.ppolicy.PasswordPolicyResponseControl;
-import org.springframework.security.ldap.userdetails.LdapUserDetails;
-import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
 import org.springframework.stereotype.Component;
 
 import com.perficient.etm.repository.UserAuthorityRepository;
 import com.perficient.etm.repository.UserRepository;
+import com.perficient.etm.security.AppUserDetails;
+import com.perficient.etm.security.AppUserDetailsImpl;
 import com.perficient.etm.security.AuthoritiesConstants;
 
 @Component
 public class CustomLdapUserDetailsMapper extends LdapUserDetailsMapper {
 
     private final Log logger = LogFactory.getLog(CustomLdapUserDetailsMapper.class);
-
-    private static final String COMMON_NAME = "cn";
 
     private String passwordAttributeName = "userPassword";
 
@@ -43,7 +38,7 @@ public class CustomLdapUserDetailsMapper extends LdapUserDetailsMapper {
 
     @Override
     public UserDetails mapUserFromContext(DirContextOperations ctx, String username, Collection<? extends GrantedAuthority> authorities) {
-        LdapUserDetailsImpl.Essence essence = getEssence(ctx, username, authorities);
+        AppUserDetailsImpl.Essence essence = getEssence(ctx, username, authorities);
 
         userRepository.findOneByLogin(username).map(u -> {
             return userAuthorityRepository.findAllByUserId(u.getId()).stream().map(ua -> {
@@ -57,20 +52,15 @@ public class CustomLdapUserDetailsMapper extends LdapUserDetailsMapper {
             essence.addAuthority(ga);
         });
 
-        LdapUserDetails ldapUserDetails = essence.createUserDetails();
-
-        addCommonNameFromContext(ctx, ldapUserDetails);
+        AppUserDetails ldapUserDetails = essence.createAppUserDetails();
 
         return ldapUserDetails;
     }
 
-    private LdapUserDetailsImpl.Essence getEssence(DirContextOperations ctx, String username, Collection<? extends GrantedAuthority> authorities) {
-        String dn = ctx.getNameInNamespace();
+    private AppUserDetailsImpl.Essence getEssence(DirContextOperations ctx, String username, Collection<? extends GrantedAuthority> authorities) {
+        logger.debug("Mapping user details from context with DN: " + ctx.getDn());
 
-        logger.debug("Mapping user details from context with DN: " + dn);
-
-        LdapUserDetailsImpl.Essence essence = new LdapUserDetailsImpl.Essence();
-        essence.setDn(dn);
+        AppUserDetailsImpl.Essence essence = new AppUserDetailsImpl.Essence(ctx);
 
         Object passwordValue = ctx.getObjectAttribute(passwordAttributeName);
 
@@ -96,20 +86,5 @@ public class CustomLdapUserDetailsMapper extends LdapUserDetailsMapper {
         }
 
         return essence;
-    }
-
-    private void addCommonNameFromContext(DirContextOperations ctx, LdapUserDetails ldapUserDetails) {
-        try {
-            LdapName dn = new LdapName(ldapUserDetails.getDn());
-
-            boolean hasCn = dn.getRdns().stream().anyMatch(rdn -> {
-                return COMMON_NAME.equals(rdn.getType());
-            });
-
-            if (!hasCn) {
-                String fullName = ctx.getStringAttribute(COMMON_NAME);
-                dn.add(new Rdn(COMMON_NAME, fullName));
-            }
-        } catch (InvalidNameException e) {}
     }
 }

@@ -117,7 +117,7 @@ public class CustomPersistentRememberMeServices extends
         PersistentToken token = userRepository.findOneByLogin(login)
             .map(userTokenMapper(request))
             .orElseGet(() -> {
-                User user = userService.createFromLdapDetails();
+                User user = userService.createFromAppUserDetails();
                 return userTokenMapper(request).apply(user);
             });
         try {
