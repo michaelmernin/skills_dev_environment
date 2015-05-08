@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>etm</title>
+  <title>Enterprise Talent Management</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -19,6 +19,8 @@
   <!-- endbuild -->
   <!-- build:css assets/styles/main.css -->
   <link rel="stylesheet" href="assets/styles/main.css">
+  <!-- build:css assets/styles/error.css -->
+  <link rel="stylesheet" href="assets/styles/error.css">
   <!-- endbuild -->
 </head>
 <body ng-app="etmApp" class="etm">
@@ -28,7 +30,7 @@
   <div ui-view="navbar" ng-cloak=""></div>
   <div layout="row">
   	<div flex-sm="100" flex-md="90" flex-lg="80" flex-gt-lg="70" offset-sm="0" offset-md="5" offset-lg="10" offset-gt-lg="15">
-      <md-content ui-view="content" md-scroll-y layout-padding></md-content>
+      <md-content ui-view="content" md-scroll-y class="md-whiteframe-z1"></md-content>
     </div>
   </div>
 
