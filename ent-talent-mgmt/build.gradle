@@ -71,6 +71,23 @@ repositories {
 }
 
 dependencies {
+    compile(group: 'org.activiti', name: 'spring-boot-starter-basic', version: '5.17.0') {
+        exclude module: 'org.springframework.boot:spring-boot-actuator'
+        exclude module: 'org.springframework.boot:spring-boot-starter-web'
+        exclude module: 'org.springframework.boot:spring-boot-starter-data-jpa'
+        //exclude module: 'org.springframework.boot:spring-boot-starter-integration'
+        exclude module: 'org.springframework.boot:spring-boot-starter-security'
+    
+        exclude module: 'org.springframework.boot:spring-boot-autoconfigure'
+        exclude module: 'org.springframework.boot:spring-boot-loader-tools'
+        exclude module: 'org.springframework.boot:spring-boot-starter-logging'
+        exclude module: 'org.springframework.boot:spring-boot-starter-aop'
+        exclude module: 'org.springframework.boot:spring-boot-starter-jdbc'
+      exclude module: 'com.h2database:h2'
+    }
+//  compile group: 'org.activiti', name: 'spring-boot-starter-rest-api', version: '5.17.0'
+//  compile group: 'org.activiti', name: 'spring-boot-starter-actuator', version: '5.17.0'
+//  compile group: 'org.activiti', name: 'spring-boot-starter-jpa', version: '5.17.0'
     compile group: 'com.codahale.metrics', name: 'metrics-core', version: codahale_metrics_version
     compile group: 'com.codahale.metrics', name: 'metrics-ehcache', version: codahale_metrics_version
     compile group: 'com.codahale.metrics', name: 'metrics-graphite', version: codahale_metrics_version
@@ -111,6 +128,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: spring_boot_version
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: spring_boot_version
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: spring_boot_version
     compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: spring_boot_version) {
         exclude module: 'spring-boot-starter-tomcat'
     }
