@@ -1,11 +1,11 @@
 <div>
   <div layout="row" class="etm-error" ng-show="authenticationError">
-    <span flex="33" offset="33" translate="login.messages.error.authentication">
+    <span flex flex-md="60" offset-md="20" flex-gt-md="33" offset-gt-md="33" translate="login.messages.error.authentication">
       <strong>Authentication failed!</strong> Please check your credentials and try again.
     </span>
   </div>
   <div layout="row" class="md-whiteframe-z1">
-  	<div layout="column" flex="33" offset="33">
+  	<div layout="column" flex-sm="90" offset-sm="5" flex-md="60" offset-md="20" flex-gt-md="33" offset-gt-md="33">
       <h2 class="md-display-1" translate="login.title">Log In</h2>
 
       <form name="loginForm" role="form">
@@ -22,7 +22,7 @@
           	<md-checkbox id="rememberMe" class="md-primary" ng-model="rememberMe">{{"login.form.rememberme" | translate}}</md-checkbox>
           </md-input-container>
           <md-input-container layout="row">
-            <md-button flex="33" class="md-raised md-primary" type="submit" ng-click="login()" translate="login.form.button">Log In</md-button>
+            <md-button flex-sm flex-md="33" class="md-raised md-primary" type="submit" ng-click="login()" translate="login.form.button">Log In</md-button>
           </md-input-container>
         </div>
       </form>
