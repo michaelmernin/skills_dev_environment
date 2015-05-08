@@ -26,8 +26,9 @@ angular.module('etmApp').factory('Auth', function Auth($rootScope, $state, $q, $
     },
 
     logout: function () {
-      AuthServerProvider.logout();
+      var promise = AuthServerProvider.logout();
       Principal.authenticate(null);
+      return promise;
     },
 
     authorize: function() {
