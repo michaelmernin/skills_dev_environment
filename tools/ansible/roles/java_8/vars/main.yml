@@ -1,5 +1,6 @@
 ---
+# file: roles/java_8/vars/main.yml
 download_url: http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz
 download_folder: /opt
-java_name: "{{download_folder}}/jdk1.8.0_45"
-java_archive: "{{download_folder}}/jdk-8u45-linux-x64.tar.gz"
+java_name: "{{ download_folder }}/jdk1.8.0_45"
+java_archive: "{{ download_folder }}/jdk-8u45-linux-x64.tar.gz"
