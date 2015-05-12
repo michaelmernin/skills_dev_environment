@@ -1,5 +1,6 @@
 ---
 # file: appservers.yml
 - hosts: appservers
+  sudo: yes
   roles:
-    - common
+    - java_8
