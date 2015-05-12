@@ -3,9 +3,13 @@
 angular.module('etmApp').controller('LoginController', function ($rootScope, $scope, $state, $timeout, Auth) {
   $scope.user = {};
   $scope.errors = {};
+  
+  function focusUserName() {
+    angular.element('[ng-model="username"]').focus();
+  }
 
   $scope.rememberMe = true;
-  $timeout(function (){angular.element('[ng-model="username"]').focus();});
+  $timeout(focusUserName);
   $scope.login = function () {
     Auth.login({
       username: $scope.username,
@@ -19,6 +23,7 @@ angular.module('etmApp').controller('LoginController', function ($rootScope, $sc
         $rootScope.back();
       }
     }).catch(function () {
+      focusUserName();
       $scope.authenticationError = true;
     });
   };

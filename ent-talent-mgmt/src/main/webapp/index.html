@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>etm</title>
+  <title>Enterprise Talent Management</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -19,6 +19,8 @@
   <!-- endbuild -->
   <!-- build:css assets/styles/main.css -->
   <link rel="stylesheet" href="assets/styles/main.css">
+  <!-- build:css assets/styles/error.css -->
+  <link rel="stylesheet" href="assets/styles/error.css">
   <!-- endbuild -->
 </head>
 <body ng-app="etmApp" class="etm">
@@ -26,11 +28,9 @@
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
   <div ui-view="navbar" ng-cloak=""></div>
-  <div class="container">
-    <div class="well" ui-view="content"></div>
-
-    <div class="footer">
-      <p translate="footer">This is your footer</p>
+  <div layout="row">
+  	<div flex flex-lg="80" flex-gt-lg="70" offset-lg="10" offset-gt-lg="15">
+      <md-content ui-view="content" md-scroll-y class="md-whiteframe-z1"></md-content>
     </div>
   </div>
 
@@ -74,9 +74,6 @@ ga('create','UA-XXXXX-X');ga('send','pageview');
   <script src="scripts/components/auth/auth.service.js"></script>
   <script src="scripts/components/auth/principal.service.js"></script>
   <script src="scripts/components/auth/services/account.service.js"></script>
-  <script src="scripts/components/auth/services/activate.service.js"></script>
-  <script src="scripts/components/auth/services/password.service.js"></script>
-  <script src="scripts/components/auth/services/register.service.js"></script>
   <script src="scripts/components/form/form.directive.js"></script>
   <script src="scripts/components/language/language.service.js"></script>
   <script src="scripts/components/language/language.controller.js"></script>
@@ -89,17 +86,10 @@ ga('create','UA-XXXXX-X');ga('send','pageview');
   <script src="scripts/components/util/truncate.filter.js"></script>
   <script src="scripts/components/util/base64.service.js"></script>
   <script src="scripts/app/account/account.js"></script>
-  <script src="scripts/app/account/activate/activate.js"></script>
-  <script src="scripts/app/account/activate/activate.controller.js"></script>
   <script src="scripts/app/account/login/login.js"></script>
   <script src="scripts/app/account/login/login.controller.js"></script>
   <script src="scripts/app/account/logout/logout.js"></script>
   <script src="scripts/app/account/logout/logout.controller.js"></script>
-  <script src="scripts/app/account/password/password.js"></script>
-  <script src="scripts/app/account/password/password.controller.js"></script>
-  <script src="scripts/app/account/password/password.directive.js"></script>
-  <script src="scripts/app/account/register/register.js"></script>
-  <script src="scripts/app/account/register/register.controller.js"></script>
   <script src="scripts/app/account/settings/settings.js"></script>
   <script src="scripts/app/account/settings/settings.controller.js"></script>
   <script src="scripts/app/admin/admin.js"></script>

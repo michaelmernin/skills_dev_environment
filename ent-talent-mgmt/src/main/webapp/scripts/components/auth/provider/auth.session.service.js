@@ -17,7 +17,7 @@ angular.module('etmApp').factory('AuthServerProvider', function loginService($ht
     },
     logout: function() {
       // logout from the server
-      $http.post('api/logout').success(function (response) {
+      return $http.post('api/logout').success(function (response) {
         localStorageService.clearAll();
         // to get a new csrf token call the api
         $http.get('api/account');
