@@ -1,0 +1,7 @@
+---
+# file: roles/mysql_server/vars/main.yml
+mysql_package: mysql-server
+mysql_root_password: password
+etm_db_name: etm
+etm_db_user: etmadmin
+etm_db_user_password: K|WH5vum*)3.(fgj7
