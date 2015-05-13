@@ -1,0 +1,4 @@
+---
+# file: roles/etm_app/vars/main.yml
+repo_url: git@github.com:Perficient/ent-talent-mgmt.git
+tag_name: HEAD

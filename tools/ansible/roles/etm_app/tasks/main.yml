@@ -1,0 +1,10 @@
+---
+# file: roles/etm_app/tasks/main.yml
+- name: Clone repository
+  tags: git
+  git: 
+    repo: "{{ repo_url }}"
+    dest: ~/app/etm
+    version: "{{ tag_name }}"
+    accept_hostkey: True
+  tags: git

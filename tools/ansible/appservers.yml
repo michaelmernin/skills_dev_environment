@@ -3,3 +3,4 @@
 - hosts: appservers
   roles:
     - java_8
+    - etm_app
