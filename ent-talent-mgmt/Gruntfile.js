@@ -383,6 +383,15 @@ module.exports = function (grunt) {
           ENV: 'prod',
           VERSION: parseVersionFromBuildGradle()
         }
+      },
+      uat: {
+        options: {
+          dest: '.tmp/scripts/app/app.constants.js',
+        },
+        constants: {
+          ENV: 'uat',
+          VERSION: parseVersionFromBuildGradle()
+        }
       }
     }
   });
@@ -413,6 +422,24 @@ module.exports = function (grunt) {
     'clean:dist',
     'wiredep:app',
     'ngconstant:prod',
+    'useminPrepare',
+    'ngtemplates',
+    'concurrent:dist',
+    'concat',
+    'copy:dist',
+    'ngAnnotate',
+    'cssmin',
+    'autoprefixer',
+    'uglify',
+    'rev',
+    'usemin',
+    'htmlmin'
+  ]);
+  
+  grunt.registerTask('buildUat', [
+    'clean:dist',
+    'wiredep:app',
+    'ngconstant:uat',
     'useminPrepare',
     'ngtemplates',
     'concurrent:dist',

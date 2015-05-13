@@ -9,12 +9,12 @@ dependencies {
 }
 
 bootRun {
-  args = ["--spring.profiles.active=prod"]
+  args = ["--spring.profiles.active=uat"]
 }
 
 task setProdProperties(dependsOn: bootRun) << {
     doFirst {
-        System.setProperty('spring.profiles.active', 'prod')
+        System.setProperty('spring.profiles.active', 'uat')
     }
 }
 
@@ -23,7 +23,7 @@ ext {
 }
 
 task gruntBuild(type: Exec) {
-   commandLine gruntCommand, '--force', 'build'
+   commandLine gruntCommand, '--force', 'buildUat'
 }
 task gruntTest(type: Exec) {
    commandLine gruntCommand, 'test'

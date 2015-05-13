@@ -9,6 +9,7 @@
     "websocket": "no",
     "databaseType": "sql",
     "devDatabaseType": "h2Memory",
+    "uatDatabaseType": "mysql",
     "prodDatabaseType": "mysql",
     "useCompass": false,
     "buildTool": "gradle",
