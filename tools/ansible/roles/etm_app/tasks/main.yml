@@ -1,10 +1,30 @@
 ---
 # file: roles/etm_app/tasks/main.yml
 - name: Clone repository
-  tags: git
+  tags:
+    - git
+    - deploy
   git: 
     repo: "{{ repo_url }}"
-    dest: ~/app/etm
+    dest: "{{ deploy_dir }}"
     version: "{{ tag_name }}"
-    accept_hostkey: True
-  tags: git
+    accept_hostkey: yes
+    
+- name: Make gradlew executable
+  tags:
+    - deploy
+    - server
+  file:
+    path: "{{ app_dir }}/gradlew"
+    state: touch
+    mode: u+x
+
+- name: Start the application
+  tags:
+    - deploy
+    - server
+  command: ./gradlew bootRun -P{{ profile }} -Dspring.ldap.password={{ ldap_password }}
+  args:
+    chdir: "{{ app_dir }}"
+  async: 100
+  poll: 0

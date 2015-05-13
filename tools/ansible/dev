@@ -5,3 +5,9 @@ stlerappdev.perficient.com
 
 [dbservers]
 stlerdbdev.perficient.com
+
+[appservers:vars]
+profile=dev
+
+[dbservers:vars]
+profile=dev

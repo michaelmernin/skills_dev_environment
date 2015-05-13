@@ -4,3 +4,9 @@
   roles:
     - java_8
     - etm_app
+
+  vars_prompt:
+    - name: ldap_password
+      prompt: What is the LDAP manager password?
+      private: yes
+      default: ""

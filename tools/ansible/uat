@@ -5,3 +5,9 @@ stlerappuat.perficient.com
 
 [dbservers]
 stlerdbuat.perficient.com
+
+[appservers:vars]
+profile=uat
+
+[dbservers:vars]
+profile=uat
