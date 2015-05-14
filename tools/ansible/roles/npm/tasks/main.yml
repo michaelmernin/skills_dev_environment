@@ -1,0 +1,39 @@
+---
+# file: roles/npm/tasks/main.yml
+- name: Download node setup script
+  tags: npm
+  sudo: yes
+  get_url:
+    url: "{{ node_setup_url }}"
+    dest: "{{ node_setup_file }}"
+    mode: 0777
+
+- name: Run node setup
+  tags: npm
+  sudo: yes
+  shell: "{{ node_setup_file }}"
+
+- name: Install Node and npm
+  tags: npm
+  sudo: yes
+  yum:
+    name: nodejs
+    state: latest
+
+- name: Clean up node setup
+  tags: npm
+  sudo: yes
+  file:
+    path: "{{ node_setup_file }}"
+    state: absent
+
+- name: Install npm packages
+  tags: npm
+  sudo: yes
+  npm:
+    name: "{{ item }}"
+    global: yes
+    state: latest
+  with_items:
+    - bower
+    - grunt-cli

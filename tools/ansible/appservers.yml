@@ -3,6 +3,7 @@
 - hosts: appservers
   roles:
     - java_8
+    - npm
     - etm_app
 
   vars_prompt:
