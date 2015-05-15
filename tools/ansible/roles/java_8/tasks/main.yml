@@ -24,3 +24,12 @@
   tags: java
   sudo: yes
   file: state=absent path={{ java_archive }}
+
+- name: Copy trust store to java security folder
+  tags: java
+  sudo: yes
+  copy:
+    src: jssecacerts
+    dest: "{{ java_security_folder }}/jssecacerts"
+    mode: 0644
+    
