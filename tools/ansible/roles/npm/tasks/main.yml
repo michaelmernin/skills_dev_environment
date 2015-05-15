@@ -37,3 +37,4 @@
   with_items:
     - bower
     - grunt-cli
+    - yo
