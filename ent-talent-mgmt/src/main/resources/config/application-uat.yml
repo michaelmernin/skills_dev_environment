@@ -1,5 +1,9 @@
 server:
-    port: 8080
+    port: 8443
+    ssl:
+      key-store: /etc/ssl/keystore-uat.p12
+      key-store-password: keystore-uat
+      keyStoreType: PKCS12
 
 spring:
     profiles:
