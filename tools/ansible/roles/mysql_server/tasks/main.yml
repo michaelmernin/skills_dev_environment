@@ -1,0 +1,45 @@
+---
+# file: roles/mysql_server/tasks/main.yml
+- name: Install MySQL Server
+  sudo: yes
+  yum: name={{ item }} state=latest
+  with_items:
+    - "{{ mysql_package }}"
+    - MySQL-python
+  
+# 'localhost' needs to be the last item for idempotency, see
+# http://ansible.cc/docs/modules.html#mysql-user
+- name: Update MySQL root password for all root accounts
+  sudo: yes
+  mysql_user: name=root host={{ item }} password={{ mysql_root_password }}
+  with_items:
+#    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+    
+- name: Copy .my.cnf file with root password credentials
+  sudo: yes
+  template: src=my.cnf.j2 dest=/root/.my.cnf owner=root mode=0600
+
+- name: Delete anonymous MySQL server users
+  sudo: yes
+  mysql_user: user="" host="{{ item }}" state=absent
+  with_items:
+    - "{{ ansible_hostname }}"
+    - "%"
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: remove the MySQL test database
+  sudo: yes
+  action: mysql_db db=test state=absent
+  
+- name: Create etm database
+  sudo: yes
+  mysql_db: name={{ etm_db_name }} collation=utf8_general_ci encoding=utf8 state=present
+
+- name: Create a database user
+  sudo: yes
+  mysql_user: name={{ etm_db_user }} password={{ etm_db_user_password }} priv="{{ etm_db_name }}.*:ALL" host="%" state=present

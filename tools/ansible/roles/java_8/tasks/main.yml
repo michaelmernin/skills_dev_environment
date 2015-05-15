@@ -1,0 +1,26 @@
+---
+# file: roles/java_8/tasks/main.yml
+- name: Download Java
+  tags: java
+  sudo: yes
+  command: "wget -q -O {{ java_archive }} --no-check-certificate --no-cookies --header 'Cookie: oraclelicense=accept-securebackup-cookie' {{ download_url }} creates={{ java_archive }}"
+
+- name: Unpack archive
+  tags: java
+  sudo: yes
+  command: "tar -zxf {{ java_archive }} -C {{ download_folder }} creates={{ java_name }}"
+ 
+- name: Fix ownership
+  tags: java
+  sudo: yes
+  file: state=directory path={{ java_name }} owner=root group=root recurse=yes
+ 
+- name: Make Java available for system
+  tags: java
+  sudo: yes
+  command: 'alternatives --install "/usr/bin/java" "java" "{{ java_name }}/bin/java" 2000'
+ 
+- name: Clean up
+  tags: java
+  sudo: yes
+  file: state=absent path={{ java_archive }}

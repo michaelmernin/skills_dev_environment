@@ -1,0 +1,4 @@
+---
+# file: roles/npm/vars/main.yml
+node_setup_url: https://rpm.nodesource.com/setup
+node_setup_file: ~/npm_setup.sh

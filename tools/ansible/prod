@@ -1,0 +1,13 @@
+# file: prod
+
+[appservers]
+stlerapp.perficient.com
+
+[dbservers]
+stlerdb.perficient.com
+
+[appservers:vars]
+profile=prod
+
+[dbservers:vars]
+profile=prod
