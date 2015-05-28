@@ -6,9 +6,11 @@ import com.perficient.etm.service.UserService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +40,16 @@ public class UserDetailsService implements org.springframework.security.core.use
         return userRepository.findOneByLogin(login.toLowerCase())
             .map(this::mapUserDetails)
             .orElseGet(() -> {
-                return mapUserDetails(userService.createFromAppUserDetails());
+                return userService.createFromAppUserDetails()
+                    .map(this::mapUserDetails)
+                    .orElseThrow(() -> {
+                        return userNotFoundException(login);
+                    });
             });
+    }
+    
+    private AuthenticationException userNotFoundException(String login) {
+        return new UsernameNotFoundException("Unable to locate user with login: " + login);
     }
 
     private UserDetails mapUserDetails(User user) {

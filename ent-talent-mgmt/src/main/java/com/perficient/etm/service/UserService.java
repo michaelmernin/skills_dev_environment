@@ -5,7 +5,6 @@ import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.AuthorityRepository;
 import com.perficient.etm.repository.PersistentTokenRepository;
 import com.perficient.etm.repository.UserRepository;
-import com.perficient.etm.security.AppUserDetails;
 import com.perficient.etm.security.SecurityUtils;
 
 import org.joda.time.LocalDate;
@@ -16,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -77,13 +78,14 @@ public class UserService {
         return (User) userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())
             .map(this::eagerLoad)
             .orElseGet(() -> {
-                return eagerLoad(this.createFromAppUserDetails());
+                return this.createFromAppUserDetails().map(this::eagerLoad).orElse(null);
             });
     }
     
-    public User createFromAppUserDetails() {
-        AppUserDetails appUser = SecurityUtils.getAppUserDetails().get();
-        return createUserInformation(appUser.getUsername(), appUser.getFirstName(), appUser.getLastName(), appUser.getEmail());
+    public Optional<User> createFromAppUserDetails() {
+        return SecurityUtils.getAppUserDetails().map(ud -> {
+            return createUserInformation(ud.getUsername(), ud.getFirstName(), ud.getLastName(), ud.getEmail());
+        });
     }
 
     /**

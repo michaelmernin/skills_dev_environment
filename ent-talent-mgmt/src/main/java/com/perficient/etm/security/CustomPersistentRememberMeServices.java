@@ -117,14 +117,20 @@ public class CustomPersistentRememberMeServices extends
         PersistentToken token = userRepository.findOneByLogin(login)
             .map(userTokenMapper(request))
             .orElseGet(() -> {
-                User user = userService.createFromAppUserDetails();
-                return userTokenMapper(request).apply(user);
+                return userService.createFromAppUserDetails().map(u -> {
+                    return userTokenMapper(request).apply(u);
+                }).orElse(null);
             });
-        try {
-            persistentTokenRepository.saveAndFlush(token);
-            addCookie(token, request, response);
-        } catch (DataAccessException e) {
-            log.error("Failed to save persistent token ", e);
+        
+        if (token != null) {
+            try {
+                persistentTokenRepository.saveAndFlush(token);
+                addCookie(token, request, response);
+            } catch (DataAccessException e) {
+                log.error("Failed to save persistent token ", e);
+            }
+        } else {
+            log.error("Failed to find user to generate persistent token ");
         }
     }
 
