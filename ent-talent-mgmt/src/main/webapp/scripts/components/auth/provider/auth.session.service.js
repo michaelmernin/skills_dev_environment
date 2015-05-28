@@ -1,8 +1,13 @@
 'use strict';
 
 angular.module('etmApp').factory('AuthServerProvider', function loginService($http, localStorageService, $window) {
+  var DOMAIN_REGEX = /@perficient\.com$/;
+
   return {
     login: function(credentials) {
+      if (DOMAIN_REGEX.test(credentials.username)) {
+        credentials.username = credentials.username.replace(DOMAIN_REGEX, '');
+      }
       var data = 'j_username=' + encodeURIComponent(credentials.username) +
           '&j_password=' + encodeURIComponent(credentials.password) +
           '&_spring_security_remember_me=' + credentials.rememberMe + '&submit=Login';
