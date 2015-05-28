@@ -2,5 +2,6 @@
 # file: roles/etm_app/vars/main.yml
 repo_url: git@github.com:Perficient/ent-talent-mgmt.git
 tag_name: HEAD
+script_dir: ~/app
 deploy_dir: ~/app/etm
-app_dir: "{{ deploy_dir }}/ent-talent-mgmt/"
+app_dir: "{{ deploy_dir }}/ent-talent-mgmt"

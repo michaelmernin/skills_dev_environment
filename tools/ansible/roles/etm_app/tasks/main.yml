@@ -9,6 +9,12 @@
     dest: "{{ deploy_dir }}"
     version: "{{ tag_name }}"
     accept_hostkey: yes
+
+- name: Kill currently running servers
+  tags:
+    - deploy
+    - server
+  command: pkill -f gradle
     
 - name: Make gradlew executable
   tags:
@@ -18,13 +24,22 @@
     path: "{{ app_dir }}/gradlew"
     state: touch
     mode: u+x
+    
+- name: Copy application bash script
+  tags: 
+    - deploy
+    - server
+  template:
+    src: etmRun.j2
+    dest: "{{ script_dir }}/etmRun"
+    mode: 0744
 
 - name: Start the application
   tags:
     - deploy
     - server
-  command: ./gradlew bootRun -P{{ profile }} -Dspring.ldap.password={{ ldap_password }}
+  command: "{{ script_dir }}/etmRun"
+  environment:
+    SPRING_LDAP_PASSWORD: "{{ ldap_password }}"
   args:
     chdir: "{{ app_dir }}"
-  async: 100
-  poll: 0
