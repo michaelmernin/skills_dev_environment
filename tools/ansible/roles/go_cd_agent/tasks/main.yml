@@ -1,0 +1,23 @@
+---
+# file: roles/go_cd_agent/tasks/main.yml
+- name: Download Go CD agent package
+  tags: gocd_agent
+  sudo: yes
+  command: "wget -q -O {{ gocd_agent_package }} --no-check-certificate --no-cookies {{ download_url }}"
+  args:
+    creates: "{{ gocd_agent_package }}"
+ 
+- name: Install Go CD agent
+  tags: gocd_agent
+  sudo: yes
+  yum:
+    name: "{{ gocd_agent_package }}"
+    state: present
+ 
+- name: Clean up
+  tags: gocd_agent
+  sudo: yes
+  file:
+    path: "{{ gocd_agent_package }}"
+    state: absent
+    

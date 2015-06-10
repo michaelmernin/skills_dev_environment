@@ -1,0 +1,23 @@
+---
+# file: roles/go_cd_server/tasks/main.yml
+- name: Download Go CD package
+  tags: gocd_server
+  sudo: yes
+  command: "wget -q -O {{ gocd_package }} --no-check-certificate --no-cookies {{ download_url }}"
+  args:
+    creates: "{{ gocd_package }}"
+ 
+- name: Install Go CD
+  tags: gocd_server
+  sudo: yes
+  yum:
+    name: "{{ gocd_package }}"
+    state: present
+ 
+- name: Clean up
+  tags: gocd_server
+  sudo: yes
+  file:
+    path: "{{ gocd_package }}"
+    state: absent
+    

@@ -1,0 +1,5 @@
+---
+# file: roles/go_cd_agent/vars/main.yml
+download_url: http://download.go.cd/gocd-rpm/go-agent-15.1.0-1863.noarch.rpm
+download_folder: /opt
+gocd_agent_package: "{{ download_folder }}/go-agent-15.1.0-1863.noarch.rpm"

@@ -1,0 +1,8 @@
+---
+# file: ciservers.yml
+- hosts: ciservers
+  roles:
+    - java_8
+    - npm
+    - go_cd_server
+    - go_cd_agent
