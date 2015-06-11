@@ -21,3 +21,18 @@
     path: "{{ gocd_agent_package }}"
     state: absent
     
+- name: Configure Go CD agent
+  tags: gocd_agent
+  sudo: yes
+  lineinfile:
+    dest: /etc/default/go-agent
+    state: present
+    regexp: ^GO_SERVER=
+    line: GO_SERVER={{ go_server_hostname }}
+    
+- name: Start Go CD agent
+  tags: gocd_agent
+  sudo: yes
+  service:
+    name: go-agent
+    state: started
