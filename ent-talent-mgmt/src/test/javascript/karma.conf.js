@@ -64,6 +64,14 @@ module.exports = function (config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false
+    singleRun: false,
+
+    // Configure test result reporters
+    reporters: ['progress', 'junit'],
+
+    // Configure junit reporter
+    junitReporter: {
+      outputFile: '../build/js-test-reports/TEST-karma-results.xml'
+    }
   });
 };
