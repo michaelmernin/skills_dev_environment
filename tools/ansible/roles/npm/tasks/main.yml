@@ -35,6 +35,7 @@
     global: yes
     state: latest
   with_items:
+    - npm
     - bower
     - grunt-cli
     - yo
