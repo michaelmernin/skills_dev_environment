@@ -5,7 +5,6 @@ import com.perficient.etm.domain.Authority;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.security.AuthoritiesConstants;
-import com.perficient.etm.service.MailService;
 import com.perficient.etm.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,9 +24,6 @@ import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -52,25 +48,19 @@ public class AccountResourceTest {
     @Mock
     private UserService mockUserService;
 
-    @Mock
-    private MailService mockMailService;
-
     private MockMvc restUserMockMvc;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        doNothing().when(mockMailService).sendActivationEmail(anyObject(), anyString());
 
         AccountResource accountResource = new AccountResource();
         ReflectionTestUtils.setField(accountResource, "userRepository", userRepository);
         ReflectionTestUtils.setField(accountResource, "userService", userService);
-        ReflectionTestUtils.setField(accountResource, "mailService", mockMailService);
 
         AccountResource accountUserMockResource = new AccountResource();
         ReflectionTestUtils.setField(accountUserMockResource, "userRepository", userRepository);
         ReflectionTestUtils.setField(accountUserMockResource, "userService", mockUserService);
-        ReflectionTestUtils.setField(accountUserMockResource, "mailService", mockMailService);
 
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(accountUserMockResource).build();
     }

@@ -43,6 +43,13 @@ spring:
         protocol: smtp
         tls: false
         auth: false
+    
+    ldap:
+        root: dc=perficient,dc=com
+        domain:
+        port: 0
+        accountdn:
+        password:
 
 metrics:
     jmx.enabled: false

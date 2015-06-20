@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import java.util.Optional;
 
 /**
  * REST controller for managing users.
@@ -33,7 +32,7 @@ public class UserResource {
     /**
      * GET  /users/:login -> get the "login" user.
      */
-    @RequestMapping(value = "/users/{login}",
+    @RequestMapping(value = "/users/{login:.+}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
