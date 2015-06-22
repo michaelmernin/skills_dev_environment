@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="75">
+  <server artifactsdir="artifacts" siteUrl="https://stlerappdev.perficient.com:8154" purgeStart="5.0" purgeUpto="10.0" jobTimeout="60" commandRepositoryLocation="default">
+    <security>
+      <ldap uri="ldaps://STLCOLODC01.perficient.com:636/" managerDn="cn=LDAP Enterprise Review,ou=System Accounts,ou=IT,dc=perficient,dc=com" encryptedManagerPassword="zDw716p/Hld7WEyIJF6Dw6N5YJkynW5t" searchFilter="(cn={0})">
+        <bases>
+          <base value="OU=Employees,DC=perficient,DC=com" />
+        </bases>
+      </ldap>
+      <admins>
+        <user>donovan.mikrot</user>
+      </admins>
+    </security>
+    <mailhost hostname="mail2.perficient.com" port="25" tls="false" from="etm-go@perficient.com" admin="donovan.mikrot@perficient.com" />
+  </server>
+  <pipelines group="etm">
+    <pipeline name="etm-build">
+      <materials>
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" />
+      </materials>
+      <stage name="install" cleanWorkingDir="true">
+        <jobs>
+          <job name="npm" runOnAllAgents="true">
+            <tasks>
+              <exec command="npm" workingdir="ent-talent-mgmt">
+                <arg>install</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="test">
+        <jobs>
+          <job name="unit-test">
+            <tasks>
+              <exec command="./gradlew" workingdir="ent-talent-mgmt">
+                <arg>test</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <test src="ent-talent-mgmt/build/test-results/*.xml" dest="etm-test-results" />
+            </artifacts>
+          </job>
+          <job name="ui-test">
+            <tasks>
+              <exec command="grunt" workingdir="ent-talent-mgmt">
+                <arg>test</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <test src="ent-talent-mgmt/build/js-test-reports/*.xml" dest="etm-test-results" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="build">
+        <jobs>
+          <job name="package">
+            <tasks>
+              <exec command="./gradlew" workingdir="ent-talent-mgmt">
+                <arg>-Pprod</arg>
+                <arg>bootRepackage</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <artifact src="ent-talent-mgmt/build/libs/*.war" dest="etm-wars" />
+              <artifact src="ent-talent-mgmt/build/libs/*.war.original" dest="etm-wars" />
+              <artifact src="ent-talent-mgmt/build/libs/*.jar" dest="etm-jars" />
+              <artifact src="ent-talent-mgmt/build/libs/*.jar.original" dest="etm-jars" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+  </pipelines>
+  <agents>
+  </agents>
+</cruise>
+

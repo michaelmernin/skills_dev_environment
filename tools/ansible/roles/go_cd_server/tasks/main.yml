@@ -20,4 +20,16 @@
   file:
     path: "{{ gocd_package }}"
     state: absent
-    
+
+- name: Copy Server config
+  tags: gocd_server
+  sudo: yes
+  copy:
+    src: cruise-config.xml
+    dest: "{{ gocd_config_folder }}/cruise-config.xml"
+    mode: 0664
+    owner: go
+    group: go
+    force: yes
+    backup: yes
+

@@ -3,3 +3,4 @@
 download_url: http://download.go.cd/gocd-rpm/go-server-15.1.0-1863.noarch.rpm
 download_folder: /opt
 gocd_package: "{{ download_folder }}/go-server-15.1.0-1863.noarch.rpm"
+gocd_config_folder: /etc/go
