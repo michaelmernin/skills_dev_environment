@@ -15,6 +15,7 @@
     - deploy
     - server
   command: pkill -f gradle
+  ignore_errors: yes
 
 - name: Copy application bash script
   tags: 
