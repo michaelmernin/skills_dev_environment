@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+        Add version and active column to ReviewType.
+    -->
+    <changeSet id="20150624165700" author="donovan">
+    	<addColumn tableName="T_REVIEWTYPE">
+        <column name="version" type="int" defaultValueNumeric="1">
+          <constraints nullable="false"/>
+        </column>
+        <column name="active" type="boolean" defaultValueBoolean="true">
+          <constraints nullable="false"/>
+        </column>
+      </addColumn>
+    </changeSet>
+</databaseChangeLog>

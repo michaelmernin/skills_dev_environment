@@ -37,10 +37,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @IntegrationTest
 public class ReviewTypeResourceTest {
 
+    private static final Boolean DEFAULT_ACTIVE = true;
+    private static final Boolean UPDATED_ACTIVE = false;
     private static final String DEFAULT_NAME = "SAMPLE_TEXT";
     private static final String UPDATED_NAME = "UPDATED_TEXT";
     private static final String DEFAULT_DESCRIPTION = "SAMPLE_TEXT";
     private static final String UPDATED_DESCRIPTION = "UPDATED_TEXT";
+    private static final Integer DEFAULT_VERSION = 1;
+    private static final Integer UPDATED_VERSION = 2;
 
     @Inject
     private ReviewTypeRepository reviewTypeRepository;
@@ -62,6 +66,8 @@ public class ReviewTypeResourceTest {
         reviewType = new ReviewType();
         reviewType.setName(DEFAULT_NAME);
         reviewType.setDescription(DEFAULT_DESCRIPTION);
+        reviewType.setVersion(DEFAULT_VERSION);
+        reviewType.setActive(DEFAULT_ACTIVE);
     }
 
     @Test
@@ -82,6 +88,8 @@ public class ReviewTypeResourceTest {
         ReviewType testReviewType = reviewTypes.iterator().next();
         assertThat(testReviewType.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testReviewType.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testReviewType.getVersion()).isEqualTo(DEFAULT_VERSION);
+        assertThat(testReviewType.isActive()).isEqualTo(DEFAULT_ACTIVE);
     }
 
     @Test
@@ -96,7 +104,9 @@ public class ReviewTypeResourceTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[0].id").value(reviewType.getId().intValue()))
                 .andExpect(jsonPath("$.[0].name").value(DEFAULT_NAME.toString()))
-                .andExpect(jsonPath("$.[0].description").value(DEFAULT_DESCRIPTION.toString()));
+                .andExpect(jsonPath("$.[0].description").value(DEFAULT_DESCRIPTION.toString()))
+                .andExpect(jsonPath("$.[0].version").value(DEFAULT_VERSION.intValue()))
+                .andExpect(jsonPath("$.[0].active").value(DEFAULT_ACTIVE.booleanValue()));
     }
 
     @Test
@@ -111,7 +121,9 @@ public class ReviewTypeResourceTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(reviewType.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
+            .andExpect(jsonPath("$.version").value(DEFAULT_VERSION.intValue()))
+            .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()));
     }
 
     @Test
@@ -131,6 +143,8 @@ public class ReviewTypeResourceTest {
         // Update the reviewType
         reviewType.setName(UPDATED_NAME);
         reviewType.setDescription(UPDATED_DESCRIPTION);
+        reviewType.setVersion(UPDATED_VERSION);
+        reviewType.setActive(UPDATED_ACTIVE);
         restReviewTypeMockMvc.perform(post("/api/reviewTypes")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(reviewType)))
@@ -142,6 +156,8 @@ public class ReviewTypeResourceTest {
         ReviewType testReviewType = reviewTypes.iterator().next();
         assertThat(testReviewType.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testReviewType.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testReviewType.getVersion()).isEqualTo(UPDATED_VERSION);
+        assertThat(testReviewType.isActive()).isEqualTo(UPDATED_ACTIVE);
     }
 
     @Test

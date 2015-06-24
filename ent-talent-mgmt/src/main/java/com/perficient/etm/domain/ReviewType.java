@@ -14,15 +14,23 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ReviewType implements Serializable {
 
+    private static final long serialVersionUID = -110339610750395967L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @Column(name = "active")
+    private Boolean active;
 
     @Column(name = "name")
     private String name;
 
     @Column(name = "description")
     private String description;
+    
+    @Column(name = "version")
+    private Integer version;
 
     public Long getId() {
         return id;
@@ -30,6 +38,14 @@ public class ReviewType implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Boolean isActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public String getName() {
@@ -46,6 +62,14 @@ public class ReviewType implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     @Override
@@ -74,6 +98,8 @@ public class ReviewType implements Serializable {
         return "ReviewType{" +
                 "id=" + id +
                 ", name='" + name + "'" +
+                ", version='" + version + "'" +
+                ", active='" + active + "'" +
                 ", description='" + description + "'" +
                 '}';
     }

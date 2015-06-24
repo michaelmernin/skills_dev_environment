@@ -41,3 +41,4 @@ src/main/webapp/dist
 .gradle
 build
 /bin/
+docs/er-diagram.mwb.bak
