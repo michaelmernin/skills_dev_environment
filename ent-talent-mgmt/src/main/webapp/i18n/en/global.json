@@ -8,6 +8,7 @@
         "main": "Entities",
         "reviewType": "ReviewType",
         "category": "Category",
+        "feedbackType": "FeedbackType",
         "additionalEntity": "JHipster will add addtional entities"
       },
       "account": {

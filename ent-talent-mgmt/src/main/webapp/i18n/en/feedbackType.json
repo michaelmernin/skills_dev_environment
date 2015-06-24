@@ -1,0 +1,18 @@
+{
+    "etmApp": {
+        "feedbackType" : {
+            "home": {
+                "title": "FeedbackTypes",
+                "createLabel": "Create a new FeedbackType",
+                "createOrEditLabel": "Create or edit a FeedbackType"
+            },
+            "delete": {
+                "question": "Are you sure you want to delete FeedbackType {{ id }}?"
+            },
+            "detail": {
+                "title": "FeedbackType"
+            },
+            "name": "Name"
+        }
+    }
+}
