@@ -1,0 +1,19 @@
+{
+    "etmApp": {
+        "feedbackStatus" : {
+            "home": {
+                "title": "FeedbackStatuses",
+                "createLabel": "Create a new FeedbackStatus",
+                "createOrEditLabel": "Create or edit a FeedbackStatus"
+            },
+            "delete": {
+                "question": "Are you sure you want to delete FeedbackStatus {{ id }}?"
+            },
+            "detail": {
+                "title": "FeedbackStatus"
+            },
+            "name": "Name",
+            "description": "Description"
+        }
+    }
+}
