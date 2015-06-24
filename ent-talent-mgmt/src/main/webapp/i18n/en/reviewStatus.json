@@ -1,0 +1,19 @@
+{
+    "etmApp": {
+        "reviewStatus" : {
+            "home": {
+                "title": "ReviewStatuses",
+                "createLabel": "Create a new ReviewStatus",
+                "createOrEditLabel": "Create or edit a ReviewStatus"
+            },
+            "delete": {
+                "question": "Are you sure you want to delete ReviewStatus {{ id }}?"
+            },
+            "detail": {
+                "title": "ReviewStatus"
+            },
+            "name": "Name",
+            "description": "Description"
+        }
+    }
+}
