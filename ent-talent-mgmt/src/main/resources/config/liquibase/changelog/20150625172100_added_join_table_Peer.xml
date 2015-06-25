@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <!--
+        Added the join table Peer.
+    -->
+    <changeSet id="20150625172100" author="donovan">
+        <createTable tableName="T_PEER">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="review_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="user_id, review_id" tableName="T_PEER"/>
+        
+        <addForeignKeyConstraint baseColumnNames="review_id"
+                                 baseTableName="T_PEER"
+                                 constraintName="fk_peer_review_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_REVIEW"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="T_PEER"
+                                 constraintName="fk_peer_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_USER"/>
+
+    </changeSet>
+</databaseChangeLog>

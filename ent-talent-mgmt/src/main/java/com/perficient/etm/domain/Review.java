@@ -1,5 +1,6 @@
 package com.perficient.etm.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.perficient.etm.domain.util.CustomLocalDateSerializer;
@@ -13,6 +14,8 @@ import org.joda.time.LocalDate;
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Review.
@@ -55,7 +58,7 @@ public class Review implements Serializable {
     @Column(name = "responsibilities")
     private String responsibilities;
 
-    @Column(name = "rating", precision=10, scale=2)
+    @Column(name = "rating")
     private Double rating;
 
     @ManyToOne
@@ -69,6 +72,15 @@ public class Review implements Serializable {
 
     @ManyToOne
     private User reviewer;
+    
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "T_PEER",
+            joinColumns = {@JoinColumn(name = "review_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<User> peers = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -108,6 +120,14 @@ public class Review implements Serializable {
 
     public void setClient(String client) {
         this.client = client;
+    }
+
+    public Set<User> getPeers() {
+        return peers;
+    }
+
+    public void setPeers(Set<User> peers) {
+        this.peers = peers;
     }
 
     public String getProject() {
