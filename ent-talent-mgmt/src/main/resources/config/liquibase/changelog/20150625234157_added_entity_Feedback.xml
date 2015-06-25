@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <!--
+        Added the entity Feedback.
+    -->
+    <changeSet id="20150625234157" author="jhipster">
+        <createTable tableName="T_FEEDBACK">
+            <column name="id" type="bigint" autoIncrement="true" >
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="review_id" type="bigint"/>
+            <column name="author_id" type="bigint"/>
+            <column name="feedbacktype_id" type="bigint"/>
+            <column name="feedbackstatus_id" type="bigint"/>
+        </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="review_id"
+                                 baseTableName="T_FEEDBACK"
+                                 constraintName="fk_feedback_review_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="REVIEW"/>
+
+        <addForeignKeyConstraint baseColumnNames="author_id"
+                                 baseTableName="T_FEEDBACK"
+                                 constraintName="fk_feedback_author_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_USER"/>
+
+        <addForeignKeyConstraint baseColumnNames="feedbacktype_id"
+                                 baseTableName="T_FEEDBACK"
+                                 constraintName="fk_feedback_feedbacktype_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_FEEDBACKTYPE"/>
+
+        <addForeignKeyConstraint baseColumnNames="feedbackstatus_id"
+                                 baseTableName="T_FEEDBACK"
+                                 constraintName="fk_feedback_feedbackstatus_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_FEEDBACKSTATUS"/>
+
+    </changeSet>
+</databaseChangeLog>

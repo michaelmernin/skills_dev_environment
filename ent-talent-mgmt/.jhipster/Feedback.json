@@ -1,0 +1,67 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "review",
+            "relationshipNameCapitalized": "Review",
+            "relationshipFieldName": "review",
+            "otherEntityName": "review",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "Review",
+            "otherEntityField": "title"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "author",
+            "relationshipNameCapitalized": "Author",
+            "relationshipFieldName": "author",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "User",
+            "otherEntityField": "firstName"
+        },
+        {
+            "relationshipId": 3,
+            "relationshipName": "feedbackType",
+            "relationshipNameCapitalized": "FeedbackType",
+            "relationshipFieldName": "feedbackType",
+            "otherEntityName": "feedbackType",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "FeedbackType",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipId": 4,
+            "relationshipName": "feedbackStatus",
+            "relationshipNameCapitalized": "FeedbackStatus",
+            "relationshipFieldName": "feedbackStatus",
+            "otherEntityName": "feedbackStatus",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "FeedbackStatus",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipId": 5,
+            "relationshipName": "rating",
+            "relationshipNameCapitalized": "Rating",
+            "relationshipFieldName": "rating",
+            "otherEntityName": "rating",
+            "relationshipType": "one-to-many",
+            "otherEntityNameCapitalized": "Rating",
+            "otherEntityRelationshipName": "feedback"
+        }
+    ],
+    "fields": [],
+    "fieldsContainOwnerManyToMany": false,
+    "fieldsContainOwnerOneToOne": false,
+    "fieldsContainOneToMany": true,
+    "fieldsContainLocalDate": false,
+    "fieldsContainCustomTime": false,
+    "fieldsContainBigDecimal": false,
+    "fieldsContainDateTime": false,
+    "fieldsContainDate": false,
+    "changelogDate": "20150625234157",
+    "dto": "no",
+    "pagination": "no",
+    "validation": false
+}
