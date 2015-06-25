@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <!--
+        Added the entity Review.
+    -->
+    <changeSet id="20150625162915" author="jhipster">
+        <createTable tableName="T_REVIEW">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="start_date" type="date"/>
+            <column name="end_date" type="date"/>
+            <column name="client" type="varchar(255)"/>
+            <column name="project" type="varchar(255)"/>
+            <column name="role" type="varchar(255)"/>
+            <column name="responsibilities" type="varchar(255)"/>
+            <column name="rating" type="double"/>
+            <column name="reviewtype_id" type="bigint"/>
+            <column name="reviewstatus_id" type="bigint"/>
+            <column name="reviewee_id" type="bigint"/>
+            <column name="reviewer_id" type="bigint"/>
+        </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="reviewtype_id"
+                                 baseTableName="T_REVIEW"
+                                 constraintName="fk_review_reviewtype_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_REVIEWTYPE"/>
+
+        <addForeignKeyConstraint baseColumnNames="reviewstatus_id"
+                                 baseTableName="T_REVIEW"
+                                 constraintName="fk_review_reviewstatus_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_REVIEWSTATUS"/>
+
+        <addForeignKeyConstraint baseColumnNames="reviewee_id"
+                                 baseTableName="T_REVIEW"
+                                 constraintName="fk_review_reviewee_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_USER"/>
+
+        <addForeignKeyConstraint baseColumnNames="reviewer_id"
+                                 baseTableName="T_REVIEW"
+                                 constraintName="fk_review_reviewer_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_USER"/>
+
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,110 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "ReviewType",
+            "relationshipNameCapitalized": "ReviewType",
+            "relationshipFieldName": "reviewType",
+            "otherEntityName": "reviewType",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "ReviewType",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "ReviewStatus",
+            "relationshipNameCapitalized": "ReviewStatus",
+            "relationshipFieldName": "reviewStatus",
+            "otherEntityName": "reviewStatus",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "ReviewStatus",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipId": 3,
+            "relationshipName": "reviewee",
+            "relationshipNameCapitalized": "Reviewee",
+            "relationshipFieldName": "reviewee",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "User",
+            "otherEntityField": "firstName"
+        },
+        {
+            "relationshipId": 4,
+            "relationshipName": "reviewer",
+            "relationshipNameCapitalized": "Reviewer",
+            "relationshipFieldName": "reviewer",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "User",
+            "otherEntityField": "firstName"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "title",
+            "fieldType": "String",
+            "fieldNameCapitalized": "Title",
+            "fieldNameUnderscored": "title"
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "startDate",
+            "fieldType": "LocalDate",
+            "fieldNameCapitalized": "StartDate",
+            "fieldNameUnderscored": "start_date"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "endDate",
+            "fieldType": "LocalDate",
+            "fieldNameCapitalized": "EndDate",
+            "fieldNameUnderscored": "end_date"
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "client",
+            "fieldType": "String",
+            "fieldNameCapitalized": "Client",
+            "fieldNameUnderscored": "client"
+        },
+        {
+            "fieldId": 5,
+            "fieldName": "project",
+            "fieldType": "String",
+            "fieldNameCapitalized": "Project",
+            "fieldNameUnderscored": "project"
+        },
+        {
+            "fieldId": 6,
+            "fieldName": "role",
+            "fieldType": "String",
+            "fieldNameCapitalized": "Role",
+            "fieldNameUnderscored": "role"
+        },
+        {
+            "fieldId": 7,
+            "fieldName": "responsibilities",
+            "fieldType": "String",
+            "fieldNameCapitalized": "Responsibilities",
+            "fieldNameUnderscored": "responsibilities"
+        },
+        {
+            "fieldId": 8,
+            "fieldName": "rating",
+            "fieldType": "BigDecimal",
+            "fieldNameCapitalized": "Rating",
+            "fieldNameUnderscored": "rating"
+        }
+    ],
+    "fieldsContainOwnerManyToMany": false,
+    "fieldsContainOneToMany": false,
+    "fieldsContainLocalDate": true,
+    "fieldsContainCustomTime": true,
+    "fieldsContainBigDecimal": true,
+    "fieldsContainDateTime": false,
+    "fieldsContainDate": false,
+    "changelogDate": "20150625162915"
+}

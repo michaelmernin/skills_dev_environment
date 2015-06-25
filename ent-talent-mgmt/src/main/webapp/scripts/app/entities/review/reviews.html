@@ -1,0 +1,185 @@
+<div>
+
+    <h2 translate="etmApp.review.home.title">Review</h2>
+
+    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#saveReviewModal" ng-click="clear()">
+        <span class="glyphicon glyphicon-flash"></span> <span translate="etmApp.review.home.createLabel">Create a new Review</span>
+    </button>
+    <div class="modal fade" id="saveReviewModal" tabindex="-1" role="dialog" aria-labelledby="myReviewLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="editForm" role="form" novalidate
+                      class="ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
+                      ng-submit="create()">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" id="myReviewLabel" translate="etmApp.review.home.createOrEditLabel">Create or edit a Review</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>ID</label>
+                            <input type="text" class="form-control" name="id"
+                                   ng-model="review.id" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label translate="etmApp.review.title">Title</label>
+                            <input type="text" class="form-control" name="title"
+                                   ng-model="review.title">
+                        </div>
+                        <div class="form-group">
+                            <label translate="etmApp.review.startDate">StartDate</label>
+                            <input type="date" class="form-control" name="startDate"
+                                   ng-model="review.startDate">
+                        </div>
+                        <div class="form-group">
+                            <label translate="etmApp.review.endDate">EndDate</label>
+                            <input type="date" class="form-control" name="endDate"
+                                   ng-model="review.endDate">
+                        </div>
+                        <div class="form-group">
+                            <label translate="etmApp.review.client">Client</label>
+                            <input type="text" class="form-control" name="client"
+                                   ng-model="review.client">
+                        </div>
+                        <div class="form-group">
+                            <label translate="etmApp.review.project">Project</label>
+                            <input type="text" class="form-control" name="project"
+                                   ng-model="review.project">
+                        </div>
+                        <div class="form-group">
+                            <label translate="etmApp.review.role">Role</label>
+                            <input type="text" class="form-control" name="role"
+                                   ng-model="review.role">
+                        </div>
+                        <div class="form-group">
+                            <label translate="etmApp.review.responsibilities">Responsibilities</label>
+                            <input type="text" class="form-control" name="responsibilities"
+                                   ng-model="review.responsibilities">
+                        </div>
+                        <div class="form-group">
+                            <label translate="etmApp.review.rating">Rating</label>
+                            <input type="text" class="form-control" name="rating"
+                                   ng-model="review.rating">
+                        </div>
+
+                        <div class="form-group">
+                            <label translate="etmApp.review.ReviewType">ReviewType</label>
+                            <select class="form-control" name="rating" ng-model="review.reviewType.id" ng-options="reviewType.id as reviewType.name for reviewType in reviewtypes">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label translate="etmApp.review.ReviewStatus">ReviewStatus</label>
+                            <select class="form-control" name="rating" ng-model="review.reviewStatus.id" ng-options="reviewStatus.id as reviewStatus.name for reviewStatus in reviewstatuss">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label translate="etmApp.review.reviewee">reviewee</label>
+                            <select class="form-control" name="rating" ng-model="review.reviewee.id" ng-options="user.id as user.firstName for user in users">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label translate="etmApp.review.reviewer">reviewer</label>
+                            <select class="form-control" name="rating" ng-model="review.reviewer.id" ng-options="user.id as user.firstName for user in users">
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+                        </button>
+                        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteReviewConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="deleteForm" ng-submit="confirmDelete(review.id)">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" translate="entity.delete.title">Confirm delete operation</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p translate="etmApp.review.delete.question" translate-values="{id: '{{review.id}}'}">Are you sure you want to delete this Review?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+                        </button>
+                        <button type="submit" ng-disabled="deleteForm.$invalid" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th translate="etmApp.review.title">Title</th>
+                    <th translate="etmApp.review.startDate">StartDate</th>
+                    <th translate="etmApp.review.endDate">EndDate</th>
+                    <th translate="etmApp.review.client">Client</th>
+                    <th translate="etmApp.review.project">Project</th>
+                    <th translate="etmApp.review.role">Role</th>
+                    <th translate="etmApp.review.responsibilities">Responsibilities</th>
+                    <th translate="etmApp.review.rating">Rating</th>
+                    <th translate="etmApp.review.ReviewType">ReviewType</th>
+                    <th translate="etmApp.review.ReviewStatus">ReviewStatus</th>
+                    <th translate="etmApp.review.reviewee">reviewee</th>
+                    <th translate="etmApp.review.reviewer">reviewer</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="review in reviews">
+                    <td><a ui-sref="reviewDetail({id:review.id})">{{review.id}}</a></td>
+                    <td>{{review.title}}</td>
+                    <td>{{review.startDate}}</td>
+                    <td>{{review.endDate}}</td>
+                    <td>{{review.client}}</td>
+                    <td>{{review.project}}</td>
+                    <td>{{review.role}}</td>
+                    <td>{{review.responsibilities}}</td>
+                    <td>{{review.rating}}</td>
+                    <td>{{review.ReviewType.name}}</td>
+                    <td>{{review.ReviewStatus.name}}</td>
+                    <td>{{review.reviewee.firstName}}</td>
+                    <td>{{review.reviewer.firstName}}</td>
+                    <td>
+                        <button type="submit"
+                                ui-sref="reviewDetail({id:review.id})"
+                                class="btn btn-info">
+                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span translate="entity.action.view"> View</span>
+                        </button>
+                        <button type="submit"
+                                ng-click="update(review.id)"
+                                class="btn btn-primary">
+                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span translate="entity.action.edit"> Edit</span>
+                        </button>
+                        <button type="submit"
+                                ng-click="delete(review.id)"
+                                class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete"> Delete</span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

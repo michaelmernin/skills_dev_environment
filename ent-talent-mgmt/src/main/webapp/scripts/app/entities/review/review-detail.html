@@ -1,0 +1,118 @@
+
+<div>
+    <h2><span translate="etmApp.review.detail.title">Review</span> {{review.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th translate="entity.detail.field">Field</th>
+                    <th translate="entity.detail.value">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span translate="etmApp.review.title">Title</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{review.title}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="etmApp.review.startDate">StartDate</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{review.startDate}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="etmApp.review.endDate">EndDate</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{review.endDate}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="etmApp.review.client">Client</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{review.client}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="etmApp.review.project">Project</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{review.project}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="etmApp.review.role">Role</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{review.role}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="etmApp.review.responsibilities">Responsibilities</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{review.responsibilities}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="etmApp.review.rating">Rating</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{review.rating}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="etmApp.review.ReviewType">ReviewType</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{review.ReviewType.name}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="etmApp.review.ReviewStatus">ReviewStatus</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{review.ReviewStatus.name}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="etmApp.review.reviewee">reviewee</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{review.reviewee.firstName}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="etmApp.review.reviewer">reviewer</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{review.reviewer.firstName}}" readonly>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            ui-sref="review"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

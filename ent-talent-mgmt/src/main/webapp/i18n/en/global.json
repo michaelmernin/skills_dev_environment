@@ -11,6 +11,7 @@
         "feedbackType": "FeedbackType",
         "feedbackStatus": "FeedbackStatus",
         "reviewStatus": "ReviewStatus",
+        "review": "Review",
         "additionalEntity": "JHipster will add addtional entities"
       },
       "account": {
