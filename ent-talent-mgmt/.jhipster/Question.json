@@ -1,0 +1,48 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "ReviewType",
+            "relationshipNameCapitalized": "ReviewType",
+            "relationshipFieldName": "reviewType",
+            "otherEntityName": "reviewType",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "ReviewType",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "Category",
+            "relationshipNameCapitalized": "Category",
+            "relationshipFieldName": "category",
+            "otherEntityName": "category",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "Category",
+            "otherEntityField": "title"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "text",
+            "fieldType": "String",
+            "fieldNameCapitalized": "Text",
+            "fieldNameUnderscored": "text"
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "position",
+            "fieldType": "Integer",
+            "fieldNameCapitalized": "Position",
+            "fieldNameUnderscored": "position"
+        }
+    ],
+    "fieldsContainOwnerManyToMany": false,
+    "fieldsContainOneToMany": false,
+    "fieldsContainLocalDate": false,
+    "fieldsContainCustomTime": false,
+    "fieldsContainBigDecimal": false,
+    "fieldsContainDateTime": false,
+    "fieldsContainDate": false,
+    "changelogDate": "20150625181534"
+}

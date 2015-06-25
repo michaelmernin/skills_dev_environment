@@ -1,0 +1,21 @@
+{
+    "etmApp": {
+        "question" : {
+            "home": {
+                "title": "Questions",
+                "createLabel": "Create a new Question",
+                "createOrEditLabel": "Create or edit a Question"
+            },
+            "delete": {
+                "question": "Are you sure you want to delete Question {{ id }}?"
+            },
+            "detail": {
+                "title": "Question"
+            },
+            "text": "Text",
+            "position": "Position",
+            "ReviewType": "ReviewType",
+            "Category": "Category"
+        }
+    }
+}
