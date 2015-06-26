@@ -1,0 +1,65 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "question",
+            "relationshipNameCapitalized": "Question",
+            "relationshipFieldName": "question",
+            "otherEntityName": "question",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "Question",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "feedback",
+            "relationshipNameCapitalized": "Feedback",
+            "relationshipFieldName": "feedback",
+            "otherEntityName": "feedback",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "Feedback",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "score",
+            "fieldType": "BigDecimal",
+            "fieldNameCapitalized": "Score",
+            "fieldNameUnderscored": "score",
+            "fieldInJavaBeanMethod": "Score",
+            "fieldValidate": false
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "comment",
+            "fieldType": "String",
+            "fieldNameCapitalized": "Comment",
+            "fieldNameUnderscored": "comment",
+            "fieldInJavaBeanMethod": "Comment",
+            "fieldValidate": false
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "visible",
+            "fieldType": "Boolean",
+            "fieldNameCapitalized": "Visible",
+            "fieldNameUnderscored": "visible",
+            "fieldInJavaBeanMethod": "Visible",
+            "fieldValidate": false
+        }
+    ],
+    "fieldsContainOwnerManyToMany": false,
+    "fieldsContainOwnerOneToOne": false,
+    "fieldsContainOneToMany": false,
+    "fieldsContainLocalDate": false,
+    "fieldsContainCustomTime": false,
+    "fieldsContainBigDecimal": true,
+    "fieldsContainDateTime": false,
+    "fieldsContainDate": false,
+    "changelogDate": "20150625235445",
+    "dto": "no",
+    "pagination": "no",
+    "validation": false
+}

@@ -25,7 +25,7 @@
                                  baseTableName="T_FEEDBACK"
                                  constraintName="fk_feedback_review_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="REVIEW"/>
+                                 referencedTableName="T_REVIEW"/>
 
         <addForeignKeyConstraint baseColumnNames="author_id"
                                  baseTableName="T_FEEDBACK"

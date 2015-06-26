@@ -16,5 +16,6 @@
     <include file="classpath:config/liquibase/changelog/20150625172100_added_join_table_Peer.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150625181534_added_entity_Question.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150625234157_added_entity_Feedback.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20150625235445_added_entity_Rating.xml" relativeToChangelogFile="false"/>
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

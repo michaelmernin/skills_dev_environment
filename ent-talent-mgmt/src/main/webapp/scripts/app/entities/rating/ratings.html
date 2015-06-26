@@ -1,0 +1,143 @@
+<div>
+
+    <h2>Ratings</h2>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#saveRatingModal" ng-click="clear()">
+                    <span class="glyphicon glyphicon-flash"></span> <span>Create a new Rating</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="saveRatingModal" tabindex="-1" role="dialog" aria-labelledby="myRatingLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="editForm" role="form" novalidate ng-submit="save()">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" id="myRatingLabel">Create or edit a Rating</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>ID</label>
+                            <input type="text" class="form-control" name="id"
+                                   ng-model="rating.id" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Score</label>
+                            <input type="number" class="form-control" name="score"
+                                   ng-model="rating.score">
+
+                        </div>
+                        <div class="form-group">
+                            <label>Comment</label>
+                            <input type="text" class="form-control" name="comment"
+                                   ng-model="rating.comment">
+
+                        </div>
+                        <div class="form-group">
+                            <label>Visible</label>
+                            <input type="checkbox" class="form-control" name="visible"
+                                   ng-model="rating.visible">
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>question</label>
+                            <select class="form-control" name="question" ng-model="rating.question.id" ng-options="question.id as question.id for question in questions">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>feedback</label>
+                            <select class="form-control" name="feedback" ng-model="rating.feedback.id" ng-options="feedback.id as feedback.id for feedback in feedbacks">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                        </button>
+                        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteRatingConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="deleteForm" ng-submit="confirmDelete(rating.id)">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                ng-click="clear()">&times;</button>
+                        <h4 class="modal-title">Confirm delete operation</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this Rating?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                        </button>
+                        <button type="submit" ng-disabled="deleteForm.$invalid" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span>Delete</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Score</th>
+                    <th>Comment</th>
+                    <th>Visible</th>
+                    <th>question</th>
+                    <th>feedback</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="rating in ratings">
+                    <td><a ui-sref="ratingDetail({id:rating.id})">{{rating.id}}</a></td>
+                    <td>{{rating.score}}</td>
+                    <td>{{rating.comment}}</td>
+                    <td>{{rating.visible}}</td>
+                    <td>{{rating.question.id}}</td>
+                    <td>{{rating.feedback.id}}</td>
+                    <td>
+                        <button type="submit"
+                                ui-sref="ratingDetail({id:rating.id})"
+                                class="btn btn-info btn-sm">
+                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
+                        </button>
+                        <button type="submit"
+                                ng-click="showUpdate(rating.id)"
+                                class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
+                        </button>
+                        <button type="submit"
+                                ng-click="delete(rating.id)"
+                                class="btn btn-danger btn-sm">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
