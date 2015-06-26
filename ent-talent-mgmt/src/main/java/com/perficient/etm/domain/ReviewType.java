@@ -3,8 +3,12 @@ package com.perficient.etm.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * A ReviewType.
@@ -31,6 +35,11 @@ public class ReviewType implements Serializable {
     
     @Column(name = "version")
     private Integer version;
+    
+    @OneToMany(mappedBy = "reviewType")
+    @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Question> questions;
 
     public Long getId() {
         return id;
@@ -62,6 +71,14 @@ public class ReviewType implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(Set<Question> questions) {
+        this.questions = questions;
     }
 
     public Integer getVersion() {

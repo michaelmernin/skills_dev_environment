@@ -81,6 +81,16 @@ public class Review implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<User> peers = new HashSet<>();
+    
+    @OneToMany(mappedBy = "review")
+    @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Feedback> feedback;
+    
+    @OneToMany(mappedBy = "review")
+    @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Goal> goals;
 
     public Long getId() {
         return id;
@@ -120,6 +130,22 @@ public class Review implements Serializable {
 
     public void setClient(String client) {
         this.client = client;
+    }
+
+    public Set<Feedback> getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(Set<Feedback> feedback) {
+        this.feedback = feedback;
+    }
+
+    public Set<Goal> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(Set<Goal> goals) {
+        this.goals = goals;
     }
 
     public Set<User> getPeers() {
