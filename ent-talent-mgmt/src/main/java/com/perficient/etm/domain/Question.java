@@ -14,11 +14,14 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Question implements Serializable {
 
-    private static final long serialVersionUID = 1613242546842519888L;
+    private static final long serialVersionUID = -2230560518784704382L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(name = "title")
+    private String title;
 
     @Column(name = "text")
     private String text;
@@ -38,6 +41,14 @@ public class Question implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getText() {
@@ -97,7 +108,7 @@ public class Question implements Serializable {
     public String toString() {
         return "Question{" +
                 "id=" + id +
-                ", text='" + text + "'" +
+                ", title='" + title + "'" +
                 ", position='" + position + "'" +
                 '}';
     }

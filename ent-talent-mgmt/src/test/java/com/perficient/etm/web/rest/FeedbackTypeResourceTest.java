@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -64,8 +66,7 @@ public class FeedbackTypeResourceTest {
     @Test
     @Transactional
     public void createFeedbackType() throws Exception {
-        // Validate the database is empty
-        assertThat(feedbackTypeRepository.findAll()).hasSize(0);
+        int count = (int) feedbackTypeRepository.count();
 
         // Create the FeedbackType
         restFeedbackTypeMockMvc.perform(post("/api/feedbackTypes")
@@ -75,52 +76,56 @@ public class FeedbackTypeResourceTest {
 
         // Validate the FeedbackType in the database
         List<FeedbackType> feedbackTypes = feedbackTypeRepository.findAll();
-        assertThat(feedbackTypes).hasSize(1);
-        FeedbackType testFeedbackType = feedbackTypes.iterator().next();
+        assertThat(feedbackTypes).hasSize(count + 1);
+        Optional<FeedbackType> optional = feedbackTypes.stream().filter(ft -> {return DEFAULT_NAME.equals(ft.getName());}).findAny();
+        assertThat(optional.isPresent()).isTrue();
+        FeedbackType testFeedbackType = optional.get();
         assertThat(testFeedbackType.getName()).isEqualTo(DEFAULT_NAME);
     }
 
     @Test
     @Transactional
     public void getAllFeedbackTypes() throws Exception {
-        // Initialize the database
-        feedbackTypeRepository.saveAndFlush(feedbackType);
+        // Read a feedback type
+        FeedbackType feedbackType = feedbackTypeRepository.findOne(1L);
 
         // Get all the feedbackTypes
         restFeedbackTypeMockMvc.perform(get("/api/feedbackTypes"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[0].id").value(feedbackType.getId().intValue()))
-                .andExpect(jsonPath("$.[0].name").value(DEFAULT_NAME.toString()));
+                .andExpect(jsonPath("$.[0].name").value(feedbackType.getName()));
     }
 
     @Test
     @Transactional
     public void getFeedbackType() throws Exception {
-        // Initialize the database
-        feedbackTypeRepository.saveAndFlush(feedbackType);
+        // Read a feedback type
+        FeedbackType feedbackType = feedbackTypeRepository.findOne(1L);
 
         // Get the feedbackType
         restFeedbackTypeMockMvc.perform(get("/api/feedbackTypes/{id}", feedbackType.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(feedbackType.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()));
+            .andExpect(jsonPath("$.name").value(feedbackType.getName()));
     }
 
     @Test
     @Transactional
     public void getNonExistingFeedbackType() throws Exception {
         // Get the feedbackType
-        restFeedbackTypeMockMvc.perform(get("/api/feedbackTypes/{id}", 1L))
+        restFeedbackTypeMockMvc.perform(get("/api/feedbackTypes/{id}", 404L))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateFeedbackType() throws Exception {
-        // Initialize the database
-        feedbackTypeRepository.saveAndFlush(feedbackType);
+        int count = (int) feedbackTypeRepository.count();
+        
+        // Read a feedback type
+        FeedbackType feedbackType = feedbackTypeRepository.findOne(1L);
 
         // Update the feedbackType
         feedbackType.setName(UPDATED_NAME);
@@ -131,16 +136,20 @@ public class FeedbackTypeResourceTest {
 
         // Validate the FeedbackType in the database
         List<FeedbackType> feedbackTypes = feedbackTypeRepository.findAll();
-        assertThat(feedbackTypes).hasSize(1);
-        FeedbackType testFeedbackType = feedbackTypes.iterator().next();
+        assertThat(feedbackTypes).hasSize(count);
+        Optional<FeedbackType> optional = feedbackTypes.stream().filter(ft -> {return ft.getId() == 1L;}).findAny();
+        assertThat(optional.isPresent()).isTrue();
+        FeedbackType testFeedbackType = optional.get();
         assertThat(testFeedbackType.getName()).isEqualTo(UPDATED_NAME);
     }
 
     @Test
     @Transactional
     public void deleteFeedbackType() throws Exception {
-        // Initialize the database
-        feedbackTypeRepository.saveAndFlush(feedbackType);
+        int count = (int) feedbackTypeRepository.count();
+        
+        // Read a feedback type
+        FeedbackType feedbackType = feedbackTypeRepository.findOne(1L);
 
         // Get the feedbackType
         restFeedbackTypeMockMvc.perform(delete("/api/feedbackTypes/{id}", feedbackType.getId())
@@ -149,6 +158,6 @@ public class FeedbackTypeResourceTest {
 
         // Validate the database is empty
         List<FeedbackType> feedbackTypes = feedbackTypeRepository.findAll();
-        assertThat(feedbackTypes).hasSize(0);
+        assertThat(feedbackTypes).hasSize(count - 1);
     }
 }

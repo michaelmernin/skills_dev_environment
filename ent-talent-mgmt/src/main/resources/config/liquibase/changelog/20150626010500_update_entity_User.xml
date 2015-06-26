@@ -10,7 +10,7 @@
     <!--
         Add additional User columns.
     -->
-    <changeSet id="20150626003243" author="donovan">
+    <changeSet id="20150626010500" author="donovan">
         <addColumn tableName="T_USER">
           <column name="counselor_id" type="bigint"/>
           <column name="title" type="varchar(255)"/>

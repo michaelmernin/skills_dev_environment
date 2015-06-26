@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -67,8 +69,7 @@ public class ReviewStatusResourceTest {
     @Test
     @Transactional
     public void createReviewStatus() throws Exception {
-        // Validate the database is empty
-        assertThat(reviewStatusRepository.findAll()).hasSize(0);
+        int count = (int) reviewStatusRepository.count();
 
         // Create the ReviewStatus
         restReviewStatusMockMvc.perform(post("/api/reviewStatuses")
@@ -78,8 +79,10 @@ public class ReviewStatusResourceTest {
 
         // Validate the ReviewStatus in the database
         List<ReviewStatus> reviewStatuses = reviewStatusRepository.findAll();
-        assertThat(reviewStatuses).hasSize(1);
-        ReviewStatus testReviewStatus = reviewStatuses.iterator().next();
+        assertThat(reviewStatuses).hasSize(count + 1);
+        Optional<ReviewStatus> optional = reviewStatuses.stream().filter(rs -> {return DEFAULT_NAME.equals(rs.getName());}).findAny();
+        assertThat(optional.isPresent()).isTrue();
+        ReviewStatus testReviewStatus = optional.get();
         assertThat(testReviewStatus.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testReviewStatus.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
@@ -87,46 +90,48 @@ public class ReviewStatusResourceTest {
     @Test
     @Transactional
     public void getAllReviewStatuses() throws Exception {
-        // Initialize the database
-        reviewStatusRepository.saveAndFlush(reviewStatus);
+        // Read a review status
+        ReviewStatus reviewStatus = reviewStatusRepository.findOne(1L);
 
         // Get all the reviewStatuses
         restReviewStatusMockMvc.perform(get("/api/reviewStatuses"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[0].id").value(reviewStatus.getId().intValue()))
-                .andExpect(jsonPath("$.[0].name").value(DEFAULT_NAME.toString()))
-                .andExpect(jsonPath("$.[0].description").value(DEFAULT_DESCRIPTION.toString()));
+                .andExpect(jsonPath("$.[0].name").value(reviewStatus.getName()))
+                .andExpect(jsonPath("$.[0].description").value(reviewStatus.getDescription()));
     }
 
     @Test
     @Transactional
     public void getReviewStatus() throws Exception {
-        // Initialize the database
-        reviewStatusRepository.saveAndFlush(reviewStatus);
+        // Read a review status
+        ReviewStatus reviewStatus = reviewStatusRepository.findOne(1L);
 
         // Get the reviewStatus
         restReviewStatusMockMvc.perform(get("/api/reviewStatuses/{id}", reviewStatus.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(reviewStatus.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
+            .andExpect(jsonPath("$.name").value(reviewStatus.getName()))
+            .andExpect(jsonPath("$.description").value(reviewStatus.getDescription()));
     }
 
     @Test
     @Transactional
     public void getNonExistingReviewStatus() throws Exception {
         // Get the reviewStatus
-        restReviewStatusMockMvc.perform(get("/api/reviewStatuses/{id}", 1L))
+        restReviewStatusMockMvc.perform(get("/api/reviewStatuses/{id}", 404L))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateReviewStatus() throws Exception {
-        // Initialize the database
-        reviewStatusRepository.saveAndFlush(reviewStatus);
+        int count = (int) reviewStatusRepository.count();
+        
+        // Read a review status
+        ReviewStatus reviewStatus = reviewStatusRepository.findOne(1L);
 
         // Update the reviewStatus
         reviewStatus.setName(UPDATED_NAME);
@@ -138,8 +143,10 @@ public class ReviewStatusResourceTest {
 
         // Validate the ReviewStatus in the database
         List<ReviewStatus> reviewStatuses = reviewStatusRepository.findAll();
-        assertThat(reviewStatuses).hasSize(1);
-        ReviewStatus testReviewStatus = reviewStatuses.iterator().next();
+        assertThat(reviewStatuses).hasSize(count);
+        Optional<ReviewStatus> optional = reviewStatuses.stream().filter(rs -> {return rs.getId() == 1L;}).findAny();
+        assertThat(optional.isPresent()).isTrue();
+        ReviewStatus testReviewStatus = optional.get();
         assertThat(testReviewStatus.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testReviewStatus.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
@@ -147,8 +154,10 @@ public class ReviewStatusResourceTest {
     @Test
     @Transactional
     public void deleteReviewStatus() throws Exception {
-        // Initialize the database
-        reviewStatusRepository.saveAndFlush(reviewStatus);
+        int count = (int) reviewStatusRepository.count();
+        
+        // Read a review status
+        ReviewStatus reviewStatus = reviewStatusRepository.findOne(1L);
 
         // Get the reviewStatus
         restReviewStatusMockMvc.perform(delete("/api/reviewStatuses/{id}", reviewStatus.getId())
@@ -157,6 +166,6 @@ public class ReviewStatusResourceTest {
 
         // Validate the database is empty
         List<ReviewStatus> reviewStatuses = reviewStatusRepository.findAll();
-        assertThat(reviewStatuses).hasSize(0);
+        assertThat(reviewStatuses).hasSize(count - 1);
     }
 }

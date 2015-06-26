@@ -5,12 +5,12 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <!--
-        Remove unnecessary User columns.
+        Add description column to Authority.
     -->
-    <changeSet id="20150502171400" author="donovan">
-    	<dropColumn tableName="T_USER" columnName="password"/>
-      <dropColumn tableName="T_USER" columnName="activated"/>
-      <dropColumn tableName="T_USER" columnName="activation_key"/>
-
+    <changeSet id="20150626104100" author="donovan">
+        <addColumn tableName="T_AUTHORITY">
+          <column name="description" type="varchar(50)"/>
+        </addColumn>
+        
     </changeSet>
 </databaseChangeLog>

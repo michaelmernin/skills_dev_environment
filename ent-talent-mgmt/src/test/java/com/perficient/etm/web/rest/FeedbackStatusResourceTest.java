@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -67,8 +69,7 @@ public class FeedbackStatusResourceTest {
     @Test
     @Transactional
     public void createFeedbackStatus() throws Exception {
-        // Validate the database is empty
-        assertThat(feedbackStatusRepository.findAll()).hasSize(0);
+        int count = (int) feedbackStatusRepository.count();
 
         // Create the FeedbackStatus
         restFeedbackStatusMockMvc.perform(post("/api/feedbackStatuses")
@@ -78,8 +79,10 @@ public class FeedbackStatusResourceTest {
 
         // Validate the FeedbackStatus in the database
         List<FeedbackStatus> feedbackStatuses = feedbackStatusRepository.findAll();
-        assertThat(feedbackStatuses).hasSize(1);
-        FeedbackStatus testFeedbackStatus = feedbackStatuses.iterator().next();
+        assertThat(feedbackStatuses).hasSize(count + 1);
+        Optional<FeedbackStatus> optional = feedbackStatuses.stream().filter(fs -> {return DEFAULT_NAME.equals(fs.getName());}).findAny();
+        assertThat(optional.isPresent()).isTrue();
+        FeedbackStatus testFeedbackStatus = optional.get();
         assertThat(testFeedbackStatus.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testFeedbackStatus.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
@@ -87,46 +90,48 @@ public class FeedbackStatusResourceTest {
     @Test
     @Transactional
     public void getAllFeedbackStatuses() throws Exception {
-        // Initialize the database
-        feedbackStatusRepository.saveAndFlush(feedbackStatus);
+        // Read a feedback status
+        FeedbackStatus feedbackStatus = feedbackStatusRepository.findOne(1L);
 
         // Get all the feedbackStatuses
         restFeedbackStatusMockMvc.perform(get("/api/feedbackStatuses"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[0].id").value(feedbackStatus.getId().intValue()))
-                .andExpect(jsonPath("$.[0].name").value(DEFAULT_NAME.toString()))
-                .andExpect(jsonPath("$.[0].description").value(DEFAULT_DESCRIPTION.toString()));
+                .andExpect(jsonPath("$.[0].name").value(feedbackStatus.getName()))
+                .andExpect(jsonPath("$.[0].description").value(feedbackStatus.getDescription()));
     }
 
     @Test
     @Transactional
     public void getFeedbackStatus() throws Exception {
-        // Initialize the database
-        feedbackStatusRepository.saveAndFlush(feedbackStatus);
+        // Read a feedback status
+        FeedbackStatus feedbackStatus = feedbackStatusRepository.findOne(1L);
 
         // Get the feedbackStatus
         restFeedbackStatusMockMvc.perform(get("/api/feedbackStatuses/{id}", feedbackStatus.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(feedbackStatus.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
+            .andExpect(jsonPath("$.name").value(feedbackStatus.getName()))
+            .andExpect(jsonPath("$.description").value(feedbackStatus.getDescription()));
     }
 
     @Test
     @Transactional
     public void getNonExistingFeedbackStatus() throws Exception {
         // Get the feedbackStatus
-        restFeedbackStatusMockMvc.perform(get("/api/feedbackStatuses/{id}", 1L))
+        restFeedbackStatusMockMvc.perform(get("/api/feedbackStatuses/{id}", 404L))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateFeedbackStatus() throws Exception {
-        // Initialize the database
-        feedbackStatusRepository.saveAndFlush(feedbackStatus);
+        int count = (int) feedbackStatusRepository.count();
+        
+        // Read a feedback status
+        FeedbackStatus feedbackStatus = feedbackStatusRepository.findOne(1L);
 
         // Update the feedbackStatus
         feedbackStatus.setName(UPDATED_NAME);
@@ -138,8 +143,10 @@ public class FeedbackStatusResourceTest {
 
         // Validate the FeedbackStatus in the database
         List<FeedbackStatus> feedbackStatuses = feedbackStatusRepository.findAll();
-        assertThat(feedbackStatuses).hasSize(1);
-        FeedbackStatus testFeedbackStatus = feedbackStatuses.iterator().next();
+        assertThat(feedbackStatuses).hasSize(count);
+        Optional<FeedbackStatus> optional = feedbackStatuses.stream().filter(fs -> {return fs.getId() == 1L;}).findAny();
+        assertThat(optional.isPresent()).isTrue();
+        FeedbackStatus testFeedbackStatus = optional.get();
         assertThat(testFeedbackStatus.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testFeedbackStatus.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
@@ -147,8 +154,10 @@ public class FeedbackStatusResourceTest {
     @Test
     @Transactional
     public void deleteFeedbackStatus() throws Exception {
-        // Initialize the database
-        feedbackStatusRepository.saveAndFlush(feedbackStatus);
+        int count = (int) feedbackStatusRepository.count();
+        
+        // Read a feedback status
+        FeedbackStatus feedbackStatus = feedbackStatusRepository.findOne(1L);
 
         // Get the feedbackStatus
         restFeedbackStatusMockMvc.perform(delete("/api/feedbackStatuses/{id}", feedbackStatus.getId())
@@ -157,6 +166,6 @@ public class FeedbackStatusResourceTest {
 
         // Validate the database is empty
         List<FeedbackStatus> feedbackStatuses = feedbackStatusRepository.findAll();
-        assertThat(feedbackStatuses).hasSize(0);
+        assertThat(feedbackStatuses).hasSize(count - 1);
     }
 }

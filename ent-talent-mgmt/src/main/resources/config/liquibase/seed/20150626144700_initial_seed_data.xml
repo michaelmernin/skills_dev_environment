@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <!--
+        Add seed data.
+    -->
+    <changeSet id="20150626144700" author="donovan">
+        <loadUpdateData encoding="UTF-8" separator=";"
+                  file="config/liquibase/seed/users.csv"
+                  tableName="T_USER"
+                  primaryKey="id"/>
+
+        <loadUpdateData encoding="UTF-8" separator=";"
+                  file="config/liquibase/seed/authorities.csv"
+                  tableName="T_AUTHORITY"
+                  primaryKey="name"/>
+
+        <loadUpdateData encoding="UTF-8" separator=";"
+                  file="config/liquibase/seed/users_authorities.csv"
+                  tableName="T_USER_AUTHORITY"
+                  primaryKey="user_id,authority_name"/>
+
+        <loadUpdateData encoding="UTF-8" separator=";"
+                  file="config/liquibase/seed/review_types.csv"
+                  tableName="T_REVIEWTYPE"
+                  primaryKey="id"/>
+
+        <loadUpdateData encoding="UTF-8" separator=";"
+                  file="config/liquibase/seed/categories.csv"
+                  tableName="T_CATEGORY"
+                  primaryKey="id"/>
+
+        <loadUpdateData encoding="UTF-8" separator=";"
+                  file="config/liquibase/seed/feedback_types.csv"
+                  tableName="T_FEEDBACKTYPE"
+                  primaryKey="id"/>
+
+        <loadUpdateData encoding="UTF-8" separator=";"
+                  file="config/liquibase/seed/feedback_statuses.csv"
+                  tableName="T_FEEDBACKSTATUS"
+                  primaryKey="id"/>
+
+        <loadUpdateData encoding="UTF-8" separator=";"
+                  file="config/liquibase/seed/review_statuses.csv"
+                  tableName="T_REVIEWSTATUS"
+                  primaryKey="id"/>
+
+    </changeSet>
+</databaseChangeLog>

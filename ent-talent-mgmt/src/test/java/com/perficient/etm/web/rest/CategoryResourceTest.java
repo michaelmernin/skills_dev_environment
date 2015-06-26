@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -64,8 +66,7 @@ public class CategoryResourceTest {
     @Test
     @Transactional
     public void createCategory() throws Exception {
-        // Validate the database is empty
-        assertThat(categoryRepository.findAll()).hasSize(0);
+        int count = (int) categoryRepository.count();
 
         // Create the Category
         restCategoryMockMvc.perform(post("/api/categories")
@@ -75,52 +76,56 @@ public class CategoryResourceTest {
 
         // Validate the Category in the database
         List<Category> categories = categoryRepository.findAll();
-        assertThat(categories).hasSize(1);
-        Category testCategory = categories.iterator().next();
+        assertThat(categories).hasSize(count + 1);
+        Optional<Category> optional = categories.stream().filter(c -> {return DEFAULT_TITLE.equals(c.getTitle());}).findAny();
+        assertThat(optional.isPresent()).isTrue();
+        Category testCategory = optional.get();
         assertThat(testCategory.getTitle()).isEqualTo(DEFAULT_TITLE);
     }
 
     @Test
     @Transactional
     public void getAllCategories() throws Exception {
-        // Initialize the database
-        categoryRepository.saveAndFlush(category);
+        // Read a category
+        Category category = categoryRepository.findOne(1L);
 
         // Get all the categories
         restCategoryMockMvc.perform(get("/api/categories"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[0].id").value(category.getId().intValue()))
-                .andExpect(jsonPath("$.[0].title").value(DEFAULT_TITLE.toString()));
+                .andExpect(jsonPath("$.[0].title").value(category.getTitle()));
     }
 
     @Test
     @Transactional
     public void getCategory() throws Exception {
-        // Initialize the database
-        categoryRepository.saveAndFlush(category);
+        // Read a category
+        Category category = categoryRepository.findOne(1L);
 
         // Get the category
         restCategoryMockMvc.perform(get("/api/categories/{id}", category.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(category.getId().intValue()))
-            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()));
+            .andExpect(jsonPath("$.title").value(category.getTitle()));
     }
 
     @Test
     @Transactional
     public void getNonExistingCategory() throws Exception {
         // Get the category
-        restCategoryMockMvc.perform(get("/api/categories/{id}", 1L))
+        restCategoryMockMvc.perform(get("/api/categories/{id}", 404L))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateCategory() throws Exception {
-        // Initialize the database
-        categoryRepository.saveAndFlush(category);
+        int count = (int) categoryRepository.count();
+        
+        // Read a category
+        Category category = categoryRepository.findOne(1L);
 
         // Update the category
         category.setTitle(UPDATED_TITLE);
@@ -131,24 +136,28 @@ public class CategoryResourceTest {
 
         // Validate the Category in the database
         List<Category> categories = categoryRepository.findAll();
-        assertThat(categories).hasSize(1);
-        Category testCategory = categories.iterator().next();
+        assertThat(categories).hasSize(count);
+        Optional<Category> optional = categories.stream().filter(c -> {return c.getId() == 1L;}).findAny();
+        assertThat(optional.isPresent()).isTrue();
+        Category testCategory = optional.get();
         assertThat(testCategory.getTitle()).isEqualTo(UPDATED_TITLE);
     }
 
     @Test
     @Transactional
     public void deleteCategory() throws Exception {
-        // Initialize the database
-        categoryRepository.saveAndFlush(category);
+        int count = (int) categoryRepository.count();
+        
+        // Read a category
+        Category category = categoryRepository.findOne(1L);
 
         // Get the category
         restCategoryMockMvc.perform(delete("/api/categories/{id}", category.getId())
                 .accept(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
-        // Validate the database is empty
+        // Validate the database has one less item
         List<Category> categories = categoryRepository.findAll();
-        assertThat(categories).hasSize(0);
+        assertThat(categories).hasSize(count - 1);
     }
 }

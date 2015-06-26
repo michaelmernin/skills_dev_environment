@@ -18,13 +18,18 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Authority implements Serializable {
 
-    private static final long serialVersionUID = -1264888405412284053L;
-    
+    private static final long serialVersionUID = -8843803286670675243L;
+
     @NotNull
     @Size(min = 0, max = 50)
     @Id
     @Column(length = 50)
     private String name;
+
+    @NotNull
+    @Size(min = 0, max = 50)
+    @Column(length = 50)
+    private String description;
 
     public String getName() {
         return name;
@@ -32,6 +37,14 @@ public class Authority implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
@@ -61,6 +74,7 @@ public class Authority implements Serializable {
     public String toString() {
         return "Authority{" +
                 "name='" + name + '\'' +
+                "description='" + description + '\'' +
                 "}";
     }
 }
