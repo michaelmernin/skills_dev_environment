@@ -29,7 +29,7 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class User extends AbstractAuditingEntity implements Serializable {
 
-    private static final long serialVersionUID = 1924270200059530090L;
+    private static final long serialVersionUID = -930408054469262071L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -66,6 +66,16 @@ public class User extends AbstractAuditingEntity implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Authority> authorities = new HashSet<>();
+    
+    @OneToMany(mappedBy = "reviewee")
+    @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Review> selfReviews;
+    
+    @OneToMany(mappedBy = "reviewer")
+    @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Review> colleagueReviews;
     
     @JsonIgnore
     @ManyToMany
@@ -184,6 +194,22 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.authorities = authorities;
     }
     
+    public Set<Review> getSelfReviews() {
+        return selfReviews;
+    }
+
+    public void setSelfReviews(Set<Review> selfReviews) {
+        this.selfReviews = selfReviews;
+    }
+
+    public Set<Review> getColleagueReviews() {
+        return colleagueReviews;
+    }
+
+    public void setColleagueReviews(Set<Review> colleagueReviews) {
+        this.colleagueReviews = colleagueReviews;
+    }
+
     public Set<Review> getPeerReviews() {
         return peerReviews;
     }
@@ -229,8 +255,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
                 "login='" + login + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", langKey='" + langKey + '\'' +
                 "}";
     }
 }
