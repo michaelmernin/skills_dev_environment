@@ -1,0 +1,74 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "review",
+            "relationshipNameCapitalized": "Review",
+            "relationshipFieldName": "review",
+            "otherEntityName": "review",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "Review",
+            "otherEntityField": "title"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "author",
+            "relationshipNameCapitalized": "Author",
+            "relationshipFieldName": "author",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "User",
+            "otherEntityField": "firstName"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldNameCapitalized": "Name",
+            "fieldNameUnderscored": "name",
+            "fieldInJavaBeanMethod": "Name",
+            "fieldValidate": false
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "note",
+            "fieldType": "String",
+            "fieldNameCapitalized": "Note",
+            "fieldNameUnderscored": "note",
+            "fieldInJavaBeanMethod": "Note",
+            "fieldValidate": false
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "targetDate",
+            "fieldType": "LocalDate",
+            "fieldNameCapitalized": "TargetDate",
+            "fieldNameUnderscored": "target_date",
+            "fieldInJavaBeanMethod": "TargetDate",
+            "fieldValidate": false
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "completionDate",
+            "fieldType": "LocalDate",
+            "fieldNameCapitalized": "CompletionDate",
+            "fieldNameUnderscored": "completion_date",
+            "fieldInJavaBeanMethod": "CompletionDate",
+            "fieldValidate": false
+        }
+    ],
+    "fieldsContainOwnerManyToMany": false,
+    "fieldsContainOwnerOneToOne": false,
+    "fieldsContainOneToMany": false,
+    "fieldsContainLocalDate": true,
+    "fieldsContainCustomTime": true,
+    "fieldsContainBigDecimal": false,
+    "fieldsContainDateTime": false,
+    "fieldsContainDate": false,
+    "changelogDate": "20150626003243",
+    "dto": "no",
+    "pagination": "no",
+    "validation": false
+}

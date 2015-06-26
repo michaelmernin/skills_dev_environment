@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <!--
+        Added the entity Goal.
+    -->
+    <changeSet id="20150626003243" author="jhipster">
+        <createTable tableName="T_GOAL">
+            <column name="id" type="bigint" autoIncrement="true" >
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="note" type="varchar(255)"/>
+            <column name="target_date" type="date"/>
+            <column name="completion_date" type="date"/>
+            <column name="review_id" type="bigint"/>
+            <column name="author_id" type="bigint"/>
+        </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="review_id"
+                                 baseTableName="T_GOAL"
+                                 constraintName="fk_goal_review_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_REVIEW"/>
+
+        <addForeignKeyConstraint baseColumnNames="author_id"
+                                 baseTableName="T_GOAL"
+                                 constraintName="fk_goal_author_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_USER"/>
+
+    </changeSet>
+</databaseChangeLog>

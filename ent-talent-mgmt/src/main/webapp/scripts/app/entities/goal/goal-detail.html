@@ -1,0 +1,70 @@
+
+<div>
+    <h2><span>Goal</span> {{goal.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span>Name</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{goal.name}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>Note</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{goal.note}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>TargetDate</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{goal.targetDate}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>CompletionDate</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{goal.completionDate}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>review</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{goal.review.title}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>author</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{goal.author.firstName}}" readonly>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            ui-sref="goal"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+</div>
