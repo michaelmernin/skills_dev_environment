@@ -12,7 +12,7 @@ public final class AuthoritiesConstants {
 
     public static final String ANONYMOUS = "ROLE_ANONYMOUS";
     
-    public static final String COUNCELOR = "ROLE_COUNCELOR";
+    public static final String COUNSELOR = "ROLE_COUNSELOR";
     
     public static final String GENERAL_MANAGER = "ROLE_GENERAL_MANAGER";
     
