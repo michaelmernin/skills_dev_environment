@@ -18,6 +18,8 @@ import java.util.Objects;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Feedback implements Serializable {
 
+    private static final long serialVersionUID = 4925837454082432014L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

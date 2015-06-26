@@ -14,6 +14,8 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Category implements Serializable {
 
+    private static final long serialVersionUID = 8101043601812357214L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

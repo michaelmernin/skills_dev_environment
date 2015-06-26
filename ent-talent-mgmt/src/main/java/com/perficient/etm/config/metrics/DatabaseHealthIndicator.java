@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
+
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
  */
 public class DatabaseHealthIndicator extends AbstractHealthIndicator {
     
+    @SuppressWarnings("unused")
     private DataSource dataSource;
 
     private JdbcTemplate jdbcTemplate;

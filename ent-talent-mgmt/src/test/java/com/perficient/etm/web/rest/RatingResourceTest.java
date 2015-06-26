@@ -87,7 +87,7 @@ public class RatingResourceTest {
         Rating testRating = ratings.get(ratings.size() - 1);
         assertThat(testRating.getScore()).isEqualTo(DEFAULT_SCORE);
         assertThat(testRating.getComment()).isEqualTo(DEFAULT_COMMENT);
-        assertThat(testRating.getVisible()).isEqualTo(DEFAULT_VISIBLE);
+        assertThat(testRating.isVisible()).isEqualTo(DEFAULT_VISIBLE);
     }
 
     @Test
@@ -153,7 +153,7 @@ public class RatingResourceTest {
         Rating testRating = ratings.get(ratings.size() - 1);
         assertThat(testRating.getScore()).isEqualTo(UPDATED_SCORE);
         assertThat(testRating.getComment()).isEqualTo(UPDATED_COMMENT);
-        assertThat(testRating.getVisible()).isEqualTo(UPDATED_VISIBLE);
+        assertThat(testRating.isVisible()).isEqualTo(UPDATED_VISIBLE);
     }
 
     @Test

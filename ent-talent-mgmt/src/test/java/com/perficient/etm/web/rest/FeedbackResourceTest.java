@@ -73,7 +73,6 @@ public class FeedbackResourceTest {
         // Validate the Feedback in the database
         List<Feedback> feedback = feedbackRepository.findAll();
         assertThat(feedback).hasSize(databaseSizeBeforeCreate + 1);
-        Feedback testFeedback = feedback.get(feedback.size() - 1);
     }
 
     @Test
@@ -127,7 +126,6 @@ public class FeedbackResourceTest {
         // Validate the Feedback in the database
         List<Feedback> feedback = feedbackRepository.findAll();
         assertThat(feedback).hasSize(databaseSizeBeforeUpdate);
-        Feedback testFeedback = feedback.get(feedback.size() - 1);
     }
 
     @Test

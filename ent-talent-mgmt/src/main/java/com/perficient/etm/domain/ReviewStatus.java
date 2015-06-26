@@ -14,6 +14,8 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ReviewStatus implements Serializable {
 
+    private static final long serialVersionUID = -424659438384575321L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

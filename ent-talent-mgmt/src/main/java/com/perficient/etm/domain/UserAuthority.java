@@ -22,6 +22,8 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class UserAuthority implements Serializable {
 
+    private static final long serialVersionUID = 2662495204798997264L;
+
     @NotNull
     @Id
     @Size(min = 0, max = 50)

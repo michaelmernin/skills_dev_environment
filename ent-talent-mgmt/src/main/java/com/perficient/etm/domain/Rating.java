@@ -60,7 +60,7 @@ public class Rating implements Serializable {
         this.comment = comment;
     }
 
-    public Boolean getVisible() {
+    public Boolean isVisible() {
         return visible;
     }
 

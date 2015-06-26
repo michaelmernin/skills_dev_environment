@@ -14,6 +14,8 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class FeedbackStatus implements Serializable {
 
+    private static final long serialVersionUID = -5095660024849162357L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
