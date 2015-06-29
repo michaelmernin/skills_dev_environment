@@ -29,7 +29,9 @@
         <loadUpdateData encoding="UTF-8" separator=";"
                   file="config/liquibase/seed/review_types.csv"
                   tableName="T_REVIEWTYPE"
-                  primaryKey="id"/>
+                  primaryKey="id">
+          <column name="active" type="boolean"/>
+        </loadUpdateData>
 
         <loadUpdateData encoding="UTF-8" separator=";"
                   file="config/liquibase/seed/categories.csv"
