@@ -1,7 +1,11 @@
 <md-toolbar class="md-whiteframe-z1">
   <h1 class="md-toolbar-tools">
     <img class="perficient-logo-sm" src="/assets/images/Perficient-Logo-Reversed_Small.png" alt="Perficient Logo" height="50px"/>
-    <a href="#"><span translate="global.title">ETM</span> <span class="navbar-version">v{{VERSION}}</span></a>
+    <a href="#">
+      <span hide-sm translate="global.title">Enterprise Talent Management</span>
+      <span hide-gt-sm translate="global.abbr">ETM</span>
+      <span hide-sm class="navbar-version">v{{VERSION}}</span>
+    </a>
     <span flex></span>
     <md-button id="right-nav-toggle" class="md-fab md-primary" ng-click="toggleRightNav()" aria-label="Open Right Nav">
       <i class="fa fa-lg fa-bars"></i>
