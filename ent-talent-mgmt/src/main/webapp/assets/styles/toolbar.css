@@ -8,7 +8,7 @@ Perficient Logo in toolbar
 /* ==========================================================================
 Version number in toolbar
 ========================================================================== */
-.navbar-version {
+.toolbar-version {
   font-size: 10px;
   color: #ccc
 }

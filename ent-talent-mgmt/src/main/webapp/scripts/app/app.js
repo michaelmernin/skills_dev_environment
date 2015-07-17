@@ -79,9 +79,9 @@ angular.module('etmApp', [
   $stateProvider.state('site', {
     'abstract': true,
     views: {
-      'navbar@': {
-        templateUrl: 'scripts/components/navbar/toolbar.html',
-        controller: 'NavbarController'
+      'toolbar@': {
+        templateUrl: 'scripts/components/toolbar/toolbar.html',
+        controller: 'ToolbarController'
       }
     },
     resolve: {
