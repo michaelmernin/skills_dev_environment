@@ -4,52 +4,11 @@ body {
   color: #333;
 }
 
-body > [layout] {
-  background: #fafafa;
-}
-
 /* ==========================================================================
 Hide ng-cloak on page load, https://docs.angularjs.org/api/ng/directive/ngCloak
 ========================================================================== */
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
-}
-
-/* ==========================================================================
-Developement Ribbon
-========================================================================== */
-.development {
-  position: absolute;
-  width: 149px;
-  height: 149px;
-  top: 0;
-  left: 0;
-  border: 0;
-  z-index: 1000;
-  background-image: url("../images/development_ribbon.png");
-  background-position: center center;
-  background-repeat: no-repeat;
-}
-
-/* ==========================================================================
-Version number in navbar
-========================================================================== */
-.navbar-version {
-  font-size: 10px;
-  color: #ccc
-}
-
-/* ==========================================================================
-Menu Toggle
-========================================================================== */
-.etm md-toolbar .md-toolbar-tools .md-button,
-.etm md-toolbar .md-toolbar-tools .md-button:hover,
-.etm md-toolbar .md-toolbar-tools .md-button:focus  {
-  margin-left: 16px;
-  box-shadow: none;
-  border: none;
-  transform: none;
-  -webkit-transform: none;
 }
 
 /* ==========================================================================
@@ -82,14 +41,6 @@ Browser Upgrade Prompt
 .error {
   color: white;
   background-color: red;
-}
-
-.hipster {
-  display: inline-block;
-  width: 347px;
-  height: 497px;
-  background: url("../images/hipster.png") no-repeat center top;
-  background-size: contain;
 }
 
 /* wait autoprefixer update to allow simple generation of high pixel density media query */

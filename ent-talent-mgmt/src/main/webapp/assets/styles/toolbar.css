@@ -1,0 +1,27 @@
+/* ==========================================================================
+Perficient Logo in toolbar
+========================================================================== */
+.md-toolbar-tools .perficient-logo-sm {
+  margin-right: 10px;
+}
+
+/* ==========================================================================
+Version number in toolbar
+========================================================================== */
+.navbar-version {
+  font-size: 10px;
+  color: #ccc
+}
+
+/* ==========================================================================
+Menu Toggle in toolbar
+========================================================================== */
+.etm md-toolbar .md-toolbar-tools .md-button,
+.etm md-toolbar .md-toolbar-tools .md-button:hover,
+.etm md-toolbar .md-toolbar-tools .md-button:focus  {
+  margin-left: 16px;
+  box-shadow: none;
+  border: none;
+  transform: none;
+  -webkit-transform: none;
+}
