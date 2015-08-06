@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('ToolbarController', function ($scope, $state, $mdUtil, $mdSidenav, Auth, Principal) {
+angular.module('etmApp').controller('SidenavController', function ($scope, $state, $mdUtil, $mdSidenav, Auth, Principal) {
   $scope.isAuthenticated = Principal.isAuthenticated;
   $scope.isInRole = Principal.isInRole;
   $scope.$state = $state;

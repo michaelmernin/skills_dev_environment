@@ -82,6 +82,10 @@ angular.module('etmApp', [
       'toolbar@': {
         templateUrl: 'scripts/components/toolbar/toolbar.html',
         controller: 'ToolbarController'
+      },
+      'sidenav@': {
+        templateUrl: 'scripts/components/sidenav/sidenav.html',
+        controller: 'SidenavController'
       }
     },
     resolve: {

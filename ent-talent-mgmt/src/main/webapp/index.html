@@ -20,6 +20,7 @@
   <!-- build:css assets/styles/app.css -->
   <link rel="stylesheet" href="assets/styles/main.css">
   <link rel="stylesheet" href="assets/styles/toolbar.css">
+  <link rel="stylesheet" href="assets/styles/sidenav.css">
   <link rel="stylesheet" href="assets/styles/error.css">
   <!-- endbuild -->
 </head>
@@ -27,9 +28,14 @@
   <!--[if lt IE 10]>
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
-  <div ui-view="toolbar" ng-cloak></div>
-  <div layout="row">
-  	<div ui-view="content" flex flex-lg="80" flex-gt-lg="70" offset-lg="10" offset-gt-lg="15"></div>
+  <div layout="row" style="height: 100%">
+    <div layout="column" flex>
+      <div ui-view="toolbar" ng-cloak></div>
+      <div layout="row" flex>
+        <div ui-view="content" flex flex-lg="90" offset-lg="5" flex-gt-lg="80" offset-gt-lg="10"></div>
+      </div>
+    </div>
+    <div ui-view="sidenav" ng-cloak></div>
   </div>
 
   <!-- Google Analytics: uncomment and change UA-XXXXX-X to be your site's ID.
@@ -81,6 +87,7 @@ ga('create','UA-XXXXX-X');ga('send','pageview');
   <script src="scripts/components/admin/monitoring.service.js"></script>
   <script src="scripts/components/toolbar/toolbar.directive.js"></script>
   <script src="scripts/components/toolbar/toolbar.controller.js"></script>
+  <script src="scripts/components/sidenav/sidenav.controller.js"></script>
   <script src="scripts/components/util/truncate.filter.js"></script>
   <script src="scripts/components/util/base64.service.js"></script>
   <script src="scripts/app/account/account.js"></script>

@@ -1,0 +1,51 @@
+<md-sidenav class="sidenav md-sidenav-right md-whiteframe-z2" md-component-id="right-nav" md-is-locked-open="$mdMedia('gt-md')">
+  <md-toolbar class="md-theme-light">
+    <h1 class="md-toolbar-tools">
+      Navigation
+      <span flex></span>
+      <md-button class="md-fab md-primary" hide-gt-md ng-click="toggleRightNav()" aria-label="Close Right Nav">
+        <i class="fa fa-lg fa-close"></i>
+      </md-button>
+    </h1>
+  </md-toolbar>
+  <md-content ng-switch="isAuthenticated()">
+    <section>
+      <md-subheader>Pages</md-subheader>
+      <md-list>
+        <md-list-item>
+          <md-button class="md-primary" href="#">Link</md-button>
+        </md-list-item>
+        <md-list-item>
+          <md-button class="md-primary" href="#">Link</md-button>
+        </md-list-item>
+      </md-list>
+      <md-divider></md-divider>
+    </section>
+    <section ng-show="isInRole('ROLE_ADMIN')">
+      <md-subheader>Admin</md-subheader>
+      <md-list>
+        <md-list-item>
+          <md-button class="md-primary" href="#">Link</md-button>
+        </md-list-item>
+      </md-list>
+      <md-divider></md-divider>
+    </section>
+    <section>
+      <md-subheader>Account</md-subheader>
+      <md-list>
+        <md-list-item ng-switch-when="true">
+          <md-button class="md-primary" ng-click="logout()">
+            <i class="fa fa-sign-out"></i>&#xA0;
+            <span translate="global.menu.account.logout">Log out</span>
+          </md-button>
+        </md-list-item>
+        <md-list-item ng-switch-when="false">
+          <md-button class="md-primary" ui-sref="login">
+            <i class="fa fa-sign-in"></i>&#xA0;
+            <span translate="global.menu.account.login">Login</span>
+          </md-button>
+        </md-list-item>
+      </md-list>
+    </section>
+  </md-content>
+</md-sidenav>
