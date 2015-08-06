@@ -7,6 +7,12 @@
       <span hide-sm class="toolbar-version">v{{VERSION}}</span>
     </a>
     <span flex></span>
+    <md-button hide-sm ui-sref="settings" ng-show="isAuthenticated()">
+      {{account.firstName}} {{account.lastName}} <i class="fa fa-lg fa-user"></i>
+    </md-button>
+    <md-button hide-gt-sm ui-sref="settings" ng-show="isAuthenticated()" class="md-fab md-primary">
+      <i class="fa fa-lg fa-user"></i>
+    </md-button>
     <md-button hide-gt-md class="md-fab md-primary" ng-click="toggleRightNav()" aria-label="Open Right Nav">
       <i class="fa fa-lg fa-navicon"></i>
     </md-button>
