@@ -8,4 +8,8 @@ angular.module('etmApp').controller('LogsController', function ($scope, LogsServ
       $scope.loggers = LogsService.findAll();
     });
   };
+  
+  $scope.splitClass = function (className) {
+    return className.replace(/\.([A-Z])/, ' $1')
+  }
 });
