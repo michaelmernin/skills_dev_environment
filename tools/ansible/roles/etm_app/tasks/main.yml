@@ -26,6 +26,12 @@
     dest: "{{ script_dir }}/etmRun"
     mode: 0744
 
+- name: Load encrypted LDAP password from vault
+  tags:
+    - deploy
+    - server
+  include_vars: ldap.yml
+
 - name: Start the application
   tags:
     - deploy

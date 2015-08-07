@@ -6,7 +6,10 @@
   with_items:
     - "{{ mysql_package }}"
     - MySQL-python
-  
+
+- name: Load encrypted MySQL passwords from vault
+  include_vars: passwords.yml
+
 # 'localhost' needs to be the last item for idempotency, see
 # http://ansible.cc/docs/modules.html#mysql-user
 - name: Update MySQL root password for all root accounts
