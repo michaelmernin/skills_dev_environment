@@ -1,0 +1,7 @@
+.swagger-iframe {
+  border: none;
+  margin: 0;
+  padding: 0;
+  height: 800px;
+  height: calc(100vh - 64px - 16px); /* viewport - toolbar - layout padding */
+}
