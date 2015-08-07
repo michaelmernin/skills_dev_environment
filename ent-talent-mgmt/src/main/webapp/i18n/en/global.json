@@ -27,7 +27,7 @@
       "admin": {
         "main": "Administration",
         "tracker": "User tracker",
-        "metrics": "Metrics",
+        "status": "Status",
         "health": "Health",
         "configuration": "Configuration",
         "logs": "Logs",

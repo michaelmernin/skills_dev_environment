@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('etmApp').controller('MetricsController', function ($scope, MonitoringService) {
+angular.module('etmApp').controller('StatusController', function ($scope, MonitoringService) {
   $scope.metrics = {};
   $scope.updatingMetrics = true;
 
   $scope.refresh = function () {
     $scope.updatingMetrics = true;
-    MonitoringService.getMetrics().then(function (promise) {
+    MonitoringService.getStatus().then(function (promise) {
       $scope.metrics = promise;
       $scope.updatingMetrics = false;
     }, function (promise) {

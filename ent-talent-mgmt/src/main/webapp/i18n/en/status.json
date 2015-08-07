@@ -1,6 +1,6 @@
 {
-  "metrics": {
-    "title": "Application Metrics",
+  "status": {
+    "title": "Application Status",
     "refresh.button": "Refresh",
     "updating": "Updating...",
     "jvm": {

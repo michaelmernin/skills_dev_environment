@@ -1,22 +1,22 @@
 'use strict';
 
 angular.module('etmApp').config(function ($stateProvider) {
-  $stateProvider.state('metrics', {
+  $stateProvider.state('status', {
     parent: 'admin',
-    url: '/metrics',
+    url: '/status',
     data: {
       roles: ['ROLE_ADMIN'],
-      pageTitle: 'metrics.title'
+      pageTitle: 'status.title'
     },
     views: {
       'content@': {
-        templateUrl: 'scripts/app/admin/metrics/metrics.html',
-        controller: 'MetricsController'
+        templateUrl: 'scripts/app/admin/status/status.html',
+        controller: 'StatusController'
       }
     },
     resolve: {
       translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-        $translatePartialLoader.addPart('metrics');
+        $translatePartialLoader.addPart('status');
         return $translate.refresh();
       }]
     }

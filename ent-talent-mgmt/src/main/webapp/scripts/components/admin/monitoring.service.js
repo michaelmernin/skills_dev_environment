@@ -2,8 +2,8 @@
 
 angular.module('etmApp').factory('MonitoringService', function ($rootScope, $http) {
   return {
-    getMetrics: function () {
-      return $http.get('metrics/metrics').then(function (response) {
+    getStatus: function () {
+      return $http.get('status/status').then(function (response) {
         return response.data;
       });
     },
