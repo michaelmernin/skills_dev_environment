@@ -3,7 +3,7 @@
     <h1 class="md-toolbar-tools">
       Navigation
       <span flex></span>
-      <md-button class="md-fab md-primary" hide-gt-md ng-click="toggleRightNav()" aria-label="Close Right Nav">
+      <md-button class="md-fab md-primary" ng-show="$mdMedia('md') || $mdMedia('sm')" ng-click="toggleRightNav()" aria-label="Close Right Nav">
         <i class="fa fa-lg fa-close"></i>
       </md-button>
     </h1>
