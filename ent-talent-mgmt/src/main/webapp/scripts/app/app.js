@@ -5,6 +5,7 @@ angular.module('etmApp', [
 ]).run(function ($rootScope, $location, $window, $http, $state, $translate, Auth, Principal, Language, ENV, VERSION) {
   $rootScope.ENV = ENV;
   $rootScope.VERSION = VERSION;
+
   $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams) {
     $rootScope.toState = toState;
     $rootScope.toStateParams = toStateParams;
@@ -66,7 +67,7 @@ angular.module('etmApp', [
     $mdThemingProvider.theme('default')
       .primaryPalette('prft-red')
       .accentPalette('grey');
-  }]).config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, httpRequestInterceptorCacheBusterProvider) {
+}]).config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, httpRequestInterceptorCacheBusterProvider) {
 
   //enable CSRF
   $httpProvider.defaults.xsrfCookieName = 'CSRF-TOKEN';
@@ -113,4 +114,7 @@ angular.module('etmApp', [
 
   tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-i18n/angular-locale_{{locale}}.js');
   tmhDynamicLocaleProvider.useCookieStorage('NG_TRANSLATE_LANG_KEY');
-});
+}).config(['$compileProvider', 'ENV', function ($compileProvider, ENV) {
+  var debugDisabled = ENV === 'prod' || ENV === 'uat';
+  $compileProvider.debugInfoEnabled(!debugDisabled);
+}]);
