@@ -3,7 +3,10 @@
     <div layout="column" layout-padding>
       <h2 translate="configuration.title">configuration</h2>
     
-      {{'configuration.filter' | translate}} <input type="text" ng-model="filter" class="form-control">
+      <md-input-container>
+        <label for="filter" translate="configuration.filter">Filter</label>
+        <input type="text" id="filter" ng-model="filter">
+      </md-input-container>
     
       <table class="table table-condensed table-striped table-bordered table-responsive">
         <thead>
@@ -16,9 +19,12 @@
         <tr ng-repeat="entry in configuration | filter:filter | orderBy:predicate:reverse">
           <td>{{entry.prefix}}</span></td>
           <td>
-            <div class="row" ng-repeat="(key, value) in entry.properties">
-              <div class="col-md-6">{{key}}</div>
-              <div class="col-md-6"><span class="label label-info">{{value}}</span></div>
+            <div ng-repeat="(key, value) in entry.properties">
+              <span>
+                <md-tooltip ng-if="value">{{value}}</md-tooltip>
+                <i class="fa fa-info-circle" ng-if="value"></i>
+                {{key}}
+              </span>
             </div>
           </td>
         </tr>
