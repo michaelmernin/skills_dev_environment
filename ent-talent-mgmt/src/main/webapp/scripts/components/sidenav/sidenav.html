@@ -10,7 +10,6 @@
   </md-toolbar>
   <md-content ng-switch="isAuthenticated()">
     <section>
-      <md-subheader>Pages</md-subheader>
       <md-list>
         <md-list-item>
           <md-button class="md-primary" href="#">Link</md-button>
@@ -22,19 +21,76 @@
       <md-divider></md-divider>
     </section>
     <section ng-show="isInRole('ROLE_ADMIN')">
-      <md-subheader>Admin</md-subheader>
+      <md-subheader>
+        <i class="fa fa-flask"></i>&#xA0;
+        <span translate="global.menu.admin.main">Admin</span>
+      </md-subheader>
       <md-list>
         <md-list-item>
-          <md-button class="md-primary" href="#">Link</md-button>
+          <md-button class="md-primary" ui-sref="status">
+            <i class="fa fa-dashboard"></i>&#xA0;
+            <span translate="global.menu.admin.status">Status</span>
+          </md-button>
+        </md-list-item>
+        <md-list-item>
+          <md-button class="md-primary" ui-sref="health">
+            <i class="fa fa-heartbeat"></i>&#xA0;
+            <span translate="global.menu.admin.health">Health</span>
+          </md-button>
+        </md-list-item>
+        <md-list-item>
+          <md-button class="md-primary" ui-sref="configuration">
+            <i class="fa fa-wrench"></i>&#xA0;
+            <span translate="global.menu.admin.configuration">Configuration</span>
+          </md-button>
+        </md-list-item>
+        <md-list-item>
+          <md-button class="md-primary" ui-sref="audits">
+            <i class="fa fa-history"></i>&#xA0;
+            <span translate="global.menu.admin.audits">Audits</span>
+          </md-button>
+        </md-list-item>
+        <md-list-item>
+          <md-button class="md-primary" ui-sref="logs">
+            <i class="fa fa-list-alt"></i>&#xA0;
+            <span translate="global.menu.admin.logs">Logs</span>
+          </md-button>
+        </md-list-item>
+        <md-list-item>
+          <md-button class="md-primary" ui-sref="docs">
+            <i class="fa fa-book"></i>&#xA0;
+            <span translate="global.menu.admin.apidocs">API Docs</span>
+          </md-button>
+        </md-list-item>
+        <md-list-item ng-show="{{ENV === 'dev'}}">
+          <md-button class="md-primary" href="/console" target="_tab">
+            <i class="fa fa-database"></i>&#xA0;
+            <span translate="global.menu.admin.database">Database</span>
+          </md-button>
         </md-list-item>
       </md-list>
       <md-divider></md-divider>
     </section>
     <section>
-      <md-subheader>Account</md-subheader>
+      <md-subheader>
+        <i class="fa fa-user"></i>&#xA0;
+        <span translate="global.menu.account.main">Account</span>
+      </md-subheader>
       <md-list>
         <md-list-item ng-switch-when="true">
-          <md-button class="md-primary" ng-click="logout()">
+          <md-button class="md-primary" ui-sref="settings">
+            <i class="fa fa-cog"></i>&#xA0;
+            <span translate="global.menu.account.settings">Profile</span>
+          </md-button>
+        </md-list-item>
+        <md-list-item ng-switch-when="true">
+          <md-button class="md-primary" ui-sref="sessions">
+            <i class="fa fa-cloud"></i>&#xA0;
+            <span translate="global.menu.account.sessions">Sessions</span>
+          </md-button>
+        </md-list-item>
+        <md-list-item ng-switch-when="true">
+          <md-button class="md-primary" ui-sref="login" ng-click="logout()">
             <i class="fa fa-sign-out"></i>&#xA0;
             <span translate="global.menu.account.logout">Log out</span>
           </md-button>

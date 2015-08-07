@@ -3,21 +3,14 @@
     <div layout="column" layout-padding>
       <h2 class="md-display-1" translate="main.title">My Dashboard</h2>
 
-        <div ng-switch="isAuthenticated()">
-          <div ng-switch-when="true" >
-            <p translate="main.logged.message" translate-values="{firstName: '{{account.firstName}}', lastName: '{{account.lastName}}', email: '{{account.email}}'}">
-              You are logged in as user "Admin".
-            </p>
-            <p>
-              <a href="#/logout" translate="global.menu.account.logout">Log out</a>
-            </p>
-          </div>
-
-          <p ng-switch-when="false" translate="global.messages.info.authenticated">
-            You are not logged in. <a href="#/login">Log in</a>
+      <div ng-switch="isAuthenticated()">
+        <div ng-switch-when="true" >
+          <p translate="main.logged.message" translate-values="{firstName: '{{account.firstName}}', lastName: '{{account.lastName}}', email: '{{account.email}}'}">
+            You are logged in as user "Admin".
           </p>
         </div>
       </div>
+
     </div>
   </md-content>
 </div>

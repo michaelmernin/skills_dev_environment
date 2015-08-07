@@ -18,7 +18,7 @@
       },
       "account": {
         "main": "Account",
-        "settings": "Settings",
+        "settings": "Profile",
         "password": "Password",
         "sessions": "Sessions",
         "login": "Authenticate",
@@ -32,7 +32,7 @@
         "configuration": "Configuration",
         "logs": "Logs",
         "audits": "Audits",
-        "apidocs": "API",
+        "apidocs": "API Docs",
         "database": "Database"
       },
       "language": "Language"
