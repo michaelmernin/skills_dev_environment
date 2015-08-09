@@ -6,3 +6,4 @@
     - npm
     - go_cd_server
     - go_cd_agent
+    - ansible_agent

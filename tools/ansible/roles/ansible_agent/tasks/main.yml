@@ -1,0 +1,15 @@
+---
+# file: roles/ansible_agent/tasks/main.yml
+- name: Configure EPEL Repository
+  tags: ansible_agent
+  sudo: yes
+  yum:
+    name: epel-release
+    state: latest
+
+- name: Install Ansible
+  tags: ansible_agent
+  sudo: yes
+  yum:
+    name: ansible
+    state: latest
