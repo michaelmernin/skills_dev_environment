@@ -10,34 +10,57 @@
     version: "{{ tag_name }}"
     accept_hostkey: yes
 
-- name: Kill currently running servers
+- name: Copy war artifact
+  tags:
+    - ci_deploy
+  copy:
+    src: "{{ artifact_dir }}/"
+    dest: "{{ war_dir }}"
+
+- name: Kill currently running server
   tags:
     - deploy
+    - ci_deploy
     - server
-  command: pkill -f gradle
+  command: pkill -f etm
   ignore_errors: yes
 
 - name: Copy application bash script
   tags: 
     - deploy
-    - server
   template:
     src: etmRun.j2
     dest: "{{ script_dir }}/etmRun"
     mode: 0744
 
+- name: Copy war bash script
+  tags:
+    - ci_deploy
+  template:
+    src: etmRunWar.j2
+    dest: "{{ script_dir }}/etmRunWar"
+    mode: 0744
+
 - name: Load encrypted LDAP password from vault
   tags:
     - deploy
+    - ci_deploy
     - server
   include_vars: ldap.yml
 
 - name: Start the application
   tags:
     - deploy
-    - server
   command: "{{ script_dir }}/etmRun"
   environment:
     SPRING_LDAP_PASSWORD: "{{ ldap_password }}"
   args:
     chdir: "{{ app_dir }}"
+
+- name: Start the war
+  tags:
+    - ci_deploy
+    - server
+  command: "{{ script_dir }}/etmRunWar"
+  environment:
+    SPRING_LDAP_PASSWORD: "{{ ldap_password }}"

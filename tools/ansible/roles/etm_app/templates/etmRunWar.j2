@@ -1,0 +1,3 @@
+#!/bin/bash
+
+( ( nohup java -jar {{ war_dir }}/etm-{{ war_version }}.war --spring.profiles.active={{ profile }} 1>/dev/null 2>&1 ) & )

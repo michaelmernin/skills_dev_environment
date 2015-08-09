@@ -3,5 +3,7 @@
 repo_url: git@github.com:Perficient/ent-talent-mgmt.git
 tag_name: HEAD
 script_dir: ~/app
-deploy_dir: ~/app/etm
+deploy_dir: "{{ script_dir }}/etm"
 app_dir: "{{ deploy_dir }}/ent-talent-mgmt"
+war_dir: "{{ script_dir }}/etm-wars"
+war_version: 0.1-SNAPSHOT
