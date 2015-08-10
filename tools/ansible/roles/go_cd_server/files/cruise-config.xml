@@ -14,9 +14,14 @@
     <mailhost hostname="mail2.perficient.com" port="25" tls="false" from="etm-go@perficient.com" admin="donovan.mikrot@perficient.com" />
   </server>
   <pipelines group="etm">
-    <pipeline name="etm-build">
+    <pipeline name="etm-build" labeltemplate="${COUNT}-${git[:7]}" isLocked="false">
       <materials>
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" materialName="git">
+          <filter>
+            <ignore pattern="docs/**/*" />
+            <ignore pattern="tools/**/*" />
+          </filter>
+        </git>
       </materials>
       <stage name="install" cleanWorkingDir="true">
         <jobs>
@@ -76,8 +81,42 @@
         </jobs>
       </stage>
     </pipeline>
+    <pipeline name="etm-deploy-uat" labeltemplate="${etm-build}" isLocked="true" template="etm-deploy">
+      <params>
+        <param name="inventory">uat</param>
+      </params>
+      <materials>
+        <pipeline pipelineName="etm-build" stageName="build" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git">
+          <filter>
+            <ignore pattern="ent-talent-mgmt/**/*" />
+            <ignore pattern="docs/**/*" />
+            <ignore pattern="tools/ssl/**/*" />
+          </filter>
+        </git>
+      </materials>
+    </pipeline>
   </pipelines>
+  <templates>
+    <pipeline name="etm-deploy">
+      <stage name="deploy">
+        <jobs>
+          <job name="server">
+            <tasks>
+              <fetchartifact pipeline="etm-build" stage="build" job="package" srcdir="etm-wars">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="tools/ansible">
+                <arg>-c</arg>
+                <arg>ansible-playbook appservers.yml -i #{inventory} -t ci_deploy -e "artifact_dir=../../etm-wars" --vault-password-file ~/.ansible/vault_key.txt</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+  </templates>
   <agents>
   </agents>
 </cruise>
-
