@@ -117,30 +117,6 @@ module.exports = function (grunt) {
         'src/main/webapp/scripts/components/**/*.js'
       ]
     },
-    coffee: {
-      options: {
-        sourceMap: true,
-        sourceRoot: ''
-      },
-      dist: {
-        files: [{
-          expand: true,
-          cwd: 'src/main/webapp/scripts',
-          src: ['scripts/app/**/*.coffee', 'scripts/components/**/*.coffee'],
-          dest: '.tmp/scripts',
-          ext: '.js'
-        }]
-      },
-      test: {
-        files: [{
-          expand: true,
-          cwd: 'test/spec',
-          src: '**/*.coffee',
-          dest: '.tmp/spec',
-          ext: '.js'
-        }]
-      }
-    },
     concat: {
       // not used since Uglify task does concat,
       // but still available if needed
@@ -289,22 +265,6 @@ module.exports = function (grunt) {
             'generated/*'
           ]
         }]
-      },
-      generateHerokuDirectory: {
-        expand: true,
-        dest: 'deploy/heroku',
-        src: [
-          'pom.xml',
-          'src/main/**'
-        ]
-      },
-      generateOpenshiftDirectory: {
-        expand: true,
-        dest: 'deploy/openshift',
-        src: [
-          'pom.xml',
-          'src/main/**'
-        ]
       }
     },
     concurrent: {
@@ -336,28 +296,6 @@ module.exports = function (grunt) {
           src: '*.js',
           dest: '.tmp/concat/scripts'
         }]
-      }
-    },
-    buildcontrol: {
-      options: {
-        commit: true,
-        push: false,
-        connectCommits: false,
-        message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
-      },
-      heroku: {
-        options: {
-          dir: 'deploy/heroku',
-          remote: 'heroku',
-          branch: 'master'
-        }
-      },
-      openshift: {
-        options: {
-          dir: 'deploy/openshift',
-          remote: 'openshift',
-          branch: 'master'
-        }
       }
     },
     ngconstant: {
@@ -405,11 +343,6 @@ module.exports = function (grunt) {
     'watch'
   ]);
 
-  grunt.registerTask('server', function (target) {
-    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run([target ? ('serve:' + target) : 'serve']);
-  });
-
   grunt.registerTask('test', [
     'clean:server',
     'wiredep:test',
@@ -452,32 +385,6 @@ module.exports = function (grunt) {
     'rev',
     'usemin',
     'htmlmin'
-  ]);
-
-  grunt.registerTask('buildHeroku', [
-    'test',
-    'build',
-    'copy:generateHerokuDirectory',
-  ]);
-
-  grunt.registerTask('deployHeroku', [
-    'test',
-    'build',
-    'copy:generateHerokuDirectory',
-    'buildcontrol:heroku'
-  ]);
-
-  grunt.registerTask('buildOpenshift', [
-    'test',
-    'build',
-    'copy:generateOpenshiftDirectory',
-  ]);
-
-  grunt.registerTask('deployOpenshift', [
-    'test',
-    'build',
-    'copy:generateOpenshiftDirectory',
-    'buildcontrol:openshift'
   ]);
 
   grunt.registerTask('default', [
