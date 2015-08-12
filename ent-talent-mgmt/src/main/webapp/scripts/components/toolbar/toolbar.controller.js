@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('ToolbarController', function ($scope, $state, $mdUtil, $mdSidenav, $mdMedia, Auth, Principal) {
+angular.module('etmApp').controller('ToolbarController', function ($scope, $state, $mdMedia, Sidenav, Auth, Principal) {
   Principal.identity().then(function(account) {
     $scope.account = account;
   });
@@ -14,7 +14,5 @@ angular.module('etmApp').controller('ToolbarController', function ($scope, $stat
     $state.go('home');
   };
   
-  $scope.toggleRightNav = $mdUtil.debounce(function () {
-    $mdSidenav('right-nav').toggle();
-  }, 300);
+  $scope.toggleSideNav = Sidenav.toggle;
 });
