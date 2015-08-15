@@ -40,7 +40,7 @@ public class UserDetailsService implements org.springframework.security.core.use
         return userRepository.findOneByLogin(login.toLowerCase())
             .map(this::mapUserDetails)
             .orElseGet(() -> {
-                return userService.createFromAppUserDetails()
+                return userService.getFromAppUserDetails()
                     .map(this::mapUserDetails)
                     .orElseThrow(() -> {
                         return userNotFoundException(login);
