@@ -32,7 +32,7 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class User extends AbstractAuditingEntity implements Serializable {
 
-    private static final long serialVersionUID = -930408054469262071L;
+    private static final long serialVersionUID = 9112749211348786719L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -61,6 +61,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(length = 100, unique = true)
     @JsonView(View.Public.class)
     private String email;
+    
+    @Size(max = 50)
+    @Column(name = "employee_id", length = 50)
+    private String employeeId;
 
     @JsonView(View.Private.class)
     @Size(min = 2, max = 5)
@@ -205,6 +209,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+    
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
 
     public String getLangKey() {
         return langKey;
@@ -281,6 +293,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public String toString() {
         return "User{" +
                 "login='" + login + '\'' +
+                ", employeeId='" + employeeId + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 "}";

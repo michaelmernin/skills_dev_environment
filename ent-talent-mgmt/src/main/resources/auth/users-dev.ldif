@@ -1,3 +1,5 @@
+version: 1
+
 dn: ou=groups,dc=perficient,dc=com
 objectclass: top
 objectclass: organizationalUnit
@@ -17,6 +19,7 @@ cn: dev.user1
 sn: UserOne
 givenName: Dev
 mail: Dev.User1@email.com
+employeeID: 4321
 userPassword: password!D1
 
 dn: cn=dev.user2,ou=people,dc=perficient,dc=com
@@ -28,6 +31,7 @@ cn: dev.user2
 sn: UserTwo
 givenName: Dev
 mail: Dev.User2@email.com
+employeeID: 4322
 userPassword: password!D2
 
 dn: cn=dev.user3,ou=people,dc=perficient,dc=com
@@ -39,6 +43,7 @@ cn: dev.user3
 sn: UserThree
 givenName: Dev
 mail: Dev.User3@email.com
+employeeID: 4323
 userPassword: password!D3
 
 dn: cn=dev.user4,ou=people,dc=perficient,dc=com
@@ -50,6 +55,7 @@ cn: dev.user4
 sn: UserFour
 givenName: Dev
 mail: Dev.User4@email.com
+employeeID: 4324
 userPassword: password!D4
 
 dn: cn=dev.user5,ou=people,dc=perficient,dc=com
@@ -61,4 +67,17 @@ cn: dev.user5
 sn: UserFive
 givenName: Dev
 mail: Dev.User5@email.com
+employeeID: 4325
 userPassword: password!D5
+
+dn: cn=dev.user6,ou=people,dc=perficient,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: dev.user6
+sn: UserSix
+givenName: Dev
+mail: Dev.User6@email.com
+employeeID: 4325
+userPassword: password!D6

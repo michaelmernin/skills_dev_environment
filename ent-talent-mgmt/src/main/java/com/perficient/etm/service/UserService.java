@@ -59,7 +59,15 @@ public class UserService {
     }
     
     public Optional<User> getFromAppUserDetails() {
-        return SecurityUtils.getAppUserDetails().map(this::createUser);
+        return SecurityUtils.getAppUserDetails().map(ud -> {
+            return userRepository.findOneByEmployeeId(ud.getEmployeeId().toLowerCase())
+                .map(u -> {
+                    setUserDetails(u, ud);
+                    return userRepository.save(u);
+                }).orElseGet(() -> {
+                    return createUser(ud);
+                });
+        });
     }
 
     /**
@@ -98,7 +106,6 @@ public class UserService {
     private void setUserAuthorities(User newUser) {
         Set<Authority> authorities = new HashSet<>();
         authorities.add(authorityRepository.findOne(AuthoritiesConstants.USER));
-
         if (userRepository.count() < 3) { // if first user except for system and anonymousUser
             authorities.add(authorityRepository.findOne(AuthoritiesConstants.ADMIN));
         }
@@ -111,6 +118,7 @@ public class UserService {
         user.setFirstName(userDetails.getFirstName());
         user.setLastName(userDetails.getLastName());
         user.setEmail(userDetails.getEmail());
+        user.setEmployeeId(userDetails.getEmployeeId().toLowerCase());
     }
 
 }

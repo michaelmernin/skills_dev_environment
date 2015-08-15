@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LdapAuthenticatorPostProcessor implements ObjectPostProcessor<AbstractLdapAuthenticator> {
 
-    private final String[] USER_ATTRIBUTES = new String[] {"mail", "givenName", "sn"};
+    private final String[] USER_ATTRIBUTES = new String[] {"mail", "givenName", "sn", "employeeID"};
     
     @Override
     public <O extends AbstractLdapAuthenticator> O postProcess(O object) {

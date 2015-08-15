@@ -5,13 +5,15 @@ import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 
 public class AppUserDetailsImpl extends LdapUserDetailsImpl implements AppUserDetails {
 
-    private static final long serialVersionUID = 1323756778220381423L;
+    private static final long serialVersionUID = 2431850834420419823L;
 
     private String firstName;
    
     private String lastName;
    
     private String email;
+    
+    private String employeeId;
     
     @Override
     public String getFirstName() {
@@ -28,6 +30,11 @@ public class AppUserDetailsImpl extends LdapUserDetailsImpl implements AppUserDe
         return email;
     }
     
+    @Override
+    public String getEmployeeId() {
+        return employeeId;
+    }
+    
     public static class Essence extends LdapUserDetailsImpl.Essence {
 
         public Essence() {
@@ -38,6 +45,7 @@ public class AppUserDetailsImpl extends LdapUserDetailsImpl implements AppUserDe
             setFirstName(ctx.getStringAttribute("givenName"));
             setLastName(ctx.getStringAttribute("sn"));
             setEmail(ctx.getStringAttribute("mail"));
+            setEmployeeId(ctx.getStringAttribute("employeeID"));
         }
 
         public Essence(AppUserDetailsImpl copyMe) {
@@ -45,6 +53,7 @@ public class AppUserDetailsImpl extends LdapUserDetailsImpl implements AppUserDe
             setFirstName(copyMe.firstName);
             setLastName(copyMe.lastName);
             setEmail(copyMe.email);
+            setEmployeeId(copyMe.employeeId);
         }
 
         protected LdapUserDetailsImpl createTarget() {
@@ -61,6 +70,10 @@ public class AppUserDetailsImpl extends LdapUserDetailsImpl implements AppUserDe
 
         public void setEmail(String email) {
             ((AppUserDetailsImpl) instance).email = email;
+        }
+        
+        public void setEmployeeId(String employeeId) {
+            ((AppUserDetailsImpl) instance).employeeId = employeeId;
         }
 
         public AppUserDetails createAppUserDetails() {

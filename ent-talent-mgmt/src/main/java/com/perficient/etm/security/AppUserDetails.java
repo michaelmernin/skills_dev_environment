@@ -9,4 +9,6 @@ public interface AppUserDetails extends UserDetails {
     public String getLastName();
     
     public String getEmail();
+    
+    public String getEmployeeId();
 }

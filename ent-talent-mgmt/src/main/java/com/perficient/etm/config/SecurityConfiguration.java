@@ -50,6 +50,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Inject
     private LdapAuthenticatorPostProcessor authenticatorPostProcessor;
     
+    @Inject
+    private ApacheDSContainerPostProcessor apacheDSContainerPostProcessor;
+    
     @Value("${spring.ldap.domain}")
     private String ldapDomain;
 
@@ -80,12 +83,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .managerDn(ldapAccountDn + "," + ldapRoot)
                     .managerPassword(ldapPassword);
     	} else {
+    	    ldapAuthentication.addObjectPostProcessor(apacheDSContainerPostProcessor);
     	    ldapAuthentication
     	        .userDnPatterns("cn={0},ou=people")
     	        .groupSearchBase("ou=groups")
     	        .contextSource()
     	            .root(ldapRoot)
-    	            .ldif("classpath*:auth/users-dev.ldif");
+    	            .ldif("classpath:auth/empty.ldif");
     	}
     }
 
