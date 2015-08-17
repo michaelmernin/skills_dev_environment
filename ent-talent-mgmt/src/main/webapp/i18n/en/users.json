@@ -1,0 +1,12 @@
+{
+  "users": {
+    "title": "Manage Users",
+    "filter": "Filter (by Login)",
+    "table": {
+      "login": "Login",
+      "name": "Name",
+      "email": "Email",
+      "roles": "Roles"
+    }
+  }
+}

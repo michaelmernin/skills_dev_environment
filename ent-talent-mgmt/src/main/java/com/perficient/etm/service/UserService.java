@@ -51,10 +51,9 @@ public class UserService {
     }
 
     public User getUserWithAuthorities() {
-        return (User) userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())
-            .map(this::eagerLoad)
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())
             .orElseGet(() -> {
-                return this.getFromAppUserDetails().map(this::eagerLoad).orElse(null);
+                return this.getFromAppUserDetails().orElse(null);
             });
     }
     
@@ -112,9 +111,5 @@ public class UserService {
         user.setLastName(userDetails.getLastName());
         user.setEmail(userDetails.getEmail());
     }
-    
-    private User eagerLoad(User user) {
-        user.getAuthorities().size();
-        return user;
-    }
+
 }

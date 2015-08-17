@@ -58,8 +58,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "lang_key", length = 5)
     private String langKey;
 
-    @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "T_USER_AUTHORITY",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},

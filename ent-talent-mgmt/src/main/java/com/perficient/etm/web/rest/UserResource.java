@@ -1,9 +1,11 @@
 package com.perficient.etm.web.rest;
 
+import java.util.List;
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.security.AuthoritiesConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,19 @@ public class UserResource {
     @Inject
     private UserRepository userRepository;
 
+    /**
+     * GET  /users -> get all the users.
+     */
+    @RequestMapping(value = "/users",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    @RolesAllowed(AuthoritiesConstants.ADMIN)
+    List<User> getAll() {
+        log.debug("REST request to get all Users");
+        return userRepository.findAllNormalUsers();
+    }
+    
     /**
      * GET  /users/:login -> get the "login" user.
      */
