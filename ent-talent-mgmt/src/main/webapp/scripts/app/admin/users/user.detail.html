@@ -1,0 +1,57 @@
+<md-dialog aria-label="{{ user.firstName }} {{ user.lastName }}" flex="66">
+  <form name="userForm">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <h3>Identity</h3>
+      <md-input-container>
+        <label>First Name</label>
+        <input type="text" name="firstName" ng-model="user.firstName" required/>
+        <div ng-messages="userForm.firstName.$error" ng-show="userForm.firstName.$dirty">
+          <div ng-message="required">This is required!</div>
+          <div ng-message="minlength">This is too short!</div>
+        </div>
+      </md-input-container>
+      <md-input-container>
+        <label>First Name</label>
+        <input type="text" name="lastName" ng-model="user.lastName" required minlength="2"/>
+        <div ng-messages="userForm.lastName.$error" ng-show="userForm.lastName.$dirty">
+          <div ng-message="required">This is required!</div>
+          <div ng-message="minlength">This is too short!</div>
+        </div>
+      </md-input-container>
+      <md-input-container>
+        <label>User Name</label>
+        <input type="text" name="login" ng-model="user.login" required minlength="4"/>
+        <div ng-messages="userForm.login.$error" ng-show="userForm.login.$dirty">
+          <div ng-message="required">This is required!</div>
+          <div ng-message="minlength">This is too short!</div>
+        </div>
+      </md-input-container>
+      <md-input-container>
+        <label>Email</label>
+        <input type="email" name="email" ng-model="user.email" required/>
+        <div ng-messages="userForm.email.$error" ng-show="userForm.email.$dirty">
+          <div ng-message="required">This is required!</div>
+          <div ng-message="email">This is not an email!</div>
+        </div>
+      </md-input-container>
+      <h3>Roles</h3>
+      <md-select multiple="multiple" ng-model="user.authorities" ng-model-options="{trackBy: '$value.name'}" placeholder="Select roles" required>
+        <md-option ng-value="role" ng-repeat="role in roles">{{ role.description }}</md-option>
+      </md-select>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+      <span flex></span>
+      <md-button ng-click="cancel()" class="md-primary">Cancel</md-button>
+      <md-button ng-click="save()" class="md-primary">Save</md-button>
+    </div>
+  </form>
+</md-dialog>

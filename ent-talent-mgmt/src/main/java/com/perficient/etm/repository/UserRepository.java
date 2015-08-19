@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     void delete(User t);
 
-    @Query("select distinct u from User u where u.id > 2")
+    @Query("select distinct u from User u where u.id > 2 order by u.id asc")
     List<User> findAllNormalUsers();
 
 }
