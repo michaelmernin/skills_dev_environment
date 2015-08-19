@@ -10,7 +10,7 @@
       </div>
     </md-toolbar>
     <md-dialog-content>
-      <h3>Identity</h3>
+      <h3>Account</h3>
       <md-input-container>
         <label>First Name</label>
         <input type="text" name="firstName" ng-model="user.firstName" required/>
@@ -40,13 +40,39 @@
         <input type="email" name="email" ng-model="user.email" required/>
         <div ng-messages="userForm.email.$error" ng-show="userForm.email.$dirty">
           <div ng-message="required">This is required!</div>
-          <div ng-message="email">This is not an email!</div>
+          <div ng-message="email">This is not a valid email!</div>
         </div>
       </md-input-container>
       <h3>Roles</h3>
       <md-select multiple="multiple" ng-model="user.authorities" ng-model-options="{trackBy: '$value.name'}" placeholder="Select roles" required>
         <md-option ng-value="role" ng-repeat="role in roles">{{ role.description }}</md-option>
       </md-select>
+      <h3>Counselor</h3>
+      <md-select ng-model="user.counselor" ng-model-options="{trackBy: '$value.id'}" placeholder="Select a counselor">
+        <md-option ng-value="counselor" ng-repeat="counselor in counselors">{{ counselor.firstName }} {{ counselor.lastName }}</md-option>
+      </md-select>
+      <h3>Organization</h3>
+      <md-input-container>
+        <label>Start Date</label>
+        <input type="date" name="startDate" ng-model="user.startDate"/>
+        <div ng-messages="userForm.startDate.$error" ng-show="userForm.startDate.$dirty">
+          <div ng-message="date">This is not a valid date!</div>
+        </div>
+      </md-input-container>
+      <md-input-container>
+        <label>Title</label>
+        <input type="text" name="title" ng-model="user.title" minlength="8"/>
+        <div ng-messages="userForm.title.$error" ng-show="userForm.title.$dirty">
+          <div ng-message="minlength">This is too short!</div>
+        </div>
+      </md-input-container>
+      <md-input-container>
+        <label>Target Title</label>
+        <input type="text" name="targetTitle" ng-model="user.targetTitle" minlength="8"/>
+        <div ng-messages="userForm.targetTitle.$error" ng-show="userForm.targetTitle.$dirty">
+          <div ng-message="minlength">This is too short!</div>
+        </div>
+      </md-input-container>
     </md-dialog-content>
     <div class="md-actions" layout="row">
       <span flex></span>

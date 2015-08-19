@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('UsersController', function ($scope, $mdDialog, User) {
+angular.module('etmApp').controller('UsersController', function ($scope, $mdDialog, $filter, User) {
   $scope.users = [];
   $scope.loadAll = function () {
     User.query(function (result) {
@@ -9,18 +9,26 @@ angular.module('etmApp').controller('UsersController', function ($scope, $mdDial
   };
   $scope.loadAll();
 
+  function userHasRole(role, user) {
+    return user.authorities.some(function (authority) {
+      return role === authority.name;
+    });
+  }
+
   $scope.viewUserDetails = function (user, ev) {
+    var counselors = $scope.users.filter(userHasRole.bind(null, 'ROLE_COUNSELOR'));
     $mdDialog.show({
       controller: 'UserDetailController',
       templateUrl: 'scripts/app/admin/users/user.detail.html',
       parent: angular.element(document.body),
       targetEvent: ev,
-      locals: {user: user}
+      locals: {
+        user: user,
+        counselors: counselors
+      }
     }).then(function (updatedUser) {
       angular.copy(updatedUser, user);
-      User.update(user, function () {
-        $scope.refresh();
-      });
+      User.update(user);
     });
   };
   
