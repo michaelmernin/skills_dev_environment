@@ -23,4 +23,19 @@ angular.module('etmApp').controller('UsersController', function ($scope, $mdDial
       });
     });
   };
+  
+  $scope.deleteUser = function (user, ev) {
+    var confirmDelete = $mdDialog.confirm()
+      .title('Confirm User Deletion')
+      .ariaLabel('Delete User Confirm')
+      .content('Delete ' + user.firstName + ' ' + user.lastName + '?')
+      .ok('Delete')
+      .cancel('Cancel')
+      .targetEvent(ev);
+    $mdDialog.show(confirmDelete).then(function () {
+      User.delete({id: user.id}, function () {
+        $scope.users.splice($scope.users.indexOf(user), 1);
+      });
+    });
+  };
 });

@@ -78,4 +78,17 @@ public class UserResource {
         userRepository.save(user);
         return ResponseEntity.ok().build();
     }
+    
+    /**
+     * DELETE  /users/:id -> delete the "id" user.
+     */
+    @RequestMapping(value = "/users/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    @RolesAllowed(AuthoritiesConstants.ADMIN)
+    public void delete(@PathVariable Long id) {
+        log.debug("REST request to delete User : {}", id);
+        userRepository.delete(id);
+    }
 }
