@@ -93,6 +93,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @ManyToOne
     private User counselor;
     
+    @ManyToOne
+    @JoinColumn(name = "general_manager_id", referencedColumnName = "id")
+    private User generalManager;
+    
     @Column(name = "title")
     private String title;
     
@@ -143,6 +147,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setCounselor(User counselor) {
         this.counselor = counselor;
+    }
+    
+    public User getGeneralManager() {
+        return generalManager;
+    }
+
+    public void setGeneralManager(User generalManager) {
+        this.generalManager = generalManager;
     }
 
     public String getTitle() {

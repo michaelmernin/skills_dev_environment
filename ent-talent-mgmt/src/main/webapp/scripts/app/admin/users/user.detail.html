@@ -51,6 +51,10 @@
       <md-select ng-model="user.counselor" ng-model-options="{trackBy: '$value.id'}" placeholder="Select a counselor">
         <md-option ng-value="counselor" ng-repeat="counselor in counselors">{{ counselor.firstName }} {{ counselor.lastName }}</md-option>
       </md-select>
+      <h3>General Manager</h3>
+      <md-select ng-model="user.generalManager" ng-model-options="{trackBy: '$value.id'}" placeholder="Select a General Manager">
+        <md-option ng-value="generalManager" ng-repeat="generalManager in generalManagers">{{ generalManager.firstName }} {{ generalManager.lastName }}</md-option>
+      </md-select>
       <h3>Organization</h3>
       <md-input-container>
         <label>Start Date</label>
