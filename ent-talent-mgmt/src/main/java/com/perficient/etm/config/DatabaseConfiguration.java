@@ -85,7 +85,7 @@ public class DatabaseConfiguration implements EnvironmentAware {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource);
         liquibase.setChangeLog("classpath:config/liquibase/master.xml");
-        liquibase.setContexts("development, production, uat");
+        liquibase.setContexts(String.join(",", env.getActiveProfiles()));
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_FAST)) {
             if ("org.h2.jdbcx.JdbcDataSource".equals(propertyResolver.getProperty("dataSourceClassName"))) {
                 liquibase.setShouldRun(true);

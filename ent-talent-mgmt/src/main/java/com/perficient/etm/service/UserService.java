@@ -5,6 +5,8 @@ import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.AuthorityRepository;
 import com.perficient.etm.repository.PersistentTokenRepository;
 import com.perficient.etm.repository.UserRepository;
+import com.perficient.etm.security.AppUserDetails;
+import com.perficient.etm.security.AuthoritiesConstants;
 import com.perficient.etm.security.SecurityUtils;
 
 import org.joda.time.LocalDate;
@@ -37,27 +39,6 @@ public class UserService {
 
     @Inject
     private AuthorityRepository authorityRepository;
-    
-    private User createUserInformation(String login, String firstName, String lastName, String email) {
-    	return createUserInformation(login, firstName, lastName, email, "en");
-    }
-
-    private User createUserInformation(String login, String firstName, String lastName, String email,
-                                      String langKey) {
-        User newUser = new User();
-        Authority authority = authorityRepository.findOne("ROLE_USER");
-        Set<Authority> authorities = new HashSet<>();
-        newUser.setLogin(login);
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
-        newUser.setEmail(email);
-        newUser.setLangKey(langKey);
-        authorities.add(authority);
-        newUser.setAuthorities(authorities);
-        userRepository.saveAndFlush(newUser);
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
-    }
 
     public void updateUserInformation(String firstName, String lastName, String email) {
         userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).ifPresent(u -> {
@@ -69,23 +50,15 @@ public class UserService {
         });
     }
 
-    private User eagerLoad(User user) {
-        user.getAuthorities().size();
-        return user;
-    }
-
     public User getUserWithAuthorities() {
-        return (User) userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())
-            .map(this::eagerLoad)
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())
             .orElseGet(() -> {
-                return this.createFromAppUserDetails().map(this::eagerLoad).orElse(null);
+                return this.getFromAppUserDetails().orElse(null);
             });
     }
     
-    public Optional<User> createFromAppUserDetails() {
-        return SecurityUtils.getAppUserDetails().map(ud -> {
-            return createUserInformation(ud.getUsername(), ud.getFirstName(), ud.getLastName(), ud.getEmail());
-        });
+    public Optional<User> getFromAppUserDetails() {
+        return SecurityUtils.getAppUserDetails().map(this::createUser);
     }
 
     /**
@@ -106,4 +79,37 @@ public class UserService {
             persistentTokenRepository.delete(token);
         });
     }
+    
+    private User createUser(AppUserDetails userDetails) {
+        return createUser(userDetails, "en");
+    }
+
+    private User createUser(AppUserDetails userDetails, String langKey) {
+        User newUser = new User();
+        setUserDetails(newUser, userDetails);
+        newUser.setLangKey(langKey);
+        setUserAuthorities(newUser);
+        userRepository.saveAndFlush(newUser);
+        log.debug("Created Information for User: {}", newUser);
+        return newUser;
+    }
+
+    private void setUserAuthorities(User newUser) {
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(authorityRepository.findOne(AuthoritiesConstants.USER));
+
+        if (userRepository.count() < 3) { // if first user except for system and anonymousUser
+            authorities.add(authorityRepository.findOne(AuthoritiesConstants.ADMIN));
+        }
+
+        newUser.setAuthorities(authorities);
+    }
+    
+    private void setUserDetails(User user, AppUserDetails userDetails) {
+        user.setLogin(userDetails.getUsername().toLowerCase());
+        user.setFirstName(userDetails.getFirstName());
+        user.setLastName(userDetails.getLastName());
+        user.setEmail(userDetails.getEmail());
+    }
+
 }

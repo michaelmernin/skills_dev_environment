@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etmApp', [
-  'LocalStorageModule', 'tmh.dynamicLocale', 'ngResource', 'ui.router', 'ngCookies', 'pascalprecht.translate', 'ngCacheBuster', 'ngMaterial'
+  'LocalStorageModule', 'tmh.dynamicLocale', 'ngResource', 'ui.router', 'ngCookies', 'pascalprecht.translate', 'ngCacheBuster', 'ngMaterial', 'ngMessages'
 ]).run(function ($rootScope, $location, $window, $http, $state, $translate, Auth, Principal, Language, ENV, VERSION) {
   $rootScope.ENV = ENV;
   $rootScope.VERSION = VERSION;
@@ -74,7 +74,7 @@ angular.module('etmApp', [
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRF-TOKEN';
 
   //Cache everything except rest api requests
-  httpRequestInterceptorCacheBusterProvider.setMatchlist([/.*api.*/, /.*protected.*/], true);
+  httpRequestInterceptorCacheBusterProvider.setMatchlist([/.*api\/(?!authorities).*/, /.*protected.*/], true);
 
   $urlRouterProvider.otherwise('/');
   $stateProvider.state('site', {

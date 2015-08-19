@@ -1,10 +1,13 @@
 package com.perficient.etm.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.perficient.etm.domain.util.CustomLocalDateSerializer;
 import com.perficient.etm.domain.util.ISO8601LocalDateDeserializer;
+import com.perficient.etm.domain.util.PartialSerializer;
+import com.perficient.etm.web.view.View;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -54,12 +57,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(length = 100, unique = true)
     private String email;
 
+    @JsonView(View.Full.class)
     @Size(min = 2, max = 5)
     @Column(name = "lang_key", length = 5)
     private String langKey;
 
-    @JsonIgnore
-    @ManyToMany
+    @JsonView(View.Full.class)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "T_USER_AUTHORITY",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
@@ -91,15 +95,26 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<PersistentToken> persistentTokens = new HashSet<>();
     
+    @JsonSerialize(using = PartialSerializer.class)
+    @JsonView(View.Full.class)
     @ManyToOne
     private User counselor;
     
+    @JsonSerialize(using = PartialSerializer.class)
+    @JsonView(View.Full.class)
+    @ManyToOne
+    @JoinColumn(name = "general_manager_id", referencedColumnName = "id")
+    private User generalManager;
+    
+    @JsonView(View.Full.class)
     @Column(name = "title")
     private String title;
     
+    @JsonView(View.Full.class)
     @Column(name = "target_title")
     private String targetTitle;
     
+    @JsonView(View.Full.class)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @JsonSerialize(using = CustomLocalDateSerializer.class)
     @JsonDeserialize(using = ISO8601LocalDateDeserializer.class)
@@ -144,6 +159,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setCounselor(User counselor) {
         this.counselor = counselor;
+    }
+    
+    public User getGeneralManager() {
+        return generalManager;
+    }
+
+    public void setGeneralManager(User generalManager) {
+        this.generalManager = generalManager;
     }
 
     public String getTitle() {

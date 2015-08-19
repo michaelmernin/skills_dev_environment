@@ -1,7 +1,3 @@
 id;login;first_name;last_name;email;lang_key;created_by
 1;system;NULL;System;NULL;en;system
 2;anonymousUser;Anonymous;User;NULL;en;system
-3;dev.user1;Dev;UserOne;Dev.User1@email.com;en;system
-4;dev.user2;Dev;UserTwo;Dev.User2@email.com;en;system
-5;dev.user3;Dev;UserThree;Dev.User3@email.com;en;system
-6;dev.user4;Dev;UserFour;Dev.User4@email.com;en;system

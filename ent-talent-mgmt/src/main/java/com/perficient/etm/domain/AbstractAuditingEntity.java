@@ -7,8 +7,11 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonView;
+import com.perficient.etm.web.view.View;
+
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -23,21 +26,25 @@ import javax.validation.constraints.NotNull;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractAuditingEntity {
 
+    @JsonView(View.Full.class)
     @CreatedBy
     @NotNull
     @Column(name = "created_by", nullable = false, length = 50, updatable = false)
     private String createdBy;
 
+    @JsonView(View.Full.class)
     @CreatedDate
     @NotNull
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Column(name = "created_date", nullable = false)
     private DateTime createdDate = DateTime.now();
 
+    @JsonView(View.Full.class)
     @LastModifiedBy
     @Column(name = "last_modified_by", length = 50)
     private String lastModifiedBy;
 
+    @JsonView(View.Full.class)
     @LastModifiedDate
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Column(name = "last_modified_date")
