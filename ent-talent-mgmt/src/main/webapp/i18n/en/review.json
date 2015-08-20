@@ -1,29 +1,30 @@
 {
-    "etmApp": {
-        "review" : {
-            "home": {
-                "title": "Reviews",
-                "createLabel": "Create a new Review",
-                "createOrEditLabel": "Create or edit a Review"
-            },
-            "delete": {
-                "question": "Are you sure you want to delete Review {{ id }}?"
-            },
-            "detail": {
-                "title": "Review"
-            },
-            "title": "Title",
-            "startDate": "StartDate",
-            "endDate": "EndDate",
-            "client": "Client",
-            "project": "Project",
-            "role": "Role",
-            "responsibilities": "Responsibilities",
-            "rating": "Rating",
-            "ReviewType": "ReviewType",
-            "ReviewStatus": "ReviewStatus",
-            "reviewee": "reviewee",
-            "reviewer": "reviewer"
-        }
-    }
+  "review": {
+    "home": {
+      "title": "Reviews",
+      "createLabel": "Create a new Review",
+      "createOrEditLabel": "Create or edit a Review"
+    },
+    "delete": {
+      "question": "Are you sure you want to delete Review {{ id }}?"
+    },
+    "detail": {
+      "title": "Review"
+    },
+    "new": {
+      "title": "Create a Review"
+    },
+    "title": "Title",
+    "startDate": "StartDate",
+    "endDate": "EndDate",
+    "client": "Client",
+    "project": "Project",
+    "role": "Role",
+    "responsibilities": "Responsibilities",
+    "rating": "Rating",
+    "ReviewType": "ReviewType",
+    "ReviewStatus": "ReviewStatus",
+    "reviewee": "Reviewee",
+    "reviewer": "Reviewer"
+  }
 }

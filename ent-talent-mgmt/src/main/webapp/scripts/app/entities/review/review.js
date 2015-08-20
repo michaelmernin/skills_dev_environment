@@ -1,46 +1,62 @@
 'use strict';
 
-angular.module('etmApp')
-    .config(function ($stateProvider) {
-        $stateProvider
-            .state('review', {
-                parent: 'entity',
-                url: '/review',
-                data: {
-                    roles: ['ROLE_USER'],
-                    pageTitle: 'etmApp.review.home.title'
-                },
-                views: {
-                    'content@': {
-                        templateUrl: 'scripts/app/entities/review/reviews.html',
-                        controller: 'ReviewController'
-                    }
-                },
-                resolve: {
-                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                        $translatePartialLoader.addPart('review');
-                        return $translate.refresh();
-                    }]
-                }
-            })
-            .state('reviewDetail', {
-                parent: 'entity',
-                url: '/review/:id',
-                data: {
-                    roles: ['ROLE_USER'],
-                    pageTitle: 'etmApp.review.detail.title'
-                },
-                views: {
-                    'content@': {
-                        templateUrl: 'scripts/app/entities/review/review-detail.html',
-                        controller: 'ReviewDetailController'
-                    }
-                },
-                resolve: {
-                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                        $translatePartialLoader.addPart('review');
-                        return $translate.refresh();
-                    }]
-                }
-            });
-    });
+angular.module('etmApp').config(function ($stateProvider) {
+  $stateProvider.state('review', {
+    parent: 'entity',
+    url: '/review',
+    data: {
+      roles: ['ROLE_USER'],
+      pageTitle: 'review.home.title'
+    },
+    views: {
+      'content@': {
+        templateUrl: 'scripts/app/entities/review/reviews.html',
+        controller: 'ReviewController'
+      }
+    },
+    resolve: {
+      translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+        $translatePartialLoader.addPart('review');
+        return $translate.refresh();
+      }]
+    }
+  }).state('review.new', {
+    parent: 'review',
+    url: '/new',
+    data: {
+      roles: ['ROLE_USER'],
+      pageTitle: 'review.new.title'
+    },
+    views: {
+      'content@': {
+        templateUrl: 'scripts/app/entities/review/new-review.html',
+        controller: 'NewReviewController'
+      }
+    },
+    resolve: {
+      translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+        $translatePartialLoader.addPart('review');
+        return $translate.refresh();
+      }]
+    }
+  }).state('review.detail', {
+    parent: 'review',
+    url: '/:id',
+    data: {
+      roles: ['ROLE_USER'],
+      pageTitle: 'review.detail.title'
+    },
+    views: {
+      'content@': {
+        templateUrl: 'scripts/app/entities/review/review-detail.html',
+        controller: 'ReviewDetailController'
+      }
+    },
+    resolve: {
+      translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+        $translatePartialLoader.addPart('review');
+        return $translate.refresh();
+      }]
+    }
+  });
+});
