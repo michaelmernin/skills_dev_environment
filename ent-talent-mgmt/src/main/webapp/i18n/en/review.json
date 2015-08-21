@@ -41,6 +41,11 @@
       "reviewStatus": "a Review Status",
       "reviewee": "a Reviewee",
       "reviewer": "a Reviewer"
+    },
+    "validate": {
+      "endDate": {
+        "min": "Please select an End Date at least one year after the Start Date."
+      }
     }
   }
 }

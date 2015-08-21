@@ -44,13 +44,16 @@
           </md-input-container>
           <md-input-container flex-gt-sm>
             <label translate="review.endDate">End Date</label>
-            <input type="date" name="endDate" ng-model="review.endDate" required/>
+            <input type="date" name="endDate" ng-model="review.endDate" required min="{{ minEndDate() }}"/>
             <div ng-messages="reviewForm.endDate.$error" ng-if="reviewForm.$submitted || reviewForm.endDate.$dirty">
               <div ng-message="required">
                 <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.endDate' | translate }}'}">Please select a value.</span>
               </div>
               <div ng-message="date">
                 <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.endDate' | translate }}'}">Please select a valid value.</span>
+              </div>
+              <div ng-message="min">
+                <span translate="review.validate.endDate.min">Please select a value at least one year after the Start Date.</span>
               </div>
             </div>
           </md-input-container>

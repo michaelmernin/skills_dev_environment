@@ -26,4 +26,15 @@ angular.module('etmApp').controller('NewReviewController', function ($scope, $st
       });
     }
   };
+
+  $scope.minEndDate = function () {
+    if ($scope.reviewForm.startDate.$valid) {
+      var minDate = new Date($scope.review.startDate);
+      console.dir(minDate);
+      minDate.setMonth(minDate.getMonth() + 12);
+      console.dir(minDate);
+      return minDate;
+    }
+    return '';
+  };
 });
