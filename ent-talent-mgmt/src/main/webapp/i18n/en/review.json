@@ -12,7 +12,16 @@
       "title": "Review"
     },
     "new": {
-      "title": "Create a Review"
+      "title": "Create a Review",
+      "save": {
+        "dialog": {
+          "title": "Confirm Review Save",
+          "label": "Save Review Confirm",
+          "content": "Once you have initiated a review, it cannot be deleted. Are you sure you want to continue?",
+          "ok": "Accept & Create Review",
+          "cancel": "Cancel"
+        }
+      }
     },
     "info": "Review Info",
     "dates": "Review Dates",
