@@ -14,17 +14,33 @@
     "new": {
       "title": "Create a Review"
     },
+    "info": "Review Info",
+    "dates": "Review Dates",
     "title": "Title",
-    "startDate": "StartDate",
-    "endDate": "EndDate",
+    "startDate": "Start Date",
+    "endDate": "End Date",
     "client": "Client",
     "project": "Project",
     "role": "Role",
     "responsibilities": "Responsibilities",
     "rating": "Rating",
-    "ReviewType": "ReviewType",
-    "ReviewStatus": "ReviewStatus",
+    "reviewType": "Review Type",
+    "reviewStatus": "Review Status",
     "reviewee": "Reviewee",
-    "reviewer": "Reviewer"
+    "reviewer": "Reviewer",
+    "a": {
+      "title": "a Title",
+      "startDate": "a Start Date",
+      "endDate": "an End Date",
+      "client": "a Client",
+      "project": "a Project",
+      "role": "a Role",
+      "responsibilities": "Responsibilities",
+      "rating": "a Rating",
+      "reviewType": "a Review Type",
+      "reviewStatus": "a Review Status",
+      "reviewee": "a Reviewee",
+      "reviewer": "a Reviewer"
+    }
   }
 }

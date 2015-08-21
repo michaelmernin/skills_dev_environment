@@ -32,12 +32,6 @@ angular.module('etmApp').config(function ($stateProvider) {
         templateUrl: 'scripts/app/entities/review/new-review.html',
         controller: 'NewReviewController'
       }
-    },
-    resolve: {
-      translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-        $translatePartialLoader.addPart('review');
-        return $translate.refresh();
-      }]
     }
   }).state('review.detail', {
     parent: 'review',
@@ -51,12 +45,6 @@ angular.module('etmApp').config(function ($stateProvider) {
         templateUrl: 'scripts/app/entities/review/review-detail.html',
         controller: 'ReviewDetailController'
       }
-    },
-    resolve: {
-      translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-        $translatePartialLoader.addPart('review');
-        return $translate.refresh();
-      }]
     }
   });
 });

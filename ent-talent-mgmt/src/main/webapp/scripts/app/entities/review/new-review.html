@@ -3,49 +3,61 @@
     <form name="reviewForm" novalidate>
       <div layout="column" layout-padding>
         <h2 class="md-display-1" translate="review.new.title">Create a Review</h2>
-        <h3>Review Info</h3>
+        <h3 translate="review.info">Review Info</h3>
         <div layout-gt-sm="row">
           <md-input-container flex-gt-sm>
-            <label>Review Type</label>
+            <label translate="review.reviewType">Review Type</label>
             <md-select name="reviewType" ng-model="review.reviewType" ng-model-options="{trackBy: '$value.id'}" required>
               <md-option ng-value="reviewType" ng-repeat="reviewType in reviewTypes">{{ reviewType.name }}</md-option>
             </md-select>
-            <div ng-messages="reviewForm.reviewType.$error" ng-show="reviewForm.$dirty || reviewForm.reviewType.$dirty">
-              <div ng-message="required">This is required!</div>
+            <div ng-messages="reviewForm.reviewType.$error" ng-if="reviewForm.$submitted || reviewForm.reviewType.$dirty">
+              <div ng-message="required">
+                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.reviewType' | translate }}'}">Please select a value.</span>
+              </div>
             </div>
           </md-input-container>
           <md-input-container flex-gt-sm>
-            <label>Reviewee</label>
+            <label translate="review.reviewee">Reviewee</label>
             <md-select name="reviewee" ng-model="review.reviewee" ng-model-options="{trackBy: '$value.login'}" required>
               <md-option ng-value="reviewee" ng-repeat="reviewee in reviewees">{{ reviewee.firstName }} {{ reviewee.lastName }}</md-option>
             </md-select>
-            <div ng-messages="reviewForm.reviewee.$error" ng-show="reviewForm.$dirty || reviewForm.reviewee.$dirty">
-              <div ng-message="required">This is required!</div>
+            <div ng-messages="reviewForm.reviewee.$error" ng-if="reviewForm.$submitted || reviewForm.reviewee.$dirty">
+              <div ng-message="required">
+                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.reviewee' | translate }}'}">Please select a value.</span>
+              </div>
             </div>
           </md-input-container>
         </div>
-        <h3>Review Dates</h3>
+        <h3 translate="review.dates">Review Dates</h3>
         <div layout-gt-sm="row">
           <md-input-container flex-gt-sm>
-            <label>Start Date</label>
+            <label translate="review.startDate">Start Date</label>
             <input type="date" name="startDate" ng-model="review.startDate" required/>
-            <div ng-messages="reviewForm.startDate.$error" ng-show="reviewForm.$dirty || reviewForm.startDate.$dirty">
-              <div ng-message="required">This is required!</div>
-              <div ng-message="date">This is not a valid date!</div>
+            <div ng-messages="reviewForm.startDate.$error" ng-if="reviewForm.$submitted || reviewForm.startDate.$dirty">
+              <div ng-message="required">
+                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.startDate' | translate }}'}">Please select a value.</span>
+              </div>
+              <div ng-message="date">
+                <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.startDate' | translate }}'}">Please select a valid value.</span>
+              </div>
             </div>
           </md-input-container>
           <md-input-container flex-gt-sm>
-            <label>End Date</label>
+            <label translate="review.endDate">End Date</label>
             <input type="date" name="endDate" ng-model="review.endDate" required/>
-            <div ng-messages="reviewForm.endDate.$error" ng-show="reviewForm.$dirty || reviewForm.endDate.$dirty">
-              <div ng-message="required">This is required!</div>
-              <div ng-message="date">This is not a valid date!</div>
+            <div ng-messages="reviewForm.endDate.$error" ng-if="reviewForm.$submitted || reviewForm.endDate.$dirty">
+              <div ng-message="required">
+                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.endDate' | translate }}'}">Please select a value.</span>
+              </div>
+              <div ng-message="date">
+                <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.endDate' | translate }}'}">Please select a valid value.</span>
+              </div>
             </div>
           </md-input-container>
         </div>
         <div layout="row">
           <span flex></span>
-          <md-button ng-click="save()" class="md-primary">Save</md-button>
+          <md-button ng-click="save()" class="md-primary" translate="entity.action.save">Save</md-button>
         </div>
       </div>
     </form>
