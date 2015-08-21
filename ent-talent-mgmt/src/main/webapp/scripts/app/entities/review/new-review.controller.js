@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('etmApp').controller('NewReviewController', function ($scope, Review, ReviewType, Principal, User) {
-  $scope.review = {};
+angular.module('etmApp').controller('NewReviewController', function ($scope, $state, Review, ReviewType, Principal, User) {
+  $scope.review = new Review();
   $scope.reviewTypes = [];
   $scope.reviewees = [];
 
@@ -21,7 +21,9 @@ angular.module('etmApp').controller('NewReviewController', function ($scope, Rev
 
   $scope.save = function () {
     if ($scope.reviewForm.$valid) {
-      console.dir($scope.review);
+      $scope.review.$save(function (review) {
+        $state.go('review.detail', {review: review, id: review.id});
+      });
     } else {
       $scope.reviewForm.$setDirty(true);
     }
