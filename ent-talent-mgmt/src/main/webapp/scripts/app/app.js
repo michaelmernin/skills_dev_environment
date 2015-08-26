@@ -111,6 +111,7 @@ angular.module('etmApp', [
 
   $translateProvider.preferredLanguage('en');
   $translateProvider.useCookieStorage();
+  $translateProvider.directivePriority(222); // https://github.com/angular-translate/angular-translate/issues/949
 
   tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-i18n/angular-locale_{{locale}}.js');
   tmhDynamicLocaleProvider.useCookieStorage('NG_TRANSLATE_LANG_KEY');

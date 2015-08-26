@@ -33,9 +33,10 @@ public class ReviewResource {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public void create(@RequestBody Review review) {
+    public ResponseEntity<Review> create(@RequestBody Review review) {
         log.debug("REST request to save Review : {}", review);
-        reviewRepository.save(review);
+        review = reviewRepository.save(review);
+        return new ResponseEntity<>(review, HttpStatus.OK);
     }
 
     /**
