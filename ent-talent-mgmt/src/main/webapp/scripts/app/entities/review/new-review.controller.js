@@ -34,7 +34,7 @@ angular.module('etmApp').controller('NewReviewController', function ($scope, $st
           .targetEvent(ev);
         $mdDialog.show(confirmSave).then(function () {
           $scope.review.$save(function (review) {
-            $state.go('review.detail', {review: review, id: review.id});
+            $state.go('review.edit', {review: review, id: review.id});
           });
         });
       });

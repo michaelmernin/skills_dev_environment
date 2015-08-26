@@ -46,5 +46,18 @@ angular.module('etmApp').config(function ($stateProvider) {
         controller: 'ReviewDetailController'
       }
     }
+  }).state('review.edit', {
+	  parent: 'review.detail',
+	  url: '/edit',
+	  data: {
+		  roles: ['ROLE_USER'],
+		  pageTitle: 'review.detail.edit.title'
+	  },
+	  views: {
+	    'content@': {
+		  templateUrl: 'scripts/app/entities/review/review-edit.html',
+		  controller: 'ReviewEditController'
+	    }
+	  }
   });
 });

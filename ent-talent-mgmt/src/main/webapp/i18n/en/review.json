@@ -9,7 +9,10 @@
       "question": "Are you sure you want to delete Review {{ id }}?"
     },
     "detail": {
-      "title": "Review"
+      "title": "Review",
+      "edit": {
+      	"title": "Edit Review"
+      	}
     },
     "new": {
       "title": "Create a Review",
