@@ -49,7 +49,7 @@ public class ReviewResource {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<Review> create(@Valid @RequestBody Review review, BindingResult result) {
-        log.debug("REST request to save Review : {}", review);
+        log.debug("REST request to create Review : {}", review);
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid new review", result);
         }
@@ -84,6 +84,23 @@ public class ReviewResource {
                 review,
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    
+    /**
+     * PUT  /reviews/:id -> Update a review.
+     */
+    @RequestMapping(value = "/reviews/{id}",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Review> update(@Valid @RequestBody Review review, BindingResult result) {
+        log.debug("REST request to update Review : {}", review);
+        if (result.hasErrors()) {
+            throw new InvalidRequestException("Invalid review update", result);
+        }
+        review.sanitize(false);
+        review = reviewRepository.save(review);
+        return new ResponseEntity<>(review, HttpStatus.OK);
     }
 
     /**

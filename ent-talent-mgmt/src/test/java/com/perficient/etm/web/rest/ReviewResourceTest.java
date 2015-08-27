@@ -177,7 +177,7 @@ public class ReviewResourceTest {
         review.setRole(UPDATED_ROLE);
         review.setResponsibilities(UPDATED_RESPONSIBILITIES);
         review.setRating(UPDATED_RATING);
-        restReviewMockMvc.perform(post("/api/reviews")
+        restReviewMockMvc.perform(put("/api/reviews/" + review.getId())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(review)))
                 .andExpect(status().isOk());
