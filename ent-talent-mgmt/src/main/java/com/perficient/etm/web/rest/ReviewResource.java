@@ -2,15 +2,22 @@ package com.perficient.etm.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.repository.ReviewRepository;
+import com.perficient.etm.web.validator.ReviewValidator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +32,14 @@ public class ReviewResource {
 
     @Inject
     private ReviewRepository reviewRepository;
+    
+    @Inject
+    private ReviewValidator reviewValidator;
+    
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.setValidator(reviewValidator);
+    }
 
     /**
      * POST  /reviews -> Create a new review.
@@ -33,8 +48,12 @@ public class ReviewResource {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Review> create(@RequestBody Review review) {
+    public ResponseEntity<Review> create(@Valid @RequestBody Review review, BindingResult result) {
         log.debug("REST request to save Review : {}", review);
+        if (result.hasErrors()) {
+            throw new InvalidRequestException("Invalid new review", result);
+        }
+        review.sanitize(true);
         review = reviewRepository.save(review);
         return new ResponseEntity<>(review, HttpStatus.OK);
     }

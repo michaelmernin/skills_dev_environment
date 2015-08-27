@@ -219,6 +219,13 @@ public class Review implements Serializable {
     public void setReviewer(User user) {
         this.reviewer = user;
     }
+    
+    public void sanitize(boolean isCreate) {
+        if (isCreate) {
+            id = null;
+        }
+        reviewStatus = null;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -81,7 +82,7 @@ public class UserService {
     }
     
     private User createUser(AppUserDetails userDetails) {
-        return createUser(userDetails, "en");
+        return createUser(userDetails, Locale.US.toLanguageTag());
     }
 
     private User createUser(AppUserDetails userDetails, String langKey) {
