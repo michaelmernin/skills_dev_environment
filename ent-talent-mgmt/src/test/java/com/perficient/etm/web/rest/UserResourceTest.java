@@ -71,6 +71,27 @@ public class UserResourceTest {
             user = u;
         });
     }
+    
+    @Test
+    public void getAllUsers() throws Exception {
+        // Get all the users
+        restUserMockMvc.perform(get("/api/users"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0]").exists())
+                .andExpect(jsonPath("$[0].id").value(3))
+                .andExpect(jsonPath("$[0].login").value(DEFAULT_LOGIN))
+                .andExpect(jsonPath("$[1]").exists())
+                .andExpect(jsonPath("$[1].id").value(4))
+                .andExpect(jsonPath("$[1].login").value("dev.user2"))
+                .andExpect(jsonPath("$[2]").exists())
+                .andExpect(jsonPath("$[2].id").value(5))
+                .andExpect(jsonPath("$[2].login").value("dev.user3"))
+                .andExpect(jsonPath("$[3]").exists())
+                .andExpect(jsonPath("$[3].id").value(6))
+                .andExpect(jsonPath("$[3].login").value("dev.user4"));
+    }
 
     @Test
     public void testGetExistingUser() throws Exception {
