@@ -31,4 +31,20 @@ public class TestUtil {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return mapper.writeValueAsBytes(object);
     }
+    
+    /**
+     * Convert an object to JSON byte array.
+     *
+     * @param object
+     *            the object to convert
+     * @param mapper
+     *            the configured object mapper to use for conversion
+     * @return the JSON byte array
+     * @throws IOException
+     */
+    public static byte[] convertObjectToJsonBytes(Object object, ObjectMapper mapper)
+            throws IOException {
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        return mapper.writeValueAsBytes(object);
+    }
 }

@@ -63,9 +63,9 @@ public class UserResource {
     }
     
     /**
-     * PUT  /users -> Updates an existing user.
+     * PUT  /users/:id -> Updates an existing user.
      */
-    @RequestMapping(value = "/users",
+    @RequestMapping(value = "/users/{id}",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed

@@ -1,6 +1,11 @@
 package com.perficient.etm.web.rest;
 
+import java.util.List;
+import java.util.Optional;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.perficient.etm.Application;
+import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.UserRepository;
 
 import org.junit.Before;
@@ -15,10 +20,14 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -33,24 +42,42 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @IntegrationTest
 public class UserResourceTest {
 
+    private static final String DEFAULT_LOGIN = "dev.user1";
+    private static final String UPDATED_LOGIN = "test.user1";
+    private static final String UPDATED_FIRST_NAME = "Test";
+    private static final String UPDATED_LAST_NAME = "User1";
+    private static final String UPDATED_EMAIL = "test.user1@email.com";
+
     @Inject
     private UserRepository userRepository;
+    
+    @Inject
+    private ObjectMapper objectMapper;
 
     private MockMvc restUserMockMvc;
+    
+    private User user;
 
-    @Before
+    @PostConstruct
     public void setup() {
         UserResource userResource = new UserResource();
         ReflectionTestUtils.setField(userResource, "userRepository", userRepository);
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
     }
+    
+    @Before
+    public void initTest() {
+        userRepository.findOneByLogin(DEFAULT_LOGIN).ifPresent(u -> {
+            user = u;
+        });
+    }
 
     @Test
     public void testGetExistingUser() throws Exception {
-        restUserMockMvc.perform(get("/api/users/{login}", "dev.user1")
+        restUserMockMvc.perform(get("/api/users/{login}", DEFAULT_LOGIN)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.lastName").value("UserOne"));
     }
 
@@ -59,5 +86,32 @@ public class UserResourceTest {
         restUserMockMvc.perform(get("/api/users/unknown")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    @Transactional
+    public void testUpdateUser() throws Exception {
+        int count = (int) userRepository.count();
+        
+        // Update the user
+        user.setLogin(UPDATED_LOGIN);
+        user.setFirstName(UPDATED_FIRST_NAME);
+        user.setLastName(UPDATED_LAST_NAME);
+        user.setEmail(UPDATED_EMAIL);
+        restUserMockMvc.perform(put("/api/users/" + user.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(user, objectMapper)))
+                .andExpect(status().isOk());
+        
+        // Validate the User in the database
+        List<User> users = userRepository.findAll();
+        assertThat(users).hasSize(count);
+        Optional<User> optional = users.stream().filter(u -> {return u.getId() == user.getId();}).findAny();
+        assertThat(optional.isPresent()).isTrue();
+        User testUser = optional.get();
+        assertThat(testUser.getLogin()).isEqualTo(UPDATED_LOGIN);
+        assertThat(testUser.getFirstName()).isEqualTo(UPDATED_FIRST_NAME);
+        assertThat(testUser.getLastName()).isEqualTo(UPDATED_LAST_NAME);
+        assertThat(testUser.getEmail()).isEqualTo(UPDATED_EMAIL);
     }
 }
