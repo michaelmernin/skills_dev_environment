@@ -3,6 +3,7 @@ package com.perficient.etm.web.rest;
 import com.perficient.etm.Application;
 import com.perficient.etm.domain.Rating;
 import com.perficient.etm.repository.RatingRepository;
+import com.perficient.etm.utils.ResourceTestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -82,8 +83,8 @@ public class RatingResourceTest {
 
         // Create the Rating
         restRatingMockMvc.perform(post("/api/ratings")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(rating)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(rating)))
                 .andExpect(status().isCreated());
 
         // Validate the Rating in the database
@@ -148,8 +149,8 @@ public class RatingResourceTest {
         rating.setComment(UPDATED_COMMENT);
         rating.setVisible(UPDATED_VISIBLE);
         restRatingMockMvc.perform(put("/api/ratings")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(rating)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(rating)))
                 .andExpect(status().isOk());
 
         // Validate the Rating in the database
@@ -171,7 +172,7 @@ public class RatingResourceTest {
 
         // Get the rating
         restRatingMockMvc.perform(delete("/api/ratings/{id}", rating.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
         // Validate the database is empty

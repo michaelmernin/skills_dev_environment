@@ -3,6 +3,7 @@ package com.perficient.etm.web.rest;
 import com.perficient.etm.Application;
 import com.perficient.etm.domain.Goal;
 import com.perficient.etm.repository.GoalRepository;
+import com.perficient.etm.utils.ResourceTestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -87,8 +88,8 @@ public class GoalResourceTest {
 
         // Create the Goal
         restGoalMockMvc.perform(post("/api/goals")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(goal)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(goal)))
                 .andExpect(status().isCreated());
 
         // Validate the Goal in the database
@@ -157,8 +158,8 @@ public class GoalResourceTest {
         goal.setTargetDate(UPDATED_TARGET_DATE);
         goal.setCompletionDate(UPDATED_COMPLETION_DATE);
         restGoalMockMvc.perform(put("/api/goals")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(goal)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(goal)))
                 .andExpect(status().isOk());
 
         // Validate the Goal in the database
@@ -181,7 +182,7 @@ public class GoalResourceTest {
 
         // Get the goal
         restGoalMockMvc.perform(delete("/api/goals/{id}", goal.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
         // Validate the database is empty

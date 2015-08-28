@@ -3,6 +3,7 @@ package com.perficient.etm.web.rest;
 import com.perficient.etm.Application;
 import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.repository.ReviewTypeRepository;
+import com.perficient.etm.utils.ResourceTestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -81,8 +82,8 @@ public class ReviewTypeResourceTest {
 
         // Create the ReviewType
         restReviewTypeMockMvc.perform(post("/api/reviewTypes")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(reviewType)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(reviewType)))
                 .andExpect(status().isOk());
 
         // Validate the ReviewType in the database
@@ -153,8 +154,8 @@ public class ReviewTypeResourceTest {
         reviewType.setVersion(UPDATED_VERSION);
         reviewType.setActive(UPDATED_ACTIVE);
         restReviewTypeMockMvc.perform(post("/api/reviewTypes")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(reviewType)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(reviewType)))
                 .andExpect(status().isOk());
 
         // Validate the ReviewType in the database
@@ -179,7 +180,7 @@ public class ReviewTypeResourceTest {
 
         // Get the reviewType
         restReviewTypeMockMvc.perform(delete("/api/reviewTypes/{id}", reviewType.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
         // Validate the database is empty

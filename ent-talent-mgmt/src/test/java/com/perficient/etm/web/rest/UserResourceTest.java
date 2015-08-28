@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.perficient.etm.Application;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.UserRepository;
+import com.perficient.etm.utils.AuthenticationTestExecutionListener;
+import com.perficient.etm.utils.ResourceTestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -39,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @ActiveProfiles("dev")
+@TestExecutionListeners({AuthenticationTestExecutionListener.class})
 @IntegrationTest
 public class UserResourceTest {
 
@@ -120,8 +124,8 @@ public class UserResourceTest {
         user.setLastName(UPDATED_LAST_NAME);
         user.setEmail(UPDATED_EMAIL);
         restUserMockMvc.perform(put("/api/users/" + user.getId())
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(user, objectMapper)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(user, objectMapper)))
                 .andExpect(status().isOk());
         
         // Validate the User in the database
@@ -134,5 +138,27 @@ public class UserResourceTest {
         assertThat(testUser.getFirstName()).isEqualTo(UPDATED_FIRST_NAME);
         assertThat(testUser.getLastName()).isEqualTo(UPDATED_LAST_NAME);
         assertThat(testUser.getEmail()).isEqualTo(UPDATED_EMAIL);
+    }
+    
+    @Test
+    @Transactional
+    public void testGetUserCounselees() throws Exception {
+        // Initialize the database
+        User counselor = userRepository.findOne(5L);
+        user.setCounselor(counselor);
+        userRepository.saveAndFlush(user);
+        
+        // Set current user
+        AuthenticationTestExecutionListener.setCurrentUser(counselor);
+        
+        restUserMockMvc.perform(get("/api/counselees")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0]").exists())
+                .andExpect(jsonPath("$[0].id").value(3))
+                .andExpect(jsonPath("$[0].login").value(DEFAULT_LOGIN))
+                .andExpect(jsonPath("$[1]").doesNotExist());
     }
 }

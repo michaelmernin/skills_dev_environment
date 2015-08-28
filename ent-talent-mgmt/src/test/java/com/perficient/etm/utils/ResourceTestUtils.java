@@ -1,4 +1,4 @@
-package com.perficient.etm.web.rest;
+package com.perficient.etm.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +10,7 @@ import java.nio.charset.Charset;
 /**
  * Utility class for testing REST controllers.
  */
-public class TestUtil {
+public class ResourceTestUtils {
 
     /** MediaType for JSON UTF8 */
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(

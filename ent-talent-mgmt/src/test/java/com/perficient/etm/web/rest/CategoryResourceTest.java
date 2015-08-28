@@ -3,6 +3,7 @@ package com.perficient.etm.web.rest;
 import com.perficient.etm.Application;
 import com.perficient.etm.domain.Category;
 import com.perficient.etm.repository.CategoryRepository;
+import com.perficient.etm.utils.ResourceTestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -72,8 +73,8 @@ public class CategoryResourceTest {
 
         // Create the Category
         restCategoryMockMvc.perform(post("/api/categories")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(category)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(category)))
                 .andExpect(status().isOk());
 
         // Validate the Category in the database
@@ -132,8 +133,8 @@ public class CategoryResourceTest {
         // Update the category
         category.setTitle(UPDATED_TITLE);
         restCategoryMockMvc.perform(post("/api/categories")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(category)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(category)))
                 .andExpect(status().isOk());
 
         // Validate the Category in the database
@@ -155,7 +156,7 @@ public class CategoryResourceTest {
 
         // Get the category
         restCategoryMockMvc.perform(delete("/api/categories/{id}", category.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
         // Validate the database has one less item

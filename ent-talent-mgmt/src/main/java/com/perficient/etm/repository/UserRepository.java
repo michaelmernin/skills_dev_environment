@@ -21,5 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select distinct u from User u where u.id > 2 order by u.id asc")
     List<User> findAllNormalUsers();
-
+    
+    @Query("select u from User u where u.counselor.login = ?#{principal.username}")
+    List<User> findCounseleesForCurrentUser();
 }

@@ -7,7 +7,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.security.AuthoritiesConstants;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -90,5 +89,18 @@ public class UserResource {
     public void delete(@PathVariable Long id) {
         log.debug("REST request to delete User : {}", id);
         userRepository.delete(id);
+    }
+    
+    /**
+     * GET  /counselees -> get all the counselees of the current user.
+     */
+    @RequestMapping(value = "/counselees",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    @RolesAllowed(AuthoritiesConstants.COUNSELOR)
+    List<User> getCounselees() {
+        log.debug("REST request to get user's counselees");
+        return userRepository.findCounseleesForCurrentUser();
     }
 }

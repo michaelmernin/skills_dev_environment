@@ -3,6 +3,7 @@ package com.perficient.etm.web.rest;
 import com.perficient.etm.Application;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.repository.FeedbackTypeRepository;
+import com.perficient.etm.utils.ResourceTestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -72,8 +73,8 @@ public class FeedbackTypeResourceTest {
 
         // Create the FeedbackType
         restFeedbackTypeMockMvc.perform(post("/api/feedbackTypes")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(feedbackType)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(feedbackType)))
                 .andExpect(status().isOk());
 
         // Validate the FeedbackType in the database
@@ -132,8 +133,8 @@ public class FeedbackTypeResourceTest {
         // Update the feedbackType
         feedbackType.setName(UPDATED_NAME);
         restFeedbackTypeMockMvc.perform(post("/api/feedbackTypes")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(feedbackType)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(feedbackType)))
                 .andExpect(status().isOk());
 
         // Validate the FeedbackType in the database
@@ -155,7 +156,7 @@ public class FeedbackTypeResourceTest {
 
         // Get the feedbackType
         restFeedbackTypeMockMvc.perform(delete("/api/feedbackTypes/{id}", feedbackType.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
         // Validate the database is empty

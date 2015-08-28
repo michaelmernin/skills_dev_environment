@@ -3,6 +3,7 @@ package com.perficient.etm.web.rest;
 import com.perficient.etm.Application;
 import com.perficient.etm.domain.Question;
 import com.perficient.etm.repository.QuestionRepository;
+import com.perficient.etm.utils.ResourceTestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -76,8 +77,8 @@ public class QuestionResourceTest {
 
         // Create the Question
         restQuestionMockMvc.perform(post("/api/questions")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(question)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(question)))
                 .andExpect(status().isOk());
 
         // Validate the Question in the database
@@ -136,8 +137,8 @@ public class QuestionResourceTest {
         question.setText(UPDATED_TEXT);
         question.setPosition(UPDATED_POSITION);
         restQuestionMockMvc.perform(post("/api/questions")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(question)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(question)))
                 .andExpect(status().isOk());
 
         // Validate the Question in the database
@@ -156,7 +157,7 @@ public class QuestionResourceTest {
 
         // Get the question
         restQuestionMockMvc.perform(delete("/api/questions/{id}", question.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
         // Validate the database is empty

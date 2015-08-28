@@ -38,10 +38,10 @@ public class UserDetailsService implements org.springframework.security.core.use
     public UserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating {}", login);
         return userRepository.findOneByLogin(login.toLowerCase())
-            .map(this::mapUserDetails)
+            .map(UserDetailsService::mapUserDetails)
             .orElseGet(() -> {
                 return userService.getFromAppUserDetails()
-                    .map(this::mapUserDetails)
+                    .map(UserDetailsService::mapUserDetails)
                     .orElseThrow(() -> {
                         return userNotFoundException(login);
                     });
@@ -52,7 +52,7 @@ public class UserDetailsService implements org.springframework.security.core.use
         return new UsernameNotFoundException("Unable to locate user with login: " + login);
     }
 
-    private UserDetails mapUserDetails(User user) {
+    public static UserDetails mapUserDetails(User user) {
         return new org.springframework.security.core.userdetails.User(user.getLogin().toLowerCase(),
                 "NotNull", getGrantedAuthorities(user));
     }

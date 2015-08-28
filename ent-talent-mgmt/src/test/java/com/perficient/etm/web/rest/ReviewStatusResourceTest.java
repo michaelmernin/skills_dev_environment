@@ -3,6 +3,7 @@ package com.perficient.etm.web.rest;
 import com.perficient.etm.Application;
 import com.perficient.etm.domain.ReviewStatus;
 import com.perficient.etm.repository.ReviewStatusRepository;
+import com.perficient.etm.utils.ResourceTestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -75,8 +76,8 @@ public class ReviewStatusResourceTest {
 
         // Create the ReviewStatus
         restReviewStatusMockMvc.perform(post("/api/reviewStatuses")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(reviewStatus)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(reviewStatus)))
                 .andExpect(status().isOk());
 
         // Validate the ReviewStatus in the database
@@ -139,8 +140,8 @@ public class ReviewStatusResourceTest {
         reviewStatus.setName(UPDATED_NAME);
         reviewStatus.setDescription(UPDATED_DESCRIPTION);
         restReviewStatusMockMvc.perform(post("/api/reviewStatuses")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(reviewStatus)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(reviewStatus)))
                 .andExpect(status().isOk());
 
         // Validate the ReviewStatus in the database
@@ -163,7 +164,7 @@ public class ReviewStatusResourceTest {
 
         // Get the reviewStatus
         restReviewStatusMockMvc.perform(delete("/api/reviewStatuses/{id}", reviewStatus.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
         // Validate the database is empty

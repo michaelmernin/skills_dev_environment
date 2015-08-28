@@ -3,6 +3,7 @@ package com.perficient.etm.web.rest;
 import com.perficient.etm.Application;
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.repository.FeedbackRepository;
+import com.perficient.etm.utils.ResourceTestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -71,8 +72,8 @@ public class FeedbackResourceTest {
 
         // Create the Feedback
         restFeedbackMockMvc.perform(post("/api/feedback")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(feedback)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(feedback)))
                 .andExpect(status().isCreated());
 
         // Validate the Feedback in the database
@@ -124,8 +125,8 @@ public class FeedbackResourceTest {
 
         // Update the feedback
         restFeedbackMockMvc.perform(put("/api/feedback")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(feedback)))
+                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
+                .content(ResourceTestUtils.convertObjectToJsonBytes(feedback)))
                 .andExpect(status().isOk());
 
         // Validate the Feedback in the database
@@ -143,7 +144,7 @@ public class FeedbackResourceTest {
 
         // Get the feedback
         restFeedbackMockMvc.perform(delete("/api/feedback/{id}", feedback.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
         // Validate the database is empty
