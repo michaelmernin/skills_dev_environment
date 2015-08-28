@@ -1,21 +1,13 @@
 package com.perficient.etm.service;
 
-import com.perficient.etm.Application;
 import com.perficient.etm.domain.PersistentToken;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.PersistentTokenRepository;
 import com.perficient.etm.repository.UserRepository;
+import com.perficient.etm.utils.SpringAppTest;
 
 import org.joda.time.LocalDate;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-
 import javax.inject.Inject;
 
 import static org.assertj.core.api.Assertions.*;
@@ -25,13 +17,7 @@ import static org.assertj.core.api.Assertions.*;
  *
  * @see UserService
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebAppConfiguration
-@ActiveProfiles("dev")
-@IntegrationTest
-@Transactional
-public class UserServiceTest {
+public class UserServiceTest extends SpringAppTest {
 
     @Inject
     private PersistentTokenRepository persistentTokenRepository;

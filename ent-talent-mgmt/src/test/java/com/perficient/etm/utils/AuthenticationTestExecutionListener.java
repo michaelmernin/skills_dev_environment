@@ -9,15 +9,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.TestContext;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-
+import org.springframework.test.context.support.AbstractTestExecutionListener;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.security.UserDetailsService;
 
 /**
  * Utility class for configuring security context for tests.
  */
-public class AuthenticationTestExecutionListener extends DependencyInjectionTestExecutionListener {
+public class AuthenticationTestExecutionListener extends AbstractTestExecutionListener {
     
     Authentication defaultAuthentication;
 

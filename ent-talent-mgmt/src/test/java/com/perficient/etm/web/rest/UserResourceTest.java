@@ -4,27 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.perficient.etm.Application;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.UserRepository;
-import com.perficient.etm.utils.AuthenticationTestExecutionListener;
 import com.perficient.etm.utils.ResourceTestUtils;
+import com.perficient.etm.utils.SpringAppTest;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -32,19 +22,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static com.perficient.etm.utils.AuthenticationTestExecutionListener.setCurrentUser;
 
 /**
  * Test class for the UserResource REST controller.
  *
  * @see UserResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebAppConfiguration
-@ActiveProfiles("dev")
-@TestExecutionListeners({AuthenticationTestExecutionListener.class})
-@IntegrationTest
-public class UserResourceTest {
+public class UserResourceTest extends SpringAppTest {
 
     private static final String DEFAULT_LOGIN = "dev.user1";
     private static final String UPDATED_LOGIN = "test.user1";
@@ -114,7 +99,6 @@ public class UserResourceTest {
     }
     
     @Test
-    @Transactional
     public void testUpdateUser() throws Exception {
         int count = (int) userRepository.count();
         
@@ -141,16 +125,14 @@ public class UserResourceTest {
     }
     
     @Test
-    @Transactional
     public void testGetUserCounselees() throws Exception {
         // Initialize the database
         User counselor = userRepository.findOne(5L);
         user.setCounselor(counselor);
         userRepository.saveAndFlush(user);
         
-        // Set current user
-        AuthenticationTestExecutionListener.setCurrentUser(counselor);
-        
+        // Get the counselees for the authenticated counselor
+        setCurrentUser(counselor);
         restUserMockMvc.perform(get("/api/counselees")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
