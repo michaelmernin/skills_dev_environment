@@ -331,6 +331,22 @@ module.exports = function (grunt) {
           VERSION: parseVersionFromBuildGradle()
         }
       }
+    },
+    protractor: {
+      options: {
+        configFile: 'src/test/e2e/protractor.conf.js',
+        webdriverManagerUpdate: true
+      },
+      dev: {
+        options: {}
+      },
+      uat: {
+        options: {
+          args: {
+            baseUrl: 'https://stlerappuat.perficient.com:8443'
+          }
+        }
+      }
     }
   });
 
@@ -368,7 +384,7 @@ module.exports = function (grunt) {
     'usemin',
     'htmlmin'
   ]);
-  
+
   grunt.registerTask('buildUat', [
     'clean:dist',
     'wiredep:app',
