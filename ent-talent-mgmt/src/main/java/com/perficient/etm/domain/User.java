@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.perficient.etm.domain.util.CustomLocalDateSerializer;
 import com.perficient.etm.domain.util.ISO8601LocalDateDeserializer;
-import com.perficient.etm.domain.util.PartialSerializer;
+import com.perficient.etm.domain.util.PublicSerializer;
 import com.perficient.etm.web.view.View;
 
 import org.hibernate.annotations.Cache;
@@ -36,33 +36,38 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView(View.Public.class)
     private Long id;
 
     @NotNull
     @Pattern(regexp = "^[a-z0-9\\.]*$")
     @Size(min = 1, max = 50)
     @Column(length = 50, unique = true, nullable = false)
+    @JsonView(View.Public.class)
     private String login;
 
     @Size(max = 50)
     @Column(name = "first_name", length = 50)
+    @JsonView(View.Public.class)
     private String firstName;
 
     @Size(max = 50)
     @Column(name = "last_name", length = 50)
+    @JsonView(View.Public.class)
     private String lastName;
 
     @Email
     @Size(max = 100)
     @Column(length = 100, unique = true)
+    @JsonView(View.Public.class)
     private String email;
 
-    @JsonView(View.Full.class)
+    @JsonView(View.Private.class)
     @Size(min = 2, max = 5)
     @Column(name = "lang_key", length = 5)
     private String langKey;
 
-    @JsonView(View.Full.class)
+    @JsonView(View.Private.class)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "T_USER_AUTHORITY",
@@ -95,26 +100,26 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<PersistentToken> persistentTokens = new HashSet<>();
     
-    @JsonSerialize(using = PartialSerializer.class)
-    @JsonView(View.Full.class)
+    @JsonSerialize(using = PublicSerializer.class)
+    @JsonView(View.Private.class)
     @ManyToOne
     private User counselor;
     
-    @JsonSerialize(using = PartialSerializer.class)
-    @JsonView(View.Full.class)
+    @JsonSerialize(using = PublicSerializer.class)
+    @JsonView(View.Counselee.class)
     @ManyToOne
     @JoinColumn(name = "general_manager_id", referencedColumnName = "id")
     private User generalManager;
     
-    @JsonView(View.Full.class)
+    @JsonView(View.Counselee.class)
     @Column(name = "title")
     private String title;
     
-    @JsonView(View.Full.class)
+    @JsonView(View.Counselee.class)
     @Column(name = "target_title")
     private String targetTitle;
     
-    @JsonView(View.Full.class)
+    @JsonView(View.Counselee.class)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @JsonSerialize(using = CustomLocalDateSerializer.class)
     @JsonDeserialize(using = ISO8601LocalDateDeserializer.class)

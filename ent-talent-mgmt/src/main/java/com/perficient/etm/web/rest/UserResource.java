@@ -4,9 +4,12 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.security.AuthoritiesConstants;
+import com.perficient.etm.web.view.View;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -99,6 +102,7 @@ public class UserResource {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RolesAllowed(AuthoritiesConstants.COUNSELOR)
+    @JsonView(View.Counselee.class)
     List<User> getCounselees() {
         log.debug("REST request to get user's counselees");
         return userRepository.findCounseleesForCurrentUser();

@@ -8,7 +8,9 @@ angular.module('etmApp').controller('NewReviewController', function ($scope, $st
   Principal.identity().then(function(account) {
     $scope.reviewees.push(account);
     if (Principal.isInRole('ROLE_COUNSELOR')) {
-      //get counselees
+      User.queryCounselees(function (result) {
+        Array.prototype.push.apply($scope.reviewees, result);
+      });
     }
   });
 

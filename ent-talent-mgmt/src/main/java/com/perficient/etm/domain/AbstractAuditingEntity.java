@@ -26,25 +26,25 @@ import javax.validation.constraints.NotNull;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractAuditingEntity {
 
-    @JsonView(View.Full.class)
+    @JsonView(View.Private.class)
     @CreatedBy
     @NotNull
     @Column(name = "created_by", nullable = false, length = 50, updatable = false)
     private String createdBy;
 
-    @JsonView(View.Full.class)
+    @JsonView(View.Private.class)
     @CreatedDate
     @NotNull
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Column(name = "created_date", nullable = false)
     private DateTime createdDate = DateTime.now();
 
-    @JsonView(View.Full.class)
+    @JsonView(View.Private.class)
     @LastModifiedBy
     @Column(name = "last_modified_by", length = 50)
     private String lastModifiedBy;
 
-    @JsonView(View.Full.class)
+    @JsonView(View.Private.class)
     @LastModifiedDate
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Column(name = "last_modified_date")

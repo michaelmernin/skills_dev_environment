@@ -30,6 +30,16 @@ angular.module('etmApp').factory('User', function ($resource, DateUtils) {
         data.startDate = DateUtils.convertLocaleDateToServer(data.startDate);
         return angular.toJson(data);
       }
+    },
+    'queryCounselees': {
+      url: 'api/counselees',
+      method: 'GET',
+      isArray: true,
+      transformResponse: function (data) {
+        data = angular.fromJson(data);
+        data.forEach(convertFromServer);
+        return data;
+      }
     }
   });
 });

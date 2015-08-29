@@ -1,6 +1,7 @@
 package com.perficient.etm.web.view;
 
 public class View {
-    public static class Partial {}
-    public static class Full extends Partial {}
+    public static class Public {}
+    public static class Counselee extends Public {}
+    public static class Private extends Counselee {}
 }

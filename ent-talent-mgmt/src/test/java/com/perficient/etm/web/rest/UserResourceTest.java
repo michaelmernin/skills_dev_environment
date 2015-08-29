@@ -141,6 +141,9 @@ public class UserResourceTest extends SpringAppTest {
                 .andExpect(jsonPath("$[0]").exists())
                 .andExpect(jsonPath("$[0].id").value(3))
                 .andExpect(jsonPath("$[0].login").value(DEFAULT_LOGIN))
+                .andExpect(jsonPath("$[0].firstName").exists())
+                .andExpect(jsonPath("$[0].lastName").exists())
+                .andExpect(jsonPath("$[0].email").exists())
                 .andExpect(jsonPath("$[1]").doesNotExist());
     }
 }
