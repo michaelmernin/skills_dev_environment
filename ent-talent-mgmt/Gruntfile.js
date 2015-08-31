@@ -338,12 +338,21 @@ module.exports = function (grunt) {
         webdriverManagerUpdate: true
       },
       dev: {
-        options: {}
+        options: {
+          args: {
+            params: {
+              ENV: 'dev'
+            }
+          }
+        }
       },
       uat: {
         options: {
           args: {
-            baseUrl: 'https://stlerappuat.perficient.com:8443'
+            baseUrl: 'https://stlerappuat.perficient.com:8443',
+            params: {
+              ENV: 'uat'
+            }
           }
         }
       }
