@@ -40,6 +40,19 @@
     "reviewStatus": "Review Status",
     "reviewee": "Reviewee",
     "reviewer": "Reviewer",
+    "annual": {
+    	"peers": "Peers",
+    	"engagements": "Engagements",
+    	"goals": "Goals",
+    	"evaluation": "Evaluation",
+    	"overall": "Overall",
+    	"startDate": "Start Date:",
+    	"endDate": "End Date:",
+    	"reviewType": "Review Type:",
+    	"status": "Status:",
+    	"counselor": "Counselor:",
+    	"reviewInformation": "Review Information"
+    },
     "a": {
       "title": "a Title",
       "startDate": "a Start Date",
