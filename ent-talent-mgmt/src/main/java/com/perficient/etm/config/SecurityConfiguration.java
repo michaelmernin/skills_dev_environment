@@ -71,9 +71,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         ldapAuthentication.userDetailsContextMapper(ldapUserDetailsMapper);
         ldapAuthentication.addObjectPostProcessor(authenticatorPostProcessor);
     	
-        if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION, Constants.SPRING_PROFILE_UAT)) {
+        if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
             ldapAuthentication
-                .userDnPatterns("cn={0},ou=Employees," + ldapRoot, "cn={0},ou=Test,ou=IT," + ldapRoot)
+                .userDnPatterns("cn={0},ou=Employees," + ldapRoot)
                 .groupSearchBase("ou=Groups," + ldapRoot)
                 .contextSource()
                     .url("ldaps://" + ldapDomain + ":" + ldapPort + "/")
