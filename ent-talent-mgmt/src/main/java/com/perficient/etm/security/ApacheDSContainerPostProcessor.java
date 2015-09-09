@@ -1,5 +1,6 @@
 package com.perficient.etm.security;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -24,6 +25,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.ldap.server.ApacheDSContainer;
 import org.springframework.stereotype.Component;
+
+import com.google.common.io.Files;
 
 @Component
 public class ApacheDSContainerPostProcessor implements ObjectPostProcessor<ApacheDSContainer> {
@@ -99,15 +102,19 @@ public class ApacheDSContainerPostProcessor implements ObjectPostProcessor<Apach
 
     private void loadLdif(CoreSession adminSession, String file) {
         try {
-            Resource[] ldifs = context.getResources(file);
-            String ldifFile;
-            try {
-                ldifFile = ldifs[0].getFile().getAbsolutePath();
-            } catch (IOException e) {
-                ldifFile = ldifs[0].getURI().toString();
-            }
+            ClassLoader classLoader = getClass().getClassLoader();
+            Resource ldif = context.getResource(file);
             
-            LdifFileLoader loader = new LdifFileLoader(adminSession, ldifFile);
+            File ldifFile;
+            LdifFileLoader loader;
+            try {
+                ldifFile = ldif.getFile();
+            } catch (IOException e) {
+                ldifFile = File.createTempFile(ldif.getFilename(), null);
+                Files.copy(() -> {return ldif.getInputStream();}, ldifFile);
+            }
+
+            loader = new LdifFileLoader(adminSession, ldifFile, null, classLoader);
             loader.execute();
         } catch (IOException e) {
             log.warn("Failed to load " + file);
