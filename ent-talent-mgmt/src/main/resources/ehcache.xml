@@ -25,6 +25,10 @@
          timeToLiveSeconds="3600">
   </cache>
 
+  <cache name="com.perficient.etm.domain.UserAuthority"
+         timeToLiveSeconds="3600">
+  </cache>
+
   <cache name="com.perficient.etm.domain.User.authorities"
          timeToLiveSeconds="3600">
   </cache>
@@ -34,6 +38,78 @@
   </cache>
 
   <cache name="com.perficient.etm.domain.User.persistentTokens"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.ReviewType"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Review"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Review.peers"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.User.peerReviews"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.User.selfReviews"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.User.colleagueReviews"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.ReviewStatus"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Category"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Rating"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.FeedbackType"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.FeedbackStatus"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Goal"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Review.goals"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Feedback"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Review.feedback"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Feedback.ratings"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Question"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.ReviewType.questions"
          timeToLiveSeconds="3600">
   </cache>
 </ehcache>
