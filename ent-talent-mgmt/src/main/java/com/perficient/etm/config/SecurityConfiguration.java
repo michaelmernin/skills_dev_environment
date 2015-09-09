@@ -85,7 +85,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     	        .groupSearchBase("ou=groups")
     	        .contextSource()
     	            .root(ldapRoot)
-    	            .ldif("classpath:auth/users-dev.ldif");
+    	            .ldif("classpath*:auth/users-dev.ldif");
     	}
     }
 
