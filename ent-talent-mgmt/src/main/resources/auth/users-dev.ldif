@@ -13,6 +13,7 @@ objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
+cn: dev.user1
 sn: UserOne
 givenName: Dev
 mail: Dev.User1@email.com
@@ -23,6 +24,7 @@ objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
+cn: dev.user2
 sn: UserTwo
 givenName: Dev
 mail: Dev.User2@email.com
@@ -33,6 +35,7 @@ objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
+cn: dev.user3
 sn: UserThree
 givenName: Dev
 mail: Dev.User3@email.com
@@ -43,6 +46,7 @@ objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
+cn: dev.user4
 sn: UserFour
 givenName: Dev
 mail: Dev.User4@email.com
@@ -53,6 +57,7 @@ objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
+cn: dev.user5
 sn: UserFive
 givenName: Dev
 mail: Dev.User5@email.com
