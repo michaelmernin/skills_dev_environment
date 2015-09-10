@@ -25,7 +25,7 @@
       </materials>
       <stage name="install" cleanWorkingDir="true">
         <jobs>
-          <job name="npm" runOnAllAgents="true">
+          <job name="npm">
             <tasks>
               <exec command="npm" workingdir="ent-talent-mgmt">
                 <arg>install</arg>
@@ -35,7 +35,7 @@
           </job>
         </jobs>
       </stage>
-      <stage name="test">
+      <stage name="test" fetchMaterials="false">
         <jobs>
           <job name="unit-test">
             <tasks>
@@ -61,7 +61,7 @@
           </job>
         </jobs>
       </stage>
-      <stage name="build">
+      <stage name="build" fetchMaterials="false">
         <jobs>
           <job name="package">
             <tasks>
@@ -84,6 +84,7 @@
     <pipeline name="etm-deploy-uat" labeltemplate="${etm-build}" isLocked="true" template="etm-deploy">
       <params>
         <param name="inventory">uat</param>
+        <param name="url">https://stlerappuat.perficient.com:8443</param>
       </params>
       <materials>
         <pipeline pipelineName="etm-build" stageName="build" />
@@ -95,6 +96,41 @@
           </filter>
         </git>
       </materials>
+    </pipeline>
+    <pipeline name="etm-test-uat" labeltemplate="${etm-deploy-uat}" isLocked="false">
+      <materials>
+        <pipeline pipelineName="etm-deploy-uat" stageName="verify" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" />
+      </materials>
+      <stage name="install">
+        <jobs>
+          <job name="npm">
+            <tasks>
+              <exec command="npm" workingdir="ent-talent-mgmt">
+                <arg>install</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="test" fetchMaterials="false">
+        <jobs>
+          <job name="acceptance-test">
+            <tasks>
+              <exec command="env" workingdir="ent-talent-mgmt">
+                <arg>DISPLAY=:99</arg>
+                <arg>grunt</arg>
+                <arg>protractor:uat</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <test src="ent-talent-mgmt/build/e2e-test-reports/*.xml" dest="etm-test-results" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
     </pipeline>
   </pipelines>
   <templates>
@@ -109,6 +145,22 @@
               <exec command="/bin/bash" workingdir="tools/ansible">
                 <arg>-c</arg>
                 <arg>ansible-playbook appservers.yml -i #{inventory} -t ci_deploy -e "artifact_dir=../../etm-wars" --vault-password-file ~/.ansible/vault_key.txt</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="verify" fetchMaterials="false">
+        <jobs>
+          <job name="started">
+            <tasks>
+              <exec command="wget">
+                <arg>--retry-connrefused</arg>
+                <arg>--waitretry=60</arg>
+                <arg>--tries=20</arg>
+                <arg>--no-check-certificate</arg>
+                <arg>#{url}</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
