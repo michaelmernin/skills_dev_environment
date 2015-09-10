@@ -81,3 +81,27 @@ givenName: Dev
 mail: Dev.User6@email.com
 employeeID: 4325
 userPassword: password!D6
+
+dn: cn=dev.user7,ou=people,dc=perficient,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: dev.user7
+sn: UserSeven
+givenName: Dev
+mail: Dev.User7@email.com
+employeeID: 4327
+userPassword: password!D7
+
+dn: cn=dev.user8,ou=people,dc=perficient,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: dev.user8
+sn: UserEight
+givenName: Dev
+mail: Dev.User8@email.com
+employeeID: 4328
+userPassword: password!D8
