@@ -1,0 +1,26 @@
+---
+# file: roles/firefox_headless/tasks/main.yml
+- name: Install firefox and Xvfb packages
+  tags: firefox
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - firefox
+    - Xvfb
+
+- name: Setup Xvfb init script
+  tags: firefox
+  sudo: yes
+  copy:
+    src: xvfbd
+    dest: /etc/init.d/xvfbd
+    mode: 0755
+
+- name: Start Xvfc service
+  tags: firefox
+  sudo: yes
+  service:
+    name: xvfbd
+    state: started

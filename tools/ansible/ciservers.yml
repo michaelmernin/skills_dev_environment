@@ -7,3 +7,4 @@
     - go_cd_server
     - go_cd_agent
     - ansible_agent
+    - firefox_headless
