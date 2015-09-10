@@ -65,16 +65,4 @@ public class ReviewTypeResource {
         		HttpStatus.OK))
         	.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
-    /**
-     * DELETE  /reviewTypes/:id -> delete the "id" reviewType.
-     */
-    @RequestMapping(value = "/reviewTypes/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public void delete(@PathVariable Long id) {
-        log.debug("REST request to delete ReviewType : {}", id);
-        reviewTypeRepository.delete(id);
-    }
 }

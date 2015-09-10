@@ -65,16 +65,4 @@ public class QuestionResource {
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
-    /**
-     * DELETE  /questions/:id -> delete the "id" question.
-     */
-    @RequestMapping(value = "/questions/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public void delete(@PathVariable Long id) {
-        log.debug("REST request to delete Question : {}", id);
-        questionRepository.delete(id);
-    }
 }

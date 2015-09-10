@@ -142,22 +142,4 @@ public class ReviewStatusResourceTest extends SpringAppTest {
         assertThat(testReviewStatus.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testReviewStatus.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
-
-    @Test
-    @Transactional
-    public void deleteReviewStatus() throws Exception {
-        int count = (int) reviewStatusRepository.count();
-        
-        // Read a review status
-        ReviewStatus reviewStatus = reviewStatusRepository.findOne(1L);
-
-        // Get the reviewStatus
-        restReviewStatusMockMvc.perform(delete("/api/reviewStatuses/{id}", reviewStatus.getId())
-                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
-
-        // Validate the database is empty
-        List<ReviewStatus> reviewStatuses = reviewStatusRepository.findAll();
-        assertThat(reviewStatuses).hasSize(count - 1);
-    }
 }

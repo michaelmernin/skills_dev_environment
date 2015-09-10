@@ -137,20 +137,4 @@ public class QuestionResourceTest extends SpringAppTest {
         assertThat(testQuestion.getText()).isEqualTo(UPDATED_TEXT);
         assertThat(testQuestion.getPosition()).isEqualTo(UPDATED_POSITION);
     }
-
-    @Test
-    @Transactional
-    public void deleteQuestion() throws Exception {
-        // Initialize the database
-        questionRepository.saveAndFlush(question);
-
-        // Get the question
-        restQuestionMockMvc.perform(delete("/api/questions/{id}", question.getId())
-                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
-
-        // Validate the database is empty
-        List<Question> questions = questionRepository.findAll();
-        assertThat(questions).hasSize(0);
-    }
 }

@@ -134,22 +134,4 @@ public class CategoryResourceTest extends SpringAppTest {
         Category testCategory = optional.get();
         assertThat(testCategory.getTitle()).isEqualTo(UPDATED_TITLE);
     }
-
-    @Test
-    @Transactional
-    public void deleteCategory() throws Exception {
-        int count = (int) categoryRepository.count();
-        
-        // Read a category
-        Category category = categoryRepository.findOne(1L);
-
-        // Get the category
-        restCategoryMockMvc.perform(delete("/api/categories/{id}", category.getId())
-                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
-
-        // Validate the database has one less item
-        List<Category> categories = categoryRepository.findAll();
-        assertThat(categories).hasSize(count - 1);
-    }
 }

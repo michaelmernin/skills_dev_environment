@@ -65,16 +65,4 @@ public class CategoryResource {
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
-    /**
-     * DELETE  /categories/:id -> delete the "id" category.
-     */
-    @RequestMapping(value = "/categories/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public void delete(@PathVariable Long id) {
-        log.debug("REST request to delete Category : {}", id);
-        categoryRepository.delete(id);
-    }
 }

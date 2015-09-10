@@ -158,22 +158,4 @@ public class ReviewTypeResourceTest extends SpringAppTest {
         assertThat(testReviewType.getVersion()).isEqualTo(UPDATED_VERSION);
         assertThat(testReviewType.isActive()).isEqualTo(UPDATED_ACTIVE);
     }
-
-    @Test
-    @Transactional
-    public void deleteReviewType() throws Exception {
-        int count = (int) reviewTypeRepository.count();
-        
-        // Read a review type
-        ReviewType reviewType = reviewTypeRepository.findOne(1L);
-
-        // Get the reviewType
-        restReviewTypeMockMvc.perform(delete("/api/reviewTypes/{id}", reviewType.getId())
-                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
-
-        // Validate the database is empty
-        List<ReviewType> reviewTypes = reviewTypeRepository.findAll();
-        assertThat(reviewTypes).hasSize(count - 1);
-    }
 }
