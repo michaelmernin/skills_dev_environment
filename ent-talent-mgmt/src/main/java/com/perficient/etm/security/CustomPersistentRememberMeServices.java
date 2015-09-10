@@ -54,8 +54,7 @@ import java.util.function.Function;
  * <p/>
  */
 @Service
-public class CustomPersistentRememberMeServices extends
-        AbstractRememberMeServices {
+public class CustomPersistentRememberMeServices extends AbstractRememberMeServices {
 
     private final Logger log = LoggerFactory.getLogger(CustomPersistentRememberMeServices.class);
 
@@ -88,19 +87,15 @@ public class CustomPersistentRememberMeServices extends
     @Override
     @Transactional
     protected UserDetails processAutoLoginCookie(String[] cookieTokens, HttpServletRequest request, HttpServletResponse response) {
-
         PersistentToken token = getPersistentToken(cookieTokens);
         String login = token.getUser().getLogin();
 
         // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
         log.debug("Refreshing persistent login token for user '{}', series '{}'", login, token.getSeries());
-        token.setTokenDate(new LocalDate());
-        token.setTokenValue(generateTokenData());
-        token.setIpAddress(request.getRemoteAddr());
-        token.setUserAgent(request.getHeader("User-Agent"));
+        updateTokenValues(token, request);
         try {
             persistentTokenRepository.saveAndFlush(token);
-            addCookie(token, request, response);
+            setCookie(token, request, response);
         } catch (DataAccessException e) {
             log.error("Failed to update token: ", e);
             throw new RememberMeAuthenticationException("Autologin failed due to data access problem", e);
@@ -117,15 +112,15 @@ public class CustomPersistentRememberMeServices extends
         PersistentToken token = userRepository.findOneByLogin(login)
             .map(userTokenMapper(request))
             .orElseGet(() -> {
-                return userService.getFromAppUserDetails().map(u -> {
-                    return userTokenMapper(request).apply(u);
-                }).orElse(null);
+                return userService.getFromAppUserDetails()
+                    .map(userTokenMapper(request))
+                    .orElse(null);
             });
         
         if (token != null) {
             try {
                 persistentTokenRepository.saveAndFlush(token);
-                addCookie(token, request, response);
+                setCookie(token, request, response);
             } catch (DataAccessException e) {
                 log.error("Failed to save persistent token ", e);
             }
@@ -136,15 +131,19 @@ public class CustomPersistentRememberMeServices extends
 
     private Function<? super User, ? extends PersistentToken> userTokenMapper(HttpServletRequest request) {
         return u -> {
-            PersistentToken t = new PersistentToken();
-            t.setSeries(generateSeriesData());
-            t.setUser(u);
-            t.setTokenValue(generateTokenData());
-            t.setTokenDate(new LocalDate());
-            t.setIpAddress(request.getRemoteAddr());
-            t.setUserAgent(request.getHeader("User-Agent"));
-            return t;
+            PersistentToken token = new PersistentToken();
+            token.setSeries(generateRandomData(DEFAULT_SERIES_LENGTH));
+            token.setUser(u);
+            updateTokenValues(token, request);
+            return token;
         };
+    }
+
+    private void updateTokenValues(PersistentToken token, HttpServletRequest request) {
+        token.setTokenDate(new LocalDate());
+        token.setTokenValue(generateRandomData(DEFAULT_TOKEN_LENGTH));
+        token.setIpAddress(request.getRemoteAddr());
+        token.setUserAgent(request.getHeader("User-Agent"));
     }
 
     /**
@@ -203,21 +202,17 @@ public class CustomPersistentRememberMeServices extends
         return token;
     }
 
-    private String generateSeriesData() {
-        byte[] newSeries = new byte[DEFAULT_SERIES_LENGTH];
+    private String generateRandomData(int length) {
+        byte[] newSeries = new byte[length];
         random.nextBytes(newSeries);
         return new String(Base64.encode(newSeries));
     }
 
-    private String generateTokenData() {
-        byte[] newToken = new byte[DEFAULT_TOKEN_LENGTH];
-        random.nextBytes(newToken);
-        return new String(Base64.encode(newToken));
+    private void setCookie(PersistentToken token, HttpServletRequest request, HttpServletResponse response) {
+        setCookie(request, response, token.getSeries(), token.getTokenValue());
     }
 
-    private void addCookie(PersistentToken token, HttpServletRequest request, HttpServletResponse response) {
-        setCookie(
-                new String[]{token.getSeries(), token.getTokenValue()},
-                TOKEN_VALIDITY_SECONDS, request, response);
+    private void setCookie(HttpServletRequest request, HttpServletResponse response, String... tokens) {
+        setCookie(tokens, TOKEN_VALIDITY_SECONDS, request, response);
     }
 }
