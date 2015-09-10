@@ -3,7 +3,6 @@ package com.perficient.etm.web.rest;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.utils.ResourceTestUtils;
@@ -15,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -40,9 +40,6 @@ public class UserResourceTest extends SpringAppTest {
     @Inject
     private UserRepository userRepository;
     
-    @Inject
-    private ObjectMapper objectMapper;
-
     private MockMvc restUserMockMvc;
     
     private User user;
@@ -126,13 +123,8 @@ public class UserResourceTest extends SpringAppTest {
     
     @Test
     public void testGetUserCounselees() throws Exception {
-        // Initialize the database
-        User counselor = userRepository.findOne(5L);
-        user.setCounselor(counselor);
-        userRepository.saveAndFlush(user);
-        
         // Get the counselees for the authenticated counselor
-        setCurrentUser(counselor);
+        setCurrentUser(userRepository.findOne(5L));
         restUserMockMvc.perform(get("/api/counselees")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -144,6 +136,18 @@ public class UserResourceTest extends SpringAppTest {
                 .andExpect(jsonPath("$[0].firstName").exists())
                 .andExpect(jsonPath("$[0].lastName").exists())
                 .andExpect(jsonPath("$[0].email").exists())
-                .andExpect(jsonPath("$[1]").doesNotExist());
+                .andExpect(jsonPath("$[1]").exists())
+                .andExpect(jsonPath("$[1].id").value(6))
+                .andExpect(jsonPath("$[1].login").exists())
+                .andExpect(jsonPath("$[1].firstName").exists())
+                .andExpect(jsonPath("$[1].lastName").exists())
+                .andExpect(jsonPath("$[1].email").exists())
+                .andExpect(jsonPath("$[2]").exists())
+                .andExpect(jsonPath("$[2].id").value(7))
+                .andExpect(jsonPath("$[2].login").exists())
+                .andExpect(jsonPath("$[2].firstName").exists())
+                .andExpect(jsonPath("$[2].lastName").exists())
+                .andExpect(jsonPath("$[2].email").exists())
+                .andExpect(jsonPath("$[3]").doesNotExist());
     }
 }

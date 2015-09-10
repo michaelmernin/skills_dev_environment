@@ -17,6 +17,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.perficient.etm.Application;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,13 +39,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 })
 @Transactional
 public class SpringAppTest {
-    
+
     @Inject
     protected ApplicationContext context;
-    
+
+    @Inject
+    protected ObjectMapper objectMapper;
+
     @Test
     public void testContext() {
         assertThat(context).isNotNull();
+        assertThat(objectMapper).isNotNull();
     }
-
 }

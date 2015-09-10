@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -61,8 +63,7 @@ public class QuestionResourceTest extends SpringAppTest {
     @Test
     @Transactional
     public void createQuestion() throws Exception {
-        // Validate the database is empty
-        assertThat(questionRepository.findAll()).hasSize(0);
+        int count = (int) questionRepository.count();
 
         // Create the Question
         restQuestionMockMvc.perform(post("/api/questions")
@@ -72,8 +73,10 @@ public class QuestionResourceTest extends SpringAppTest {
 
         // Validate the Question in the database
         List<Question> questions = questionRepository.findAll();
-        assertThat(questions).hasSize(1);
-        Question testQuestion = questions.iterator().next();
+        assertThat(questions).hasSize(count + 1);
+        Optional<Question> optional = questions.stream().filter(q -> {return DEFAULT_TEXT.equals(q.getText());}).findAny();
+        assertThat(optional.isPresent()).isTrue();
+        Question testQuestion = optional.get();
         assertThat(testQuestion.getText()).isEqualTo(DEFAULT_TEXT);
         assertThat(testQuestion.getPosition()).isEqualTo(DEFAULT_POSITION);
     }
@@ -81,16 +84,18 @@ public class QuestionResourceTest extends SpringAppTest {
     @Test
     @Transactional
     public void getAllQuestions() throws Exception {
-        // Initialize the database
-        questionRepository.saveAndFlush(question);
+        int count = (int) questionRepository.count();
+        Question question = questionRepository.findOne(1L);
 
         // Get all the questions
-        restQuestionMockMvc.perform(get("/api/questions"))
+        ResultActions result = restQuestionMockMvc.perform(get("/api/questions"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.[0].id").value(question.getId().intValue()))
-                .andExpect(jsonPath("$.[0].text").value(DEFAULT_TEXT.toString()))
-                .andExpect(jsonPath("$.[0].position").value(DEFAULT_POSITION));
+                .andExpect(jsonPath("$[0].id").value(question.getId().intValue()))
+                .andExpect(jsonPath("$[0].text").value(question.getText()))
+                .andExpect(jsonPath("$[0].position").value(question.getPosition()));
+
+        ResourceTestUtils.assertJsonCount(result, count);
     }
 
     @Test
@@ -112,16 +117,17 @@ public class QuestionResourceTest extends SpringAppTest {
     @Transactional
     public void getNonExistingQuestion() throws Exception {
         // Get the question
-        restQuestionMockMvc.perform(get("/api/questions/{id}", 1L))
+        restQuestionMockMvc.perform(get("/api/questions/{id}", 404L))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void updateQuestion() throws Exception {
-        // Initialize the database
-        questionRepository.saveAndFlush(question);
+        int count = (int) questionRepository.count();
 
+        Question question = questionRepository.findOne(1L);
+        
         // Update the question
         question.setText(UPDATED_TEXT);
         question.setPosition(UPDATED_POSITION);
@@ -132,8 +138,10 @@ public class QuestionResourceTest extends SpringAppTest {
 
         // Validate the Question in the database
         List<Question> questions = questionRepository.findAll();
-        assertThat(questions).hasSize(1);
-        Question testQuestion = questions.iterator().next();
+        assertThat(questions).hasSize(count);
+        Optional<Question> optional = questions.stream().filter(q -> {return q.getId() == 1L;}).findAny();
+        assertThat(optional.isPresent()).isTrue();
+        Question testQuestion = optional.get();
         assertThat(testQuestion.getText()).isEqualTo(UPDATED_TEXT);
         assertThat(testQuestion.getPosition()).isEqualTo(UPDATED_POSITION);
     }
