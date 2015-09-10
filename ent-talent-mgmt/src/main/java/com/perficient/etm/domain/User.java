@@ -62,6 +62,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @JsonView(View.Public.class)
     private String email;
     
+    @JsonView(View.Private.class)
     @Size(max = 50)
     @Column(name = "employee_id", length = 50)
     private String employeeId;
