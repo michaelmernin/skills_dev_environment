@@ -1,0 +1,7 @@
+.etm-rating-form md-input-container:first-child {
+  padding-bottom: 2px;
+}
+
+.etm-rating-form md-switch {
+  margin: 12px 24px 12px 0;
+}

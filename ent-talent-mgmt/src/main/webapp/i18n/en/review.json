@@ -40,6 +40,8 @@
     "reviewStatus": "Review Status",
     "reviewee": "Reviewee",
     "reviewer": "Reviewer",
+    "comments": "Comments",
+    "na": "N/A",
     "annual": {
     	"peers": "Peers",
     	"engagements": "Engagements",

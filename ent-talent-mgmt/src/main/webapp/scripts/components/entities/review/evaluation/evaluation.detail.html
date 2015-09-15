@@ -1,0 +1,35 @@
+<md-dialog aria-label="Give Feedback about {{ question.category.title }}" flex="66">
+  <form name="evalForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Give Feedback about {{ question.category.title }}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="close()">
+          <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <h3 class="md-headline" ng-if="!!question.title">{{ question.title }}</h3>
+      <p class="md-title">{{ question.text }}</p>
+      <h3>Self Feedback</h3>
+      <h4>By {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}</h4>
+      <etm-rating ng-model="question.ratings.reviewee" ng-disabled="!question.ratings.reviewee.canEdit"></etm-rating>
+      <h3>Reviewer Feedback</h3>
+      <h4>By {{ review.reviewer.firstName }} {{ review.reviewer.lastName }}</h4>
+      <etm-rating ng-model="question.ratings.reviewer" ng-disabled="!question.ratings.reviewer.canEdit"></etm-rating>
+      <div ng-if="question.ratings.peer.length">
+        <h3>Peer Feedback</h3>
+        <div ng-repeat="peerRating in question.ratings.peer">
+          <h4>By {{ peerRating.feedback.author.firstName }} {{ peerRating.feedback.author.lastName }}</h4>
+          <etm-rating ng-model="peerRating" ng-disabled="!peerRating.canEdit"></etm-rating>
+          <md-divider ng-if="!$last"></md-divider>
+        </div>
+      </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+      <span flex></span>
+      <md-button ng-click="close()" class="md-primary">Close</md-button>
+    </div>
+  </form>
+</md-dialog>

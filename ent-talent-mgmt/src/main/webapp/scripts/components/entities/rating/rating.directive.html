@@ -1,0 +1,15 @@
+<ng-form name="ratingForm" class="etm-rating-form">
+  <md-input-container layout="row" layout-sm="column">
+    <md-switch ng-model="na" ng-disabled="disabled" ng-change="setNA()" class="md-primary" aria-label="Score Not Applicable">{{ 'review.na' | translate }}</md-switch>
+    <md-slider flex-gt-sm md-discrete name="score" ng-model="rating.score" ng-disabled="disabled || na" step="1" min="1" max="5" class="md-primary" aria-label="Score"></md-slider>
+  </md-input-container>
+  <md-input-container>
+    <label>Comments</label>
+    <textarea name="comment" ng-model="rating.comment" ng-disabled="disabled" md-maxlength="250" ng-required="rating.score !== 3"></textarea>
+    <div ng-messages="ratingForm.comment.$error" ng-if="ratingForm.comment.$touched">
+      <div ng-message="required">
+        <span translate="global.messages.validate.field.enter.required" translate-values="{name: '{{ 'review.comments' | translate }}'}">Please enter a value.</span>
+      </div>
+    </div>
+  </md-input-container>
+</ng-form>
