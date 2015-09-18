@@ -29,8 +29,8 @@
 </head>
 <body ng-app="etmApp" class="etm">
   <!--[if lt IE 10]>
-<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-<![endif]-->
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
   <div layout="row" style="height: 100%">
     <div layout="column" flex>
       <div ui-view="toolbar" ng-cloak></div>
@@ -40,17 +40,6 @@
     </div>
     <div ui-view="sidenav" ng-cloak></div>
   </div>
-
-  <!-- Google Analytics: uncomment and change UA-XXXXX-X to be your site's ID.
-<script>
-(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-e.src='//www.google-analytics.com/analytics.js';
-r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-ga('create','UA-XXXXX-X');ga('send','pageview');
-</script>-->
-
   <!-- build:js scripts/vendor.js -->
   <!-- bower:js -->
   <script src="bower_components/modernizr/modernizr.js"></script>
@@ -74,15 +63,12 @@ ga('create','UA-XXXXX-X');ga('send','pageview');
   <script src="bower_components/angular-cache-buster/angular-cache-buster.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
-
-
   <!-- build:js({.tmp,src/main/webapp}) scripts/app.js -->
   <script src="scripts/app/app.js"></script>
   <script src="scripts/app/app.constants.js"></script>
   <script src="scripts/components/auth/auth.service.js"></script>
   <script src="scripts/components/auth/principal.service.js"></script>
   <script src="scripts/components/auth/services/account.service.js"></script>
-  <script src="scripts/components/form/form.directive.js"></script>
   <script src="scripts/components/language/language.service.js"></script>
   <script src="scripts/components/language/language.controller.js"></script>
   <script src="scripts/components/admin/audits.service.js"></script>
@@ -128,25 +114,10 @@ ga('create','UA-XXXXX-X');ga('send','pageview');
   <script src="scripts/components/auth/provider/auth.session.service.js"></script>
   <script src="scripts/app/account/sessions/sessions.js"></script>
   <script src="scripts/app/account/sessions/sessions.controller.js"></script>
-  <script src="scripts/app/entities/reviewType/reviewType.js"></script>
-  <script src="scripts/app/entities/reviewType/reviewType.controller.js"></script>
-  <script src="scripts/app/entities/reviewType/reviewType-detail.controller.js"></script>
   <script src="scripts/components/entities/reviewType/reviewType.service.js"></script>
-  <script src="scripts/app/entities/category/category.js"></script>
-  <script src="scripts/app/entities/category/category.controller.js"></script>
-  <script src="scripts/app/entities/category/category-detail.controller.js"></script>
   <script src="scripts/components/entities/category/category.service.js"></script>
-  <script src="scripts/app/entities/feedbackType/feedbackType.js"></script>
-  <script src="scripts/app/entities/feedbackType/feedbackType.controller.js"></script>
-  <script src="scripts/app/entities/feedbackType/feedbackType-detail.controller.js"></script>
   <script src="scripts/components/entities/feedbackType/feedbackType.service.js"></script>
-  <script src="scripts/app/entities/feedbackStatus/feedbackStatus.js"></script>
-  <script src="scripts/app/entities/feedbackStatus/feedbackStatus.controller.js"></script>
-  <script src="scripts/app/entities/feedbackStatus/feedbackStatus-detail.controller.js"></script>
   <script src="scripts/components/entities/feedbackStatus/feedbackStatus.service.js"></script>
-  <script src="scripts/app/entities/reviewStatus/reviewStatus.js"></script>
-  <script src="scripts/app/entities/reviewStatus/reviewStatus.controller.js"></script>
-  <script src="scripts/app/entities/reviewStatus/reviewStatus-detail.controller.js"></script>
   <script src="scripts/components/entities/reviewStatus/reviewStatus.service.js"></script>
   <script src="scripts/app/entities/review/review.js"></script>
   <script src="scripts/app/entities/review/review.controller.js"></script>
@@ -156,22 +127,10 @@ ga('create','UA-XXXXX-X');ga('send','pageview');
   <script src="scripts/components/entities/review/evaluation/evaluation.controller.js"></script>
   <script src="scripts/components/entities/review/evaluation/evaluation.detail.controller.js"></script>
   <script src="scripts/components/entities/review/review.service.js"></script>
-  <script src="scripts/app/entities/question/question.js"></script>
-  <script src="scripts/app/entities/question/question.controller.js"></script>
-  <script src="scripts/app/entities/question/question-detail.controller.js"></script>
   <script src="scripts/components/entities/question/question.service.js"></script>
-  <script src="scripts/app/entities/feedback/feedback.js"></script>
-  <script src="scripts/app/entities/feedback/feedback.controller.js"></script>
-  <script src="scripts/app/entities/feedback/feedback-detail.controller.js"></script>
   <script src="scripts/components/entities/feedback/feedback.service.js"></script>
-  <script src="scripts/app/entities/rating/rating.js"></script>
-  <script src="scripts/app/entities/rating/rating.controller.js"></script>
-  <script src="scripts/app/entities/rating/rating-detail.controller.js"></script>
   <script src="scripts/components/entities/rating/rating.service.js"></script>
   <script src="scripts/components/entities/rating/rating.directive.js"></script>
-  <script src="scripts/app/entities/goal/goal.js"></script>
-  <script src="scripts/app/entities/goal/goal.controller.js"></script>
-  <script src="scripts/app/entities/goal/goal-detail.controller.js"></script>
   <script src="scripts/components/entities/goal/goal.service.js"></script>
   <!-- endbuild -->
 </body>
