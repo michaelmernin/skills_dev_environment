@@ -8,15 +8,15 @@
             <h5>{{ question.title ? question.title : question.text | limitTo:titleLimit() }}</h5>
             <p>
               <span ng-if="question.ratings.reviewee.score">
-                <i class="fa fa-comment-o"/>
+                <i class="fa fa-comment-o"></i>
                 Self Rating: {{ getScore(question.ratings.reviewee) }}
               </span>
               <span ng-if="question.ratings.reviewee.score">
-                <i class="fa fa-comment-o"/>
+                <i class="fa fa-comment-o"></i>
                 Reviewer Rating: {{ getScore(question.ratings.reviewee) }}
               </span>
               <span ng-if="getAvgScore(question.ratings.peer)">
-                <i class="fa fa-comments-o"/>
+                <i class="fa fa-comments-o"></i>
                 Average Peer Rating: {{ getAvgScore(question.ratings.peer) }}
               </span>
             </p>
