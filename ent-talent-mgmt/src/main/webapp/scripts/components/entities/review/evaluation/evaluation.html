@@ -11,9 +11,9 @@
                 <i class="fa fa-comment-o"></i>
                 Self Rating: {{ getScore(question.ratings.reviewee) }}
               </span>
-              <span ng-if="question.ratings.reviewee.score">
+              <span ng-if="question.ratings.reviewer.score">
                 <i class="fa fa-comment-o"></i>
-                Reviewer Rating: {{ getScore(question.ratings.reviewee) }}
+                Reviewer Rating: {{ getScore(question.ratings.reviewer) }}
               </span>
               <span ng-if="getAvgScore(question.ratings.peer)">
                 <i class="fa fa-comments-o"></i>
