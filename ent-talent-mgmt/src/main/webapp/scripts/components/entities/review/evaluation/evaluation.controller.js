@@ -1,20 +1,22 @@
 'use strict';
 
-angular.module('etmApp').controller('EvaluationController', function ($scope, $mdDialog, $mdMedia, $window, Principal, Feedback, Rating) {
+angular.module('etmApp').controller('EvaluationController', function ($scope, $mdDialog, $mdMedia, $window, Principal, Feedback, Rating, Evaluation) {
   var questions = [];
   var questionsIndex = {};
   var review = {};
+  var user = {};
 
   $scope.categories = {};
 
   Principal.identity().then(function (account) {
+    user = account;
     $scope.$parent.$watch('review', function (parentReview) {
       review = parentReview;
       questions = getQuestions(review);
       if (questions.length) {
-        var feedback = getFeedback(review, account);
+        var feedback = getFeedback(review);
         angular.forEach(feedback, function (userFeedback) {
-          setRatings(userFeedback, account);
+          setRatings(userFeedback);
         });
       } else {
         $scope.categories = {};
@@ -30,40 +32,18 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
       targetEvent: ev,
       locals: {
         question: question,
-        review: review
+        review: review,
+        user: user
       }
     });
   };
 
   $scope.getScore = function (rating) {
-    if (rating.score === -1) {
-      return 'N/A';
-    }
-    return rating.score;
+    return Evaluation.score(rating);
   };
 
   $scope.getAvgScore = function (ratings) {
-    var allNull = true;
-    var sum = 0;
-    var count = 0;
-
-    angular.forEach(ratings, function (rating) {
-      if (rating.score) {
-        allNull = false;
-        if (rating.score !== -1) {
-          ++count;
-          sum += rating.score;
-        }
-      }
-    });
-
-    if (allNull) {
-      return null;
-    }
-    if (!count) {
-      return 'N/A';
-    }
-    return sum / count;
+    return Evaluation.avgScore(ratings);
   };
 
   $scope.titleLimit = function () {
@@ -84,22 +64,22 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
     return review && review.reviewType && review.reviewType.questions && review.reviewType.questions.length ? review.reviewType.questions : [];
   }
 
-  function getFeedback(review, account) {
+  function getFeedback(review) {
     if (!review.feedback) {
       review.feedback = [];
     }
 
-    if (!accountHasFeedback(review.feedback, account)) {
-      review.feedback.push(createNewFeedback(review, account));
+    if (!userHasFeedback(review.feedback)) {
+      review.feedback.push(createNewFeedback(review));
     }
 
     return review.feedback;
   }
 
-  function accountHasFeedback(feedback, account) {
+  function userHasFeedback(feedback) {
     var found = false;
     for (var i = 0; i < feedback.length; ++i) {
-      if (feedback[i].author.id === account.id) {
+      if (feedback[i].author.id === user.id) {
         found = true;
         break;
       }
@@ -107,10 +87,10 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
     return found;
   }
 
-  function createNewFeedback(review, account) {
-    var feedbackType = getFeedbackType(review, account);
+  function createNewFeedback(review) {
+    var feedbackType = Evaluation.userFeedbackType(review, user);
     var userFeedback = new Feedback();
-    userFeedback.author = {id: account.id, firstName: account.firstName, lastName: account.lastName};
+    userFeedback.author = {id: user.id, firstName: user.firstName, lastName: user.lastName};
     userFeedback.feedbackType = feedbackType;
     userFeedback.ratings = [];
     angular.forEach(questions, function (question) {
@@ -122,19 +102,9 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
     return userFeedback;
   }
 
-  function getFeedbackType(review, account) {
-    if (review.reviewee.id === account.id) {
-      return {id: 1};
-    }
-    if (review.reviewer.id === account.id) {
-      return {id: 2};
-    }
-    return {id: 3};
-  }
-
-  function setRatings(userFeedback, account) {
+  function setRatings(userFeedback) {
     var type = userFeedback.feedbackType.id;
-    var canEdit = userFeedback.author.id === account.id;
+    var canEdit = userFeedback.author.id === user.id;
 
     angular.forEach(userFeedback.ratings, function (rating) {
       rating.feedback = userFeedback;

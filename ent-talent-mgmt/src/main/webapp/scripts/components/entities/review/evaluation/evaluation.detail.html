@@ -12,18 +12,26 @@
     <md-dialog-content>
       <h3 class="md-headline" ng-if="!!question.title">{{ question.title }}</h3>
       <p class="md-title">{{ question.text }}</p>
-      <h3>Self Feedback</h3>
-      <h4>By {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}</h4>
-      <etm-rating ng-model="question.ratings.reviewee" ng-disabled="!question.ratings.reviewee.canEdit"></etm-rating>
-      <h3>Reviewer Feedback</h3>
-      <h4>By {{ review.reviewer.firstName }} {{ review.reviewer.lastName }}</h4>
-      <etm-rating ng-model="question.ratings.reviewer" ng-disabled="!question.ratings.reviewer.canEdit"></etm-rating>
-      <div ng-if="question.ratings.peer.length">
-        <h3>Peer Feedback</h3>
-        <div ng-repeat="peerRating in question.ratings.peer">
-          <h4>By {{ peerRating.feedback.author.firstName }} {{ peerRating.feedback.author.lastName }}</h4>
-          <etm-rating ng-model="peerRating" ng-disabled="!peerRating.canEdit"></etm-rating>
-          <md-divider ng-if="!$last"></md-divider>
+      <div ng-if="showRevieweeRating()">
+        <h3>Self Feedback</h3>
+        <h4>By {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}</h4>
+        <etm-rating ng-model="question.ratings.reviewee" ng-disabled="!question.ratings.reviewee.canEdit"></etm-rating>
+      </div>
+      <div ng-if="showReviewerRating()">
+        <h3>Reviewer Feedback</h3>
+        <h4>By {{ review.reviewer.firstName }} {{ review.reviewer.lastName }}</h4>
+        <etm-rating ng-model="question.ratings.reviewer" ng-disabled="!question.ratings.reviewer.canEdit"></etm-rating>
+      </div>
+      <div ng-if="showPeerRatings()">
+        <div ng-if="question.ratings.peer.length">
+          <h3>Peer Feedback</h3>
+          <div ng-repeat="peerRating in question.ratings.peer">
+            <div ng-if="showPeerRating(peerRating)">
+              <h4>By {{ peerRating.feedback.author.firstName }} {{ peerRating.feedback.author.lastName }}</h4>
+              <etm-rating ng-model="peerRating" ng-disabled="!peerRating.canEdit"></etm-rating>
+              <md-divider ng-if="!$last"></md-divider>
+            </div>
+          </div>
         </div>
       </div>
     </md-dialog-content>
