@@ -1,10 +1,12 @@
 package com.perficient.etm.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.web.validator.ReviewValidator;
+import com.perficient.etm.web.view.View;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +50,7 @@ public class ReviewResource {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @JsonView(View.Peer.class)
     public ResponseEntity<Review> create(@Valid @RequestBody Review review, BindingResult result) {
         log.debug("REST request to create Review : {}", review);
         if (result.hasErrors()) {
@@ -93,6 +96,7 @@ public class ReviewResource {
             method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @JsonView(View.Peer.class)
     public ResponseEntity<Review> update(@Valid @RequestBody Review review, BindingResult result) {
         log.debug("REST request to update Review : {}", review);
         if (result.hasErrors()) {
