@@ -34,6 +34,10 @@ spring:
     messageSource:
         cacheSeconds: 1
 
+    jackson:
+        mapper:
+            DEFAULT_VIEW_INCLUSION: true
+
 swagger:
     title: etm API
     description: etm applications and beyond!
