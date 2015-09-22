@@ -17,6 +17,6 @@ public abstract class AbstractViewSerializer extends JsonSerializer<Object> {
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writerWithView(getView());
         String json = writer.writeValueAsString(value);
-        jgen.writeRaw(":" + json);
+        jgen.writeRawValue(json);
     }
 }

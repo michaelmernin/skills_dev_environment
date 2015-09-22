@@ -34,24 +34,29 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 9112749211348786719L;
 
+    @JsonView(View.Public.class)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @JsonView(View.Public.class)
     @NotNull
     @Pattern(regexp = "^[a-z0-9\\.]*$")
     @Size(min = 1, max = 50)
     @Column(length = 50, unique = true, nullable = false)
     private String login;
 
+    @JsonView(View.Public.class)
     @Size(max = 50)
     @Column(name = "first_name", length = 50)
     private String firstName;
 
+    @JsonView(View.Public.class)
     @Size(max = 50)
     @Column(name = "last_name", length = 50)
     private String lastName;
 
+    @JsonView(View.Public.class)
     @Email
     @Size(max = 100)
     @Column(length = 100, unique = true)
