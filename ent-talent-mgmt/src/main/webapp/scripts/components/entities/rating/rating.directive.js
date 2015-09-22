@@ -20,6 +20,13 @@ angular.module('etmApp').directive('etmRating', function () {
         }
       }
 
+      $scope.getScore = function () {
+        if ($scope.na) {
+          return 'N/A';
+        }
+        return $scope.rating.score;
+      }
+
       if ($scope.rating) {
         $scope.na = $scope.rating.score === -1;
       }
