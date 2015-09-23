@@ -1,10 +1,11 @@
 package com.perficient.etm.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.perficient.etm.domain.Review;
-import com.perficient.etm.exception.InvalidRequestException;
-import com.perficient.etm.repository.ReviewRepository;
-import com.perficient.etm.web.validator.ReviewValidator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -12,13 +13,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-import javax.validation.Valid;
-
-import java.util.List;
-import java.util.Optional;
+import com.codahale.metrics.annotation.Timed;
+import com.perficient.etm.domain.Review;
+import com.perficient.etm.exception.InvalidRequestException;
+import com.perficient.etm.repository.ReviewRepository;
+import com.perficient.etm.web.validator.ReviewValidator;
 
 /**
  * REST controller for managing Review.
@@ -112,5 +118,37 @@ public class ReviewResource {
     public void delete(@PathVariable Long id) {
         log.debug("REST request to delete Review : {}", id);
         reviewRepository.delete(id);
+    }
+    
+    /**
+     * GET  /reviews/:id/engagements -> get the engagements in the timeframe of "id" review.
+     */
+    @RequestMapping(value = "/reviews/{id}/engagements",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<Review> getEngagementsForAnnualReviewWithId(@PathVariable Long id) {
+    	Review review = reviewRepository.findOne(id);
+        //return reviewRepository.findAllEngagementsWithinAnnualReviewOfUser(review.getReviewee().getId(), review.getStartDate(), review.getEndDate());
+    	List<Review> enagagements = new ArrayList<Review>();
+    	Review engagement = new Review();
+    	engagement.setRole("Technical Whosit");
+    	engagement.setProject("A Tech Project");
+    	engagement.setClient("Some Client Name");
+    	engagement.setResponsibilities("Such and such responsibilities. This is usually pretty long. We have lots of responsibilitites.");
+    	engagement.setRating(3.25);
+    	engagement.setStartDate(review.getStartDate().plusMonths(1));
+    	engagement.setEndDate(review.getEndDate().minusMonths(1));
+        enagagements.add(engagement);
+        engagement = new Review();
+        engagement.setRole("Business Whatsit");
+        engagement.setProject("A Business Project");
+        engagement.setClient("Another Client Name");
+        engagement.setResponsibilities("Such and such responsibilities. This is usually pretty long. We have lots of responsibilitites. With another sentence.");
+        engagement.setRating(4.0);
+        engagement.setStartDate(review.getStartDate().minusMonths(1));
+        engagement.setEndDate(review.getEndDate().minusMonths(2));
+        enagagements.add(engagement);
+    	return enagagements;
     }
 }
