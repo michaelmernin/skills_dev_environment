@@ -8,7 +8,7 @@
         Remove unnecessary User columns.
     -->
     <changeSet id="20150502171400" author="donovan">
-    	<dropColumn tableName="T_USER" columnName="password"/>
+      <dropColumn tableName="T_USER" columnName="password"/>
       <dropColumn tableName="T_USER" columnName="activated"/>
       <dropColumn tableName="T_USER" columnName="activation_key"/>
 

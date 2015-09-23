@@ -109,7 +109,7 @@ public class FeedbackResourceTest extends SpringAppTest {
         // Initialize the database
         feedbackRepository.saveAndFlush(feedback);
 
-		int databaseSizeBeforeUpdate = feedbackRepository.findAll().size();
+        int databaseSizeBeforeUpdate = feedbackRepository.findAll().size();
 
         // Update the feedback
         restFeedbackMockMvc.perform(put("/api/feedback")
@@ -128,7 +128,7 @@ public class FeedbackResourceTest extends SpringAppTest {
         // Initialize the database
         feedbackRepository.saveAndFlush(feedback);
 
-		int databaseSizeBeforeDelete = feedbackRepository.findAll().size();
+        int databaseSizeBeforeDelete = feedbackRepository.findAll().size();
 
         // Get the feedback
         restFeedbackMockMvc.perform(delete("/api/feedback/{id}", feedback.getId())

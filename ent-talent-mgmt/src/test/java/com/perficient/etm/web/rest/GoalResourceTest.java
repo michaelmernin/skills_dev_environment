@@ -138,7 +138,7 @@ public class GoalResourceTest extends SpringAppTest {
         // Initialize the database
         goalRepository.saveAndFlush(goal);
 
-		int databaseSizeBeforeUpdate = goalRepository.findAll().size();
+        int databaseSizeBeforeUpdate = goalRepository.findAll().size();
 
         // Update the goal
         goal.setName(UPDATED_NAME);
@@ -166,7 +166,7 @@ public class GoalResourceTest extends SpringAppTest {
         // Initialize the database
         goalRepository.saveAndFlush(goal);
 
-		int databaseSizeBeforeDelete = goalRepository.findAll().size();
+        int databaseSizeBeforeDelete = goalRepository.findAll().size();
 
         // Get the goal
         restGoalMockMvc.perform(delete("/api/goals/{id}", goal.getId())

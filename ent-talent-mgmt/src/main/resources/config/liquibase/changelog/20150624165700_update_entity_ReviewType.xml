@@ -8,7 +8,7 @@
         Add version and active column to ReviewType.
     -->
     <changeSet id="20150624165700" author="donovan">
-    	<addColumn tableName="T_REVIEWTYPE">
+      <addColumn tableName="T_REVIEWTYPE">
         <column name="version" type="int" defaultValueNumeric="1">
           <constraints nullable="false"/>
         </column>

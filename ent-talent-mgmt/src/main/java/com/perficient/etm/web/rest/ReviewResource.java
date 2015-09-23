@@ -128,17 +128,17 @@ public class ReviewResource {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public List<Review> getEngagementsForAnnualReviewWithId(@PathVariable Long id) {
-    	Review review = reviewRepository.findOne(id);
+        Review review = reviewRepository.findOne(id);
         //return reviewRepository.findAllEngagementsWithinAnnualReviewOfUser(review.getReviewee().getId(), review.getStartDate(), review.getEndDate());
-    	List<Review> enagagements = new ArrayList<Review>();
-    	Review engagement = new Review();
-    	engagement.setRole("Technical Whosit");
-    	engagement.setProject("A Tech Project");
-    	engagement.setClient("Some Client Name");
-    	engagement.setResponsibilities("Such and such responsibilities. This is usually pretty long. We have lots of responsibilitites.");
-    	engagement.setRating(3.25);
-    	engagement.setStartDate(review.getStartDate().plusMonths(1));
-    	engagement.setEndDate(review.getEndDate().minusMonths(1));
+        List<Review> enagagements = new ArrayList<Review>();
+        Review engagement = new Review();
+        engagement.setRole("Technical Whosit");
+        engagement.setProject("A Tech Project");
+        engagement.setClient("Some Client Name");
+        engagement.setResponsibilities("Such and such responsibilities. This is usually pretty long. We have lots of responsibilitites.");
+        engagement.setRating(3.25);
+        engagement.setStartDate(review.getStartDate().plusMonths(1));
+        engagement.setEndDate(review.getEndDate().minusMonths(1));
         enagagements.add(engagement);
         engagement = new Review();
         engagement.setRole("Business Whatsit");
@@ -149,6 +149,6 @@ public class ReviewResource {
         engagement.setStartDate(review.getStartDate().minusMonths(1));
         engagement.setEndDate(review.getEndDate().minusMonths(2));
         enagagements.add(engagement);
-    	return enagagements;
+        return enagagements;
     }
 }

@@ -47,25 +47,25 @@ angular.module('etmApp').config(function ($stateProvider) {
       }
     }
   }).state('review.edit', {
-	  parent: 'review.detail',
-	  url: '/edit',
-	  data: {
-		  roles: ['ROLE_USER'],
-		  pageTitle: 'review.detail.edit.title'
-	  },
-	  views: {
-	    'content@': {
-	      templateUrl: 'scripts/app/entities/review/review-edit.html',
-	      controller: 'ReviewEditController'
-	    },
-	    'engagements@review.edit': {
-	      templateUrl: 'scripts/components/entities/review/engagements/engagements.html',
-	      controller: 'EngagementsController'
-	    },
-	    'evaluation@review.edit': {
-	      templateUrl: 'scripts/components/entities/review/evaluation/evaluation.html',
-	      controller: 'EvaluationController'
-	    }
-	  }
+    parent: 'review.detail',
+    url: '/edit',
+    data: {
+      roles: ['ROLE_USER'],
+      pageTitle: 'review.detail.edit.title'
+    },
+    views: {
+      'content@': {
+        templateUrl: 'scripts/app/entities/review/review-edit.html',
+        controller: 'ReviewEditController'
+      },
+      'engagements@review.edit': {
+        templateUrl: 'scripts/components/entities/review/engagements/engagements.html',
+        controller: 'EngagementsController'
+      },
+      'evaluation@review.edit': {
+        templateUrl: 'scripts/components/entities/review/evaluation/evaluation.html',
+        controller: 'EvaluationController'
+      }
+    }
   });
 });

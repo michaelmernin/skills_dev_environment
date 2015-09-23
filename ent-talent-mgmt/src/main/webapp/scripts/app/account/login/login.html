@@ -6,11 +6,11 @@
     </span>
   </div>
   <div layout="row" class="md-whiteframe-z1">
-  	<div layout="column" flex-sm="90" offset-sm="5" flex-md="60" offset-md="20" flex-gt-md="33" offset-gt-md="33">
+    <div layout="column" flex-sm="90" offset-sm="5" flex-md="60" offset-md="20" flex-gt-md="33" offset-gt-md="33">
       <h2 class="md-display-1" translate="login.title">Log In</h2>
 
       <form name="loginForm" role="form">
-      	<div layout="column">
+        <div layout="column">
           <md-input-container>
             <label for="username" translate="global.form.username">User Name</label>
             <input type="text" id="username" ng-model="username">
@@ -20,7 +20,7 @@
             <input type="password" id="password" ng-model="password">
           </md-input-container>
           <md-input-container>
-          	<md-checkbox id="rememberMe" class="md-primary" ng-model="rememberMe">{{"login.form.rememberme" | translate}}</md-checkbox>
+            <md-checkbox id="rememberMe" class="md-primary" ng-model="rememberMe">{{"login.form.rememberme" | translate}}</md-checkbox>
           </md-input-container>
           <md-input-container layout="row">
             <md-button flex-sm flex-md="33" class="md-raised md-primary" type="submit" ng-click="login()" translate="login.form.button">Log In</md-button>

@@ -60,9 +60,9 @@ public class ReviewTypeResource {
     public ResponseEntity<ReviewType> get(@PathVariable Long id) {
         log.debug("REST request to get ReviewType : {}", id);
         return Optional.ofNullable(reviewTypeRepository.findOne(id))
-        	.map(reviewType -> new ResponseEntity<>(
-        		reviewType,
-        		HttpStatus.OK))
-        	.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .map(reviewType -> new ResponseEntity<>(
+                reviewType,
+                HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

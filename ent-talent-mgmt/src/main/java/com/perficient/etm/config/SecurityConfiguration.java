@@ -73,7 +73,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         LdapAuthenticationProviderConfigurer<AuthenticationManagerBuilder> ldapAuthentication = auth.ldapAuthentication();
         ldapAuthentication.userDetailsContextMapper(ldapUserDetailsMapper);
         ldapAuthentication.addObjectPostProcessor(authenticatorPostProcessor);
-    	
+
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
             ldapAuthentication
                 .userDnPatterns("cn={0},ou=Employees," + ldapRoot)
@@ -82,15 +82,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .url("ldaps://" + ldapDomain + ":" + ldapPort + "/")
                     .managerDn(ldapAccountDn + "," + ldapRoot)
                     .managerPassword(ldapPassword);
-    	} else {
-    	    ldapAuthentication.addObjectPostProcessor(apacheDSContainerPostProcessor);
-    	    ldapAuthentication
-    	        .userDnPatterns("cn={0},ou=people")
-    	        .groupSearchBase("ou=groups")
-    	        .contextSource()
-    	            .root(ldapRoot)
-    	            .ldif("classpath:auth/empty.ldif");
-    	}
+        } else {
+            ldapAuthentication.addObjectPostProcessor(apacheDSContainerPostProcessor);
+            ldapAuthentication
+                .userDnPatterns("cn={0},ou=people")
+                .groupSearchBase("ou=groups")
+                .contextSource()
+                    .root(ldapRoot)
+                    .ldif("classpath:auth/empty.ldif");
+        }
     }
 
     @Override
@@ -152,7 +152,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api-docs/**").hasAuthority(AuthoritiesConstants.ADMIN)
                 .antMatchers("/protected/**").authenticated();
     }
-    
+
     @Bean
     public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
         return new SecurityEvaluationContextExtension();

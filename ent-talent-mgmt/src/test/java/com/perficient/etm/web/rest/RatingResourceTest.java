@@ -130,7 +130,7 @@ public class RatingResourceTest extends SpringAppTest {
         // Initialize the database
         ratingRepository.saveAndFlush(rating);
 
-		int databaseSizeBeforeUpdate = ratingRepository.findAll().size();
+        int databaseSizeBeforeUpdate = ratingRepository.findAll().size();
 
         // Update the rating
         rating.setScore(UPDATED_SCORE);
@@ -156,7 +156,7 @@ public class RatingResourceTest extends SpringAppTest {
         // Initialize the database
         ratingRepository.saveAndFlush(rating);
 
-		int databaseSizeBeforeDelete = ratingRepository.findAll().size();
+        int databaseSizeBeforeDelete = ratingRepository.findAll().size();
 
         // Get the rating
         restRatingMockMvc.perform(delete("/api/ratings/{id}", rating.getId())
