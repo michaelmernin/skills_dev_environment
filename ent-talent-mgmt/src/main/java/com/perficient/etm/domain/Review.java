@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.perficient.etm.domain.util.CustomLocalDateSerializer;
 import com.perficient.etm.domain.util.ISO8601LocalDateDeserializer;
+import com.perficient.etm.domain.util.PeerSerializer;
+import com.perficient.etm.domain.util.PublicSerializer;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -67,9 +69,11 @@ public class Review implements Serializable {
     @ManyToOne
     private ReviewStatus reviewStatus;
 
+    @JsonSerialize(using = PeerSerializer.class)
     @ManyToOne
     private User reviewee;
 
+    @JsonSerialize(using = PublicSerializer.class)
     @ManyToOne
     private User reviewer;
     

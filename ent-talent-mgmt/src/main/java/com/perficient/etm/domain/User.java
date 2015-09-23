@@ -34,32 +34,32 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 9112749211348786719L;
 
+    @JsonView(View.Public.class)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonView(View.Public.class)
     private Long id;
 
+    @JsonView(View.Public.class)
     @NotNull
     @Pattern(regexp = "^[a-z0-9\\.]*$")
     @Size(min = 1, max = 50)
     @Column(length = 50, unique = true, nullable = false)
-    @JsonView(View.Public.class)
     private String login;
 
+    @JsonView(View.Public.class)
     @Size(max = 50)
     @Column(name = "first_name", length = 50)
-    @JsonView(View.Public.class)
     private String firstName;
 
+    @JsonView(View.Public.class)
     @Size(max = 50)
     @Column(name = "last_name", length = 50)
-    @JsonView(View.Public.class)
     private String lastName;
 
+    @JsonView(View.Public.class)
     @Email
     @Size(max = 100)
     @Column(length = 100, unique = true)
-    @JsonView(View.Public.class)
     private String email;
     
     @JsonView(View.Private.class)
@@ -106,12 +106,12 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private Set<PersistentToken> persistentTokens = new HashSet<>();
     
     @JsonSerialize(using = PublicSerializer.class)
-    @JsonView(View.Private.class)
+    @JsonView(View.Peer.class)
     @ManyToOne
     private User counselor;
     
     @JsonSerialize(using = PublicSerializer.class)
-    @JsonView(View.Counselee.class)
+    @JsonView(View.Peer.class)
     @ManyToOne
     @JoinColumn(name = "general_manager_id", referencedColumnName = "id")
     private User generalManager;

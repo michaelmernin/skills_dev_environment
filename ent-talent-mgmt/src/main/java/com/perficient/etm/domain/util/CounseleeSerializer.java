@@ -8,10 +8,10 @@ import com.perficient.etm.web.view.View;
  * 
  * @see View
  */
-public class PublicSerializer extends AbstractViewSerializer {
+public class CounseleeSerializer extends AbstractViewSerializer {
 
     @Override
     protected Class<?> getView() {
-        return View.Public.class;
+        return View.Counselee.class;
     }
 }

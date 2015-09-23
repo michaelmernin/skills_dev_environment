@@ -5,39 +5,36 @@
         <h2 class="md-display-1">
           {{ review.startDate.getFullYear() }}-{{ review.endDate.getFullYear() }} {{ review.reviewType.name }} for {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}
         </h2>
-    	<md-card>
+      	<md-card>
           <md-toolbar>
             <div class="md-toolbar-tools">
               <h2 translate="review.annual.reviewInformation">Review Information</h2>
             </div>
           </md-toolbar>
           <md-card-content>
-            <md-grid-list
-        md-cols-sm="1" md-cols-md="1" md-cols-lg="2" md-cols-gt-lg="3"
-        md-row-height-sm="20:1" md-row-height-md="34:1" md-row-height-lg="16:1" md-row-height-gt-lg="16:1"
-        md-gutter="5px" >
-    <md-grid-tile class="gray"
-        md-rowspan="1" md-colspan="1" md-colspan-sm="1">
-      <strong flex translate="review.annual.reviewType">Review Type:</strong>
-                  <span flex>{{ review.reviewType.name }}</span>
-    </md-grid-tile>
-    <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
-      <strong flex translate="review.annual.startDate">Start Date:</strong>
-                  <span flex>{{ review.startDate | date:'MM/dd/yyyy' }}</span>
-    </md-grid-tile>
-    <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
-      <strong flex translate="review.annual.endDate">End Date:</strong>
-                  <span flex>{{ review.endDate | date:'MM/dd/yyyy' }}</span>
-    </md-grid-tile>
-    <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
-      <strong flex translate="review.annual.status">Status:</strong>
-                  <span flex>{{ review.reviewStatus.name }}</span>
-    </md-grid-tile>
-    <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
-      <strong flex translate="review.annual.counselor">Counselor:</strong>
-                  <span flex>{{ review.reviewee.counselor.firstName }} {{ review.reviewee.counselor.lastName }}</span>
-    </md-grid-tile>
-  </md-grid-list>
+            <md-grid-list md-cols-sm="1" md-cols-md="1" md-cols-lg="2" md-cols-gt-lg="3" md-gutter="5px"
+              md-row-height-sm="20:1" md-row-height-md="34:1" md-row-height-lg="16:1" md-row-height-gt-lg="16:1">
+              <md-grid-tile class="gray" md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+                <strong flex translate="review.annual.reviewType">Review Type:</strong>
+                <span flex>{{ review.reviewType.name }}</span>
+              </md-grid-tile>
+              <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+                <strong flex translate="review.annual.startDate">Start Date:</strong>
+                <span flex>{{ review.startDate | date:'MM/dd/yyyy' }}</span>
+              </md-grid-tile>
+              <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+                <strong flex translate="review.annual.endDate">End Date:</strong>
+                <span flex>{{ review.endDate | date:'MM/dd/yyyy' }}</span>
+              </md-grid-tile>
+              <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+                <strong flex translate="review.annual.status">Status:</strong>
+                <span flex>{{ review.reviewStatus.name }}</span>
+              </md-grid-tile>
+              <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+                <strong flex translate="review.annual.counselor">Counselor:</strong>
+                <span flex>{{ review.reviewee.counselor.firstName }} {{ review.reviewee.counselor.lastName }}</span>
+              </md-grid-tile>
+            </md-grid-list>
           </md-card-content>
         </md-card>
         <md-tabs md-dynamic-height md-border-bottom>
@@ -55,9 +52,7 @@
             </md-content>
           </md-tab>
           <md-tab label="evaluation">
-            <md-content class="md-padding">
-              <p translate="review.annual.evaluation">Evaluation</p>
-            </md-content>
+            <div ui-view="evaluation"></div>
           </md-tab>
           <md-tab label="overall">
             <md-content class="md-padding">

@@ -55,12 +55,16 @@ angular.module('etmApp').config(function ($stateProvider) {
 	  },
 	  views: {
 	    'content@': {
-		  templateUrl: 'scripts/app/entities/review/review-edit.html',
-		  controller: 'ReviewEditController'
+	      templateUrl: 'scripts/app/entities/review/review-edit.html',
+	      controller: 'ReviewEditController'
 	    },
 	    'engagements@review.edit': {
-		  templateUrl: 'scripts/components/entities/review/engagements/engagements.html',
-		  controller: 'EngagementsController'
+	      templateUrl: 'scripts/components/entities/review/engagements/engagements.html',
+	      controller: 'EngagementsController'
+	    },
+	    'evaluation@review.edit': {
+	      templateUrl: 'scripts/components/entities/review/evaluation/evaluation.html',
+	      controller: 'EvaluationController'
 	    }
 	  }
   });

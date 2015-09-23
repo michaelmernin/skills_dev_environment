@@ -60,7 +60,7 @@
             "invalid": "Please select a valid {{ name }}."
           },
           "enter": {
-            "required": "Please enter your {{ name }}.",
+            "required": "Please enter {{ name }}.",
             "invalid": "Please enter a valid {{ name }}."
           }
         }

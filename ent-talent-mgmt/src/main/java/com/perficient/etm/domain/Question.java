@@ -3,7 +3,10 @@ package com.perficient.etm.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+
 import java.io.Serializable;
 
 /**
@@ -29,6 +32,7 @@ public class Question implements Serializable {
     @Column(name = "position")
     private Integer position;
 
+    @JsonIgnore
     @ManyToOne
     private ReviewType reviewType;
 
