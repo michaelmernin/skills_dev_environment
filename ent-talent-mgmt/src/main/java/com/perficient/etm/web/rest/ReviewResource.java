@@ -1,5 +1,6 @@
 package com.perficient.etm.web.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
@@ -122,16 +122,34 @@ public class ReviewResource {
     }
     
     /**
-     * GET  /reviews/:id/engagements -> get the "id" review.
+     * GET  /reviews/:id/engagements -> get the engagements in the timeframe of "id" review.
      */
-    @RequestMapping(value = "/engagements",
+    @RequestMapping(value = "/reviews/{id}/engagements",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Review> getEngagementsForAnnualReviewWithId(@RequestParam(value="annulaReviewId") Long annulaReviewId ){
-    	Review annualreview = reviewRepository.findOne(annulaReviewId);
-    	Long revieweeId = annualreview.getReviewee().getId();
-        return reviewRepository.findAllEngagementsWithinAnnualReviewOfUser(revieweeId, annualreview.getStartDate(), annualreview.getEndDate());
+    public List<Review> getEngagementsForAnnualReviewWithId(@PathVariable Long id) {
+    	Review review = reviewRepository.findOne(id);
+        //return reviewRepository.findAllEngagementsWithinAnnualReviewOfUser(review.getReviewee().getId(), review.getStartDate(), review.getEndDate());
+    	List<Review> enagagements = new ArrayList<Review>();
+    	Review engagement = new Review();
+    	engagement.setRole("Technical Whosit");
+    	engagement.setProject("A Tech Project");
+    	engagement.setClient("Some Client Name");
+    	engagement.setResponsibilities("Such and such responsibilities. This is usually pretty long. We have lots of responsibilitites.");
+    	engagement.setRating(3.25);
+    	engagement.setStartDate(review.getStartDate().plusMonths(1));
+    	engagement.setEndDate(review.getEndDate().minusMonths(1));
+        enagagements.add(engagement);
+        engagement = new Review();
+        engagement.setRole("Business Whatsit");
+        engagement.setProject("A Business Project");
+        engagement.setClient("Another Client Name");
+        engagement.setResponsibilities("Such and such responsibilities. This is usually pretty long. We have lots of responsibilitites. With another sentence.");
+        engagement.setRating(4.0);
+        engagement.setStartDate(review.getStartDate().minusMonths(1));
+        engagement.setEndDate(review.getEndDate().minusMonths(2));
+        enagagements.add(engagement);
+    	return enagagements;
     }
-   
 }
