@@ -1,1 +1,18 @@
-<p>this is engagements html</p>
+<md-content>
+  <md-list>
+    <md-list-item class="md-3-line" ng-repeat="engagement in engagements">
+      <div flex style="border-bottom: thin solid #E1E1E1;">
+        <div layout="row" layout-margin>
+          <div layout="column" layout-align="center center" flex="5">
+            <h5 class="md-display-1">{{engagement.rating}}</h5>
+          </div>
+          <div class="md-list-item-text">
+            <h3>{{engagement.role}} on  {{engagement.project}} at {{engagement.client}}</h3>
+            <h4>{{engagement.responsibilities}}</h4>
+            <p>{{engagement.startDate | date:'MM/dd/yyyy'}} - {{engagement.endDate | date:'MM/dd/yyyy'}}</p>
+          </div>
+        </div>
+      </div>
+    </md-list-item>
+  </md-list>
+</md-content>

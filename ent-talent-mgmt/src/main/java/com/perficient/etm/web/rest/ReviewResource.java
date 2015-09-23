@@ -1,10 +1,10 @@
 package com.perficient.etm.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.perficient.etm.domain.Review;
-import com.perficient.etm.exception.InvalidRequestException;
-import com.perficient.etm.repository.ReviewRepository;
-import com.perficient.etm.web.validator.ReviewValidator;
+import java.util.List;
+import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +13,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-import javax.validation.Valid;
-
-import java.util.List;
-import java.util.Optional;
+import com.codahale.metrics.annotation.Timed;
+import com.perficient.etm.domain.Review;
+import com.perficient.etm.exception.InvalidRequestException;
+import com.perficient.etm.repository.ReviewRepository;
+import com.perficient.etm.web.validator.ReviewValidator;
 
 /**
  * REST controller for managing Review.
@@ -114,4 +120,18 @@ public class ReviewResource {
         log.debug("REST request to delete Review : {}", id);
         reviewRepository.delete(id);
     }
+    
+    /**
+     * GET  /reviews/:id/engagements -> get the "id" review.
+     */
+    @RequestMapping(value = "/engagements",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<Review> getEngagementsForAnnualReviewWithId(@RequestParam(value="annulaReviewId") Long annulaReviewId ){
+    	Review annualreview = reviewRepository.findOne(annulaReviewId);
+    	Long revieweeId = annualreview.getReviewee().getId();
+        return reviewRepository.findAllEngagementsWithinAnnualReviewOfUser(revieweeId, annualreview.getStartDate(), annualreview.getEndDate());
+    }
+   
 }

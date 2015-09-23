@@ -8,5 +8,5 @@ angular.module('etmApp')
               $scope.review = result;
             });
         };
-        $scope.load($stateParams.id);
+        $scope.load($stateParams.id); ///RIGHT HEREEEEEEEEEE!!!!!
     });
