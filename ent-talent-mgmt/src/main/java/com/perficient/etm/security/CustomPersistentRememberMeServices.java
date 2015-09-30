@@ -108,7 +108,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
     protected void onLoginSuccess(HttpServletRequest request, HttpServletResponse response, Authentication successfulAuthentication) {
         String login = successfulAuthentication.getName();
         log.debug("Creating new persistent login for user {}", login);
-        
+
         PersistentToken token = userRepository.findOneByLogin(login)
             .map(userTokenMapper(request))
             .orElseGet(() -> {
@@ -116,7 +116,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
                     .map(userTokenMapper(request))
                     .orElse(null);
             });
-        
+
         if (token != null) {
             try {
                 persistentTokenRepository.saveAndFlush(token);
@@ -129,7 +129,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
         }
     }
 
-    private Function<? super User, ? extends PersistentToken> userTokenMapper(HttpServletRequest request) {
+    private Function<? super User, PersistentToken> userTokenMapper(HttpServletRequest request) {
         return u -> {
             PersistentToken token = new PersistentToken();
             token.setSeries(generateRandomData(DEFAULT_SERIES_LENGTH));
