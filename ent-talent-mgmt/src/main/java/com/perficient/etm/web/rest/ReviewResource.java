@@ -121,15 +121,15 @@ public class ReviewResource {
     }
     
     /**
-     * GET  /reviews/:id/engagements -> get the engagements in the timeframe of "id" review.
+     * GET  /reviews/:id/engagements -> get the engagements in the timeframe of a review.
      */
     @RequestMapping(value = "/reviews/{id}/engagements",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Review> getEngagementsForAnnualReviewWithId(@PathVariable Long id) {
+    public List<Review> getEngagements(@PathVariable Long id) {
         Review review = reviewRepository.findOne(id);
-        //return reviewRepository.findAllEngagementsWithinAnnualReviewOfUser(review.getReviewee().getId(), review.getStartDate(), review.getEndDate());
+        //return reviewRepository.findCompletedEngagementsForUserWithinDates(review.getReviewee().getId(), review.getStartDate(), review.getEndDate());
         List<Review> enagagements = new ArrayList<Review>();
         Review engagement = new Review();
         engagement.setRole("Technical Whosit");
