@@ -24,6 +24,10 @@ public class ReviewType implements Serializable {
     
     @Column(name = "active")
     private Boolean active;
+    
+    @Column(name = "interval")
+    @Enumerated(EnumType.STRING)
+    private ReviewInterval interval;
 
     @Column(name = "name")
     private String name;
@@ -52,6 +56,14 @@ public class ReviewType implements Serializable {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public ReviewInterval getInterval() {
+        return interval;
+    }
+    
+    public void setInterval(ReviewInterval interval) {
+        this.interval = interval;
     }
 
     public String getName() {
