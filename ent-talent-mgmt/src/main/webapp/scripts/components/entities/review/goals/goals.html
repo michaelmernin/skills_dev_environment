@@ -1,0 +1,11 @@
+<div ng-cloak>
+  <span><label>Goal/Action Required</label><label>Target Date</label><label>Status/Notes</label></span>
+  <md-card ng-repeat="(category, questions) in categories | orderBy:'toString()'">
+    <md-card-content>      
+      <md-input-container>
+      <label>Color</label>
+      <input type="text" ng-model="color" required md-maxlength="10">
+      </md-input-container>
+     </md-card-content>
+   </md-card>
+</div>
