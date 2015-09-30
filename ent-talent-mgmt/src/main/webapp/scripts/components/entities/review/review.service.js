@@ -46,6 +46,16 @@ angular.module('etmApp').factory('Review', function ($resource, DateUtils) {
         data.forEach(convertFromServer);
         return data;
       }
+    },
+    'peers': {
+      url: 'api/reviews/:id/peers',
+      method: 'GET',
+      isArray: true,
+      transformResponse: function (data) {
+        data = angular.fromJson(data);
+        //data.forEach(convertFromServer);
+        return data;
+      }
     }
   });
 });

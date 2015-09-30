@@ -40,6 +40,12 @@ angular.module('etmApp').factory('User', function ($resource, DateUtils) {
         data.forEach(convertFromServer);
         return data;
       }
+    },
+    'autocomplete': {
+    	url: 'api/users/autocomplete/:query',
+    	method: 'GET',
+    	params: {query: '@query'},
+    	isArray: true
     }
   });
 });

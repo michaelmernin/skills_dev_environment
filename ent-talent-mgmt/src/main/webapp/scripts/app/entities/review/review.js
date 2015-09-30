@@ -65,6 +65,10 @@ angular.module('etmApp').config(function ($stateProvider) {
       'evaluation@review.edit': {
         templateUrl: 'scripts/components/entities/review/evaluation/evaluation.html',
         controller: 'EvaluationController'
+      },
+      'peers@review.edit': {
+        templateUrl: 'scripts/components/entities/review/peers/peers.html',
+        controller: 'PeersController'
       }
     }
   });

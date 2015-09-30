@@ -1,0 +1,17 @@
+<div ng-cloak layout="column" layout-padding>
+  <md-autocomplete md-selected-item="selectedItem" md-item-text="user.firstName + ' ' + user.lastName" md-selected-item-change="peerSelected(user)" md-search-text="searchText" md-min-length="3" placeholder="Type here to search for peers..." md-items="user in getMatches(searchText)">
+    <span md-highlight-text="searchText">{{user.firstName}} {{user.lastName}}</span>
+  </md-autocomplete>
+</div>
+
+<div ng-cloak layout="column" layout-padding>
+      <md-list>
+        <md-list-item ng-repeat="user in peers track by $index" class="md-3-line">
+          <div class="md-list-item-text">
+            <h3>{{user.firstName}} {{user.lastName}}</h3>
+            <p>{{user.email}}</p>
+            <md-icon md-font-icon="fa fa-trash-o fa-lg" class="md-secondary" ng-click="deletePeer(user, $event)" aria-label="Delete User"></md-icon>
+          </div>
+        </md-list-item>
+      </md-list>
+</div>      

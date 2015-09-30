@@ -26,4 +26,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     @Query("select u from User u where u.counselor.login = ?#{principal.username}")
     List<User> findCounseleesForCurrentUser();
+
+    List<User> findByLastNameStartingWith(String lastname);
+    
+    List<User> findByFirstNameStartingWith(String firstname);
+    
+    List<User> findByFirstNameStartingWithAndLastNameStartingWith(String firstname, String lastname);
+
 }

@@ -1,6 +1,7 @@
 package com.perficient.etm.web.rest;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.codahale.metrics.annotation.Timed;
@@ -106,5 +107,26 @@ public class UserResource {
     List<User> getCounselees() {
         log.debug("REST request to get user's counselees");
         return userRepository.findCounseleesForCurrentUser();
+    }
+    
+    
+    /**
+     * GET  /users/autocomplete/query -> get all users with name containing query
+     */
+    @RequestMapping(value = "/users/autocomplete/{query}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    @JsonView(View.Public.class)
+    List<User> getUsersAutocomplete(@PathVariable String query) {
+        log.debug("REST request to get users for autocomplete");
+        String[] splitQuery = query.split(" ");
+        List<User> usersList = new ArrayList<User>();
+        if (splitQuery.length > 1) {
+          usersList.addAll(userRepository.findByFirstNameStartingWithAndLastNameStartingWith(splitQuery[0], splitQuery[1]));
+        }
+        usersList.addAll(userRepository.findByFirstNameStartingWith(query));
+        usersList.addAll(userRepository.findByLastNameStartingWith(query));
+        return usersList;
     }
 }
