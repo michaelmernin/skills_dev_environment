@@ -1,5 +1,6 @@
 package com.perficient.etm.web.rest;
 
+import com.perficient.etm.domain.ReviewInterval;
 import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.repository.ReviewTypeRepository;
 import com.perficient.etm.utils.ResourceTestUtils;
@@ -62,6 +63,7 @@ public class ReviewTypeResourceTest extends SpringAppTest {
         reviewType.setDescription(DEFAULT_DESCRIPTION);
         reviewType.setVersion(DEFAULT_VERSION);
         reviewType.setActive(DEFAULT_ACTIVE);
+        reviewType.setInterval(ReviewInterval.ANNUAL);
     }
 
     @Test
