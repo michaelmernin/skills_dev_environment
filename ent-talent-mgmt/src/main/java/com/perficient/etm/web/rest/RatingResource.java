@@ -29,9 +29,9 @@ public class RatingResource {
     private RatingRepository ratingRepository;
 
     /**
-     * POST  /ratings -> Create a new rating.
+     * POST  /reviews/:reviewId/feedback/:feedbackId/ratings -> Create a new rating.
      */
-    @RequestMapping(value = "/ratings",
+    @RequestMapping(value = "/reviews/{reviewId}/feedback/{feedbackId}/ratings",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -45,9 +45,9 @@ public class RatingResource {
     }
 
     /**
-     * PUT  /ratings -> Updates an existing rating.
+     * PUT  /reviews/:reviewId/feedback/:feedbackId/ratings -> Updates an existing rating.
      */
-    @RequestMapping(value = "/ratings",
+    @RequestMapping(value = "/reviews/{reviewId}/feedback/{feedbackId}/ratings",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -61,9 +61,9 @@ public class RatingResource {
     }
 
     /**
-     * GET  /ratings -> get all the ratings.
+     * GET  /reviews/:reviewId/feedback/:feedbackId/ratings -> get all the ratings.
      */
-    @RequestMapping(value = "/ratings",
+    @RequestMapping(value = "/reviews/{reviewId}/feedback/{feedbackId}/ratings",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -73,9 +73,9 @@ public class RatingResource {
     }
 
     /**
-     * GET  /ratings/:id -> get the "id" rating.
+     * GET  /reviews/:reviewId/feedback/:feedbackId/ratings/:id -> get the "id" rating.
      */
-    @RequestMapping(value = "/ratings/{id}",
+    @RequestMapping(value = "/reviews/{reviewId}/feedback/{feedbackId}/ratings/{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -86,17 +86,5 @@ public class RatingResource {
                 rating,
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    /**
-     * DELETE  /ratings/:id -> delete the "id" rating.
-     */
-    @RequestMapping(value = "/ratings/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public void delete(@PathVariable Long id) {
-        log.debug("REST request to delete Rating : {}", id);
-        ratingRepository.delete(id);
     }
 }

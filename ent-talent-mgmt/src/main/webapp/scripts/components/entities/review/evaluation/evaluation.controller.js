@@ -182,6 +182,9 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
   function updateDirtyRating(rating) {
     if (rating && rating.$dirty) {
       Rating.update({
+        reviewId: review.id,
+        feedbackId: rating.feedback.id
+      }, {
         id: rating.id,
         score: rating.score,
         comment: rating.comment,
