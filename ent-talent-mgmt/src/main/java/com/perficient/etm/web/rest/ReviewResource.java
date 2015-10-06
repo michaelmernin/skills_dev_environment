@@ -60,7 +60,7 @@ public class ReviewResource {
         }
         review.sanitize(true);
         review = reviewRepository.save(review);
-        return new ResponseEntity<>(review, HttpStatus.OK);
+        return new ResponseEntity<>(review, HttpStatus.CREATED);
     }
 
     /**

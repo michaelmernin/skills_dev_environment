@@ -1,8 +1,12 @@
 package com.perficient.etm.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.perficient.etm.domain.util.PublicSerializer;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,6 +31,7 @@ public class Feedback implements Serializable {
     @ManyToOne
     private Review review;
 
+    @JsonSerialize(using = PublicSerializer.class)
     @ManyToOne
     private User author;
 
@@ -36,8 +41,7 @@ public class Feedback implements Serializable {
     @ManyToOne
     private FeedbackStatus feedbackStatus;
 
-    @OneToMany(mappedBy = "feedback")
-    @JsonIgnore
+    @OneToMany(mappedBy = "feedback", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Rating> ratings = new HashSet<>();
 
@@ -49,10 +53,12 @@ public class Feedback implements Serializable {
         this.id = id;
     }
 
+    @JsonIgnore
     public Review getReview() {
         return review;
     }
 
+    @JsonProperty
     public void setReview(Review review) {
         this.review = review;
     }
@@ -114,6 +120,10 @@ public class Feedback implements Serializable {
     public String toString() {
         return "Feedback{" +
                 "id=" + id +
+                ", review='" + (review != null ? review.getId() : null) + "'" +
+                ", author='" + (author != null ? author.getId() : null) + "'" +
+                ", type='" + (feedbackType != null ? feedbackType.getId() : null) + "'" +
+                ", status='" + (feedbackStatus != null ? feedbackStatus.getId() : null) + "'" +
                 '}';
     }
 }

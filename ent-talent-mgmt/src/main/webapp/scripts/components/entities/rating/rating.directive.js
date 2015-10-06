@@ -28,8 +28,15 @@ angular.module('etmApp').directive('etmRating', function () {
       }
 
       if ($scope.rating) {
+        if ($scope.rating.score === null) {
+          $scope.rating.score = undefined;
+        }
         $scope.na = $scope.rating.score === -1;
       }
+
+      $scope.$watch('ratingForm.$dirty', function (dirty) {
+        $scope.rating.$dirty = dirty;
+      });
     }
   };
 });

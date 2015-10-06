@@ -26,12 +26,15 @@ public class Question implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @JsonView(View.Public.class)
     @Column(name = "title")
     private String title;
 
+    @JsonView(View.Public.class)
     @Column(name = "text")
     private String text;
 
+    @JsonView(View.Public.class)
     @Column(name = "position")
     private Integer position;
 
@@ -39,6 +42,7 @@ public class Question implements Serializable {
     @ManyToOne
     private ReviewType reviewType;
 
+    @JsonView(View.Public.class)
     @ManyToOne
     private Category category;
 

@@ -1,7 +1,9 @@
 package com.perficient.etm.web.rest;
 
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.Review;
 import com.perficient.etm.repository.FeedbackRepository;
+import com.perficient.etm.repository.RatingRepository;
 import com.perficient.etm.utils.ResourceTestUtils;
 import com.perficient.etm.utils.SpringAppTest;
 
@@ -32,9 +34,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class FeedbackResourceTest extends SpringAppTest {
 
+    private static final long REVIEW_ID = 1L;
 
     @Inject
     private FeedbackRepository feedbackRepository;
+    
+    @Inject
+    private RatingRepository ratingRepository;
 
     private MockMvc restFeedbackMockMvc;
 
@@ -45,28 +51,32 @@ public class FeedbackResourceTest extends SpringAppTest {
         MockitoAnnotations.initMocks(this);
         FeedbackResource feedbackResource = new FeedbackResource();
         ReflectionTestUtils.setField(feedbackResource, "feedbackRepository", feedbackRepository);
+        ReflectionTestUtils.setField(feedbackResource, "ratingRepository", ratingRepository);
         this.restFeedbackMockMvc = MockMvcBuilders.standaloneSetup(feedbackResource).build();
     }
 
     @Before
     public void initTest() {
         feedback = new Feedback();
+        Review review = new Review();
+        review.setId(REVIEW_ID);
+        feedback.setReview(review);
     }
 
     @Test
     @Transactional
     public void createFeedback() throws Exception {
-        int databaseSizeBeforeCreate = feedbackRepository.findAll().size();
+        int count = (int) feedbackRepository.count();
 
         // Create the Feedback
-        restFeedbackMockMvc.perform(post("/api/feedback")
+        restFeedbackMockMvc.perform(post("/api/reviews/{reviewId}/feedback", REVIEW_ID)
                 .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
                 .content(ResourceTestUtils.convertObjectToJsonBytes(feedback)))
                 .andExpect(status().isCreated());
 
         // Validate the Feedback in the database
         List<Feedback> feedback = feedbackRepository.findAll();
-        assertThat(feedback).hasSize(databaseSizeBeforeCreate + 1);
+        assertThat(feedback).hasSize(count + 1);
     }
 
     @Test
@@ -76,10 +86,10 @@ public class FeedbackResourceTest extends SpringAppTest {
         feedbackRepository.saveAndFlush(feedback);
 
         // Get all the feedback
-        restFeedbackMockMvc.perform(get("/api/feedback"))
+        restFeedbackMockMvc.perform(get("/api/reviews/{reviewId}/feedback", REVIEW_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(feedback.getId().intValue())));
+                .andExpect(jsonPath("$[*].id").value(hasItem(feedback.getId().intValue())));
     }
 
     @Test
@@ -89,7 +99,7 @@ public class FeedbackResourceTest extends SpringAppTest {
         feedbackRepository.saveAndFlush(feedback);
 
         // Get the feedback
-        restFeedbackMockMvc.perform(get("/api/feedback/{id}", feedback.getId()))
+        restFeedbackMockMvc.perform(get("/api/reviews/{reviewId}/feedback/{id}", REVIEW_ID, feedback.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(feedback.getId().intValue()));
@@ -99,7 +109,7 @@ public class FeedbackResourceTest extends SpringAppTest {
     @Transactional
     public void getNonExistingFeedback() throws Exception {
         // Get the feedback
-        restFeedbackMockMvc.perform(get("/api/feedback/{id}", Long.MAX_VALUE))
+        restFeedbackMockMvc.perform(get("/api/reviews/{reviewId}/feedback/{id}", REVIEW_ID, Long.MAX_VALUE))
                 .andExpect(status().isNotFound());
     }
 
@@ -109,34 +119,16 @@ public class FeedbackResourceTest extends SpringAppTest {
         // Initialize the database
         feedbackRepository.saveAndFlush(feedback);
 
-        int databaseSizeBeforeUpdate = feedbackRepository.findAll().size();
+        int count = (int) feedbackRepository.count();
 
         // Update the feedback
-        restFeedbackMockMvc.perform(put("/api/feedback")
+        restFeedbackMockMvc.perform(put("/api/reviews/{reviewId}/feedback", REVIEW_ID)
                 .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
                 .content(ResourceTestUtils.convertObjectToJsonBytes(feedback)))
                 .andExpect(status().isOk());
 
         // Validate the Feedback in the database
         List<Feedback> feedback = feedbackRepository.findAll();
-        assertThat(feedback).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    public void deleteFeedback() throws Exception {
-        // Initialize the database
-        feedbackRepository.saveAndFlush(feedback);
-
-        int databaseSizeBeforeDelete = feedbackRepository.findAll().size();
-
-        // Get the feedback
-        restFeedbackMockMvc.perform(delete("/api/feedback/{id}", feedback.getId())
-                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
-
-        // Validate the database is empty
-        List<Feedback> feedback = feedbackRepository.findAll();
-        assertThat(feedback).hasSize(databaseSizeBeforeDelete - 1);
+        assertThat(feedback).hasSize(count);
     }
 }

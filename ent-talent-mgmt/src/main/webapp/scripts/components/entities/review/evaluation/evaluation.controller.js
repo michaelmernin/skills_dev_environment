@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('EvaluationController', function ($scope, $mdDialog, $mdMedia, $window, Principal, Feedback, Rating, Evaluation) {
+angular.module('etmApp').controller('EvaluationController', function ($scope, $mdDialog, $mdMedia, $window, Principal, Review, Feedback, Rating, Evaluation) {
   var questions = [];
   var questionsIndex = {};
   var review = {};
@@ -11,15 +11,20 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
   Principal.identity().then(function (account) {
     user = account;
     $scope.$parent.$watch('review', function (parentReview) {
-      review = parentReview;
-      questions = getQuestions(review);
-      if (questions.length) {
-        var feedback = getFeedback(review);
-        angular.forEach(feedback, function (userFeedback) {
-          setRatings(userFeedback);
+      if (parentReview.id) {
+        review = parentReview;
+        Feedback.query({reviewId: review.id}, function (feedback) {
+          review.feedback = feedback;
+          if (questions.length) {
+            feedback = getFeedback(review);
+            angular.forEach(feedback, function (userFeedback) {
+              setRatings(userFeedback);
+            });
+          } else {
+            $scope.categories = {};
+          }
         });
-      } else {
-        $scope.categories = {};
+        questions = getQuestions(review);
       }
     });
   });
@@ -35,6 +40,10 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
         review: review,
         user: user
       }
+    }).then(function (question) {
+      updateDirtyRating(question.ratings.reviewee);
+      updateDirtyRating(question.ratings.reviewer);
+      angular.forEach(question.ratings.peer, updateDirtyRating);
     });
   };
 
@@ -89,15 +98,28 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
 
   function createNewFeedback(review) {
     var feedbackType = Evaluation.userFeedbackType(review, user);
-    var userFeedback = new Feedback();
+    var userFeedback = {};
     userFeedback.author = {id: user.id, firstName: user.firstName, lastName: user.lastName};
     userFeedback.feedbackType = feedbackType;
     userFeedback.ratings = [];
     angular.forEach(questions, function (question) {
       indexQuestion(question);
-      var userRating = new Rating();
+      var userRating = {};
       userRating.question = {id: question.id};
       userFeedback.ratings.push(userRating);
+    });
+    var feedbackClone = {};
+    angular.copy(userFeedback, feedbackClone);
+    feedbackClone.review = {id: review.id};
+    Feedback.save({reviewId: review.id}, feedbackClone, function (feedbackSaved) {
+      userFeedback.id = feedbackSaved.id;
+      angular.forEach(userFeedback.ratings, function (rating) {
+        angular.forEach(feedbackSaved.ratings, function (ratingSaved) {
+          if (rating.question.id === ratingSaved.question.id) {
+            rating.id = ratingSaved.id;
+          }
+        });
+      });
     });
     return userFeedback;
   }
@@ -154,6 +176,18 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
       } else {
         $scope.categories[category].push(question);
       }
+    }
+  }
+
+  function updateDirtyRating(rating) {
+    if (rating && rating.$dirty) {
+      Rating.update({
+        id: rating.id,
+        score: rating.score,
+        comment: rating.comment,
+        visible: rating.visible,
+        question: {id: rating.question.id}
+      });
     }
   }
 

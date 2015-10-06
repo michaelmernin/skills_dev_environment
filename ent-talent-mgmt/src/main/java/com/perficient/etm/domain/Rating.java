@@ -3,6 +3,7 @@ package com.perficient.etm.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.perficient.etm.domain.util.IdentitySerializer;
 
@@ -38,6 +39,7 @@ public class Rating implements Serializable {
     private Question question;
 
     @ManyToOne
+    @JsonIgnore
     private Feedback feedback;
 
     public Long getId() {
@@ -106,6 +108,9 @@ public class Rating implements Serializable {
 
     @Override
     public int hashCode() {
+        if(id == null && question != null) {
+            return Objects.hashCode(question.getId());
+        }
         return Objects.hashCode(id);
     }
 
@@ -113,9 +118,8 @@ public class Rating implements Serializable {
     public String toString() {
         return "Rating{" +
                 "id=" + id +
+                ", question='" + (question != null ? question.getId() : null ) + "'" +
                 ", score='" + score + "'" +
-                ", comment='" + comment + "'" +
-                ", visible='" + visible + "'" +
                 '}';
     }
 }

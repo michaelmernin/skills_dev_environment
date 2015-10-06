@@ -2,22 +2,25 @@ package com.perficient.etm.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.Review;
+import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.repository.FeedbackRepository;
+import com.perficient.etm.repository.RatingRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing Feedback.
+ * REST controller for managing Feedback for a Review.
  */
 @RestController
 @RequestMapping("/api")
@@ -27,76 +30,77 @@ public class FeedbackResource {
 
     @Inject
     private FeedbackRepository feedbackRepository;
+    
+    @Inject
+    private RatingRepository ratingRepository;
 
     /**
-     * POST  /feedback -> Create a new feedback.
+     * POST  /reviews/:id/feedback -> Create a new feedback.
      */
-    @RequestMapping(value = "/feedback",
+    @RequestMapping(value = "/reviews/{reviewId}/feedback",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Void> create(@RequestBody Feedback feedback) throws URISyntaxException {
-        log.debug("REST request to save Feedback : {}", feedback);
-        if (feedback.getId() != null) {
-            return ResponseEntity.badRequest().header("Failure", "A new feedback cannot already have an ID").build();
+    public ResponseEntity<Feedback> create(@PathVariable Long reviewId, @RequestBody Feedback feedback, BindingResult result) {
+        log.debug("REST request to save Feedback : {} for Review : {}", feedback, reviewId);
+        if (result.hasErrors()) {
+            throw new InvalidRequestException("Invalid new feedback", result);
+        }
+        if (feedback.getReview() == null) {
+           feedback.setReview(new Review());
+        }
+        if (feedback.getReview().getId() == null) {
+            feedback.getReview().setId(reviewId);
         }
         feedbackRepository.save(feedback);
-        return ResponseEntity.created(new URI("/api/feedback/" + feedback.getId())).build();
+        feedback.getRatings().stream().forEach((r) -> {
+            r.setFeedback(feedback);
+        });
+        ratingRepository.save(feedback.getRatings());
+        return new ResponseEntity<>(feedback, HttpStatus.CREATED);
     }
 
     /**
-     * PUT  /feedback -> Updates an existing feedback.
+     * PUT  /reviews/:id/feedback -> Updates an existing feedback.
      */
-    @RequestMapping(value = "/feedback",
+    @RequestMapping(value = "/reviews/{reviewId}/feedback",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Void> update(@RequestBody Feedback feedback) throws URISyntaxException {
-        log.debug("REST request to update Feedback : {}", feedback);
-        if (feedback.getId() == null) {
-            return create(feedback);
+    public ResponseEntity<Void> update(@PathVariable Long reviewId, @RequestBody Feedback feedback, BindingResult result) {
+        log.debug("REST request to update Feedback : {} for Review : {}", feedback, reviewId);
+        if (result.hasErrors()) {
+            throw new InvalidRequestException("Invalid feedback update", result);
         }
         feedbackRepository.save(feedback);
         return ResponseEntity.ok().build();
     }
 
     /**
-     * GET  /feedback -> get all the feedback.
+     * GET  /reviews/:id/feedback -> get the feedback for a review.
      */
-    @RequestMapping(value = "/feedback",
+    @RequestMapping(value = "/reviews/{reviewId}/feedback",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Feedback> getAll() {
-        log.debug("REST request to get all Feedbacks");
-        return feedbackRepository.findAll();
+    public List<Feedback> getAll(@PathVariable Long reviewId) {
+        log.debug("REST request to get all Feedback for Review : {}", reviewId);
+        return feedbackRepository.findAllByReviewId(reviewId);
     }
 
     /**
-     * GET  /feedback/:id -> get the "id" feedback.
+     * GET  /reviews/:id/feedback/:id -> get the "id" feedback.
      */
-    @RequestMapping(value = "/feedback/{id}",
+    @RequestMapping(value = "/reviews/{reviewId}/feedback/{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Feedback> get(@PathVariable Long id) {
-        log.debug("REST request to get Feedback : {}", id);
+    public ResponseEntity<Feedback> get(@PathVariable Long reviewId, @PathVariable Long id) {
+        log.debug("REST request to get Feedback : {} for Review : {}", id, reviewId);
         return Optional.ofNullable(feedbackRepository.findOne(id))
             .map(feedback -> new ResponseEntity<>(
                 feedback,
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    /**
-     * DELETE  /feedback/:id -> delete the "id" feedback.
-     */
-    @RequestMapping(value = "/feedback/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public void delete(@PathVariable Long id) {
-        log.debug("REST request to delete Feedback : {}", id);
-        feedbackRepository.delete(id);
     }
 }

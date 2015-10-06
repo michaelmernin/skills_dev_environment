@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etmApp').factory('Feedback', function ($resource, DateUtils) {
-  return $resource('api/feedback/:id', {}, {
+  return $resource('api/reviews/:reviewId/feedback/:id', {}, {
     'query': { method: 'GET', isArray: true},
     'get': {
       method: 'GET',
