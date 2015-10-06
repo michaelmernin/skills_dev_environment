@@ -34,7 +34,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 9112749211348786719L;
 
-    @JsonView(View.Public.class)
+    @JsonView(View.Identity.class)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

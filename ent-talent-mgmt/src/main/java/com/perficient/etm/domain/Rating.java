@@ -3,6 +3,9 @@ package com.perficient.etm.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.perficient.etm.domain.util.IdentitySerializer;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -30,6 +33,7 @@ public class Rating implements Serializable {
     @Column(name = "visible")
     private Boolean visible;
 
+    @JsonSerialize(using = IdentitySerializer.class)
     @ManyToOne
     private Question question;
 

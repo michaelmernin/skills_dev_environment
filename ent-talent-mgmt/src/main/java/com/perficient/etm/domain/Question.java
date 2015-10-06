@@ -4,6 +4,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.perficient.etm.web.view.View;
 
 import javax.persistence.*;
 
@@ -19,6 +21,7 @@ public class Question implements Serializable {
 
     private static final long serialVersionUID = -2230560518784704382L;
 
+    @JsonView(View.Identity.class)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
