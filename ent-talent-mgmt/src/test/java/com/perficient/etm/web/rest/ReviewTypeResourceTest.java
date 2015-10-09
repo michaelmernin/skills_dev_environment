@@ -40,6 +40,8 @@ public class ReviewTypeResourceTest extends SpringAppTest {
     private static final String UPDATED_DESCRIPTION = "UPDATED_TEXT";
     private static final Integer DEFAULT_VERSION = 1;
     private static final Integer UPDATED_VERSION = 2;
+    private static final String DEFAULT_PROCESS = "SAMPLE_PROCESS";
+    private static final String UPDATED_PROCESS = "UPDATED_PROCESS";
 
     @Inject
     private ReviewTypeRepository reviewTypeRepository;
@@ -64,6 +66,7 @@ public class ReviewTypeResourceTest extends SpringAppTest {
         reviewType.setVersion(DEFAULT_VERSION);
         reviewType.setActive(DEFAULT_ACTIVE);
         reviewType.setInterval(ReviewInterval.ANNUAL);
+        reviewType.setProcessName(DEFAULT_PROCESS);
     }
 
     @Test
@@ -87,6 +90,7 @@ public class ReviewTypeResourceTest extends SpringAppTest {
         assertThat(testReviewType.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testReviewType.getVersion()).isEqualTo(DEFAULT_VERSION);
         assertThat(testReviewType.isActive()).isEqualTo(DEFAULT_ACTIVE);
+        assertThat(testReviewType.getProcessName()).isEqualTo(DEFAULT_PROCESS);
     }
 
     @Test
@@ -144,6 +148,7 @@ public class ReviewTypeResourceTest extends SpringAppTest {
         reviewType.setDescription(UPDATED_DESCRIPTION);
         reviewType.setVersion(UPDATED_VERSION);
         reviewType.setActive(UPDATED_ACTIVE);
+        reviewType.setProcessName(UPDATED_PROCESS);
         restReviewTypeMockMvc.perform(post("/api/reviewTypes")
                 .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
                 .content(ResourceTestUtils.convertObjectToJsonBytes(reviewType)))
@@ -159,5 +164,6 @@ public class ReviewTypeResourceTest extends SpringAppTest {
         assertThat(testReviewType.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testReviewType.getVersion()).isEqualTo(UPDATED_VERSION);
         assertThat(testReviewType.isActive()).isEqualTo(UPDATED_ACTIVE);
+        assertThat(testReviewType.getProcessName()).isEqualTo(UPDATED_PROCESS);
     }
 }
