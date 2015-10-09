@@ -53,7 +53,17 @@
       "reviewType": "Review Type:",
       "status": "Status:",
       "counselor": "Counselor:",
-      "reviewInformation": "Review Information"
+      "reviewInformation": "Review Information",
+      "goals": {
+      	"addGoal": "Add Goal",
+      	"goalDetailHeader": "Fill out fields to create goal",
+      	"goal": "Goal",
+      	"targetDate": "Target Date",
+      	"statusNotes": "Status Notes",
+      	"cancel": "Cancel",
+      	"save": "Save",
+      	"completionDate": "Completion Date"
+      }
     },
     "a": {
       "title": "a Title",
@@ -67,7 +77,9 @@
       "reviewType": "a Review Type",
       "reviewStatus": "a Review Status",
       "reviewee": "a Reviewee",
-      "reviewer": "a Reviewer"
+      "reviewer": "a Reviewer",
+      "goal": "a Goal",
+      "targetDate": "a Target Date"
     },
     "validate": {
       "endDate": {

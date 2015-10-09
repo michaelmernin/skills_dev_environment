@@ -1,11 +1,25 @@
 <div ng-cloak>
-  <span><label>Goal/Action Required</label><label>Target Date</label><label>Status/Notes</label></span>
-  <md-card ng-repeat="(category, questions) in categories | orderBy:'toString()'">
-    <md-card-content>      
-      <md-input-container>
-      <label>Color</label>
-      <input type="text" ng-model="color" required md-maxlength="10">
-      </md-input-container>
-     </md-card-content>
-   </md-card>
+  <md-list>
+    <md-list-item class="md-3-line" ng-repeat="goal in goals" ng-click="editGoal(goal, $event)">
+      <span ng-if="goal.completionDate" layout-padding>
+        <md-icon md-font-icon="fa fa-lg fa-check-circle-o" style="color:green"></md-icon>
+      </span>
+      <span ng-if="!goal.completionDate" layout-padding>
+        <md-icon md-font-icon="fa fa-lg fa-circle-o"></md-icon>
+      </span>
+      <div class="md-list-item-text" layout="column">
+        <md-content layout-padding>
+          <h3>{{goal.name}}</h3>
+        </md-content>
+        <md-content layout-padding>
+          <h4>{{goal.targetDate | date:'MM/dd/yyyy'}}</h4>
+        </md-content>
+        <md-content layout-padding>
+          <p>{{goal.notes}}</p>          
+        </md-content>
+      </div>
+      <md-icon md-font-icon="fa fa-lg fa-trash" class="md-secondary" aria-label="Delete Goal" ng-click="deleteGoal(goal, $event)"></md-icon>
+    </md-list-item>
+    <md-button class="md-raised" ng-click="addGoal($event)" translate="review.annual.goals.addGoal">Add Goal</md-button>
+  </md-list>
 </div>
