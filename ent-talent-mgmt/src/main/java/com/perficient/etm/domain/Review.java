@@ -91,7 +91,6 @@ public class Review implements Serializable {
     private Set<Feedback> feedback;
     
     @OneToMany(mappedBy = "review")
-    @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Goal> goals;
 

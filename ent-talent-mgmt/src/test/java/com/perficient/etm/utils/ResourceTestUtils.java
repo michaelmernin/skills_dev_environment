@@ -86,9 +86,11 @@ public class ResourceTestUtils {
     }
 
     public static void assertJsonKeys(ResultActions result, String path, String... fields) throws RuntimeException {
-        Arrays.stream(fields).forEach(f -> {
+        Arrays.stream(fields).map(f -> {
+           return Matchers.describedAs("Path %1 to have key %0", Matchers.hasKey(f), f, path);
+        }).forEach(m -> {
             try {
-                result.andExpect(jsonPath(path).value(Matchers.hasKey(f)));
+                result.andExpect(jsonPath(path).value(m));
             } catch (RuntimeException re) {
                 throw re;
             } catch (Exception e) {
@@ -98,8 +100,12 @@ public class ResourceTestUtils {
     }
 
     public static void assertJsonArrayItemKeys(ResultActions result, int count, String... fields) {
+        assertJsonArrayItemKeys(result, "$", count, fields);
+    }
+    
+    public static void assertJsonArrayItemKeys(ResultActions result, String path, int count, String... fields) {
         IntStream.range(0, count).forEach(i -> {
-            assertJsonKeys(result, "$[" + i + "]", fields);
+            assertJsonKeys(result, path + "[" + i + "]", fields);
         });
     }
 }

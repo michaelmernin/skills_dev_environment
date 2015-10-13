@@ -91,7 +91,7 @@ public class ReviewResourceTest extends SpringAppTest {
         restReviewMockMvc.perform(post("/api/reviews")
                 .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
                 .content(ResourceTestUtils.convertObjectToJsonBytes(review)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         // Validate the Review in the database
         List<Review> reviews = reviewRepository.findAll();

@@ -38,6 +38,9 @@ public class ReviewType implements Serializable {
     @Column(name = "version")
     private Integer version;
     
+    @Column(name = "process_name")
+    private String processName;
+    
     @OneToMany(mappedBy = "reviewType", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Question> questions;
@@ -98,7 +101,15 @@ public class ReviewType implements Serializable {
         this.version = version;
     }
 
-    @Override
+    public String getProcessName() {
+		return processName;
+	}
+
+	public void setProcessName(String processName) {
+		this.processName = processName;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -127,6 +138,7 @@ public class ReviewType implements Serializable {
                 ", version='" + version + "'" +
                 ", active='" + active + "'" +
                 ", description='" + description + "'" +
+                ", processName='" + processName + "'" +
                 '}';
     }
 }

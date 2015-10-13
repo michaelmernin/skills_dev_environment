@@ -4,6 +4,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.perficient.etm.web.view.View;
 
 import javax.persistence.*;
 
@@ -19,16 +21,20 @@ public class Question implements Serializable {
 
     private static final long serialVersionUID = -2230560518784704382L;
 
+    @JsonView(View.Identity.class)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @JsonView(View.Public.class)
     @Column(name = "title")
     private String title;
 
+    @JsonView(View.Public.class)
     @Column(name = "text")
     private String text;
 
+    @JsonView(View.Public.class)
     @Column(name = "position")
     private Integer position;
 
@@ -36,6 +42,7 @@ public class Question implements Serializable {
     @ManyToOne
     private ReviewType reviewType;
 
+    @JsonView(View.Public.class)
     @ManyToOne
     private Category category;
 

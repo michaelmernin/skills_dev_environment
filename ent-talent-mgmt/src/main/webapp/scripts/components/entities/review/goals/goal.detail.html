@@ -1,0 +1,49 @@
+<md-dialog flex="66">
+  <form name="goalForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 translate="review.annual.goals.goalDetailHeader">Fill out fields to create goal</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <md-input-container>
+        <label translate="review.annual.goals.goal">Goal</label>
+        <textarea name="goal" ng-model="goal.name" md-maxlength="1000" required></textarea>
+        <div ng-messages="goalForm.goal.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
+          <div ng-message="required">
+            <span translate="global.messages.validate.field.enter.required" translate-values="{name: '{{ 'review.a.goal' | translate }}'}">Please enter a value.</span>
+          </div>
+        </div>
+      </md-input-container>      
+      <md-input-container flex-gt-sm>
+        <label translate="review.annual.goals.targetDate">Target Date</label>
+        <input type="date" name="targetDate" ng-model="goal.targetDate"/>
+        <div ng-messages="goalForm.targetDate.$error">
+          <div ng-message="date">
+            <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.annual.goals.targetDate' | translate }}'}" >Please select a valid value.</span>
+          </div>
+        </div>
+      </md-input-container>      
+      <md-input-container>
+        <label translate="review.annual.goals.statusNotes">Status/Notes</label>
+        <textarea name="notes" ng-model="goal.notes" md-maxlength="1000"></textarea>
+      </md-input-container>
+      <md-input-container layout="row" layout-wrap layout-padding>
+        <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="isPopulated()">Completed?</md-switch>
+        <md-input-container flex-gt-sm>
+          <label translate="review.annual.goals.completionDate">Completion Date</label>
+          <input type="date" name="completionDate" ng-model="goal.completionDate" ng-disabled="!switchCompletion" />
+        </md-input-container> 
+      </md-input-container>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+      <span flex></span>
+      <md-button ng-click="cancel()" class="md-primary" translate="review.annual.goals.cancel">Cancel</md-button>
+      <md-button ng-click="hide()" class="md-primary" translate="review.annual.goals.save">Save</md-button>
+    </div>
+  </form>
+</md-dialog>

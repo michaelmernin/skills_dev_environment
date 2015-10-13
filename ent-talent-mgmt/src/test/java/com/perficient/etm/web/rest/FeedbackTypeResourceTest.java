@@ -134,22 +134,4 @@ public class FeedbackTypeResourceTest extends SpringAppTest {
         FeedbackType testFeedbackType = optional.get();
         assertThat(testFeedbackType.getName()).isEqualTo(UPDATED_NAME);
     }
-
-    @Test
-    @Transactional
-    public void deleteFeedbackType() throws Exception {
-        int count = (int) feedbackTypeRepository.count();
-        
-        // Read a feedback type
-        FeedbackType feedbackType = feedbackTypeRepository.findOne(1L);
-
-        // Get the feedbackType
-        restFeedbackTypeMockMvc.perform(delete("/api/feedbackTypes/{id}", feedbackType.getId())
-                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
-
-        // Validate the database is empty
-        List<FeedbackType> feedbackTypes = feedbackTypeRepository.findAll();
-        assertThat(feedbackTypes).hasSize(count - 1);
-    }
 }

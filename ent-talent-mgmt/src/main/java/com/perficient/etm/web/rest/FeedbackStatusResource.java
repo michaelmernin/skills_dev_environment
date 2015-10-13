@@ -65,16 +65,4 @@ public class FeedbackStatusResource {
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
-    /**
-     * DELETE  /feedbackStatuses/:id -> delete the "id" feedbackStatus.
-     */
-    @RequestMapping(value = "/feedbackStatuses/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public void delete(@PathVariable Long id) {
-        log.debug("REST request to delete FeedbackStatus : {}", id);
-        feedbackStatusRepository.delete(id);
-    }
 }

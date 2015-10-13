@@ -142,22 +142,4 @@ public class FeedbackStatusResourceTest extends SpringAppTest {
         assertThat(testFeedbackStatus.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testFeedbackStatus.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
-
-    @Test
-    @Transactional
-    public void deleteFeedbackStatus() throws Exception {
-        int count = (int) feedbackStatusRepository.count();
-        
-        // Read a feedback status
-        FeedbackStatus feedbackStatus = feedbackStatusRepository.findOne(1L);
-
-        // Get the feedbackStatus
-        restFeedbackStatusMockMvc.perform(delete("/api/feedbackStatuses/{id}", feedbackStatus.getId())
-                .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
-
-        // Validate the database is empty
-        List<FeedbackStatus> feedbackStatuses = feedbackStatusRepository.findAll();
-        assertThat(feedbackStatuses).hasSize(count - 1);
-    }
 }
