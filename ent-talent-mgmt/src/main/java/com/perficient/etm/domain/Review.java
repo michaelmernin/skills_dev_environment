@@ -77,8 +77,7 @@ public class Review implements Serializable {
     @ManyToOne
     private User reviewer;
     
-    @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "T_PEER",
             joinColumns = {@JoinColumn(name = "review_id", referencedColumnName = "id")},
