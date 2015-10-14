@@ -1,11 +1,17 @@
 package com.perficient.etm.web.rest.dto;
 
-import org.hibernate.validator.constraints.Email;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.List;
+
+import org.hibernate.validator.constraints.Email;
+import org.joda.time.LocalDate;
+
+import com.perficient.etm.domain.Authority;
+import com.perficient.etm.domain.User;
 
 public class UserDTO {
     
@@ -35,20 +41,34 @@ public class UserDTO {
     private String langKey;
 
     private List<String> roles;
+    
+    @Size(max = 50)
+    private String title;
+    
+    @Size(max = 50)
+    private String targetTitle;
+    
+    @Size(max = 50)
+    private LocalDate startDate;
+    
+    @Size(max = 50)
+    private User counselor;
 
     public UserDTO() {
     }
-
-    public UserDTO(Long id, String login, String password, String firstName, String lastName, String email, String langKey,
-                   List<String> roles) {
-        this.id = id;
-        this.login = login;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.langKey = langKey;
-        this.roles = roles;
+    
+    public UserDTO(User user) {
+    	this.id = user.getId();
+    	this.login = user.getLogin();
+    	this.password = null;
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail();
+        this.langKey = user.getLangKey();
+        this.title = user.getTitle();
+        this.targetTitle = user.getTargetTitle();
+        this.startDate = user.getStartDate();
+        this.roles = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toList());
     }
     
     public Long getId() {
@@ -83,7 +103,23 @@ public class UserDTO {
         return roles;
     }
 
-    @Override
+    public String getTitle() {
+		return title;
+	}
+
+	public String getTargetTitle() {
+		return targetTitle;
+	}
+
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+	
+	public User getCounselor() {
+		return counselor;
+	}
+
+	@Override
     public String toString() {
         return "UserDTO{" +
         "login='" + login + '\'' +
