@@ -2,12 +2,13 @@
 
 angular.module('etmApp').controller('PeersController', function ($scope, $stateParams, $mdDialog, Review, User) {
   $scope.peers = [];
-  $scope.load = function (id) {
-    Review.peers({id: id}, function (result) {
-      $scope.peers = result;
-    });
-  };
-  $scope.load($stateParams.id);
+  var review = {};
+  $scope.$parent.$watch('review', function (parentReview) {
+    if (parentReview.id) {
+      review = parentReview;
+      $scope.peers = review.peers;
+    }
+  });
   
   $scope.getMatches = function (query) {
      return User.autocomplete({query: query}).$promise;
@@ -16,6 +17,7 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   $scope.peerSelected = function (user) {
     if (user.login != null) {
       $scope.peers.push(user);
+      Review.update(review);
     }
  };
  
