@@ -287,7 +287,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Override
     public int hashCode() {
+      if(login != null){
         return login.hashCode();
+      } else {
+        return id.hashCode();
+      }
     }
 
     @Override

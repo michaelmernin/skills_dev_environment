@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('PeersController', function ($scope, $stateParams, $mdDialog, Review, User) {
+angular.module('etmApp').controller('PeersController', function ($scope, $stateParams, $mdDialog, Review, User, Peer) {
   $scope.peers = [];
   var review = {};
   $scope.$parent.$watch('review', function (parentReview) {
@@ -15,10 +15,12 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   };
   
   $scope.peerSelected = function (user) {
-    if (user.login != null) {
-      $scope.peers.push(user);
-      Review.update(review);
-    }
+    if (user != null) {
+      if (user.login != null) {
+        $scope.peers.push(user);
+        Peer.save({reviewId: review.id}, {id: user.id});
+      }
+    }  
  };
  
  $scope.deletePeer = function (user, ev) {
@@ -31,6 +33,7 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
      .targetEvent(ev);
    $mdDialog.show(confirmDelete).then(function () {
          $scope.peers.splice($scope.peers.indexOf(user), 1);
+         Peer.delete({reviewId: review.id, id: user.id});
    });
  };
 });

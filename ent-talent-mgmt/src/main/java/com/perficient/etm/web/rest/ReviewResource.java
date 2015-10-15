@@ -3,9 +3,11 @@ package com.perficient.etm.web.rest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.web.validator.ReviewValidator;
@@ -119,6 +122,7 @@ public class ReviewResource {
         log.debug("REST request to delete Review : {}", id);
         reviewRepository.delete(id);
     }
+   
     
     /**
      * GET  /reviews/:id/engagements -> get the engagements in the timeframe of a review.
