@@ -11,7 +11,11 @@ angular.module('etmApp').config(function ($stateProvider) {
       'content@': {
         templateUrl: 'scripts/app/main/main.html',
         controller: 'MainController'
-      }
+      },
+      'dashboardReviews@': {
+		  templateUrl: 'scripts/components/dashboard/reviews/dashboardReviews.html',
+		  controller: 'DashboardReviewsController'
+	    }
     },
     resolve: {
       mainTranslatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate,$translatePartialLoader) {

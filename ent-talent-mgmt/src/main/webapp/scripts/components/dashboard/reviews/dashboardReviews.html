@@ -1,0 +1,30 @@
+<div ng-cloak>
+  <md-content md-scroll-y class="md-whiteframe-z1">
+    <div layout-padding layout-margin>
+      <h2>Reviews</h2>
+      <md-divider></md-divider>
+      <md-input-container>
+        <label for="filter">Filter</label>
+        <input type="text" id="filter" ng-model="filter">
+      </md-input-container>
+    </div>
+    <md-list>
+      <md-list-item class="md-3-line" ng-repeat="review in reviews | filter:filter">
+        <div layout="row">
+          <div layout-margin layout="column" layout-align="center center">
+            <md-tooltip>
+              {{review.reviewStatus.name}}
+            </md-tooltip>
+            <md-progress-circular md-mode="determinate" value={{getReviewProgress(review.reviewStatus.name)|number:0}}> </md-progress-circular>
+          </div>
+          <div class="md-list-item-text" layout="column">
+            <h3>{{review.reviewType.name}} for {{review.reviewee.firstName}} {{review.reviewee.lastName}} by  {{review.reviewer.firstName}} {{review.reviewer.lastName}}</h3>
+            <h4 ng-hide="{{!hasProjectAndClient(review.reviewType.name)}}">{{review.project}} at {{review.client}}</h4>
+            <p hide-sm>{{review.startDate | date:'MM/dd/yyyy'}} to {{review.endDate | date:'MM/dd/yyyy'}}</p>
+          </div>
+        </div>
+        <md-divider ng-if="!$last"></md-divider>
+      </md-list-item>
+    </md-list>
+  </md-content>
+</div>
