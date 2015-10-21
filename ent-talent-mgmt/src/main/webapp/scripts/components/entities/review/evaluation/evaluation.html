@@ -1,29 +1,30 @@
 <div ng-cloak>
-  <md-card ng-repeat="(category, questions) in categories | orderBy:'toString()'">
-    <md-card-content>
-      <h4>{{ category }}</h4>
-      <md-list>
-        <md-list-item ng-repeat="question in questions | orderBy:'position'" ng-click="viewEvaluation(question, $event)" class="md-2-line">
-          <div class="md-list-item-text">
-            <h5>{{ question.title ? question.title : question.text | limitTo:titleLimit() }}</h5>
-            <p>
-              <span ng-if="question.ratings.reviewee.score">
-                <i class="fa fa-comment-o"></i>
-                Self Rating: {{ getScore(question.ratings.reviewee) }}
-              </span>
-              <span ng-if="question.ratings.reviewer.score">
-                <i class="fa fa-comment-o"></i>
-                Reviewer Rating: {{ getScore(question.ratings.reviewer) }}
-              </span>
-              <span ng-if="getAvgScore(question.ratings.peer)">
-                <i class="fa fa-comments-o"></i>
-                Average Peer Rating: {{ getAvgScore(question.ratings.peer) }}
-              </span>
-            </p>
-          </div>
-          <md-icon md-font-icon="fa fa-lg fa-edit"></md-icon>
-        </md-list-item>
-      </md-list>
-    </md-card-content>
-  </md-card>
+  <md-list>
+    <div ng-repeat="(category, questions) in categories | orderBy:'toString()'">
+      <md-list-item ng-click="toggle = !toggle;">
+        <h4>{{ category }}</h4>
+      </md-list-item>
+      <md-list-item ng-if="toggle" ng-repeat="question in questions | orderBy:'position'" ng-click="viewEvaluation(question, $event)" class="md-2-line">
+        <div class="md-list-item-text">
+          <h5>{{ question.title ? question.title : question.text | limitTo:titleLimit() }}</h5>
+          <p>
+            <span ng-if="question.ratings.reviewee.score">
+              <i class="fa fa-comment-o"></i>
+              Self Rating: {{ getScore(question.ratings.reviewee) }}
+            </span>
+            <span ng-if="question.ratings.reviewer.score">
+              <i class="fa fa-comment-o"></i>
+              Reviewer Rating: {{ getScore(question.ratings.reviewer) }}
+            </span>
+            <span ng-if="getAvgScore(question.ratings.peer)">
+              <i class="fa fa-comments-o"></i>
+              Average Peer Rating: {{ getAvgScore(question.ratings.peer) }}
+            </span>
+          </p>
+        </div>
+        <md-icon md-font-icon="fa fa-lg fa-edit"></md-icon>
+      </md-list-item>
+      <md-divider ng-if="!$last"></md-divider>
+    </div>
+  </md-list>
 </div>
