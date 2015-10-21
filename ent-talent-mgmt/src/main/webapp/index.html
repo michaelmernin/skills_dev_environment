@@ -31,10 +31,10 @@
   <!--[if lt IE 10]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
-  <div layout="row" style="height: 100%">
+  <div layout="row">
     <div layout="column" flex>
       <div ui-view="toolbar" ng-cloak></div>
-      <div layout="row" flex>
+      <div layout="row" style="height: calc(100vh - 64px); overflow-y: auto; overflow-x: hidden;">
         <div ui-view="content" flex flex-lg="90" offset-lg="5" flex-gt-lg="80" offset-gt-lg="10"></div>
       </div>
     </div>
