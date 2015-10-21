@@ -50,7 +50,13 @@ describe('Controllers Tests ', function () {
 
       expect(spiedPrincipal.identity).toHaveBeenCalled();
       expect($scope.isAuthenticated()).toBeTruthy();
-      expect($scope.account).toEqual(account);
+      expect($scope.account).toBeDefined();
+      expect($scope.account.login).toEqual(account.login);
+      expect($scope.account.email).toEqual(account.email);
+      expect($scope.account.firstName).toEqual(account.firstName);
+      expect($scope.account.lastName).toEqual(account.lastName);
+      expect($scope.account.roles).toEqual(account.roles);
+      expect($scope.account.password).toBeNull();
     });
     
     it('should not set account properties when logged out', function () {
@@ -63,7 +69,13 @@ describe('Controllers Tests ', function () {
 
       expect(spiedPrincipal.identity).toHaveBeenCalled();
       expect($scope.isAuthenticated()).toBeFalsy();
-      expect($scope.account).toBeFalsy();
+      expect($scope.account).toBeDefined();
+      expect($scope.account.login).toBeUndefined();
+      expect($scope.account.email).toBeUndefined();
+      expect($scope.account.firstName).toBeUndefined();
+      expect($scope.account.lastName).toBeUndefined();
+      expect($scope.account.roles).toBeUndefined();
+      expect($scope.account.password).toBeUndefined();
     });
   });
 });

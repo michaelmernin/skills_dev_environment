@@ -4,14 +4,10 @@ describe('Controllers Tests ', function () {
 
   beforeEach(module('etmApp'));
 
-  var $scope, q, Principal, Auth;
+  var $scope, q, Principal;
 
-  // define the mock Auth service
+  // define the mock Principal
   beforeEach(function() {
-    Auth = {
-      updateAccount: function() {}
-    };
-
     Principal = {
       identity: function() {
         var deferred = q.defer();
@@ -20,37 +16,13 @@ describe('Controllers Tests ', function () {
     };
   });
 
-
   describe('SettingsController', function () {
 
     beforeEach(inject(function ($rootScope, $controller, $q) {
       $scope = $rootScope.$new();
       q = $q;
-      $controller('SettingsController',{$scope:$scope, Principal:Principal, Auth:Auth});
+      $controller('SettingsController',{$scope:$scope, Principal:Principal});
     }));
 
-    it('should save account', function () {
-      //GIVEN
-      var account = {firstName: "John", lastName: "Doe"};
-      $scope.settingsAccount = account;
-
-      //SET SPY
-      spyOn(Principal, 'identity').and.callThrough();
-
-      spyOn(Auth, 'updateAccount').and.returnValue(new function(){
-        var deferred = q.defer();
-        $scope.error = null;
-        $scope.success = 'OK';
-        return deferred.promise;
-      });
-
-
-      //WHEN
-      $scope.save();
-
-      //THEN
-      expect($scope.error).toBeNull();
-      expect($scope.success).toBe('OK');
-    });
   });
 });
