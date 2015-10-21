@@ -2,10 +2,9 @@
 
 angular.module('etmApp').controller('MainController', function ($scope, Principal) {
   $scope.account = {};
-  $scope.isAuthenticated = false;
+  $scope.isAuthenticated = Principal.isAuthenticated;
 
-  Principal.identity().then(function(account) {
+  Principal.identity().then(function (account) {
     $scope.account = account || {};
-    $scope.isAuthenticated = Principal.isAuthenticated;
   });
 });
