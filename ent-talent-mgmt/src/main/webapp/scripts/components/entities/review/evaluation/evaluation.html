@@ -2,21 +2,36 @@
   <md-list>
     <div ng-repeat="(category, questions) in categories | orderBy:'toString()'">
       <md-list-item ng-click="toggle = !toggle;">
-        <h4>{{ category }}</h4>
+        <div class="md-list-item-text" flex>
+          <span class="md-title">{{ category }}</span>
+          <span class="score" ng-if="getAvgScore(getRatings(questions, 'reviewee'))">
+            <i class="fa fa-comment-o"></i>
+            Self: {{ getAvgScore(getRatings(questions, 'reviewee')) }}
+          </span>
+          <span class="score" ng-if="getAvgScore(getRatings(questions, 'reviewer'))">
+            <i class="fa fa-comment-o"></i>
+            Reviewer: {{ getAvgScore(getRatings(questions, 'reviewer')) }}
+          </span>
+          <span class="score" ng-if="getAvgScore(getRatings(questions, 'peer'))">
+            <i class="fa fa-comments-o"></i>
+            Peers: {{ getAvgScore(getRatings(questions, 'peer')) }}
+          </span>
+        </div>
+        <i class="fa fa-lg {{toggle ? 'fa-chevron-down' : 'fa-chevron-left'}}"></i>
       </md-list-item>
       <md-list-item ng-if="toggle" ng-repeat="question in questions | orderBy:'position'" ng-click="viewEvaluation(question, $event)" class="md-2-line">
         <div class="md-list-item-text">
           <h5>{{ question.title ? question.title : question.text | limitTo:titleLimit() }}</h5>
           <p>
-            <span ng-if="question.ratings.reviewee.score">
+            <span class="score" ng-if="question.ratings.reviewee.score">
               <i class="fa fa-comment-o"></i>
               Self Rating: {{ getScore(question.ratings.reviewee) }}
             </span>
-            <span ng-if="question.ratings.reviewer.score">
+            <span class="score" ng-if="question.ratings.reviewer.score">
               <i class="fa fa-comment-o"></i>
               Reviewer Rating: {{ getScore(question.ratings.reviewer) }}
             </span>
-            <span ng-if="getAvgScore(question.ratings.peer)">
+            <span class="score" ng-if="getAvgScore(question.ratings.peer)">
               <i class="fa fa-comments-o"></i>
               Average Peer Rating: {{ getAvgScore(question.ratings.peer) }}
             </span>

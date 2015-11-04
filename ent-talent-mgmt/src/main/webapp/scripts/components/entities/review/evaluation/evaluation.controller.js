@@ -55,6 +55,21 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
     return Evaluation.avgScore(ratings);
   };
 
+  $scope.getRatings = function (questions, property) {
+    var ratings = [];
+    angular.forEach(questions, function (question) {
+      if (question.ratings) {
+        var rating = question.ratings[property];
+        if (angular.isArray(rating)) {
+          [].push.apply(ratings, rating);
+        } else if (rating) {
+          ratings.push(rating);
+        }
+      }
+    });
+    return ratings;
+  };
+
   $scope.titleLimit = function () {
     var width = Math.max(320, $window.innerWidth);
     var padding = 100;

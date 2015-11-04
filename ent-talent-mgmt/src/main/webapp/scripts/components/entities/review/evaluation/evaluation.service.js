@@ -67,7 +67,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       if (!count) {
         return 'N/A';
       }
-      return sum / count;
+      return Math.round(10 * sum / count) / 10;
     },
     showRevieweeRating: function (review, user) {
       if (showAlways(review, user)) {
