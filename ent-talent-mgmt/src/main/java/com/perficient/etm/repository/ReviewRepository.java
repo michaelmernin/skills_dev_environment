@@ -6,8 +6,10 @@ import org.joda.time.LocalDate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PostFilter;
 
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.security.PostFilterUrtils;
 
 /**
  * Spring Data JPA repository for the Review entity.
@@ -20,4 +22,7 @@ public interface ReviewRepository extends JpaRepository<Review,Long>{
      */
     @Query("select r from Review r where r.reviewType.interval = 'PROJECT' and r.reviewStatus.id = 5 and r.reviewee.id = :userId and r.endDate > :startDate and r.endDate <= :endDate")
     List<Review> findCompletedEngagementsForUserWithinDates(@Param("userId") Long userId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    @PostFilter(PostFilterUrtils.RESTRICT_REVIEWS)
+    List<Review> findAll();
 }

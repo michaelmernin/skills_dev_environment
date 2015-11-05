@@ -2,9 +2,9 @@
 
 angular.module('etmApp').controller('DashboardReviewsController', function ($scope, $stateParams, Review, Principal) {
   $scope.reviews = [];
-  $scope.isAuthenticated = Principal.isAuthenticated();
+  $scope.isAuthenticated = Principal.isAuthenticated;
   $scope.loadReviews = function () {
-    if ($scope.isAuthenticated) {
+    if ($scope.isAuthenticated()) {
       Review.query(function (result) {
         $scope.reviews = result;
       });

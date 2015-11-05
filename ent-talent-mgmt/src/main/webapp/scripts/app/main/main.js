@@ -12,7 +12,7 @@ angular.module('etmApp').config(function ($stateProvider) {
         templateUrl: 'scripts/app/main/main.html',
         controller: 'MainController'
       },
-      'dashboardReviews@': {
+      'dashboardReviews@home': {
 		  templateUrl: 'scripts/components/dashboard/reviews/dashboardReviews.html',
 		  controller: 'DashboardReviewsController'
 	    }
