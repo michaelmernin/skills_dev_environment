@@ -8,9 +8,22 @@
       <md-list>
         <md-list-item ng-repeat="user in peers track by $index" class="md-3-line">
           <div class="md-list-item-text">
-            <h3>{{user.firstName}} {{user.lastName}}</h3>
-            <p>{{user.email}}</p>
-            <md-icon md-font-icon="fa fa-trash-o fa-lg" class="md-secondary" ng-click="deletePeer(user, $event)" aria-label="Delete User"></md-icon>
+            <div layout="row">
+              <div class="left-peers-column" flex>
+                <h3>{{user.firstName}} {{user.lastName}}</h3>
+                <p>{{user.email}}</p>           
+              </div>
+              <div flex>
+                <h3 translate="review.peers.status">Status:</h3>
+                <p>Not Sent</p>
+              </div>
+              <div flex>
+                <md-button id="email-peers-button" class="md-primary" ng-click="sendEmail(user)" translate="review.peers.sendEmail">Send Email</md-button>
+              </div>
+              <div flex>
+                <md-button id="delete-peers-button" class="md-primary" ng-click="deletePeer(user, $event)" aria-label="Delete User" translate="review.peers.removePeer">Remove Peer From Review</md-button>
+              </div>
+            </div>
           </div>
         </md-list-item>
       </md-list>

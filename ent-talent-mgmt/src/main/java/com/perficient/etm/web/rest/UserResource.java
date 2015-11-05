@@ -123,10 +123,10 @@ public class UserResource {
         String[] splitQuery = query.split(" ");
         List<User> usersList = new ArrayList<User>();
         if (splitQuery.length > 1) {
-          usersList.addAll(userRepository.findByFirstNameStartingWithAndLastNameStartingWith(splitQuery[0], splitQuery[1]));
+          usersList.addAll(userRepository.findUsersForAutocompleteByFullName(splitQuery[0], splitQuery[1]));
+        } else {
+          usersList.addAll(userRepository.findUsersForAutocomplete(query));
         }
-        usersList.addAll(userRepository.findByFirstNameStartingWith(query));
-        usersList.addAll(userRepository.findByLastNameStartingWith(query));
         return usersList;
     }
 }

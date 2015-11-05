@@ -36,4 +36,9 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
          Peer.delete({reviewId: review.id, id: user.id});
    });
  };
+ 
+ $scope.sendEmail = function (user) {
+   //TO DO: Add email functionality
+   alert("Sending Email to " + user.firstName + ' ' + user.lastName);
+ };
 });
