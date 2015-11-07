@@ -4,14 +4,17 @@
       <h2 class="md-display-1" translate="main.title">My Dashboard</h2>
 
       <div ng-switch="isAuthenticated()">
-        <div ng-switch-when="true" >
+        <div ng-switch-when="true">
           <p translate="main.logged.message" translate-values="{firstName: '{{account.firstName}}', lastName: '{{account.lastName}}', email: '{{account.email}}'}">
             You are logged in as user "Admin".
-            
+
           </p>
+          <div ui-view="dashboardReviews"></div>
+        </div>
+        <div ng-switch-when="false">
+          <div ui-view="dashboardReviews"></div>
         </div>
       </div>
     </div>
-    <div ui-view="dashboardReviews" ></div>
   </md-content>
 </div>

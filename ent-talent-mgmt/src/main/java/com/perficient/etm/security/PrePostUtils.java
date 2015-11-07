@@ -8,7 +8,7 @@ public class PrePostUtils {
 												+ " or filterObject.reviewee.generalManager.login == principal.username";
 	
 	public static final String POST_AUTHORIZE_REVIEW = "returnObject != null ? returnObject.reviewee.login == principal.username"
-			+ " or returnObject.reviewer.login == principal.username"
-			+ " or returnObject.reviewee.counselor.login == principal.username"
-			+ " or returnObject.reviewee.generalManager.login == principal.username : true";
+												+ " or returnObject.reviewer.login == principal.username"
+												+ " or returnObject.reviewee.counselor.login == principal.username"
+												+ " or returnObject.reviewee.generalManager.login == principal.username : true";
 }

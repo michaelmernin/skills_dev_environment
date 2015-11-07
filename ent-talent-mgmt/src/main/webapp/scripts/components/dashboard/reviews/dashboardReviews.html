@@ -1,15 +1,26 @@
 <div layout-padding layout-margin>
   <h2>Reviews</h2>
   <md-divider></md-divider>
-  <md-input-container>
-    <label for="filter">Filter</label>
-    <input type="text" id="filter" ng-model="filter">
-  </md-input-container>
+  <div layout="row">
+    <md-input-container flex="30">
+      <label for="filter">Filter</label>
+      <input type="text" id="filter" ng-model="filter">
+    </md-input-container>
+    <md-input-container flex="20">
+      <label>Sort By</label>
+      <md-select ng-model="sortByExpression">
+        <md-option ng-repeat="sortByItem in sortByItems" value="{{sortByItem.value}}">
+          {{sortByItem.key}}
+        </md-option>
+      </md-select>
+    </md-input-container>
+  </div>
 </div>
 <md-list>
-  <md-list-item class="md-3-line" ng-repeat="review in reviews | filter:filter">
-    <div layout="row">
-      <div layout-margin layout="column" >
+  <md-list-item class="md-3-line" ng-repeat="review in reviews | orderBy:sortByExpression | filter:filter" ng-click="goToReview(review.id)">
+    <div layout="row" >
+      <div layout-margin layout="column">
+        <div class="md-title" style=" width: 50px; height: 50px; position: absolute; line-height: 50px; text-align: center;">{{review.reviewStatus.name.substring(0,2).toUpperCase()}}</div>
         <md-tooltip>
           {{review.reviewStatus.name}}
         </md-tooltip>
