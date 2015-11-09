@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -87,11 +88,16 @@ public class ReviewResource {
     @Timed
     public ResponseEntity<Review> get(@PathVariable Long id) {
         log.debug("REST request to get Review : {}", id);
+        try{
         return Optional.ofNullable(reviewRepository.findOne(id))
             .map(review -> new ResponseEntity<>(
                 review,
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        }
+        catch(AccessDeniedException e){
+        	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
     
     /**

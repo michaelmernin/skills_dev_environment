@@ -117,7 +117,7 @@ $scope.goToReview = function ( reviewId ) {
       }
   }
 ];
-  $scope.sortByItems = [
+  $scope.orderByItems = [
     {
       key: 'Start date',
       value: 'startDate'
