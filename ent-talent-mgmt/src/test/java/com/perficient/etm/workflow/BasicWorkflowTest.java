@@ -1,6 +1,7 @@
 package com.perficient.etm.workflow;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
@@ -12,13 +13,16 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 
 public class BasicWorkflowTest {
+	
 	private RuntimeService runtimeService;
 	private IdentityService identityService;
 	private TaskService taskService;
+	
+	
 	
 	@Before
 	public void setup() {
@@ -28,17 +32,18 @@ public class BasicWorkflowTest {
 
 		RepositoryService repositoryService = processEngine
 				.getRepositoryService();
+		repositoryService.createDeployment()
+		.addClasspathResource("processes/annualReview.bpmn20.xml").deploy();	
 		runtimeService = processEngine.getRuntimeService();
 		identityService = processEngine.getIdentityService();
 		taskService = processEngine.getTaskService();
-		repositoryService.createDeployment()
-				.addClasspathResource("processes/annualReview.bpmn20.xml").deploy();	
+		
 	}
 	
 	@Test
 	public void testSuccessfulCompletion() {
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(
-				"annualReview");
+				"annualReviewTest");
 		assertNotNull(processInstance.getId());
 		System.out.println("id " + processInstance.getId() + ", definition id " 
 				+ processInstance.getProcessDefinitionId());

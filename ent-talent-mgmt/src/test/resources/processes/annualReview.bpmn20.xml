@@ -11,13 +11,7 @@
 		<userTask id="counselorFeedback" name="counselorFeedback"/>
 		<sequenceFlow id="sequenceflow3" name="Management Review" sourceRef="counselorFeedback" targetRef="mgmtReview"/>
 		<userTask id="mgmtReview" name="mgmtReview"/>
-		<sequenceFlow id="sequenceflow4" name="Counselor Review" sourceRef="mgmtReview" targetRef="completionevt"/>
-		<scriptTask id="completionevt" name="Validate order" scriptFormat="groovy">
-			<script>
-				out:println "annual review completed";
-			</script>
-		</scriptTask>
-		<sequenceFlow id="sequenceflow5" name="Complete" sourceRef="completionevt" targetRef="endevent1"/>
+		<sequenceFlow id="sequenceflow4" name="Counselor Review" sourceRef="mgmtReview" targetRef="endevent1"/>
 		<endEvent id="endevent1" name="End"/>
 	</process>
 </definitions>
