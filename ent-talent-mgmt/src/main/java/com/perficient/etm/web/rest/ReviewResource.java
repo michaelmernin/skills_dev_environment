@@ -3,8 +3,6 @@ package com.perficient.etm.web.rest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
 import javax.inject.Inject;
 import javax.validation.Valid;
 
@@ -13,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -25,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Review;
-import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.web.validator.ReviewValidator;
@@ -88,16 +84,11 @@ public class ReviewResource {
     @Timed
     public ResponseEntity<Review> get(@PathVariable Long id) {
         log.debug("REST request to get Review : {}", id);
-        try{
         return Optional.ofNullable(reviewRepository.findOne(id))
             .map(review -> new ResponseEntity<>(
                 review,
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-        }
-        catch(AccessDeniedException e){
-        	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
     
     /**
