@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('DashboardReviewsController', function ($scope,$location, $stateParams, Review, Principal) {
+angular.module('etmApp').controller('DashboardReviewsController', function ($scope, $location, $stateParams, Review, Principal) {
   $scope.reviews = [];
   $scope.isAuthenticated = Principal.isAuthenticated;
 
@@ -13,6 +13,7 @@ angular.module('etmApp').controller('DashboardReviewsController', function ($sco
       $scope.reviews = $scope.dummyReviews;
     }
   };
+  $scope.loadReviews();
   $scope.getReviewProgress = function (reviewStatus) {
     var factor = 16.66; //6 steps to complete
     if (reviewStatus != null) {
@@ -44,19 +45,30 @@ angular.module('etmApp').controller('DashboardReviewsController', function ($sco
 
   };
   $scope.hasProjectAndClient = function (reviewName) {
-    if (reviewName.toUpperCase().trim() === "Annual Review".toUpperCase().trim() || reviewName.toUpperCase().trim() === "3 Month Review".toUpperCase().trim()) {
-      return false;
-    } else {
-      return true;
-    }
+    return (
+      reviewName.toUpperCase().trim() !== "Annual Review".toUpperCase().trim() && reviewName.toUpperCase().trim() !== "3 Month Review".toUpperCase().trim()
+    )
+  };
+  $scope.goToReview = function (reviewId) {
+    $location.path('review/' + reviewId + '/edit');
   };
 
-$scope.goToReview = function ( reviewId ) {
-  console.log(reviewId);
-  $location.path( 'review/'+reviewId+'/edit');
-};
-  
-  
+  $scope.isSubstring = function (property, query) {
+    return (property && query) ? property.toLowerCase().indexOf(query) !== -1 : false
+  }
+  $scope.reviewSearch = function (review) {
+    // if query is undefined or null, show all reviews
+    if(!$scope.query){
+      return true;
+    }
+    var query = ($scope.query) ? $scope.query.toLowerCase() : "";
+    
+    var isSubstring = $scope.isSubstring;
+    return (
+      isSubstring(review.client, query) || isSubstring(review.project, query) || isSubstring(review.reviewType.name, query) || isSubstring(review.reviewStatus.name, query) || isSubstring(review.reviewee.firstName, query) || isSubstring(review.reviewee.lastName, query) || isSubstring(review.reviewer.firstName, query) || isSubstring(review.reviewer.lastName, query)
+    );
+  };
+
   $scope.dummyReviews = [
     {
       "startDate": "2014-06-10",
@@ -150,5 +162,5 @@ $scope.goToReview = function ( reviewId ) {
       value: 'reviewer.firstName'
     }
   ];
-  $scope.loadReviews();
+
 });
