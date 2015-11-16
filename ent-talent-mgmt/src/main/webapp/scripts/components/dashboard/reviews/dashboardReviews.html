@@ -15,11 +15,9 @@
           </md-option>
         </md-select>
       </md-input-container>
-      <md-input-container flex-gt-sm="20" >
         <md-switch class="md-primary" ng-model="reverseOrder" aria-label="reverse order switch" ng-show="orderByExpression">
           Reverse Order
         </md-switch>
-      </md-input-container>
     </div>
     <md-list flex-gt-sm>
       <md-list-item class="md-3-line" ng-repeat="review in reviews | orderBy:orderByExpression:reverseOrder | filter:reviewSearch" ng-click="goToReview(review.id)">

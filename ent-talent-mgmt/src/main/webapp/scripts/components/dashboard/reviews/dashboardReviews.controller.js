@@ -13,7 +13,6 @@ angular.module('etmApp').controller('DashboardReviewsController', function ($sco
       $scope.reviews = $scope.dummyReviews;
     }
   };
-  $scope.loadReviews();
   $scope.getReviewProgress = function (reviewStatus) {
     var factor = 16.66; //6 steps to complete
     if (reviewStatus != null) {
@@ -71,61 +70,61 @@ angular.module('etmApp').controller('DashboardReviewsController', function ($sco
 
   $scope.dummyReviews = [
     {
-      "startDate": "2014-06-10",
-      "endDate": "2015-04-10",
-      "client": "BestBuy",
-      "project": "Open Box",
-      "reviewType": {
-        "name": "Annual Review"
+      startDate: "2014-06-10",
+      endDate: "2015-04-10",
+      client: "BestBuy",
+      project: "Open Box",
+      reviewType: {
+        name: "Annual Review"
       },
-      "reviewStatus": {
-        "name": "Initiated"
+      reviewStatus: {
+        name: "Initiated"
       },
-      "reviewee": {
-        "firstName": "Jack",
-        "lastName": "Smith"
+      reviewee: {
+        firstName: "Jack",
+        lastName: "Smith"
       },
-      "reviewer": {
-        "firstName": "David",
-        "lastName": "Smith"
+      reviewer: {
+        firstName: "David",
+        lastName: "Smith"
       }
   }, {
-      "startDate": "2015-03-8",
-      "endDate": "2015-06-21",
-      "client": "Target",
-      "project": "AEM",
-      "reviewType": {
-        "name": "3 Month Review"
+      startDate: "2015-03-8",
+      endDate: "2015-06-21",
+      client: "Target",
+      project: "AEM",
+      reviewType: {
+        name: "3 Month Review"
       },
-      "reviewStatus": {
-        "name": "Joint Review"
+      reviewStatus: {
+        name: "Joint Review"
       },
-      "reviewee": {
-        "firstName": "John",
-        "lastName": "Doe"
+      reviewee: {
+        firstName: "John",
+        lastName: "Doe"
       },
-      "reviewer": {
-        "firstName": "Sam",
-        "lastName": "Jackson"
+      reviewer: {
+        firstName: "Sam",
+        lastName: "Jackson"
       }
   }, {
-      "startDate": "2015-03-4",
-      "endDate": "2015-08-7",
-      "client": "Midtronic",
-      "project": "iPhone App",
-      "reviewType": {
-        "name": "Engagement"
+      startDate: "2015-03-4",
+      endDate: "2015-08-7",
+      client: "Midtronic",
+      project: "iPhone App",
+      reviewType: {
+        name: "Engagement"
       },
-      "reviewStatus": {
-        "name": "GM Review"
+      reviewStatus: {
+        name: "GM Review"
       },
-      "reviewee": {
-        "firstName": "Jason",
-        "lastName": "White"
+      reviewee: {
+        firstName: "Jason",
+        lastName: "White"
       },
-      "reviewer": {
-        "firstName": "Joe",
-        "lastName": "Rose"
+      reviewer: {
+        firstName: "Joe",
+        lastName: "Rose"
       }
   }
 ];
@@ -162,5 +161,5 @@ angular.module('etmApp').controller('DashboardReviewsController', function ($sco
       value: 'reviewer.firstName'
     }
   ];
-
+$scope.loadReviews();
 });
