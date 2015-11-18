@@ -6,9 +6,13 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
 
   $scope.$parent.$watch('review', function (parentReview) {
     review = parentReview;
-    $scope.goals = review.goals || [];
+    if (review.id) {
+      Goal.query({reviewId: review.id}, function (goals) {
+        $scope.goals = goals;
+      });
+    }
   });
-  
+
   $scope.addGoal = function (ev) {
     $mdDialog.show({
       controller: 'GoalDetailController',
@@ -18,14 +22,15 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       locals: {
         goal: new Goal()
       }
-    })
-    .then(function (goal) {
-      goal.$save();
+    }).then(function (goal) {
+      goal.$save({reviewId: review.id});
       $scope.goals.push(goal);
     });
   };
   
   $scope.editGoal = function (goal, ev) {
+    goal.targetDate = new Date(goal.targetDate);
+    goal.completionDate = new Date(goal.completionDate);
     $mdDialog.show({
       controller: 'GoalDetailController',
       templateUrl: 'scripts/components/entities/review/goals/goal.detail.html',
@@ -34,9 +39,8 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       locals: {
         goal: goal
       }
-    })
-    .then(function (goal) {
-      goal.$update();
+    }).then(function (goal) {
+      goal.$update({reviewId: review.id});
     });
   };
   
@@ -50,6 +54,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       .targetEvent(ev);
     $mdDialog.show(confirmDelete).then(function () {
       $scope.goals.splice($scope.goals.indexOf(goal), 1);
+      Goal.delete(goal.review.id, goal.id);
     });
   };
   

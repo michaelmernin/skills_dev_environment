@@ -8,14 +8,17 @@
         <md-icon md-font-icon="fa fa-lg fa-circle-o"></md-icon>
       </span>
       <div class="md-list-item-text" layout="column">
-        <md-content layout-padding>
-          <h3>{{goal.name}}</h3>
+        <md-content>
+          <h3>Goal Title: {{goal.name}}</h3>
         </md-content>
-        <md-content layout-padding>
-          <h4>{{goal.targetDate | date:'MM/dd/yyyy'}}</h4>
+        <md-content>
+          <h4>Description: {{goal.description}}</h4>
         </md-content>
-        <md-content layout-padding>
-          <p>{{goal.notes}}</p>          
+        <md-content>
+          <h4>Target Date: {{goal.targetDate | date:'MM/dd/yyyy'}} - Completion Date: {{goal.completionDate | date:'MM/dd/yyyy'}}</h4>
+        </md-content>
+        <md-content>
+          <p>Notes: {{goal.notes}}</p>          
         </md-content>
       </div>
       <md-icon md-font-icon="fa fa-lg fa-trash" class="md-secondary" aria-label="Delete Goal" ng-click="deleteGoal(goal, $event)"></md-icon>

@@ -32,6 +32,9 @@ public class Goal implements Serializable {
 
     @Column(name = "note")
     private String note;
+    
+    @Column(name = "description")
+    private String description;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @JsonSerialize(using = CustomLocalDateSerializer.class)
@@ -75,7 +78,15 @@ public class Goal implements Serializable {
         this.note = note;
     }
 
-    public LocalDate getTargetDate() {
+    public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public LocalDate getTargetDate() {
         return targetDate;
     }
 
