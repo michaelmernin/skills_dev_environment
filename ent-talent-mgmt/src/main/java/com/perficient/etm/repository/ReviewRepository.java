@@ -26,8 +26,10 @@ public interface ReviewRepository extends JpaRepository<Review,Long>{
     List<Review> findCompletedEngagementsForUserWithinDates(@Param("userId") Long userId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     @PostFilter(PrePostUtils.Reviews.FILTER)
+    @Override
     List<Review> findAll();
     
     @PostAuthorize(PrePostUtils.Reviews.AUTHORIZE)
+    @Override
     Review findOne(Long id);
 }
