@@ -41,7 +41,7 @@ angular.module('etmApp').controller('DashboardReviewsController', function ($sco
 
   $scope.goToReview = function (reviewId) {
     if (reviewId) {
-      $state.go('review.edit', {id: review.id});
+      $state.go('review.edit', {id: reviewId});
     } else {
       $state.go('login');
     }
