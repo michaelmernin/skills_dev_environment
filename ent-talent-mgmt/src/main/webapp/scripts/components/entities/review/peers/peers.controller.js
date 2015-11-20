@@ -11,7 +11,7 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   });
   
   $scope.getMatches = function (query) {
-     return User.autocomplete({query: query}).$promise;
+     return User.autocomplete({query: query, reviewId: review.id}).$promise;
   };
   
   $scope.peerSelected = function (user) {
@@ -19,6 +19,7 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
       if (user.login != null) {
         $scope.peers.push(user);
         Peer.save({reviewId: review.id}, {id: user.id});
+        window.location.reload();
       }
     }  
  };
@@ -34,6 +35,7 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
    $mdDialog.show(confirmDelete).then(function () {
          $scope.peers.splice($scope.peers.indexOf(user), 1);
          Peer.delete({reviewId: review.id, id: user.id});
+         window.location.reload();
    });
  };
  

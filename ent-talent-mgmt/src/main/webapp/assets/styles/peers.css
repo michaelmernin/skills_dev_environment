@@ -1,9 +1,6 @@
-button#email-peers-button, button#delete-peers-button {
-  background-color: rgb(204,31,32);
-  color: white;
-  margin-top: -5px;
+#email-peers-icon, #delete-peers-icon {
+  margin-top: 15px;
+  color: red;
+  font-size: 28px;
 }
 
-.left-peers-column {
-	padding-left: 15px;
-}

@@ -5,26 +5,21 @@
 </div>
 
 <div ng-cloak layout="column" layout-padding>
-      <md-list>
-        <md-list-item ng-repeat="user in peers track by $index" class="md-3-line">
-          <div class="md-list-item-text">
-            <div layout="row">
-              <div class="left-peers-column" flex>
-                <h3>{{user.firstName}} {{user.lastName}}</h3>
-                <p>{{user.email}}</p>           
-              </div>
-              <div flex>
-                <h3 translate="review.peers.status">Status:</h3>
-                <p>Not Sent</p>
-              </div>
-              <div flex>
-                <md-button id="email-peers-button" class="md-primary" ng-click="sendEmail(user)" translate="review.peers.sendEmail">Send Email</md-button>
-              </div>
-              <div flex>
-                <md-button id="delete-peers-button" class="md-primary" ng-click="deletePeer(user, $event)" aria-label="Delete User" translate="review.peers.removePeer">Remove Peer From Review</md-button>
-              </div>
-            </div>
-          </div>
-        </md-list-item>
-      </md-list>
+      <table ng-table class="table">
+        <tr ng-repeat="user in peers | orderBy:'lastName'">
+          <td title="'Name'">
+            <h4>{{user.firstName}} {{user.lastName}}</h4>
+          </td>
+          <td>
+            <h4 translate="review.peers.status">Status:</h4>
+            <p>Not Sent</p>
+          </td>
+          <td>
+            <md-icon id="email-peers-icon" ng-click="sendEmail(user)" md-font-icon="fa fa-envelope-o fa-lg" class="ng-scope ng-isolate-scope md-default-theme md-font fa fa-envelope-o fa-lg"></md-icon>
+          </td>
+          <td>
+            <md-icon id="delete-peers-icon" ng-click="deletePeer(user, $event)" md-font-icon="fa fa-trash-o fa-lg" class="ng-scope ng-isolate-scope md-default-theme md-font fa fa-trash-o fa-lg"></md-icon>
+          </td>
+        </tr>
+      </table>
 </div>      

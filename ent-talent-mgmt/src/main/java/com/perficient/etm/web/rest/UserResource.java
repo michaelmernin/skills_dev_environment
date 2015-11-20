@@ -3,10 +3,13 @@ package com.perficient.etm.web.rest;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
+import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.security.AuthoritiesConstants;
 import com.perficient.etm.web.view.View;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.RolesAllowed;
@@ -36,6 +40,9 @@ public class UserResource {
 
     @Inject
     private UserRepository userRepository;
+    
+    @Inject
+    private ReviewRepository reviewRepository;
 
     /**
      * GET  /users -> get all the users.
@@ -113,12 +120,12 @@ public class UserResource {
     /**
      * GET  /users/autocomplete/query -> get all users with name containing query
      */
-    @RequestMapping(value = "/users/autocomplete/{query}",
+    @RequestMapping(value = "/users/autocomplete",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @JsonView(View.Public.class)
-    List<User> getUsersAutocomplete(@PathVariable String query) {
+    List<User> getUsersAutocomplete(@RequestParam String query, @RequestParam Long reviewId) {
         log.debug("REST request to get users for autocomplete");
         String[] splitQuery = query.split(" ");
         List<User> usersList = new ArrayList<User>();
@@ -127,6 +134,14 @@ public class UserResource {
         } else {
           usersList.addAll(userRepository.findUsersForAutocomplete(query));
         }
-        return usersList;
+        Review review = reviewRepository.findOne(reviewId);
+        Set<User> peers = review.getPeers();
+        List<User> filteredUsersList = new ArrayList<User>();
+        for (User u : usersList) {
+          if (!peers.contains(u)) {
+            filteredUsersList.add(u);
+          }
+        }
+        return filteredUsersList;
     }
 }

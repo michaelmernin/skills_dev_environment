@@ -42,9 +42,8 @@ angular.module('etmApp').factory('User', function ($resource, DateUtils) {
       }
     },
     'autocomplete': {
-    	url: 'api/users/autocomplete/:query',
+    	url: 'api/users/autocomplete',
     	method: 'GET',
-    	params: {query: '@query'},
     	isArray: true
     }
   });
