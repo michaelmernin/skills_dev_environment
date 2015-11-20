@@ -10,6 +10,7 @@ import com.perficient.etm.utils.SpringAppTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -22,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static com.perficient.etm.utils.AuthenticationTestExecutionListener.setCurrentUser;
 
 /**
  * Test class for the UserResource REST controller.
@@ -122,9 +122,9 @@ public class UserResourceTest extends SpringAppTest {
     }
 
     @Test
+    @WithUserDetails("dev.user3")
     public void testGetUserCounselees() throws Exception {
         // Get the counselees for the authenticated counselor
-        setCurrentUser(userRepository.findOne(5L));
         ResultActions result = restUserMockMvc.perform(get("/api/counselees")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

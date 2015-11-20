@@ -141,6 +141,7 @@ dependencies {
     compile group: 'org.springframework.security', name: 'spring-security-data', version: spring_security_version
     compile group: 'org.springframework.security', name: 'spring-security-web', version: spring_security_version
     compile group: 'org.springframework.security', name: 'spring-security-ldap', version: spring_security_version
+    compile group: 'org.springframework.security', name: 'spring-security-test', version: spring_security_version
     compile group: 'org.apache.directory.server', name: 'apacheds-server-jndi', version: apacheds_server_version
     compile group: 'org.springframework.cloud', name: 'spring-cloud-cloudfoundry-connector', version: spring_cloud_version
     compile group: 'org.springframework.cloud', name: 'spring-cloud-spring-service-connector', version: spring_cloud_version
