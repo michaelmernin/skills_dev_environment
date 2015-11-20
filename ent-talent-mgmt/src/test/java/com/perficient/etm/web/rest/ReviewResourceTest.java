@@ -9,12 +9,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -83,7 +82,6 @@ public class ReviewResourceTest extends SpringAppTest {
     }
 
     @Test
-    @Transactional
     public void createReview() throws Exception {
         int count = (int) reviewRepository.count();
 
@@ -110,7 +108,7 @@ public class ReviewResourceTest extends SpringAppTest {
     }
 
     @Test
-    @Transactional
+    @WithUserDetails("dev.user2")
     public void getAllReviews() throws Exception {
         int count = (int) reviewRepository.count();
         Review review = reviewRepository.findOne(1L);
@@ -133,7 +131,7 @@ public class ReviewResourceTest extends SpringAppTest {
     }
 
     @Test
-    @Transactional
+    @WithUserDetails("dev.user2")
     public void getReview() throws Exception {
         // Initialize the database
         reviewRepository.saveAndFlush(review);
@@ -154,7 +152,7 @@ public class ReviewResourceTest extends SpringAppTest {
     }
 
     @Test
-    @Transactional
+    @WithUserDetails("dev.user2")
     public void getNonExistingReview() throws Exception {
         // Get the review
         restReviewMockMvc.perform(get("/api/reviews/{id}", 404L))
@@ -162,7 +160,7 @@ public class ReviewResourceTest extends SpringAppTest {
     }
 
     @Test
-    @Transactional
+    @WithUserDetails("dev.user2")
     public void updateReview() throws Exception {
         int count = (int) reviewRepository.count();
         
@@ -199,7 +197,7 @@ public class ReviewResourceTest extends SpringAppTest {
     }
 
     @Test
-    @Transactional
+    @WithUserDetails("dev.user2")
     public void deleteReview() throws Exception {
         int count = (int) reviewRepository.count();
         
