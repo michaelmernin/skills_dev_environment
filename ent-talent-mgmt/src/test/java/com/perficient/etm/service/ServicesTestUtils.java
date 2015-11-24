@@ -1,5 +1,6 @@
 package com.perficient.etm.service;
 
+import org.activiti.engine.runtime.ProcessInstance;
 import org.mockito.Mockito;
 
 import com.perficient.etm.domain.Review;
@@ -52,9 +53,12 @@ public class ServicesTestUtils {
 		Review review = Mockito.mock(Review.class);
 		User reviewer = Mockito.mock(User.class);
 		Mockito.when(reviewer.getId()).thenReturn(1L);
+		Mockito.when(reviewer.getEmail()).thenReturn("reviewer@perficient.com");
 		Mockito.when(review.getReviewer()).thenReturn(reviewer);
+		
 		User reviewee = Mockito.mock(User.class);
 		Mockito.when(reviewee.getId()).thenReturn(2L);
+		Mockito.when(reviewee.getEmail()).thenReturn("reviewee@perficient.com");
 		Mockito.when(review.getReviewee()).thenReturn(reviewee);
 		
 		return new User[]{reviewer, reviewee};
@@ -83,6 +87,17 @@ public class ServicesTestUtils {
 		Mockito.when(type.getName()).thenReturn("Annual Review");
 		
 		return type;
+	}
+	/**
+	 * Invokes the createPeerReview method of the passed ProcessService
+	 * object using two mock users and returns the id of the new process
+	 * @param processSvc The ProcessService object where to invoke the
+	 * method in
+	 * @return The String id of the started process
+	 */
+	public static String startPeerReview(ProcessService processSvc){
+		User[] users = createMockReviewUsers();
+		return processSvc.createPeerReview(users[0], users[1]);
 	}
 	
 }

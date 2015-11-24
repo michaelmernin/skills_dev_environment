@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewType;
+import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 
 
@@ -48,6 +49,13 @@ public class ProcessService {
 		return processInstance.getId();
 	}
 
+	/**
+	 * Cancels a process with the specified process Id in the activiti engine.
+	 * It returns false if the process with the specified id was not found in the
+	 * engine
+	 * @param processId The String process Id in the activiti engine to cancel
+	 * @return True if it was cancelled correctly. 
+	 */
 	public boolean cancel(String processId){
 		try{
 			runtimeSvc.deleteProcessInstance(processId, "Process Canceled");
@@ -56,6 +64,26 @@ public class ProcessService {
 			log.info("Unable to cancel process with InstaceId {0}",processId);
 		}
 		return false;
+	}
+	
+	/**
+	 * Starts a new Peer Review process in the acitivi engine and returns the 
+	 * id of the new started process. This process is defined in the 
+	 * peer_review.bpmn20.xml file.
+	 * @param reviewee The User this peer review is for
+	 * @param peer The User (peer) that should give feedback to. The peer review
+	 * task will be assigned to this user
+	 * @return String with the id of the process started in the activiti engine
+	 */
+	public String createPeerReview(User reviewee, User peer){
+		Map<String, Object> variables = new HashMap<>();
+		variables.put("Reviewee",reviewee.getId());
+		variables.put("Peer", peer.getId());
+		variables.put("peerEmail", peer.getEmail());
+		
+		ProcessInstance pId = 
+				runtimeSvc.startProcessInstanceByKey(ReviewTypeProcess.PEER.getProcessId(),variables );
+		return pId.getId();
 	}
 	
 }

@@ -4,6 +4,9 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.IntegrationTestPropertiesListener;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,6 +29,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class SpringAppTest {
 
+	private static final Logger log = LoggerFactory.getLogger("SpringAppTest");
+	
     @Inject
     protected ApplicationContext context;
 
@@ -37,4 +42,9 @@ public class SpringAppTest {
         assertThat(context).isNotNull();
         assertThat(objectMapper).isNotNull();
     }
+
+	public Logger getLog() {
+		return log;
+	}
+    
 }

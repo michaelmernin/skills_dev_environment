@@ -4,7 +4,8 @@ import com.perficient.etm.domain.ReviewType;
 
 public enum ReviewTypeProcess {
 	
-	ANNUAL("annualReview");
+	ANNUAL("annualReview"),
+	PEER("peerReview");
 	
 	private final String processId;
 	

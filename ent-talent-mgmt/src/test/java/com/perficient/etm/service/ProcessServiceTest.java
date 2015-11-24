@@ -46,5 +46,10 @@ public class ProcessServiceTest extends SpringAppTest {
 		assertFalse("Cancelation of a non existing process should return false",result);
 	}
 	
+	@Test
+	public void testStartPeerReview(){
+		String id = ServicesTestUtils.startPeerReview(processSvc);
+		assertNotNull("Id of the peer review process should not be null", id);
+	}
 	
 }

@@ -1,5 +1,30 @@
 package com.perficient.etm.domain;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -7,17 +32,6 @@ import com.perficient.etm.domain.util.CustomLocalDateSerializer;
 import com.perficient.etm.domain.util.ISO8601LocalDateDeserializer;
 import com.perficient.etm.domain.util.PeerSerializer;
 import com.perficient.etm.domain.util.PublicSerializer;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDate;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A Review.
@@ -94,6 +108,9 @@ public class Review implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Goal> goals;
 
+    @Transient
+    private Map<Long,String> peerReviewProcesses = new HashMap<>();
+    
     public Long getId() {
         return id;
     }
@@ -228,8 +245,16 @@ public class Review implements Serializable {
         }
         reviewStatus = null;
     }
+    
+    public Map<Long,String> getPeerReviewProcesses() {
+		return peerReviewProcesses;
+	}
 
-    @Override
+	public void setPeerReviewProcesses(Map<Long,String> peerReviewProcesses) {
+		this.peerReviewProcesses = peerReviewProcesses;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

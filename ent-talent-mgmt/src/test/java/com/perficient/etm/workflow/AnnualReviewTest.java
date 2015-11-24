@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.ActivitiObjectNotFoundException;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.ProcessInstanceHistoryLog;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.junit.Test;
@@ -23,6 +25,7 @@ import com.perficient.etm.utils.SpringAppTest;
 public class AnnualReviewTest extends SpringAppTest {
 	@Autowired private RuntimeService runtimeSvc;
 	@Autowired private TaskService taskSvc;
+	@Autowired private HistoryService historySvc;
 	
 	@Test
     public void shouldCompleteReview() {
@@ -36,7 +39,7 @@ public class AnnualReviewTest extends SpringAppTest {
 		Map<String,Object> variables = new HashMap<>();
 		variables.put("Reviewee", "Alex");
 		variables.put("Reviewer", "Craig");
-		
+		variables.put("Director", "David");
 		return variables;
 	}
 	
@@ -99,7 +102,7 @@ public class AnnualReviewTest extends SpringAppTest {
 		
 		//Directors review
 		t = completeAndGetNextTask(t,processInstance.getId());
-		assertNotNullAndAsignee(t,"Craig");
+		assertNotNullAndAsignee(t,"David");
 		
 		//Joint review
 		t = completeAndGetNextTask(t,processInstance.getId());
@@ -112,10 +115,15 @@ public class AnnualReviewTest extends SpringAppTest {
 		//Process should be done by now
 		t = completeAndGetNextTask(t,processInstance.getId());
 		assertNull(t);
-		
-		//TODO check this if historical data is enabled and check for isEnded() method. might be different
+		//Save the process Instance Id
+		String processInstanceId = processInstance.getId();
+		//check this if historical data is enabled and check for isEnded() method. might be different
 		processInstance = runtimeSvc.createProcessInstanceQuery().processInstanceId(processInstance.getId()).singleResult();
 		assertNull(processInstance);
+		
+		ProcessInstanceHistoryLog result = historySvc.createProcessInstanceHistoryLogQuery(processInstanceId).singleResult();
+		assertNotNull(result);
+		assertNotNull("There should be an end time for the finished process",result.getEndTime());
 	}
 	
 	@Test

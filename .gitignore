@@ -42,3 +42,4 @@ src/main/webapp/dist
 build
 /bin/
 docs/er-diagram.mwb.bak
+/ent-talent-mgmt/.nb-gradle/

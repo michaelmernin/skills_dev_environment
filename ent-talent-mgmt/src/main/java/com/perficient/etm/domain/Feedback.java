@@ -1,5 +1,20 @@
 package com.perficient.etm.domain;
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -7,12 +22,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.perficient.etm.domain.util.PublicSerializer;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
 
 /**
  * A Feedback.
@@ -45,6 +54,10 @@ public class Feedback implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Rating> ratings = new HashSet<>();
 
+    //@Transient
+    @Column(name="activiti_process_id")
+    private String feedbackProcessId;
+    
     public Long getId() {
         return id;
     }
@@ -94,8 +107,22 @@ public class Feedback implements Serializable {
     public void setRatings(Set<Rating> ratings) {
         this.ratings = ratings;
     }
+    
+    public String getFeedbackProcessId() {
+		return feedbackProcessId;
+	}
 
-    @Override
+	public void setFeedbackProcessId(String feedbackProcessId) {
+		this.feedbackProcessId = feedbackProcessId;
+	}
+
+	public boolean belongsToAuthor(User peer){
+		if (peer == null || this.author == null)
+			return false;
+		return (this.author.getId().equals(peer.getId()));
+	}
+	
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
