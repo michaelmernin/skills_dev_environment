@@ -26,7 +26,7 @@ import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.repository.UserRepository;
-import com.perficient.etm.service.ProcessService;
+import com.perficient.etm.service.activiti.ProcessService;
 
 /**
  * REST controller for managing Review.

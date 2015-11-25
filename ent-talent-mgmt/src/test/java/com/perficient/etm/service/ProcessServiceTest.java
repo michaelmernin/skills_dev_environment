@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 
 import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.exception.ReviewProcessNotFound;
+import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.utils.SpringAppTest;
 
 public class ProcessServiceTest extends SpringAppTest {

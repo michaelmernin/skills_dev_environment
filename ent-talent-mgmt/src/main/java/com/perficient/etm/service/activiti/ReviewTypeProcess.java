@@ -1,4 +1,4 @@
-package com.perficient.etm.service;
+package com.perficient.etm.service.activiti;
 
 import com.perficient.etm.domain.ReviewType;
 

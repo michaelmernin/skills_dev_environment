@@ -33,7 +33,7 @@ import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.repository.ReviewRepository;
-import com.perficient.etm.service.ProcessService;
+import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.utils.ResourceTestUtils;
 import com.perficient.etm.utils.SpringAppTest;
 
