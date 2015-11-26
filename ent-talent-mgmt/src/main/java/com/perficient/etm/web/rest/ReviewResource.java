@@ -3,8 +3,6 @@ package com.perficient.etm.web.rest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
 import javax.inject.Inject;
 import javax.validation.Valid;
 
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Review;
-import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.web.validator.ReviewValidator;

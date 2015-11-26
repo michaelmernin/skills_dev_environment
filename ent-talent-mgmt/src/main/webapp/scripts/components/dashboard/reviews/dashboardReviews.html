@@ -1,0 +1,48 @@
+<div>
+  <h2>Reviews</h2>
+  <md-divider></md-divider>
+  <div>
+    <div layout-gt-sm="row" layout-sm="column">
+      <md-input-container flex-gt-sm="50">
+        <label for="query">Filter</label>
+        <input type="text" id="query" ng-model="query">
+      </md-input-container>
+      <md-input-container flex-gt-sm>
+        <label>Order By</label>
+        <md-select ng-model="orderByExpression">
+          <md-option ng-repeat="orderByItem in orderByItems" value="{{ orderByItem.value }}">
+            {{ orderByItem.key }}
+          </md-option>
+        </md-select>
+      </md-input-container>
+      <md-switch class="md-primary" ng-model="reverseOrder" aria-label="reverse order switch" ng-show="orderByExpression">
+        Reverse Order
+      </md-switch>
+    </div>
+    <md-list flex-gt-sm>
+      <md-list-item class="md-3-line" ng-repeat="review in reviews | orderBy:orderByExpression:reverseOrder | filter:reviewSearch" ng-click="goToReview(review.id)">
+        <div layout="row">
+          <div layout-padding layout="column">
+            <div class="md-title" style=" width: 50px; height: 50px; position: absolute; line-height: 50px; text-align: center;">
+              {{ review.reviewStatus.name.substring(0,2).toUpperCase() }}
+            </div>
+            <md-tooltip>
+              {{ review.reviewStatus.name }}
+            </md-tooltip>
+            <md-progress-circular md-mode="determinate" value="{{ getReviewProgress(review.reviewStatus) | number:0 }}"> </md-progress-circular>
+          </div>
+          <div class="md-list-item-text" layout="column">
+            <h3>
+              {{ review.reviewType.name }} for {{ review.reviewee.firstName }} {{ review.reviewee.lastName }} by 
+              {{ review.reviewer.firstName }} {{ review.reviewer.lastName }}
+            </h3>
+            <h4 ng-show="{{ !!review.project || !!review.client }}">
+              {{ review.project }}<span ng-show="{{ !!review.project && !!review.client }}"> at </span>{{ review.client }}
+            </h4>
+            <p hide-sm>{{ review.startDate | date:'MM/dd/yyyy' }} to {{ review.endDate | date:'MM/dd/yyyy' }}</p>
+          </div>
+        </div>
+      </md-list-item>
+    </md-list>
+  </div>
+</div>

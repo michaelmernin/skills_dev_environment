@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -32,6 +33,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     
     @Inject
     private MessageSource messageSource;
+    
+    @ExceptionHandler({ AccessDeniedException.class })
+    protected ResponseEntity<Object> handleAccessDenied(AccessDeniedException exception, WebRequest request) {
+        return handleExceptionInternal(exception, null, buildHeaders(), HttpStatus.NOT_FOUND, request);
+    }
 
     @ExceptionHandler({ InvalidRequestException.class })
     protected ResponseEntity<Object> handleInvalidRequest(InvalidRequestException exception, WebRequest request) {
