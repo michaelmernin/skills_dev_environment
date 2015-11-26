@@ -52,7 +52,7 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
   };
 
   $scope.getAvgScore = function (ratings) {
-    return Evaluation.avgScore(ratings);
+	return Evaluation.avgScore(ratings);
   };
 
   $scope.getRatings = function (questions, property) {
@@ -67,6 +67,11 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
         }
       }
     });
+    if(this.$parent.category == "Core Competencies"){
+		Evaluation.setCoreAverage(ratings, property);
+	}else if(this.$parent.category == "Internal Contributions"){
+		Evaluation.setInternalAverage(ratings, property);
+	}
     return ratings;
   };
 
