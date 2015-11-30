@@ -54,7 +54,7 @@ public class PeerService {
      */
 	public Review addPeerFeedback(Long reviewId, User peer) {
     	log.debug("Adding peer feedback for review {} and peer {}", reviewId, peer.getEmployeeId());
-        Review review = reviewSvc.getReview(reviewId);
+        Review review = reviewSvc.findById(reviewId);
     	Feedback f = new Feedback();
     	f.setAuthor(peer);
     	f.setReview(review);
@@ -81,7 +81,7 @@ public class PeerService {
 		}
         processSvc.cancel(feedback.get().getFeedbackProcessId());
         // TODO: Set the feedback status to cancelled and save. Or does that happen by Activiti?
-        Review review = reviewSvc.getReview(reviewId);
+        Review review = reviewSvc.findById(reviewId);
         User peer = userSvc.getUser(peerId);
         review.getPeers().remove(peer);
         reviewSvc.update(review);

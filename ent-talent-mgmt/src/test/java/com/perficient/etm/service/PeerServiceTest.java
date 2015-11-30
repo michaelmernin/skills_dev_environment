@@ -68,7 +68,7 @@ public class PeerServiceTest extends SpringAppTest {
 		String employeeId = "empId";
 		User peer = mock(User.class);
 		when(peer.getEmployeeId()).thenReturn(employeeId);
-		when(reviewSvc.getReview(reviewId)).thenReturn(review);
+		when(reviewSvc.findById(reviewId)).thenReturn(review);
 		when(review.getPeers()).thenReturn(peers);
 		when(review.getFeedback()).thenReturn(feedbacks);
 		peerSvc.addPeerFeedback(reviewId, peer);
@@ -111,7 +111,7 @@ public class PeerServiceTest extends SpringAppTest {
 		when(reviewSvc.getFeedbackForPeer(reviewId, peerId)).thenReturn(Optional.of(peerFeedback));		
 		when(peerFeedback.getFeedbackProcessId()).thenReturn(feedbackProcessId);
 		when(processSvc.cancel(feedbackProcessId)).thenReturn(true);
-		when(reviewSvc.getReview(reviewId)).thenReturn(review);
+		when(reviewSvc.findById(reviewId)).thenReturn(review);
 		when(userSvc.getUser(peerId)).thenReturn(peer);
 		when(review.getPeers()).thenReturn(peers);
 
