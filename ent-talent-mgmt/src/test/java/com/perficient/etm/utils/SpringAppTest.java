@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.perficient.etm.Application;
+import com.perficient.etm.service.ReviewService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,6 +42,7 @@ public class SpringAppTest {
     public void testContext() {
         assertThat(context).isNotNull();
         assertThat(objectMapper).isNotNull();
+        assertThat(context.getBean(ReviewService.class)).isNotNull();
     }
 
 	public Logger getLog() {

@@ -111,6 +111,9 @@ public class Review implements Serializable {
     @Transient
     private Map<Long,String> peerReviewProcesses = new HashMap<>();
     
+    @Transient
+    private String reviewProcessId;
+    
     public Long getId() {
         return id;
     }
@@ -252,6 +255,14 @@ public class Review implements Serializable {
 
 	public void setPeerReviewProcesses(Map<Long,String> peerReviewProcesses) {
 		this.peerReviewProcesses = peerReviewProcesses;
+	}
+
+	public String getReviewProcessId() {
+		return reviewProcessId;
+	}
+
+	public void setReviewProcessId(String reviewProcessId) {
+		this.reviewProcessId = reviewProcessId;
 	}
 
 	@Override

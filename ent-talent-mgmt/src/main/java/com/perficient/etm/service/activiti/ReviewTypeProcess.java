@@ -18,6 +18,8 @@ public enum ReviewTypeProcess {
 	}
 	
 	public static ReviewTypeProcess fromReviewType(ReviewType type){
+		if (type == null)
+			return null;
 		switch (type.getName()){
 		case "Annual Review":
 			return ANNUAL;

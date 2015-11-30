@@ -22,6 +22,6 @@ public class ReviewProcessNotFound extends Exception {
 	}
 	
 	public ReviewProcessNotFound(ReviewType type){
-	    super("Review type "+type.getName()+" not found");	
+	    super("Review type "+((type != null)?type.getName():" null ")+" not found");	
 	}
 }
