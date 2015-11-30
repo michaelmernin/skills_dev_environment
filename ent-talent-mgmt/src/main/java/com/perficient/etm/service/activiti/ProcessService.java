@@ -30,23 +30,18 @@ public class ProcessService {
 	@Inject
 	private RuntimeService runtimeSvc;
 
-	public String initiateProcess(ReviewType reviewType, Review review) throws ReviewProcessNotFound {
-		/*
-		 * Start the process in Activiti
-		 * set the process ID in review
-		 * set the status on the review
-		 * save the review
-		 */
-		ReviewTypeProcess processType = ReviewTypeProcess.fromReviewType(reviewType);
-		if (processType == null)
-			throw new ReviewProcessNotFound(reviewType);
-		
+	public String initiateProcess(ReviewTypeProcess reviewType, Review review) throws ReviewProcessNotFound {
+		if (reviewType == null)
+			throw new ReviewProcessNotFound("null");
 		Map<String, Object> variables = new HashMap<>();
 		variables.put("Reviewer", review.getReviewer().getId());
 		variables.put("Reviewee", review.getReviewee().getId());
-		
-		ProcessInstance processInstance = runtimeSvc.startProcessInstanceByKey(processType.getProcessId(), variables );
-		return processInstance.getId();
+		try{
+			ProcessInstance processInstance = runtimeSvc.startProcessInstanceByKey(reviewType.getProcessId(), variables );
+			return processInstance.getId();
+		}catch(Exception e){
+			throw new ReviewProcessNotFound("Unable to start review process",e);
+		}
 	}
 
 	/**

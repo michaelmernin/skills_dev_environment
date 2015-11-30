@@ -64,7 +64,6 @@ public class PeerResource {
             throw new InvalidRequestException("Invalid review update", result);
         }
         Review review = reviewRepository.getOne(reviewId);
-        createPeerReview(review,peer);
         return ResponseEntity.created(new URI("/api/reviews/" + reviewId + "/peers/" + peer.getId())).build();
     }
 

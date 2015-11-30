@@ -3,6 +3,7 @@ package com.perficient.etm.web.rest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.validation.Valid;
 
@@ -23,7 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.exception.InvalidRequestException;
+import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.repository.ReviewRepository;
+import com.perficient.etm.service.ReviewService;
 import com.perficient.etm.web.validator.ReviewValidator;
 
 /**
@@ -36,9 +39,6 @@ public class ReviewResource {
     private final Logger log = LoggerFactory.getLogger(ReviewResource.class);
 
     @Inject
-    private ReviewRepository reviewRepository;
-    
-    @Inject
     private ReviewValidator reviewValidator;
     
     @InitBinder
@@ -46,24 +46,28 @@ public class ReviewResource {
         binder.setValidator(reviewValidator);
     }
 
+    @Inject
+    private ReviewService reviewSvc;
+    
     /**
      * POST  /reviews -> Create a new review.
+     * @throws ReviewProcessNotFound If the type specified in the Review.getReviewType method has
+     * not been registered in the back-end services. 
      */
     @RequestMapping(value = "/reviews",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Review> create(@Valid @RequestBody Review review, BindingResult result) {
+    public ResponseEntity<Review> create(@Valid @RequestBody Review review, BindingResult result) throws ReviewProcessNotFound {
         log.debug("REST request to create Review : {}", review);
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid new review", result);
         }
-        review.sanitize(true);
-        review = reviewRepository.save(review);
+        getReviewSvc().startReviewProcess(review);
         return new ResponseEntity<>(review, HttpStatus.CREATED);
     }
 
-    /**
+    /**	
      * GET  /reviews -> get all the reviews.
      */
     @RequestMapping(value = "/reviews",
@@ -72,7 +76,7 @@ public class ReviewResource {
     @Timed
     public List<Review> getAll() {
         log.debug("REST request to get all Reviews");
-        return reviewRepository.findAll();
+        return getReviewSvc().findAll();
     }
 
     /**
@@ -84,7 +88,7 @@ public class ReviewResource {
     @Timed
     public ResponseEntity<Review> get(@PathVariable Long id) {
         log.debug("REST request to get Review : {}", id);
-        return Optional.ofNullable(reviewRepository.findOne(id))
+        return Optional.ofNullable(getReviewSvc().findById(id))
             .map(review -> new ResponseEntity<>(
                 review,
                 HttpStatus.OK))
@@ -103,8 +107,7 @@ public class ReviewResource {
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid review update", result);
         }
-        review.sanitize(false);
-        review = reviewRepository.save(review);
+        getReviewSvc().update(review);
         return new ResponseEntity<>(review, HttpStatus.OK);
     }
 
@@ -117,7 +120,7 @@ public class ReviewResource {
     @Timed
     public void delete(@PathVariable Long id) {
         log.debug("REST request to delete Review : {}", id);
-        reviewRepository.delete(id);
+        getReviewSvc().delete(id);
     }
    
     
@@ -129,7 +132,7 @@ public class ReviewResource {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public List<Review> getEngagements(@PathVariable Long id) {
-        Review review = reviewRepository.findOne(id);
+        Review review = getReviewSvc().findById(id);
         //return reviewRepository.findCompletedEngagementsForUserWithinDates(review.getReviewee().getId(), review.getStartDate(), review.getEndDate());
         List<Review> enagagements = new ArrayList<Review>();
         Review engagement = new Review();
@@ -152,4 +155,14 @@ public class ReviewResource {
         enagagements.add(engagement);
         return enagagements;
     }
+
+	public ReviewService getReviewSvc() {
+		return reviewSvc;
+	}
+
+	public void setReviewSvc(ReviewService reviewSvc) {
+		this.reviewSvc = reviewSvc;
+	}
+    
+    
 }

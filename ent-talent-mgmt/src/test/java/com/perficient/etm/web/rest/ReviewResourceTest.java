@@ -19,7 +19,6 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -27,12 +26,12 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.repository.ReviewRepository;
+import com.perficient.etm.service.ReviewService;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.utils.ResourceTestUtils;
 import com.perficient.etm.utils.SpringAppTest;
@@ -71,8 +70,12 @@ public class ReviewResourceTest extends SpringAppTest {
 
     private Review review;
     
+    @Inject
+    private ReviewService reviewService;
+    
     @Mock
     private ProcessService processService;
+    
     
     /*
      * The resource to be used during the test. Keep globally to update properties when 
@@ -83,8 +86,10 @@ public class ReviewResourceTest extends SpringAppTest {
     @PostConstruct
     public void setup() throws ReviewProcessNotFound {
         MockitoAnnotations.initMocks(this);
-        ReflectionTestUtils.setField(reviewResource, "reviewRepository", reviewRepository);
-        //ReflectionTestUtils.setField(reviewResource, "processSvc", processService);
+        //ReflectionTestUtils.setField(reviewResource, "reviewRepository", reviewRepository);
+        ReflectionTestUtils.setField(reviewResource, "reviewSvc", reviewService);
+        //Make the process service of the review service mock in order to avoid activiti to be invoked
+        reviewService.setProcessSvc(processService);
         this.restReviewMockMvc = MockMvcBuilders.standaloneSetup(reviewResource).build();
     }
 
@@ -99,9 +104,13 @@ public class ReviewResourceTest extends SpringAppTest {
         review.setRole(DEFAULT_ROLE);
         review.setResponsibilities(DEFAULT_RESPONSIBILITIES);
         review.setRating(DEFAULT_RATING);
+        ReviewType reviewType = new ReviewType();
+        reviewType.setName("Annual Review");
+		review.setReviewType(reviewType);
     }
 
     //@Test
+    @WithUserDetails("dev.user2")
     public void createReview() throws Exception {
         int count = (int) reviewRepository.count();
 

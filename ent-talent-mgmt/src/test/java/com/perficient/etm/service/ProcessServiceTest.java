@@ -8,11 +8,10 @@ import javax.inject.Inject;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.service.activiti.ProcessService;
+import com.perficient.etm.service.activiti.ReviewTypeProcess;
 import com.perficient.etm.utils.SpringAppTest;
 
 public class ProcessServiceTest extends SpringAppTest {
@@ -27,9 +26,7 @@ public class ProcessServiceTest extends SpringAppTest {
 	
 	@Test(expected = ReviewProcessNotFound.class)
 	public void testStartReviewProcessWithNonExistingType() throws ReviewProcessNotFound{
-		ReviewType type = Mockito.mock(ReviewType.class);
-		Mockito.when(type.getName()).thenReturn("Non Existing");
-		
+		ReviewTypeProcess type = null;
 		ServicesTestUtils.startReviewProcess(processSvc, type);
 		Assert.fail("Instance id should not be returned for a non existing process");
 	}
