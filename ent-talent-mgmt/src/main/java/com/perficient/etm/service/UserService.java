@@ -51,6 +51,10 @@ public class UserService {
         });
     }
 
+    public User getUser(Long userId) {
+    	return userRepository.getOne(userId);
+    }
+    
     public User getUserWithAuthorities() {
         return userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())
             .orElseGet(() -> {
