@@ -13,15 +13,15 @@ public class ReviewAuthorizer extends Authorizer {
     public static final String FILTER = TYPE + FILTER_METHOD;
 
     public static boolean authorize(Review review) {
-        return getLogin().map(login -> {
-	        return Optional.ofNullable(review).map(optionalReview -> {
-	           	return  isReviewer(optionalReview, login)
+    	return Optional.ofNullable(review).map(optionalReview -> {
+    		return getLogin().map(login -> {
+    			return  isReviewer(optionalReview, login)
 	           			|| isReviewee(optionalReview, login)
 	           			|| isCounselor(optionalReview, login)
 	           			|| isGeneralManager(optionalReview, login)
 	           			|| isPeer(optionalReview, login);
-	           }).orElse(false);
-	        }).orElse(false);
+    		}).orElse(false);
+    	}).orElse(false);
     }
 
     public static boolean filter(Review review) {
