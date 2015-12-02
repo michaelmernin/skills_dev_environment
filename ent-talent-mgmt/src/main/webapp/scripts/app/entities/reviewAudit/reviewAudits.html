@@ -1,0 +1,68 @@
+<div>
+    <h2>ReviewAudits</h2>
+    <jh-alert></jh-alert>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary" ui-sref="reviewAudit.new">
+                    <span class="glyphicon glyphicon-flash"></span> <span>Create a new ReviewAudit</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>ReviewAuditId</th>
+                    <th>Date</th>
+                    <th>Comment</th>
+                    <th>review</th>
+                    <th>user</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="reviewAudit in reviewAudits track by reviewAudit.id">
+                    <td><a ui-sref="reviewAudit.detail({id:reviewAudit.id})">{{reviewAudit.id}}</a></td>
+                    <td>{{reviewAudit.reviewAuditId}}</td>
+                        <td>{{reviewAudit.date | date:'mediumDate'}}</td>
+                    <td>{{reviewAudit.comment}}</td>
+                    <td>
+                        <a ui-sref="review.detail({id:reviewAudit.review.id})">{{reviewAudit.review.title}}</a>
+                    </td>
+                    <td>
+                        {{reviewAudit.user.login}}
+                    </td>
+                    <td>
+                        <button type="submit"
+                                ui-sref="reviewAudit.detail({id:reviewAudit.id})"
+                                class="btn btn-info btn-sm">
+                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
+                        </button>
+                        <button type="submit"
+                                ui-sref="reviewAudit.edit({id:reviewAudit.id})"
+                                class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
+                        </button>
+                        <button type="submit"
+                                ui-sref="reviewAudit.delete({id:reviewAudit.id})"
+                                class="btn btn-danger btn-sm">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pager">
+                <li ng-show="links['first'] >= 0" ng-click="loadPage(links['first'])"><a href="#">&lt;&lt;</a></li>
+                <li ng-show="page > 0" ng-click="loadPage(links['prev'] || 0)"><a href="#">&lt;</a></li>
+                <li ng-show="links['next']" ng-click="loadPage(links['next'])"><a href="#">&gt;</a></li>
+                <li ng-show="links['last'] > 0" ng-click="loadPage(links['last'])"><a href="#">&gt;&gt;</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>

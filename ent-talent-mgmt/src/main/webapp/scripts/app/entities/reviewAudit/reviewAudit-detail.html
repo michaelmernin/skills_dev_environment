@@ -1,0 +1,62 @@
+
+<div>
+    <h2><span>ReviewAudit</span> {{reviewAudit.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <span>ReviewAuditId</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{reviewAudit.reviewAuditId}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Date</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{reviewAudit.date | date:'mediumDate'}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Comment</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{reviewAudit.comment}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>review</span>
+                </td>
+                <td>
+                    <a class="form-control-static" ui-sref="review.detail({id:reviewAudit.review.id})">{{reviewAudit.review.title}}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>user</span>
+                </td>
+                <td>
+                    {{reviewAudit.user.login}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+</div>
