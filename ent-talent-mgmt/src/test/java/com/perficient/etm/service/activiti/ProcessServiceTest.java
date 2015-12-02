@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.service.ServicesTestUtils;
 import com.perficient.etm.service.activiti.ProcessService;
@@ -20,20 +21,20 @@ public class ProcessServiceTest extends SpringAppTest {
 	ProcessService processSvc;
 	
 	@Test
-	public void basicSetup() throws ReviewProcessNotFound {
+	public void basicSetup() throws ETMException {
 		String instanceId = ServicesTestUtils.startAnnualReviewProcess(processSvc);
 		assertNotNull("Instance of the processId should not be null", instanceId);
 	}
 	
 	@Test(expected = ReviewProcessNotFound.class)
-	public void testStartReviewProcessWithNonExistingType() throws ReviewProcessNotFound{
+	public void testStartReviewProcessWithNonExistingType() throws ETMException{
 		ReviewTypeProcess type = null;
 		ServicesTestUtils.startReviewProcess(processSvc, type);
 		Assert.fail("Instance id should not be returned for a non existing process");
 	}
 	
 	@Test
-	public void testCancel() throws ReviewProcessNotFound{
+	public void testCancel() throws ETMException{
 		String instanceId = ServicesTestUtils.startAnnualReviewProcess(processSvc);
 		boolean result = processSvc.cancel(instanceId);
 		assertTrue("Cancelation of an existing process should return true", result);

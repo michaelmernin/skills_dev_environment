@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
-import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.service.ReviewService;
 import com.perficient.etm.web.validator.ReviewValidator;
 
@@ -58,7 +58,7 @@ public class ReviewResource {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Review> create(@Valid @RequestBody Review review, BindingResult result) throws ReviewProcessNotFound {
+    public ResponseEntity<Review> create(@Valid @RequestBody Review review, BindingResult result) throws ETMException {
         log.debug("REST request to create Review : {}", review);
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid new review", result);

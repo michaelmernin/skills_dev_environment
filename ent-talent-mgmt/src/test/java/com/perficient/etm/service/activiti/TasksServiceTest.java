@@ -1,6 +1,7 @@
 package com.perficient.etm.service.activiti;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.service.ServicesTestUtils;
+import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.service.activiti.TasksService;
 import com.perficient.etm.utils.SpringAppTest;
@@ -27,7 +29,7 @@ public class TasksServiceTest extends SpringAppTest{
 	//User 1 = Reviwer
 	//User 2 = Reviewee
 	@Before
-	public void init() throws ReviewProcessNotFound{
+	public void init() throws ETMException{
 		processsIdStarted = ServicesTestUtils.startAnnualReviewProcess(processSvc); 
 	}
 	

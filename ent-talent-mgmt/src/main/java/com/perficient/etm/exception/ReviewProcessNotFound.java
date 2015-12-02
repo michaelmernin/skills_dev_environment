@@ -9,7 +9,7 @@ import com.perficient.etm.domain.ReviewType;
  * 
  * @author Alexandro Blanco <alex.blanco@perficient.com>
  */
-public class ReviewProcessNotFound extends Exception {
+public class ReviewProcessNotFound extends ETMException {
 
 	private static final long serialVersionUID = -1069208892635434961L;
 

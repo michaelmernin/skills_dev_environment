@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.domain.User;
+import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.repository.ReviewTypeRepository;
 import com.perficient.etm.service.activiti.ProcessService;
@@ -38,7 +39,7 @@ public class ServicesTestUtils {
 	 * @return String with the process id of the started process 
 	 * @throws ReviewProcessNotFound In case the review type launched is not found
 	 */
-	public static String startAnnualReviewProcess(ProcessService processSvc) throws ReviewProcessNotFound{
+	public static String startAnnualReviewProcess(ProcessService processSvc) throws ETMException{
 		ReviewTypeProcess type = createMockReviewType();
 		return startReviewProcess(processSvc,type);
 	}
@@ -50,7 +51,7 @@ public class ServicesTestUtils {
 	 * @return String with the process id of the started process 
 	 * @throws ReviewProcessNotFound In case the review type launched is not found
 	 */
-	public static String startReviewProcess(ProcessService processSvc, ReviewTypeProcess type) throws ReviewProcessNotFound{
+	public static String startReviewProcess(ProcessService processSvc, ReviewTypeProcess type) throws ETMException{
 		Review review = createMockReviewObject();
 		
 		String instanceId = processSvc.initiateProcess(type , review );

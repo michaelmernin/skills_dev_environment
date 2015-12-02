@@ -1,5 +1,6 @@
 package com.perficient.etm.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,10 +14,13 @@ import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.domain.User;
+import com.perficient.etm.exception.ActivitiProcessInitiationException;
+import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.service.activiti.ReviewTypeProcess;
+import com.perficient.etm.service.activiti.TasksService;
 
 /**
  * Service class to manage the available operations for the 
@@ -41,10 +45,11 @@ public class ReviewService extends AbstractBaseService{
 	@Inject
 	private ProcessService processSvc;
 	
-    @Inject
-    private UserService userSvc;
+	@Inject
+	private TasksService tasksService;
 	
-	
+	@Inject
+	private UserService userSvc;
 	
 	public ReviewService() {
 		super();
@@ -58,7 +63,7 @@ public class ReviewService extends AbstractBaseService{
 	 * @throws ReviewProcessNotFound If the type of process to be started
 	 * has not been registered in the system
 	 */
-	public Review startReviewProcess(Review review) throws ReviewProcessNotFound{
+	public Review startReviewProcess(Review review) throws ETMException{
 		getLog().info("Starting a new review process");
 		
 		getLog().debug("Sanitizing the review obejct");
@@ -68,15 +73,19 @@ public class ReviewService extends AbstractBaseService{
 		ReviewTypeProcess processType = ReviewTypeProcess.fromReviewType(type);
 		if (processType == null)
 			throw new ReviewProcessNotFound(type);
-		
-		String id = processSvc.initiateProcess(processType, review);
-		review.setReviewProcessId(id);
-
-        review = reviewRepository.save(review);
-        
+		try{
+			String id = processSvc.initiateProcess(processType, review);
+			review.setReviewProcessId(id);
+	        review = reviewRepository.save(review);
+		}catch(Exception e){
+			getLog().warn("Exception while launching the review process in activiti",e);
+			throw new ActivitiProcessInitiationException(e);
+		}
 		return review;
 	}
 
+	
+	
 	/**
 	 * Will return all the Review objects from the review repository
 	 * based on the criteria of the applied Filter in the ReviewRepository
@@ -115,7 +124,7 @@ public class ReviewService extends AbstractBaseService{
 		review.sanitize(false);
         review = reviewRepository.save(review);
 	}
-
+	
 	/**
 	 * Retrieves the feedback on this review for a given peer
 	 * @param reviewId
@@ -129,7 +138,21 @@ public class ReviewService extends AbstractBaseService{
         		review.getFeedback().stream().filter(f->{return f.belongsToAuthor(peer);}).findFirst();
 		return feedback;
 	}
-
+	
+	/**
+	 * Returns the list of Tasks assigned to a user across the 
+	 * activiti processes that are started in the system
+	 * @return List of String objects representing the tasks 
+	 * for the user
+	 */
+	public List<String> getUsersReviewTodo(User user){
+		if (user == null)
+			return Arrays.asList();
+		
+		List<String> tasks = getTasksService().getTasks(String.valueOf(user.getId()));
+		return tasks;
+	}
+	
 	//Getters and Setters
 	public ReviewRepository getReviewRepository() {
 		return reviewRepository;
@@ -145,6 +168,14 @@ public class ReviewService extends AbstractBaseService{
 
 	public void setProcessSvc(ProcessService processSvc) {
 		this.processSvc = processSvc;
+	}
+
+	public TasksService getTasksService() {
+		return tasksService;
+	}
+
+	public void setTasksService(TasksService tasksService) {
+		this.tasksService = tasksService;
 	}
 	
 }
