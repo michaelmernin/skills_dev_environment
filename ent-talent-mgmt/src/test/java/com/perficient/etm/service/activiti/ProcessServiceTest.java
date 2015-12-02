@@ -1,4 +1,4 @@
-package com.perficient.etm.service;
+package com.perficient.etm.service.activiti;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.perficient.etm.exception.ReviewProcessNotFound;
+import com.perficient.etm.service.ServicesTestUtils;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.service.activiti.ReviewTypeProcess;
 import com.perficient.etm.utils.SpringAppTest;

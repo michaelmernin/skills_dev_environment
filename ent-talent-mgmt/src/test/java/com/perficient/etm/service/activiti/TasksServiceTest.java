@@ -1,4 +1,4 @@
-package com.perficient.etm.service;
+package com.perficient.etm.service.activiti;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.perficient.etm.exception.ReviewProcessNotFound;
+import com.perficient.etm.service.ServicesTestUtils;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.service.activiti.TasksService;
 import com.perficient.etm.utils.SpringAppTest;
