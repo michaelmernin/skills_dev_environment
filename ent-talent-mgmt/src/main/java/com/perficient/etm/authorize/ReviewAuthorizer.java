@@ -1,5 +1,7 @@
 package com.perficient.etm.authorize;
 
+import java.util.Optional;
+
 import com.perficient.etm.domain.Review;
 
 public class ReviewAuthorizer extends Authorizer {
@@ -12,12 +14,14 @@ public class ReviewAuthorizer extends Authorizer {
 
     public static boolean authorize(Review review) {
         return getLogin().map(login -> {
-            return isReviewer(review, login)
-                    || isReviewee(review, login)
-                    || isCounselor(review, login)
-                    || isGeneralManager(review, login)
-                    || isPeer(review, login);
-        }).orElse(false);
+	        return Optional.ofNullable(review).map(optionalReview -> {
+	           	return  isReviewer(optionalReview, login)
+	           			|| isReviewee(optionalReview, login)
+	           			|| isCounselor(optionalReview, login)
+	           			|| isGeneralManager(optionalReview, login)
+	           			|| isPeer(optionalReview, login);
+	           }).orElse(false);
+	        }).orElse(false);
     }
 
     public static boolean filter(Review review) {
