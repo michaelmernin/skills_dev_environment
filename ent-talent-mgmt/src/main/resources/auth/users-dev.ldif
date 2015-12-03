@@ -21,6 +21,7 @@ givenName: Dev
 mail: Dev.User1@email.com
 employeeID: 4321
 userPassword: password!D1
+title: Administrator
 
 dn: cn=dev.user2,ou=people,dc=perficient,dc=com
 objectclass: top
@@ -33,6 +34,7 @@ givenName: Dev
 mail: Dev.User2@email.com
 employeeID: 4322
 userPassword: password!D2
+title: General Manager
 
 dn: cn=dev.user3,ou=people,dc=perficient,dc=com
 objectclass: top
@@ -45,6 +47,7 @@ givenName: Dev
 mail: Dev.User3@email.com
 employeeID: 4323
 userPassword: password!D3
+title: Senior Technical Architect
 
 dn: cn=dev.user4,ou=people,dc=perficient,dc=com
 objectclass: top
@@ -57,6 +60,7 @@ givenName: Dev
 mail: Dev.User4@email.com
 employeeID: 4324
 userPassword: password!D4
+title: Senior Technical Consultant
 
 dn: cn=dev.user5,ou=people,dc=perficient,dc=com
 objectclass: top
@@ -69,6 +73,7 @@ givenName: Dev
 mail: Dev.User5@email.com
 employeeID: 4325
 userPassword: password!D5
+title: Lead Business Consultant
 
 dn: cn=dev.user6,ou=people,dc=perficient,dc=com
 objectclass: top
@@ -81,6 +86,7 @@ givenName: Dev
 mail: Dev.User6@email.com
 employeeID: 4325
 userPassword: password!D6
+title: Lead Business Consultant
 
 dn: cn=dev.user7,ou=people,dc=perficient,dc=com
 objectclass: top
@@ -93,6 +99,7 @@ givenName: Dev
 mail: Dev.User7@email.com
 employeeID: 4327
 userPassword: password!D7
+title: Lead Technical Consultant
 
 dn: cn=dev.user8,ou=people,dc=perficient,dc=com
 objectclass: top
@@ -105,3 +112,4 @@ givenName: Dev
 mail: Dev.User8@email.com
 employeeID: 4328
 userPassword: password!D8
+title: Technical Consultant

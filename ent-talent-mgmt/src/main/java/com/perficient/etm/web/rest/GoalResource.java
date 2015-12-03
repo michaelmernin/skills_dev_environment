@@ -1,11 +1,11 @@
 package com.perficient.etm.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.perficient.etm.domain.Goal;
-import com.perficient.etm.domain.Review;
-import com.perficient.etm.exception.InvalidRequestException;
-import com.perficient.etm.repository.GoalRepository;
-import com.perficient.etm.repository.ReviewRepository;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,15 +13,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import com.codahale.metrics.annotation.Timed;
+import com.perficient.etm.domain.Goal;
+import com.perficient.etm.domain.Review;
+import com.perficient.etm.exception.InvalidRequestException;
+import com.perficient.etm.repository.GoalRepository;
+import com.perficient.etm.repository.ReviewRepository;
 
 /**
  * REST controller for managing Goal.
@@ -47,20 +50,17 @@ public class GoalResource {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @Transactional
-    public ResponseEntity<Void> create(@PathVariable Long reviewId, @RequestBody Goal goal, BindingResult result) throws URISyntaxException {
+    public ResponseEntity<Goal> create(@PathVariable Long reviewId, @RequestBody Goal goal, BindingResult result) throws URISyntaxException {
         log.debug("REST request to save Goal : {}", goal);
         if (result.hasErrors()) {
         	throw new InvalidRequestException("Invalid goal", result);
         }
-        if (goal.getId() != null) {
-            return ResponseEntity.badRequest().header("Failure", "A new goal cannot already have an ID").build();
-        }
-        Review review = reviewRepository.getOne(reviewId);
-        review.getGoals().add(goal);
-        review = reviewRepository.save(review);
+        Review review = reviewRepository.findOne(reviewId);
         goal.setReview(review);
         goalRepository.save(goal);
-        return ResponseEntity.created(new URI("/api/reviews/" + reviewId + "/goals/" + goal.getId())).build();
+        Goal savedGoal = new Goal(goal);
+        savedGoal.setReview(null);
+        return new ResponseEntity<>(savedGoal, HttpStatus.CREATED);
     }
 
     /**
@@ -72,9 +72,6 @@ public class GoalResource {
     @Timed
     public ResponseEntity<Void> update(@PathVariable Long reviewId, @RequestBody Goal goal, BindingResult result) throws URISyntaxException {
         log.debug("REST request to update Goal : {}", goal);
-        if (goal.getId() == null) {
-            return create(reviewId, goal, result);
-        }
         goalRepository.save(goal);
         return ResponseEntity.ok().build();
     }
@@ -109,13 +106,16 @@ public class GoalResource {
 
     /**
      * DELETE  review/:reviewId/goals/:id -> delete the "id" goal.
+     * @return 
      */
-    @RequestMapping(value = "reviews/{reviewId}/goals",
+    @RequestMapping(value = "reviews/{reviewId}/goals/{id}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public void delete(@PathVariable Long reviewId,@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long reviewId, @PathVariable Long id) {
         log.debug("REST request to delete Goal : {}", id);
-        goalRepository.delete(id);
+        Goal goal = goalRepository.getOne(id);
+        goalRepository.delete(goal);
+        return ResponseEntity.ok().build();
     }
 }

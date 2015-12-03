@@ -8,8 +8,6 @@ angular.module('etmApp').factory('Account', function Account($resource, DateUtil
   return $resource('api/account', {}, {
     'get': {
       method: 'GET',
-      params: {},
-      isArray: false,
       transformResponse: function (data) {
         data = angular.fromJson(data);
         convertFromServer(data);

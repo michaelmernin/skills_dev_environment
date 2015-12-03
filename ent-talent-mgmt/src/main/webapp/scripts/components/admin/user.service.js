@@ -45,6 +45,15 @@ angular.module('etmApp').factory('User', function ($resource, DateUtils) {
     	url: 'api/users/autocomplete',
     	method: 'GET',
     	isArray: true
+    },
+    'profile': {
+      url: 'api/profile',
+      method: 'GET',
+      transformResponse: function (data) {
+        data = angular.fromJson(data);
+        convertFromServer(data);
+        return data;
+      }
     }
   });
 });

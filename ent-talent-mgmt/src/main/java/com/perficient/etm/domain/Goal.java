@@ -54,7 +54,21 @@ public class Goal implements Serializable {
     @ManyToOne
     private User author;
 
-    public Long getId() {
+    public Goal(Goal goal) {
+		this.author = goal.author;
+		this.completionDate = goal.completionDate;
+		this.description = goal.description;
+		this.id = goal.id;
+		this.name = goal.name;
+		this.note = goal.note;
+		this.review = goal.review;
+		this.targetDate = goal.targetDate;
+	}
+
+	public Goal() {
+	}
+
+	public Long getId() {
         return id;
     }
 

@@ -5,79 +5,92 @@ import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 
 public class AppUserDetailsImpl extends LdapUserDetailsImpl implements AppUserDetails {
 
-    private static final long serialVersionUID = 2431850834420419823L;
+	private static final long serialVersionUID = -435642509341358317L;
 
-    private String firstName;
-   
-    private String lastName;
-   
-    private String email;
-    
-    private String employeeId;
-    
-    @Override
-    public String getFirstName() {
-        return firstName;
-    }
-    
-    @Override
-    public String getLastName() {
-        return lastName;
-    }
-    
-    @Override
-    public String getEmail() {
-        return email;
-    }
-    
-    @Override
-    public String getEmployeeId() {
-        return employeeId;
-    }
-    
-    public static class Essence extends LdapUserDetailsImpl.Essence {
+	private String firstName;
 
-        public Essence() {
-        }
+	private String lastName;
 
-        public Essence(DirContextOperations ctx) {
-            super(ctx);
-            setFirstName(ctx.getStringAttribute("givenName"));
-            setLastName(ctx.getStringAttribute("sn"));
-            setEmail(ctx.getStringAttribute("mail"));
-            setEmployeeId(ctx.getStringAttribute("employeeID"));
-        }
+	private String email;
 
-        public Essence(AppUserDetailsImpl copyMe) {
-            super(copyMe);
-            setFirstName(copyMe.firstName);
-            setLastName(copyMe.lastName);
-            setEmail(copyMe.email);
-            setEmployeeId(copyMe.employeeId);
-        }
+	private String employeeId;
 
-        protected LdapUserDetailsImpl createTarget() {
-            return new AppUserDetailsImpl();
-        }
+	private String title;
 
-        public void setLastName(String lastName) {
-            ((AppUserDetailsImpl) instance).lastName = lastName;
-        }
+	@Override
+	public String getTitle() {
+		return title;
+	}
 
-        public void setFirstName(String firstName) {
-            ((AppUserDetailsImpl) instance).firstName = firstName;
-        }
+	@Override
+	public String getFirstName() {
+		return firstName;
+	}
 
-        public void setEmail(String email) {
-            ((AppUserDetailsImpl) instance).email = email;
-        }
-        
-        public void setEmployeeId(String employeeId) {
-            ((AppUserDetailsImpl) instance).employeeId = employeeId;
-        }
+	@Override
+	public String getLastName() {
+		return lastName;
+	}
 
-        public AppUserDetails createAppUserDetails() {
-            return (AppUserDetails) super.createUserDetails();
-        }
-    }
+	@Override
+	public String getEmail() {
+		return email;
+	}
+
+	@Override
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
+	public static class Essence extends LdapUserDetailsImpl.Essence {
+
+		public Essence() {
+		}
+
+		public Essence(DirContextOperations ctx) {
+			super(ctx);
+			setFirstName(ctx.getStringAttribute("givenName"));
+			setLastName(ctx.getStringAttribute("sn"));
+			setEmail(ctx.getStringAttribute("mail"));
+			setEmployeeId(ctx.getStringAttribute("employeeID"));
+			setTitle(ctx.getStringAttribute("title"));
+		}
+
+		public Essence(AppUserDetailsImpl copyMe) {
+			super(copyMe);
+			setFirstName(copyMe.firstName);
+			setLastName(copyMe.lastName);
+			setEmail(copyMe.email);
+			setEmployeeId(copyMe.employeeId);
+			setTitle(copyMe.title);
+		}
+
+		protected LdapUserDetailsImpl createTarget() {
+			return new AppUserDetailsImpl();
+		}
+
+		public void setLastName(String lastName) {
+			((AppUserDetailsImpl) instance).lastName = lastName;
+		}
+
+		public void setFirstName(String firstName) {
+			((AppUserDetailsImpl) instance).firstName = firstName;
+		}
+
+		public void setEmail(String email) {
+			((AppUserDetailsImpl) instance).email = email;
+		}
+
+		public void setEmployeeId(String employeeId) {
+			((AppUserDetailsImpl) instance).employeeId = employeeId;
+		}
+
+		public void setTitle(String title) {
+			((AppUserDetailsImpl) instance).title = title;
+		}
+
+		public AppUserDetails createAppUserDetails() {
+			return (AppUserDetails) super.createUserDetails();
+		}
+	}
 }

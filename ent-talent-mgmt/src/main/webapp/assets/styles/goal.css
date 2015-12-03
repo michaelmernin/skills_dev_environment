@@ -1,0 +1,18 @@
+.etm-green {
+  color: #008000;
+}
+
+.goal p {
+  padding-right: 48px;
+}
+
+md-icon:first-child {
+  margin: 16px 20px 12px 20px !important;
+}
+
+.goal .md-title {
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.005em !important;
+  color: black !important;
+}
