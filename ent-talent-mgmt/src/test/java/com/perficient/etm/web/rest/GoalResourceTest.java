@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -84,6 +85,7 @@ public class GoalResourceTest extends SpringAppTest {
 
     @Test
     @Transactional
+    @WithUserDetails("dev.user4")
     public void createGoal() throws Exception {
         int databaseSizeBeforeCreate = goalRepository.findAll().size();
 
@@ -100,7 +102,7 @@ public class GoalResourceTest extends SpringAppTest {
         assertThat(testGoal.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testGoal.getNote()).isEqualTo(DEFAULT_NOTE);
         assertThat(testGoal.getTargetDate()).isEqualTo(DEFAULT_TARGET_DATE);
-        assertThat(testGoal.getCompletionDate()).isEqualTo(DEFAULT_COMPLETION_DATE);  
+        assertThat(testGoal.getCompletionDate()).isEqualTo(DEFAULT_COMPLETION_DATE);
     }
 
     @Test
