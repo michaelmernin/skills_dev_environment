@@ -10,13 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -57,8 +55,9 @@ public class ReviewAudit implements Serializable {
     @JoinColumn(name = "review_id")
     private Review review;
 
-    @ManyToOne    
-    private User user;
+//    @ManyToOne   
+//    @JoinColumn(name= "id")
+//    private User user;
 
     public Long getId() {
         return id;
@@ -100,13 +99,13 @@ public class ReviewAudit implements Serializable {
         this.review = review;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     @Override
     public boolean equals(Object o) {

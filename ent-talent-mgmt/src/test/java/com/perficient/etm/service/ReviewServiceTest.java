@@ -3,7 +3,7 @@ package com.perficient.etm.service;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,6 +24,7 @@ import com.perficient.etm.repository.ReviewTypeRepository;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.service.activiti.TasksService;
 import com.perficient.etm.utils.SpringAppTest;
+import com.perficient.etm.web.view.ToDo;
 /**
  * JUnit for the ReviewService class
  * @author Alexandro Blanco <alex.blanco@perficient.com>
@@ -57,7 +58,11 @@ public class ReviewServiceTest extends SpringAppTest {
 		Mockito.when(processSvc.initiateProcess(Mockito.any(), Mockito.any())).thenReturn("ProcessId[5]");
 		Mockito.when(processSvcWithException.initiateProcess(Mockito.any(), Mockito.any())).thenThrow(new RuntimeException("Test"));
 		
-		Mockito.when(taskSvc.getTasks(Mockito.any())).thenReturn(Arrays.asList("T1","T2","T3"));
+		List<org.activiti.engine.task.Task> mockTasksList =  new ArrayList<>();
+		
+		Mockito.when(taskSvc.getTasks(Mockito.anyString())).thenReturn(
+					mockTasksList
+				);
 		
 		reviewSvc.setProcessSvc(processSvc);
 		reviewSvc.setTasksService(taskSvc);
@@ -99,8 +104,10 @@ public class ReviewServiceTest extends SpringAppTest {
 	
 	@Test
 	public void testTodoList(){
-		List<String> tasks = reviewSvc.getUsersReviewTodo(new User());
+		List<ToDo> tasks = reviewSvc.getUsersReviewTodo(new User());
 		assertNotNull(tasks);
 	}
+	
+	
 	
 }

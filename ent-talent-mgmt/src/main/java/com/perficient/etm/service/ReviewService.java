@@ -3,11 +3,11 @@ package com.perficient.etm.service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.activiti.engine.task.Task;
 import org.springframework.stereotype.Service;
 
 import com.perficient.etm.domain.Feedback;
@@ -17,10 +17,12 @@ import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
+import com.perficient.etm.repository.ReviewAuditRepository;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.service.activiti.ReviewTypeProcess;
 import com.perficient.etm.service.activiti.TasksService;
+import com.perficient.etm.web.view.ToDo;
 
 /**
  * Service class to manage the available operations for the 
@@ -33,8 +35,7 @@ import com.perficient.etm.service.activiti.TasksService;
  */
 @Service
 public class ReviewService extends AbstractBaseService{
-    private final Logger log = LoggerFactory.getLogger(ReviewService.class);
-
+    
 	/**
 	 * The review repository that will be in charge 
 	 * of managing the Review models in the database
@@ -50,6 +51,9 @@ public class ReviewService extends AbstractBaseService{
 	
 	@Inject
 	private UserService userSvc;
+	
+	@Inject
+	private ReviewAuditRepository reviewAuditRepo;
 	
 	public ReviewService() {
 		super();
@@ -83,8 +87,6 @@ public class ReviewService extends AbstractBaseService{
 		}
 		return review;
 	}
-
-	
 	
 	/**
 	 * Will return all the Review objects from the review repository
@@ -140,17 +142,18 @@ public class ReviewService extends AbstractBaseService{
 	}
 	
 	/**
-	 * Returns the list of Tasks assigned to a user across the 
+	 * Returns the list of ToDo objects assigned to a user across the 
 	 * activiti processes that are started in the system
-	 * @return List of String objects representing the tasks 
+	 * @return List of ToDo objects representing the tasks 
 	 * for the user
 	 */
-	public List<String> getUsersReviewTodo(User user){
+	public List<ToDo> getUsersReviewTodo(final User user){
 		if (user == null)
 			return Arrays.asList();
+		List<Task> tasks = tasksService.getTasks(String.valueOf(user.getId()));
+		List<ToDo> todos = tasks.stream().map(t->{ return ToDo.fromTask(t, user);}).collect(Collectors.toList());
 		
-		List<String> tasks = getTasksService().getTasks(String.valueOf(user.getId()));
-		return tasks;
+		return todos;
 	}
 	
 	//Getters and Setters
@@ -176,6 +179,22 @@ public class ReviewService extends AbstractBaseService{
 
 	public void setTasksService(TasksService tasksService) {
 		this.tasksService = tasksService;
+	}
+
+	public UserService getUserSvc() {
+		return userSvc;
+	}
+
+	public void setUserSvc(UserService userSvc) {
+		this.userSvc = userSvc;
+	}
+
+	public ReviewAuditRepository getReviewAuditRepo() {
+		return reviewAuditRepo;
+	}
+
+	public void setReviewAuditRepo(ReviewAuditRepository reviewAuditRepo) {
+		this.reviewAuditRepo = reviewAuditRepo;
 	}
 	
 }

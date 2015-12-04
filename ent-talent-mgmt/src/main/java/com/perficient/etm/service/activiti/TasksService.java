@@ -28,10 +28,9 @@ public class TasksService {
 	 * @param user The String user id to check
 	 * @return List of String objects with the ids of the tasks
 	 */
-	public List<String> getTasks(String user){
+	public List<Task> getTasks(String user){
 		List<Task> tasks = taskSvc.createTaskQuery().taskAssignee(user).list();
-		List<String> results = tasks.stream().map(Task::getId).collect(Collectors.toList());
-		return results;
+		return tasks;
 	}
 	/**
 	 * Retrieves a specific task from the Activiti engine based on the specified task Id
@@ -43,6 +42,7 @@ public class TasksService {
 		
 		return (task != null)? task.getId() : null;
 	}
+	
 	/**
 	 * Completes one task in the Activiti engine in order to allow the process to
 	 * continue. 
