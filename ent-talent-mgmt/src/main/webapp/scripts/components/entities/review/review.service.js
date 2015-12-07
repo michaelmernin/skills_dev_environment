@@ -75,6 +75,6 @@ angular.module('etmApp').factory('Review', function ($resource, DateUtils) {
         convertFromServer(data);
         return data;
       }
-    }
+    }    
   });
 });

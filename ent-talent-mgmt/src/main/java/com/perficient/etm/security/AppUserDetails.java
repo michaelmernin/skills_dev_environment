@@ -11,4 +11,6 @@ public interface AppUserDetails extends UserDetails {
     public String getEmail();
     
     public String getEmployeeId();
+
+	public String getTitle();
 }

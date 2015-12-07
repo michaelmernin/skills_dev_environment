@@ -1,20 +1,30 @@
 package com.perficient.etm.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.perficient.etm.domain.Goal;
-import com.perficient.etm.repository.GoalRepository;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import com.codahale.metrics.annotation.Timed;
+import com.perficient.etm.domain.Goal;
+import com.perficient.etm.domain.Review;
+import com.perficient.etm.exception.InvalidRequestException;
+import com.perficient.etm.repository.GoalRepository;
+import com.perficient.etm.repository.ReviewRepository;
 
 /**
  * REST controller for managing Goal.
@@ -27,43 +37,49 @@ public class GoalResource {
 
     @Inject
     private GoalRepository goalRepository;
+    
+    @Inject
+    private ReviewRepository reviewRepository;
 
     /**
-     * POST  /goals -> Create a new goal.
+     * POST  /reviews/:reviewId/goals -> Create a new goal.
+     * @throws URISyntaxException
      */
-    @RequestMapping(value = "/goals",
+    @RequestMapping(value = "reviews/{reviewId}/goals",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Void> create(@RequestBody Goal goal) throws URISyntaxException {
+    @Transactional
+    public ResponseEntity<Goal> create(@PathVariable Long reviewId, @RequestBody Goal goal, BindingResult result) throws URISyntaxException {
         log.debug("REST request to save Goal : {}", goal);
-        if (goal.getId() != null) {
-            return ResponseEntity.badRequest().header("Failure", "A new goal cannot already have an ID").build();
+        if (result.hasErrors()) {
+        	throw new InvalidRequestException("Invalid goal", result);
         }
+        Review review = reviewRepository.findOne(reviewId);
+        goal.setReview(review);
         goalRepository.save(goal);
-        return ResponseEntity.created(new URI("/api/goals/" + goal.getId())).build();
+        Goal savedGoal = new Goal(goal);
+        savedGoal.setReview(null);
+        return new ResponseEntity<>(savedGoal, HttpStatus.CREATED);
     }
 
     /**
-     * PUT  /goals -> Updates an existing goal.
+     * PUT  review/:reviewId/goals -> Updates an existing goal.
      */
-    @RequestMapping(value = "/goals",
+    @RequestMapping(value = "reviews/{reviewId}/goals",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Void> update(@RequestBody Goal goal) throws URISyntaxException {
+    public ResponseEntity<Void> update(@PathVariable Long reviewId, @RequestBody Goal goal, BindingResult result) throws URISyntaxException {
         log.debug("REST request to update Goal : {}", goal);
-        if (goal.getId() == null) {
-            return create(goal);
-        }
         goalRepository.save(goal);
         return ResponseEntity.ok().build();
     }
 
     /**
-     * GET  /goals -> get all the goals.
+     * GET  reviews/:reviewId/goals -> get all the goals.
      */
-    @RequestMapping(value = "/goals",
+    @RequestMapping(value = "reviews/{reviewId}/goals",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -73,9 +89,9 @@ public class GoalResource {
     }
 
     /**
-     * GET  /goals/:id -> get the "id" goal.
+     * GET  review/:reviewId/goals/:id -> get the "id" goal.
      */
-    @RequestMapping(value = "/goals/{id}",
+    @RequestMapping(value = "reviews/{reviewId}/goals/{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -89,14 +105,17 @@ public class GoalResource {
     }
 
     /**
-     * DELETE  /goals/:id -> delete the "id" goal.
+     * DELETE  review/:reviewId/goals/:id -> delete the "id" goal.
+     * @return 
      */
-    @RequestMapping(value = "/goals/{id}",
+    @RequestMapping(value = "reviews/{reviewId}/goals/{id}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long reviewId, @PathVariable Long id) {
         log.debug("REST request to delete Goal : {}", id);
-        goalRepository.delete(id);
+        Goal goal = goalRepository.getOne(id);
+        goalRepository.delete(goal);
+        return ResponseEntity.ok().build();
     }
 }
