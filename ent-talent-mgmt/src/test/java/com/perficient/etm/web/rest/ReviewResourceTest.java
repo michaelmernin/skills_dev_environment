@@ -1,35 +1,40 @@
 package com.perficient.etm.web.rest;
 
-import com.perficient.etm.domain.Review;
-import com.perficient.etm.domain.User;
-import com.perficient.etm.repository.ReviewRepository;
-import com.perficient.etm.repository.UserRepository;
-import com.perficient.etm.utils.ResourceTestUtils;
-import com.perficient.etm.utils.SpringAppTest;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.User;
+import com.perficient.etm.repository.ReviewRepository;
+import com.perficient.etm.utils.ResourceTestUtils;
+import com.perficient.etm.utils.SpringAppTest;
+import com.perficient.etm.web.error.RestExceptionHandler;
 
 /**
  * Test class for the ReviewResource REST controller.
@@ -65,19 +70,27 @@ public class ReviewResourceTest extends SpringAppTest {
     @Inject
     private ReviewRepository reviewRepository;
     
-    @Inject
-    private UserRepository userRepository;
-    
     private MockMvc restReviewMockMvc;
 
     private Review review;
 
     @PostConstruct
     public void setup() {
+    	//final RestExceptionHandler restExceptionHandler = new RestExceptionHandler();
         MockitoAnnotations.initMocks(this);
         ReviewResource reviewResource = new ReviewResource();
         ReflectionTestUtils.setField(reviewResource, "reviewRepository", reviewRepository);
-        this.restReviewMockMvc = MockMvcBuilders.standaloneSetup(reviewResource).build();
+        
+        final ExceptionHandlerExceptionResolver exceptionHandlerExceptionResolver = new ExceptionHandlerExceptionResolver();
+        //here we need to setup a dummy application context that only registers the RestExceptionHandler
+        final StaticApplicationContext applicationContext = new StaticApplicationContext();
+        applicationContext.registerBeanDefinition("advice", new RootBeanDefinition(RestExceptionHandler.class, null, null));
+        //set the application context of the resolver to the dummy application context we just created
+        exceptionHandlerExceptionResolver.setApplicationContext(applicationContext);
+        //needed in order to force the exception resolver to update it's internal caches
+        exceptionHandlerExceptionResolver.afterPropertiesSet();
+
+        this.restReviewMockMvc = MockMvcBuilders.standaloneSetup(reviewResource).setHandlerExceptionResolvers(exceptionHandlerExceptionResolver).build();
     }
 
     @Before
@@ -185,6 +198,22 @@ public class ReviewResourceTest extends SpringAppTest {
         // Get the review
         restReviewMockMvc.perform(get("/api/reviews/{id}", 404L))
                 .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    @WithUserDetails("dev.user4")
+    public void getNonAuthorizedReview() throws Exception {
+        // dev.user4 does not have access to review 2 (not gm, reviewee, reviewer, councelor or peer on review 2)
+        restReviewMockMvc.perform(get("/api/reviews/{id}", 2L))
+                .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    @WithUserDetails("dev.user4")
+    public void getAuthorizedReview() throws Exception {
+        // dev.user4 does not have access to review 2 (not gm, reviewee, reviewer, councelor or peer on review 2)
+        restReviewMockMvc.perform(get("/api/reviews/{id}", 3L))
+                .andExpect(status().isOk());
     }
 
     @Test
