@@ -8,7 +8,7 @@ angular.module('etmApp').controller('ToolbarController', function ($scope, $stat
   $scope.$mdMedia = $mdMedia;
   $scope.toggleSideNav = Sidenav.toggle;
 
-  $scope.$watch('isAuthenticated', function (newValue) {
+  $scope.$watch('isAuthenticated()', function (newValue) {
     Principal.identity().then(function (account) {
       $scope.account = account || {};
     });
