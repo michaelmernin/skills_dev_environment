@@ -1,6 +1,28 @@
 'use strict';
 
 angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackType, FeedbackStatus) {
+	
+  var coreAvgScore ={};
+  
+  var internalAvgScore ={};
+  
+  function setCoreAverage(avgScore, property){
+	  coreAvgScore[property] = avgScore;
+  };
+  
+  function getCoreAverage(property){
+	  return coreAvgScore[property];
+  };
+  
+  function setInternalAverage(avgScore, property){
+	  internalAvgScore[property] = avgScore;
+  };
+  
+  function getInternalAverage(property){
+	  return internalAvgScore[property];
+  };
+  
+  
   function eq(e1, e2) {
     if (e1 === undefined || e2 === undefined) {
       return e1 === e2;
@@ -39,6 +61,11 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
   }
 
   return {
+	  getCoreAverage: getCoreAverage,
+	  setCoreAverage: setCoreAverage,
+	  getInternalAverage: getInternalAverage,
+	  setInternalAverage: setInternalAverage,
+	  
     userFeedbackType: userFeedbackType,
     score: function (rating) {
       if (rating.score === -1) {

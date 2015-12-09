@@ -73,7 +73,11 @@ angular.module('etmApp').config(function ($stateProvider) {
       'goals@review.edit': {
         templateUrl: 'scripts/components/entities/review/goals/goals.html',
         controller: 'GoalsController'
-      }
+      },
+      'overall@review.edit': {
+          templateUrl: 'scripts/components/entities/review/overall/overall.html',
+          controller: 'OverallController'
+        }
     }
   });
 });

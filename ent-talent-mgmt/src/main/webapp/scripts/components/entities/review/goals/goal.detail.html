@@ -11,33 +11,37 @@
     </md-toolbar>
     <md-dialog-content>
       <md-input-container>
-        <label translate="review.annual.goals.goal">Goal</label>
-        <textarea name="goal" ng-model="goal.name" md-maxlength="1000" required></textarea>
+        <label translate="review.annual.goals.goal">Goal Title</label>
+        <textarea name="goal" ng-model="goal.name" required></textarea>
         <div ng-messages="goalForm.goal.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
           <div ng-message="required">
             <span translate="global.messages.validate.field.enter.required" translate-values="{name: '{{ 'review.a.goal' | translate }}'}">Please enter a value.</span>
           </div>
         </div>
-      </md-input-container>      
-      <md-input-container flex-gt-sm>
-        <label translate="review.annual.goals.targetDate">Target Date</label>
-        <input type="date" name="targetDate" ng-model="goal.targetDate"/>
-        <div ng-messages="goalForm.targetDate.$error">
-          <div ng-message="date">
-            <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.annual.goals.targetDate' | translate }}'}" >Please select a valid value.</span>
-          </div>
-        </div>
-      </md-input-container>      
+      </md-input-container> 
       <md-input-container>
-        <label translate="review.annual.goals.statusNotes">Status/Notes</label>
-        <textarea name="notes" ng-model="goal.notes" md-maxlength="1000"></textarea>
-      </md-input-container>
-      <md-input-container layout="row" layout-wrap layout-padding>
+        <label translate="review.annual.goals.description">Description</label>
+        <textarea name="description" ng-model="goal.description"></textarea>
+      </md-input-container> 
+      <div layout="row">    
+        <md-input-container>
+          <label translate="review.annual.goals.targetDate">Target Date</label>
+          <input type="date" name="targetDate" ng-model="goal.targetDate"/>
+          <div ng-messages="goalForm.targetDate.$error">
+            <div ng-message="date">
+              <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.annual.goals.targetDate' | translate }}'}" >Please select a valid value.</span>
+            </div>
+          </div>
+        </md-input-container>
         <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="isPopulated()">Completed?</md-switch>
-        <md-input-container flex-gt-sm>
+        <md-input-container>
           <label translate="review.annual.goals.completionDate">Completion Date</label>
           <input type="date" name="completionDate" ng-model="goal.completionDate" ng-disabled="!switchCompletion" />
         </md-input-container> 
+      </div>      
+      <md-input-container>
+        <label translate="review.annual.goals.note">Notes</label>
+        <textarea name="note" ng-model="goal.note"></textarea>
       </md-input-container>
     </md-dialog-content>
     <div class="md-actions" layout="row">

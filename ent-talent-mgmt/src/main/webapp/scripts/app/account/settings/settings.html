@@ -1,23 +1,23 @@
 <div ng-cloak>
   <md-content md-scroll-y class="md-whiteframe-z1">
     <div layout="column" layout-padding>
-      <h2>{{user.firstName}} {{user.lastName}}'s Profile</h2>
+      <h2>{{profile.firstName}} {{profile.lastName}}'s Profile</h2>
       <md-card>
         <md-card-content>
           <div layout="row">
             <md-icon md-font-icon="fa fa-user fa-5x" class="md-avatar md-primary" style="margin: auto 50px; height: 100px;"></md-icon>
             <div layout="column" layout-padding>
               <div layout="row" layout-padding>
-                <h4>Current Title: </h4><span>{{user.title}}</span>
+                <span class="md-title">Current Title: {{profile.title}}</span>
               </div>
               <div layout="row" layout-padding>
-                <h4>Target Title: </h4><span>{{user.targetTitle}}</span>
+                <span class="md-title">Target Title: {{profile.targetTitle}}</span>
               </div>
               <div layout="row" layout-padding>
-                <h4>Career Counselor: </h4><span>{{user.councelor}}</span>
+                <span class="md-title">Career Counselor: {{profile.counselor.firstName}} {{profile.counselor.lastName}}</span>
               </div>
               <div layout="row" layout-padding>
-                <h4>Start Date: </h4><span>{{user.startDate}}</span>
+                <span class="md-title">Start Date: {{profile.startDate | date:'MM/dd/yyyy'}}</span>
               </div>
             </div>
           </div>

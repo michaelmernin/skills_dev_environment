@@ -1,0 +1,42 @@
+<div ng-cloak>
+  <md-list>
+    <div>
+      <md-list-item ng-click="toggle = !toggle;">
+        <div class="md-list-item-text" flex>
+          <span class="md-title">Composite Scores</span>
+        </div>
+        <i class="fa fa-lg {{toggle ? 'fa-chevron-down' : 'fa-chevron-left'}}"></i>
+      </md-list-item>
+      <md-list-item ng-if="toggle" class="md-2-line">
+      	<div layout="column" >
+		  <md-whiteframe class="md-whiteframe-z1 core" style="margin-bottom: 15px;"> 
+		    <span style="display: inline-table;"><span class="header">Overall Average</span><span style="margin-right: 15px;">{{getOverall('reviewee')}}</span><span style="margin-right: 15px;">{{getOverall('reviewer')}}</span></span>
+		  </md-whiteframe>
+		   <md-whiteframe class="md-whiteframe-z1 core" style="margin-bottom: 15px;">
+		    <span style="display: inline-table;"><span class="header">Core Competencies</span><span style="margin-right: 15px;">{{getCoreAvgScore('reviewee')}}</span><span style="margin-right: 15px;">{{getCoreAvgScore('reviewer')}}</span></span>
+		  </md-whiteframe>
+		   <md-whiteframe class="md-whiteframe-z1 core" style="margin-bottom: 15px;">
+		    <span style="display: inline-table"><span class="header">Internal Contributions</span><span style="margin-right: 15px;">{{getInternalAvgScore('reviewee')}}</span><span style="margin-right: 15px;">{{getInternalAvgScore('reviewer')}}</span></span>
+		  </md-whiteframe>
+		</div>
+        <div class="md-list-item-text .md-whiteframe-z1">
+          <h5>{{ question.title ? question.title : question.text | limitTo:titleLimit() }}</h5>
+          <p>
+            <span class="score" ng-if="question.ratings.reviewee.score">
+              <i class="fa fa-comment-o"></i>
+              Self Rating: {{ getScore(question.ratings.reviewee) }}
+            </span>
+            <span class="score" ng-if="question.ratings.reviewer.score">
+              <i class="fa fa-comment-o"></i>
+              Reviewer Rating: {{ getScore(question.ratings.reviewer) }}
+            </span>
+            <span class="score" ng-if="getAvgScore(question.ratings.peer)">
+              <i class="fa fa-comments-o"></i>
+              Average Peer Rating: {{ getAvgScore(question.ratings.peer) }}
+            </span>
+          </p>
+        </div>
+      </md-list-item>
+    </div>
+  </md-list>
+</div>

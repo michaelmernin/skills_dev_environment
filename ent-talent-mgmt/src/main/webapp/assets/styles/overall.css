@@ -1,0 +1,9 @@
+.core{
+	font-size: 18px !important;
+}
+
+.core .header{
+	margin-right: 15px;
+    display: inline-block;
+    width: 185px !important;
+}

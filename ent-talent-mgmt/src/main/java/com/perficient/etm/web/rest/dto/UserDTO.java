@@ -7,11 +7,16 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.joda.time.LocalDate;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.perficient.etm.domain.Authority;
 import com.perficient.etm.domain.User;
+import com.perficient.etm.domain.util.CustomLocalDateSerializer;
+import com.perficient.etm.domain.util.ISO8601LocalDateDeserializer;
 
 public class UserDTO {
     
@@ -48,6 +53,9 @@ public class UserDTO {
     @Size(max = 50)
     private String targetTitle;
     
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    @JsonSerialize(using = CustomLocalDateSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateDeserializer.class)
     @Size(max = 50)
     private LocalDate startDate;
     
