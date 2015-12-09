@@ -27,7 +27,13 @@ public class Feedback implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @Column(name = "overall_score")
+    private Double overallScore;
 
+    @Column(name = "overall_comment")
+    private String overallComment;
+    
     @ManyToOne
     private Review review;
 
@@ -53,7 +59,23 @@ public class Feedback implements Serializable {
         this.id = id;
     }
 
-    @JsonIgnore
+    public Double getOverallScore() {
+		return overallScore;
+	}
+
+	public void setOverallScore(Double overallScore) {
+		this.overallScore = overallScore;
+	}
+
+	public String getOverallComment() {
+		return overallComment;
+	}
+
+	public void setOverallComment(String overallComment) {
+		this.overallComment = overallComment;
+	}
+
+	@JsonIgnore
     public Review getReview() {
         return review;
     }
