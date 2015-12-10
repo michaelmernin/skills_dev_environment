@@ -1,0 +1,10 @@
+id;overall_score;overall_comment;review_id;feedbacktype_id;author_id;feedbackstatus_id
+1;0;I think I'm great at this;2;1;7;1
+2;3;you are ok at this;2;2;5;1
+3;4;I think you were good;2;3;3;1
+4;0;I think I did a good job;5;1;8;2
+5;0;you did a good job this year;5;2;7;3
+6;4;you did some awesome work;6;1;7;5
+7;0;thank you!;6;2;5;4
+8;2;your performance was not up to standard;7;2;7;4
+9;0;I'll do better next year.;7;1;6;5
