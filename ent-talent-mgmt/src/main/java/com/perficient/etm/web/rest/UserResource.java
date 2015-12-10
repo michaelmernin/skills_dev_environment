@@ -151,10 +151,12 @@ public class UserResource {
           usersList.addAll(userRepository.findUsersForAutocomplete(query));
         }
         Review review = reviewRepository.findOne(reviewId);
+        User reviewee = review.getReviewee();
+        User reviewer = review.getReviewer();
         Set<User> peers = review.getPeers();
         List<User> filteredUsersList = new ArrayList<User>();
         for (User u : usersList) {
-          if (!peers.contains(u)) {
+          if (!peers.contains(u) & u.getId() != reviewee.getId() & u.getId() != reviewer.getId()) {
             filteredUsersList.add(u);
           }
         }

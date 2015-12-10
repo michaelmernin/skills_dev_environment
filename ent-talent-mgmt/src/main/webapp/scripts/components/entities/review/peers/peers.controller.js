@@ -39,8 +39,20 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
    });
  };
  
- $scope.sendEmail = function (user) {
+ $scope.sendEmail = function () {
    //TO DO: Add email functionality
-   alert("Sending Email to " + user.firstName + ' ' + user.lastName);
- };
+   var peerString = "Sending email(s) to ";
+   var peerSelected = false;
+   for (var peer in $scope.peers) {
+     if ($scope.peers[peer].selected) {
+       peerSelected = true;
+       peerString += $scope.peers[peer].firstName + " " + $scope.peers[peer].lastName + "... ";
+     }
+   }
+   if (peerSelected) {
+     alert(peerString);
+   } else {
+     alert("Select peers from the list below to send emails")
+   } 
+   };
 });
