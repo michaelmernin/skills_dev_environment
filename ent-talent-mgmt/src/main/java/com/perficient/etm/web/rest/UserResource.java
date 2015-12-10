@@ -12,8 +12,11 @@ import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.security.AuthoritiesConstants;
+import com.perficient.etm.security.SecurityUtils;
 import com.perficient.etm.web.view.View;
 
+import org.apache.catalina.manager.util.SessionUtils;
+import org.apache.geronimo.mail.util.SessionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -28,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.mail.Session;
 
 /**
  * REST controller for managing users.
@@ -114,6 +118,18 @@ public class UserResource {
     List<User> getCounselees() {
         log.debug("REST request to get user's counselees");
         return userRepository.findCounseleesForCurrentUser();
+    }
+    
+    /**
+     * GET  /profile -> get the profile of the current user.
+     */
+    @RequestMapping(value = "/profile",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    ResponseEntity<User> getProfile() {
+        log.debug("REST request to get Profile");
+        return getUser(SecurityUtils.getCurrentLogin());
     }
     
     

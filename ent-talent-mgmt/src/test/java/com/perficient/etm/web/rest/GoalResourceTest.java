@@ -1,31 +1,37 @@
 package com.perficient.etm.web.rest;
 
-import com.perficient.etm.domain.Goal;
-import com.perficient.etm.repository.GoalRepository;
-import com.perficient.etm.utils.ResourceTestUtils;
-import com.perficient.etm.utils.SpringAppTest;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.perficient.etm.domain.Goal;
+import com.perficient.etm.domain.Review;
+import com.perficient.etm.repository.GoalRepository;
+import com.perficient.etm.repository.ReviewRepository;
+import com.perficient.etm.utils.ResourceTestUtils;
+import com.perficient.etm.utils.SpringAppTest;
 
 /**
  * Test class for the GoalResource REST controller.
@@ -44,9 +50,14 @@ public class GoalResourceTest extends SpringAppTest {
 
     private static final LocalDate DEFAULT_COMPLETION_DATE = new LocalDate(0L);
     private static final LocalDate UPDATED_COMPLETION_DATE = new LocalDate();
+    
+    private static final long REVIEW_ID = 1L;
 
     @Inject
     private GoalRepository goalRepository;
+    
+    @Inject
+    private ReviewRepository reviewRepository;
 
     private MockMvc restGoalMockMvc;
 
@@ -57,6 +68,7 @@ public class GoalResourceTest extends SpringAppTest {
         MockitoAnnotations.initMocks(this);
         GoalResource goalResource = new GoalResource();
         ReflectionTestUtils.setField(goalResource, "goalRepository", goalRepository);
+        ReflectionTestUtils.setField(goalResource, "reviewRepository", reviewRepository);
         this.restGoalMockMvc = MockMvcBuilders.standaloneSetup(goalResource).build();
     }
 
@@ -67,15 +79,18 @@ public class GoalResourceTest extends SpringAppTest {
         goal.setNote(DEFAULT_NOTE);
         goal.setTargetDate(DEFAULT_TARGET_DATE);
         goal.setCompletionDate(DEFAULT_COMPLETION_DATE);
+        goal.setReview(new Review());
+        goal.getReview().setId(1L);
     }
 
     @Test
     @Transactional
+    @WithUserDetails("dev.user4")
     public void createGoal() throws Exception {
         int databaseSizeBeforeCreate = goalRepository.findAll().size();
 
         // Create the Goal
-        restGoalMockMvc.perform(post("/api/goals")
+        restGoalMockMvc.perform(post("/api/reviews/{reviewId}/goals", REVIEW_ID)
                 .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
                 .content(ResourceTestUtils.convertObjectToJsonBytes(goal)))
                 .andExpect(status().isCreated());
@@ -97,7 +112,7 @@ public class GoalResourceTest extends SpringAppTest {
         goalRepository.saveAndFlush(goal);
 
         // Get all the goals
-        restGoalMockMvc.perform(get("/api/goals"))
+        restGoalMockMvc.perform(get("/api/reviews/{reviewId}/goals", goal.getReview().getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(goal.getId().intValue())))
@@ -114,7 +129,7 @@ public class GoalResourceTest extends SpringAppTest {
         goalRepository.saveAndFlush(goal);
 
         // Get the goal
-        restGoalMockMvc.perform(get("/api/goals/{id}", goal.getId()))
+        restGoalMockMvc.perform(get("/api/reviews/{reviewId}/goals/{id}", goal.getReview().getId(), goal.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(goal.getId().intValue()))
@@ -145,7 +160,7 @@ public class GoalResourceTest extends SpringAppTest {
         goal.setNote(UPDATED_NOTE);
         goal.setTargetDate(UPDATED_TARGET_DATE);
         goal.setCompletionDate(UPDATED_COMPLETION_DATE);
-        restGoalMockMvc.perform(put("/api/goals")
+        restGoalMockMvc.perform(put("/api/reviews/{reviewId}/goals", goal.getReview().getId())
                 .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
                 .content(ResourceTestUtils.convertObjectToJsonBytes(goal)))
                 .andExpect(status().isOk());
@@ -169,7 +184,7 @@ public class GoalResourceTest extends SpringAppTest {
         int databaseSizeBeforeDelete = goalRepository.findAll().size();
 
         // Get the goal
-        restGoalMockMvc.perform(delete("/api/goals/{id}", goal.getId())
+        restGoalMockMvc.perform(delete("/api/reviews/{reviewId}/goals/{id}", goal.getReview().getId(), goal.getId())
                 .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 

@@ -119,6 +119,7 @@ public class UserService {
         user.setLastName(userDetails.getLastName());
         user.setEmail(userDetails.getEmail());
         user.setEmployeeId(userDetails.getEmployeeId().toLowerCase());
+        user.setTitle(userDetails.getTitle());
     }
 
 }

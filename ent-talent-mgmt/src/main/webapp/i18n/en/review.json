@@ -64,10 +64,11 @@
       	"goalDetailHeader": "Fill out fields to create goal",
       	"goal": "Goal",
       	"targetDate": "Target Date",
-      	"statusNotes": "Status Notes",
+      	"note": "Status Notes",
       	"cancel": "Cancel",
       	"save": "Save",
-      	"completionDate": "Completion Date"
+      	"completionDate": "Completion Date",
+      	"description": "Description"
       }
     },
     "a": {

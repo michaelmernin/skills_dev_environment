@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+        Add description column to Goal.
+    -->
+    <changeSet id="20151021181700" author="michael">
+      <addColumn tableName="T_GOAL">
+        <column name="description" type="varchar(255)"/>
+      </addColumn>
+      
+      <addNotNullConstraint tableName="T_GOAL"
+      						columnName="review_id"
+      						columnDataType="bigint"/>
+    </changeSet>
+</databaseChangeLog>
