@@ -7,7 +7,7 @@
     },
     "peers": {
       "status": "Status:",
-      "sendEmail": "Email",
+      "sendEmail": "Email Peers",
       "removePeer": "Delete"
     },
     "delete": {

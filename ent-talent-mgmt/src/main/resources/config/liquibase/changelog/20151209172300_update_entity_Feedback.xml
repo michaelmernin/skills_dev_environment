@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+        Add two new columns to feedback, overall_comment and overall_score
+    -->
+    <changeSet id="20151209172300" author="ahmed">
+      <addColumn tableName="T_FEEDBACK">
+      	<column name="overall_score" type="double"/>
+       	<column name="overall_comment" type="varchar(255)"/>
+      </addColumn>
+    </changeSet>
+</databaseChangeLog>

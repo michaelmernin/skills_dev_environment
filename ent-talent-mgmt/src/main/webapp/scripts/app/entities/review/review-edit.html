@@ -38,22 +38,22 @@
           </md-card-content>
         </md-card>
         <md-tabs md-dynamic-height md-border-bottom>
-          <md-tab label="peers">
+          <md-tab label="peers" ng-if="allTabs()">
             <div ui-view="peers"></div>
           </md-tab>
-          <md-tab label="engagements">
+          <md-tab label="engagements" ng-if="allTabs()">
             <div ui-view="engagements"></div>
           </md-tab>
-          <md-tab label="goals">
+          <md-tab label="goals" ng-if="allTabs()">
             <div ui-view="goals"></div>
           </md-tab>
           <md-tab label="evaluation">
             <div ui-view="evaluation"></div>
           </md-tab>
-          <md-tab label="overall">
+          <md-tab label="overall" ng-if="allTabs()">
             <div ui-view="overall"></div>
           </md-tab>
-        </md-tabs>  
+        </md-tabs>
       </div>
     </form>
   </md-content>

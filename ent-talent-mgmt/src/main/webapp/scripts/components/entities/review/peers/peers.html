@@ -4,22 +4,13 @@
   </md-autocomplete>
 </div>
 
-<div ng-cloak layout="column" layout-padding>
-      <table ng-table class="table">
-        <tr ng-repeat="user in peers | orderBy:'lastName'">
-          <td title="'Name'">
-            <h4>{{user.firstName}} {{user.lastName}}</h4>
-          </td>
-          <td>
-            <h4 translate="review.peers.status">Status:</h4>
-            <p>Not Sent</p>
-          </td>
-          <td>
-            <md-icon id="email-peers-icon" ng-click="sendEmail(user)" md-font-icon="fa fa-envelope-o fa-lg" class="ng-scope ng-isolate-scope md-default-theme md-font fa fa-envelope-o fa-lg"></md-icon>
-          </td>
-          <td>
-            <md-icon id="delete-peers-icon" ng-click="deletePeer(user, $event)" md-font-icon="fa fa-trash-o fa-lg" class="ng-scope ng-isolate-scope md-default-theme md-font fa fa-trash-o fa-lg"></md-icon>
-          </td>
-        </tr>
-      </table>
+<div ng-cloak>
+  <md-button class="md-raised" ng-click="sendEmail()" translate="review.peers.sendEmail">Email Peers</md-button>
+  <md-list-item ng-repeat="user in peers | orderBy:'lastName'">
+    <md-checkbox ng-model="user.selected" class="md-primary"></md-checkbox>
+    <h4 class="peer-name">{{user.firstName}} {{user.lastName}}</h4>
+    <p>Not Sent</p>
+    <md-icon id="delete-peers-icon" ng-click="deletePeer(user, $event)" md-font-icon="fa fa-trash-o fa-lg" class="ng-scope ng-isolate-scope md-default-theme md-font fa fa-trash-o fa-lg"></md-icon>
+    <md-divider></md-divider>
+  </md-list-item>
 </div>      
