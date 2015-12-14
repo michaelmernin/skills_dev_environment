@@ -47,7 +47,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
   }
 
   function showByReviewStatus(review) {
-    return has([ReviewStatus.JOINT, ReviewStatus.GM, ReviewStatus.COMPLETED], review.reviewStatus);
+    return has([ReviewStatus.JOINT_APPROVAL, ReviewStatus.GM_APPROVAL, ReviewStatus.COMPLETE], review.reviewStatus);
   }
 
   function userFeedbackType(review, user) {

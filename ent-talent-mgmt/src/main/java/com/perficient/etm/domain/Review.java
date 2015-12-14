@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ import com.perficient.etm.domain.util.CustomLocalDateSerializer;
 import com.perficient.etm.domain.util.ISO8601LocalDateDeserializer;
 import com.perficient.etm.domain.util.PeerSerializer;
 import com.perficient.etm.domain.util.PublicSerializer;
+import com.perficient.etm.domain.util.ReviewStatusConverter;
 
 /**
  * A Review.
@@ -80,7 +82,8 @@ public class Review implements Serializable {
     @ManyToOne
     private ReviewType reviewType;
 
-    @ManyToOne
+    @Column(name = "reviewstatus_id")
+    @Convert(converter = ReviewStatusConverter.class)
     private ReviewStatus reviewStatus;
 
     @JsonSerialize(using = PeerSerializer.class)

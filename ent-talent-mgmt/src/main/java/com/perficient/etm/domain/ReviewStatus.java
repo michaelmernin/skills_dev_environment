@@ -1,82 +1,55 @@
 package com.perficient.etm.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.perficient.etm.web.deserializer.ReviewStatusDeserializer;
 
-/**
- * A ReviewStatus.
- */
-@Entity
-@Table(name = "T_REVIEWSTATUS")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ReviewStatus implements Serializable {
-
-    private static final long serialVersionUID = -424659438384575321L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "description")
-    private String description;
-
-    public Long getId() {
-        return id;
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+@JsonDeserialize(using = ReviewStatusDeserializer.class)
+public enum ReviewStatus {
+    OPEN(1, "Open"),
+    DIRECTOR_APPROVAL(2, "Director Approval"),
+    JOINT_APPROVAL(3, "Joint Approval"),
+    GM_APPROVAL(4, "GM Approval"),
+    COMPLETE(5, "Complete"),
+    CLOSED(6, "Closed");
+    
+    private static final Map<Integer, ReviewStatus> REGISTRY;
+    
+    static {
+        REGISTRY = Collections.unmodifiableMap(Stream.of(ReviewStatus.values()).collect(Collectors.toMap(rs -> {
+            return rs.getId();
+        }, rs -> {
+            return rs;
+        }, (u, v) -> {
+            throw new IllegalStateException(String.format("Duplicate key %s", u));
+        }, LinkedHashMap::new)));
     }
 
-    public void setId(Long id) {
+    public static ReviewStatus getById(Integer id) {
+        return REGISTRY.get(id);
+    }
+
+    private Integer id;
+
+    private String name;
+    
+    private ReviewStatus(int id, String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        ReviewStatus reviewStatus = (ReviewStatus) o;
-
-        if (id != null ? !id.equals(reviewStatus.id) : reviewStatus.id != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return (int) (id ^ (id >>> 32));
-    }
-
-    @Override
-    public String toString() {
-        return "ReviewStatus{" +
-                "id=" + id +
-                ", name='" + name + "'" +
-                ", description='" + description + "'" +
-                '}';
     }
 }

@@ -16,19 +16,19 @@ angular.module('etmApp').controller('DashboardReviewsController', function ($sco
     var step = 0;
     if (reviewStatus && reviewStatus.id) {
       switch (reviewStatus.id) {
-      case ReviewStatus.INITIATED.id:
+      case ReviewStatus.OPEN.id:
         step = 1;
         break;
-      case ReviewStatus.COUNSELOR.id:
+      case ReviewStatus.DIRECTOR_APPROVAL.id:
         step = 2;
         break;
-      case ReviewStatus.JOINT.id:
+      case ReviewStatus.JOINT_APPROVAL.id:
         step = 3;
         break;
-      case ReviewStatus.GM.id:
+      case ReviewStatus.GM_APPROVAL.id:
         step = 4;
         break;
-      case ReviewStatus.COMPLETED.id:
+      case ReviewStatus.COMPLETE.id:
       case ReviewStatus.CLOSED.id:
         step = 5;
         break;
@@ -88,7 +88,7 @@ angular.module('etmApp').controller('DashboardReviewsController', function ($sco
       client: 'BestBuy',
       project: 'Open Box',
       reviewType: {name: 'Annual Review'},
-      reviewStatus: ReviewStatus.INITIATED,
+      reviewStatus: ReviewStatus.OPEN,
       reviewee: {firstName: 'Jack', lastName: 'Smith'},
       reviewer: {firstName: 'David', lastName: 'Smith'}
     }, {
@@ -97,7 +97,7 @@ angular.module('etmApp').controller('DashboardReviewsController', function ($sco
       client: 'Target',
       project: 'AEM',
       reviewType: {name: '3 Month Review'},
-      reviewStatus: ReviewStatus.JOINT,
+      reviewStatus: ReviewStatus.JOINT_APPROVAL,
       reviewee: {firstName: 'John', lastName: 'Doe'},
       reviewer: {firstName: 'Sam', lastName: 'Jackson'}
     }, {
@@ -106,7 +106,7 @@ angular.module('etmApp').controller('DashboardReviewsController', function ($sco
       client: 'Midtronic',
       project: 'iPhone App',
       reviewType: {name: 'Engagement'},
-      reviewStatus: ReviewStatus.GM,
+      reviewStatus: ReviewStatus.GM_APPROVAL,
       reviewee: {firstName: 'Jason', lastName: 'White'},
       reviewer: {firstName: 'Joe', lastName: 'Rose'}
     }];
