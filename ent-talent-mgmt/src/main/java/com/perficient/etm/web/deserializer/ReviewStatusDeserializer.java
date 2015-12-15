@@ -9,9 +9,4 @@ public class ReviewStatusDeserializer extends EnumDeserializer<ReviewStatus> {
     public ReviewStatusDeserializer() {
         super(ReviewStatus.class);
     }
-
-    
-
-   
-
 }

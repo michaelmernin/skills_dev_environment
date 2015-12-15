@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,8 +22,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.perficient.etm.domain.util.FeedbackStatusConverter;
 import com.perficient.etm.domain.util.PublicSerializer;
-
 /**
  * A Feedback.
  */
@@ -53,7 +54,8 @@ public class Feedback implements Serializable {
     @ManyToOne
     private FeedbackType feedbackType;
 
-    @ManyToOne
+    @Column(name = "feedbackstatus_id")
+    @Convert(converter = FeedbackStatusConverter.class)
     private FeedbackStatus feedbackStatus;
 
     @OneToMany(mappedBy = "feedback", fetch = FetchType.EAGER)

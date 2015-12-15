@@ -5,8 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.core.GenericTypeResolver;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
@@ -64,7 +62,7 @@ public abstract class EnumDeserializer<E> extends StdDeserializer<E> {
     private Object invokeStaticMethod(String methodName, Class<?> parameterType, Object parameter) {
         if (parameter != null) {
             try {
-                return getEnumClass().getMethod(methodName, parameterType).invoke(null, parameter);
+                return handledType().getMethod(methodName, parameterType).invoke(null, parameter);
             } catch (IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException
                     | SecurityException e) {
@@ -73,14 +71,10 @@ public abstract class EnumDeserializer<E> extends StdDeserializer<E> {
         }
         return null;
     }
-
-    private Class<?> getEnumClass() {
-        return GenericTypeResolver.resolveTypeArgument(getClass(), EnumDeserializer.class);
-    }
     
     @SuppressWarnings("unchecked")
     private E castToEnumClass(Object value) {
-        if (value != null && getEnumClass().isAssignableFrom(value.getClass())) {
+        if (value != null && handledType().isAssignableFrom(value.getClass())) {
             return (E) value;
         }
         return null;
