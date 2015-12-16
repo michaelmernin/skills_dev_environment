@@ -44,8 +44,6 @@ public class FeedbackResourceTest extends SpringAppTest {
 
     private static final long AUTHOR_ID = 8L;
 
-    private static final long FEEDBACK_TYPE_ID = 3L;
-
     private static final long REVIEW_ID = 1L;
     
     private static final int NUM_RATINGS = 21;
@@ -75,9 +73,7 @@ public class FeedbackResourceTest extends SpringAppTest {
         Review review = new Review();
         review.setId(REVIEW_ID);
         feedback.setReview(review);
-        FeedbackType feedbackType = new FeedbackType();
-        feedbackType.setId(FEEDBACK_TYPE_ID);
-        feedback.setFeedbackType(feedbackType);
+        feedback.setFeedbackType(FeedbackType.PEER);
         User author = new User();
         author.setId(AUTHOR_ID);
         feedback.setAuthor(author);

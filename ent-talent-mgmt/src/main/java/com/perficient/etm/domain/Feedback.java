@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.perficient.etm.domain.util.FeedbackStatusConverter;
+import com.perficient.etm.domain.util.FeedbackTypeConverter;
 import com.perficient.etm.domain.util.PublicSerializer;
 /**
  * A Feedback.
@@ -51,7 +52,8 @@ public class Feedback implements Serializable {
     @ManyToOne
     private User author;
 
-    @ManyToOne
+    @Column(name = "feedbacktype_id")
+    @Convert(converter = FeedbackTypeConverter.class)
     private FeedbackType feedbackType;
 
     @Column(name = "feedbackstatus_id")
