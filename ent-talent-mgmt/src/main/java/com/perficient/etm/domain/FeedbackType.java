@@ -23,7 +23,7 @@ public enum FeedbackType {
     private static final Map<Integer, FeedbackType> REGISTRY;
     
     static {
-        REGISTRY = Collections.unmodifiableMap(Stream.of(FeedbackType.values()).collect(Collectors.toMap(ft -> {
+        REGISTRY = Collections.unmodifiableMap(Stream.of(FeedbackType.values()).collect(Collectors.toMap((FeedbackType ft) -> {
             return ft.getId();
         }, ft -> {
             return ft;

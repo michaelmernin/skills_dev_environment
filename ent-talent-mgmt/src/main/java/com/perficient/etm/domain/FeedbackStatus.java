@@ -25,7 +25,7 @@ public enum FeedbackStatus {
     private static final Map<Integer, FeedbackStatus> REGISTRY;
     
     static {
-        REGISTRY = Collections.unmodifiableMap(Stream.of(FeedbackStatus.values()).collect(Collectors.toMap(fs -> {
+        REGISTRY = Collections.unmodifiableMap(Stream.of(FeedbackStatus.values()).collect(Collectors.toMap((FeedbackStatus fs) -> {
             return fs.getId();
         }, fs -> {
             return fs;

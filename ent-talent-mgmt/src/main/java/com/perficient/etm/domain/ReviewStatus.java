@@ -23,7 +23,7 @@ public enum ReviewStatus {
     private static final Map<Integer, ReviewStatus> REGISTRY;
     
     static {
-        REGISTRY = Collections.unmodifiableMap(Stream.of(ReviewStatus.values()).collect(Collectors.toMap(rs -> {
+        REGISTRY = Collections.unmodifiableMap(Stream.of(ReviewStatus.values()).collect(Collectors.toMap((ReviewStatus rs) -> {
             return rs.getId();
         }, rs -> {
             return rs;
