@@ -1,70 +1,55 @@
 package com.perficient.etm.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.perficient.etm.web.deserializer.FeedbackTypeDeserializer;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A FeedbackType.
  */
-@Entity
-@Table(name = "T_FEEDBACKTYPE")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class FeedbackType implements Serializable {
-
-    private static final long serialVersionUID = 178603763232113535L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @Column(name = "name")
-    private String name;
-
-    public Long getId() {
-        return id;
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+@JsonDeserialize(using = FeedbackTypeDeserializer.class)
+public enum FeedbackType {
+    SELF(1, "Self"),
+    REVIEWER(2, "Reviewer"),
+    PEER(3, "Peer");
+    
+    private static final Map<Integer, FeedbackType> REGISTRY;
+    
+    static {
+        REGISTRY = Collections.unmodifiableMap(Stream.of(FeedbackType.values()).collect(Collectors.toMap((FeedbackType ft) -> {
+            return ft.getId();
+        }, ft -> {
+            return ft;
+        }, (u, v) -> {
+            throw new IllegalStateException(String.format("Duplicate key %s", u));
+        }, LinkedHashMap::new)));
     }
 
-    public void setId(Long id) {
+    public static FeedbackType getById(Integer id) {
+        return REGISTRY.get(id);
+    }
+
+    private Integer id;
+
+    private String name;
+    
+    private FeedbackType(int id, String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        FeedbackType feedbackType = (FeedbackType) o;
-
-        if (id != null ? !id.equals(feedbackType.id) : feedbackType.id != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return (int) (id ^ (id >>> 32));
-    }
-
-    @Override
-    public String toString() {
-        return "FeedbackType{" +
-                "id=" + id +
-                ", name='" + name + "'" +
-                '}';
     }
 }

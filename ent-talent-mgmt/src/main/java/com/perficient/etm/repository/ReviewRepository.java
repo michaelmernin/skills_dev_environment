@@ -22,7 +22,7 @@ public interface ReviewRepository extends JpaRepository<Review,Long>{
      * with a review endDate that is between startDate and endDate.
      */
     @PostFilter(ReviewAuthorizer.FILTER)
-    @Query("select r from Review r where r.reviewType.interval = 'PROJECT' and r.reviewStatus.id = 5 and r.reviewee.id = :userId and r.endDate > :startDate and r.endDate <= :endDate")
+    @Query("select r from Review r where r.reviewType.interval = 'PROJECT' and r.reviewStatus = 5 and r.reviewee.id = :userId and r.endDate > :startDate and r.endDate <= :endDate")
     List<Review> findCompletedEngagementsForUserWithinDates(@Param("userId") Long userId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     @PostFilter(ReviewAuthorizer.FILTER)

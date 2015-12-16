@@ -31,9 +31,13 @@
     <include file="classpath:config/liquibase/seed/dev/20151009173300_dev_seed_data.xml" relativeToChangelogFile="false"/>    
     <include file="classpath:config/liquibase/changelog/20151021181700_update_entity_Goal.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/seed/dev/20151104175500_dev_seed_data.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151209172300_update_entity_Feedback.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/seed/dev/20151209205700_dev_seed_data.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20151120095000_update_entity_Feedback.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20151202200651_added_entity_ReviewAudit.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20151209172300_update_entity_Feedback.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/seed/dev/20151209205700_dev_seed_data.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20151211105100_drop_entity_ReviewStatus.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20151214175900_drop_entity_FeedbackStatus.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/seed/dev/20151214182800_dev_seed_data.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20151216161600_drop_entity_FeedbackType.xml" relativeToChangelogFile="false"/>
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

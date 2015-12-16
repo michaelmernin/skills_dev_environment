@@ -6,7 +6,7 @@
   padding-right: 48px;
 }
 
-md-icon:first-child {
+.goal md-icon:first-child {
   margin: 16px 20px 12px 20px !important;
 }
 

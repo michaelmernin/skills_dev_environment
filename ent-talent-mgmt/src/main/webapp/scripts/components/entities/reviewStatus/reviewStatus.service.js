@@ -1,20 +1,12 @@
 'use strict';
 
 angular.module('etmApp').factory('ReviewStatus', function ($resource) {
-  return angular.extend($resource('api/reviewStatuses/:id', {}, {
-    'query': { method: 'GET', isArray: true},
-    'get': {
-      method: 'GET',
-      transformResponse: function (data) {
-        return angular.fromJson(data);
-      }
-    }
-  }), {
-    INITIATED: {id: 1, name: 'Initiated'},
-    COUNSELOR: {id: 2, name: 'Counselor Review'},
-    JOINT: {id: 3, name: 'Joint Review'},
-    GM: {id :4, name: 'GM Review'},
-    COMPLETED: {id: 5, name: 'Completed'},
+  return {
+    OPEN: {id: 1, name: 'Open'},
+    DIRECTOR_APPROVAL: {id: 2, name: 'Director Approval'},
+    JOINT_APPROVAL: {id: 3, name: 'Joint Approval'},
+    GM_APPROVAL: {id :4, name: 'GM Approval'},
+    COMPLETE: {id: 5, name: 'Complete'},
     CLOSED: {id: 6, name: 'Closed'}
-  });
+  };
 });
