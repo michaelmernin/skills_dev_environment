@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.service.ReviewService;
 import com.perficient.etm.web.validator.ReviewValidator;
+import com.perficient.etm.web.view.ToDo;
 
 /**
  * REST controller for managing Review.
@@ -164,5 +166,13 @@ public class ReviewResource {
 		this.reviewSvc = reviewSvc;
 	}
     
+	/**
+     * GET /todo -> get the todo list for the user
+     */
+    @RequestMapping(value = "/todo",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ToDo> getToDo() {
+    	log.debug("REST request to get ToDo");
+    	return getReviewSvc().getCurrentUserReviewTodo();
+    }
     
 }

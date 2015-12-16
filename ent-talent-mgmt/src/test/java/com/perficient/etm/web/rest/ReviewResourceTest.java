@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,8 @@ import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.repository.ReviewTypeRepository;
+import com.perficient.etm.repository.UserRepository;
+import com.perficient.etm.security.SecurityUtils;
 import com.perficient.etm.service.ReviewService;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.utils.ResourceTestUtils;
@@ -86,10 +89,13 @@ public class ReviewResourceTest extends SpringAppTest {
     private ReviewService reviewService;
     
     @Mock
-    private ProcessService processService;
+    private ProcessService mockProcessService;
     
     @Inject
     private ReviewTypeRepository reviewTypeRepository;
+    
+    @Inject
+    private UserRepository userRepository;
     
     /*
      * The resource to be used during the test. Keep globally to update properties when 
@@ -101,8 +107,7 @@ public class ReviewResourceTest extends SpringAppTest {
     public void setup() throws ETMException {
         MockitoAnnotations.initMocks(this);
         ReviewResource reviewResource = new ReviewResource();
-        Mockito.when(processService.initiateProcess(Mockito.anyObject(), Mockito.anyObject())).thenReturn("Process{1}");
-        reviewService.setProcessSvc(processService);
+        Mockito.when(mockProcessService.initiateProcess(Mockito.anyObject(), Mockito.anyObject())).thenReturn("Process{1}");
         ReflectionTestUtils.setField(reviewResource, "reviewSvc", reviewService);
         
         final ExceptionHandlerExceptionResolver exceptionHandlerExceptionResolver = new ExceptionHandlerExceptionResolver();
@@ -147,7 +152,7 @@ public class ReviewResourceTest extends SpringAppTest {
     @WithUserDetails("dev.user2")
     public void createReview() throws Exception {    	
         int count = (int) reviewRepository.count();
-        
+        reviewService.setProcessSvc(mockProcessService);
         
         // Create the Review
         restReviewMockMvc.perform(post("/api/reviews")
@@ -293,4 +298,38 @@ public class ReviewResourceTest extends SpringAppTest {
         List<Review> reviews = reviewRepository.findAll();
         assertThat(reviews).hasSize(count - 1);
     }
+    
+    @Test
+    @WithUserDetails("dev.user2")
+    public void getTodoList() throws Exception{
+    	String currentLogin = SecurityUtils.getCurrentLogin();
+    	Optional<User> user = loadUserDomainFromUserDetails(currentLogin);
+    	//Start a review process to generate tasks
+    	review.setReviewee(user.get());
+    	review.setReviewer(user.get());    	
+    	reviewService.startReviewProcess(review);
+    	
+    	restReviewMockMvc.perform(get("/api/todo")
+    			.accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
+    			.andExpect(status().isOk())
+    			//.andDo(print())
+    			.andExpect(jsonPath("$.").isArray())
+    			//.andExpect(jsonPath("$[0].name").exists())
+    			//.andExpect(jsonPath("$[0].activitiTaskId").exists())
+    			//.andExpect(jsonPath("$[0].user").exists())
+    			//.andExpect(jsonPath("$[0].description").exists())
+    			;
+    }
+    
+    /**
+     * Returns an Optional object with the User object that is related to the UserDetails
+     * object obtained from security context in the application.
+     * @param userDetails The String object obtained from the security context of the app with the login
+     * @return Optional with the User object as its value or null in case user is not found
+     */
+    public Optional<User> loadUserDomainFromUserDetails(final String userDetails){
+    	//log.debug("Retrieving user domain from user details");
+    	return userRepository.findOneByLogin(userDetails);
+    }
+    
 }

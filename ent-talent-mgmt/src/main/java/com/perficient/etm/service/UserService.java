@@ -126,4 +126,15 @@ public class UserService {
         user.setTitle(userDetails.getTitle());
     }
 
+    /**
+     * Returns an Optional object with the User model from the database
+     * that is associated with the current login registered in the 
+     * security context.
+     * @return Optional of User object
+     */
+    public Optional<User> getUserFromLogin(){
+    	String login = SecurityUtils.getCurrentLogin();
+    	Optional<User> user = userRepository.findOneByLogin(login);
+    	return user;
+    }
 }

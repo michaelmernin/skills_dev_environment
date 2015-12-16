@@ -156,6 +156,18 @@ public class ReviewService extends AbstractBaseService{
 		return todos;
 	}
 	
+	/**
+	 * Returns the List of ToDo objects related to the current user registarted
+	 * in the SecurityContext
+	 * @return List of ToDo objects representing the tasks 
+	 * for the user
+	 */
+	public List<ToDo> getCurrentUserReviewTodo(){
+		Optional<User> userOpt = userSvc.getUserFromLogin();
+		return getUsersReviewTodo(userOpt.orElse(null));
+	}
+	
+	
 	//Getters and Setters
 	public ReviewRepository getReviewRepository() {
 		return reviewRepository;
