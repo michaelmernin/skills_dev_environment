@@ -62,7 +62,8 @@
           "enter": {
             "required": "Please enter {{ name }}.",
             "invalid": "Please enter a valid {{ name }}."
-          }
+          },
+          "maxlength": "{{ name }} cannot be longer than {{ number }} characters."
         }
       }
     }

@@ -5,12 +5,12 @@
     <md-list-item class="md-3-line goal" ng-repeat="goal in goals" ng-click="editGoal(goal, $event)">
       <md-icon md-font-icon="{{ getIcon(goal.completionDate)}}" style="color: {{ getColor(goal.completionDate) }}" class="status-icon {{ getIcon(goal.completionDate) }}"></md-icon>
       <div class="md-list-item-text">
-        <h3>{{goal.name}}</h3>
+        <h3>{{goal.name | limitTo:fieldLimit()}}</h3>
         <h4 ng-if="goal.targetDate || goal.completionDate">
           <span ng-if="goal.targetDate">Due on {{ goal.targetDate | date:'MM/dd/yyyy' }}</span><span ng-if="goal.targetDate && goal.completionDate">, </span>
           <span ng-if="goal.completionDate">Completed on {{ goal.completionDate | date:'MM/dd/yyyy' }}</span>
         </h4>
-        <p>{{goal.description}}</p>
+        <p>{{goal.description | limitTo:fieldLimit()}}</p>
       </div>
       <md-icon md-font-icon="fa fa-lg fa-trash" class="md-secondary" aria-label="Delete Goal" ng-click="deleteGoal(goal, $event)"></md-icon>
     </md-list-item>

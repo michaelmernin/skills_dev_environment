@@ -12,16 +12,24 @@
     <md-dialog-content class="md-dialog-content">
       <md-input-container class="md-block">
         <label translate="review.annual.goals.goal">Goal Title</label>
-        <textarea name="goal" ng-model="goal.name" required></textarea>
+        <textarea name="goal" ng-model="goal.name" required md-maxlength="250"></textarea>
         <div ng-messages="goalForm.goal.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
           <div ng-message="required">
             <span translate="global.messages.validate.field.enter.required" translate-values="{name: '{{ 'review.a.goal' | translate }}'}">Please enter a value.</span>
+          </div>
+          <div ng-message="md-maxlength">
+            <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Title' | translate }}', number: '{{ '250' | translate}}'}">Title cannot be larger than 250 characters.</span>
           </div>
         </div>
       </md-input-container> 
       <md-input-container class="md-block">
         <label translate="review.annual.goals.description">Description</label>
-        <textarea name="description" ng-model="goal.description"></textarea>
+        <textarea name="description" ng-model="goal.description" md-maxlength="250"></textarea>
+        <div ng-messages="goalForm.description.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
+          <div ng-message="md-maxlength">
+            <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Description' | translate }}', number: '{{ '250' | translate}}'}">Description cannot be larger than 250 characters.</span>
+          </div>
+        </div>
       </md-input-container> 
       <div layout-gt-sm="row">
         <div layout-gt-xs="row" flex-gt-sm>
@@ -45,7 +53,12 @@
       </div>      
       <md-input-container class="md-block">
         <label translate="review.annual.goals.note">Notes</label>
-        <textarea name="note" ng-model="goal.note"></textarea>
+        <textarea name="note" ng-model="goal.note" md-maxlength="250"></textarea>
+        <div ng-messages="goalForm.note.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
+          <div ng-message="md-maxlength">
+            <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Notes' | translate }}', number: '{{ '250' | translate}}'}">Notes cannot be larger than 250 characters.</span>
+          </div>
+        </div>
       </md-input-container>
     </md-dialog-content>
     <div class="md-actions" layout="row">

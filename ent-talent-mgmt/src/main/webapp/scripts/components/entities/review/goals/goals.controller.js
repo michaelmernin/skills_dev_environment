@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('GoalsController', function ($scope, $mdDialog, $stateParams, Goal) {
+angular.module('etmApp').controller('GoalsController', function ($scope, $mdDialog, $stateParams, Goal, $window, $mdMedia) {
   var review = {};
   $scope.goals = [];  
 
@@ -77,5 +77,19 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     } else {
       return ''
     }
+  };
+  
+  $scope.fieldLimit = function () {
+    var width = Math.max(320, $window.innerWidth);
+    var padding = 100;
+    if ($mdMedia('gt-lg')) {
+      width = 0.5 * width;
+      padding += 240;
+    }
+    if ($mdMedia('lg')) {
+      width = 0.6 * width;
+      padding += 300;
+    }
+    return Math.floor((width - padding) * 0.136);
   };
 });
