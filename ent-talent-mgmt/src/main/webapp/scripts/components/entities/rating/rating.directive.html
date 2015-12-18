@@ -10,7 +10,7 @@
       <span class="md-headline">{{getScore()}}</span>
     </div>
   </md-input-container>
-  <md-input-container>
+  <md-input-container class="md-block">
     <label>Comments</label>
     <textarea name="comment" ng-model="rating.comment" ng-disabled="disabled" md-maxlength="250" ng-required="rating.score !== 3"></textarea>
     <div ng-messages="ratingForm.comment.$error" ng-if="ratingForm.comment.$touched">

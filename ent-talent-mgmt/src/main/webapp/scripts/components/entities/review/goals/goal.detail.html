@@ -10,7 +10,7 @@
       </div>
     </md-toolbar>
     <md-dialog-content class="md-dialog-content">
-      <md-input-container>
+      <md-input-container class="md-block">
         <label translate="review.annual.goals.goal">Goal Title</label>
         <textarea name="goal" ng-model="goal.name" required></textarea>
         <div ng-messages="goalForm.goal.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
@@ -19,7 +19,7 @@
           </div>
         </div>
       </md-input-container> 
-      <md-input-container>
+      <md-input-container class="md-block">
         <label translate="review.annual.goals.description">Description</label>
         <textarea name="description" ng-model="goal.description"></textarea>
       </md-input-container> 
@@ -39,7 +39,7 @@
           <input type="date" name="completionDate" ng-model="goal.completionDate" ng-disabled="!switchCompletion" />
         </md-input-container> 
       </div>      
-      <md-input-container>
+      <md-input-container class="md-block">
         <label translate="review.annual.goals.note">Notes</label>
         <textarea name="note" ng-model="goal.note"></textarea>
       </md-input-container>

@@ -14,7 +14,7 @@
      <!--DELETE ME-->
       
       <ng-form name="feedbackForm">
-        <md-input-container>
+        <md-input-container class="md-block">
           <label>Overall Comment</label>
           <textarea name="overallComment" ng-model="feedback.overallComment" md-maxlength="250" rows="1" ng-required="true"></textarea>
           <div ng-messages="feedbackForm.overallComment.$error" ng-if="ratingForm.comment.$touched">
