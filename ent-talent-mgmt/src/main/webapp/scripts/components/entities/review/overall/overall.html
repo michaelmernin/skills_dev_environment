@@ -39,4 +39,41 @@
       </md-list-item>
     </div>
   </md-list>
+  <div>
+    <md-list>
+      <md-list-item  ng-click="viewFeedback(reviewerFeedback,'reviewer' , $event)">
+        <div layout="column" layout-align="start center" layout-margin >
+          <md-icon md-font-icon="fa fa-user fa-4x" class="md-primary fa fa-user fa-4x" style="height: auto;"
+                   aria-hidden="true" layout-margin>
+          </md-icon>
+          <md-tooltip md-direction="bottom">
+            {{reviewerFeedback.author.firstName}} {{reviewerFeedback.author.lastName}}
+          </md-tooltip>
+          <p>{{reviewerFeedback.author.firstName}}</p>
+        </div>
+        <div layout-align="start center" flex="90">
+          <p style="line-height: 1.5em;" > {{reviewerFeedback.overallComment}}</p>
+         <md-icon md-font-icon="fa fa-edit fa-lg" class="md-secondary" aria-label="Edit"></md-icon> 
+        </div>
+      </md-list-item>
+      <md-list-item  ng-click="viewFeedback(revieweeFeedback,'reviewee', $event)">
+        <div layout="column" layout-align="start center" layout-margin >
+          <md-icon md-font-icon="fa fa-user fa-lg" class="md-primary fa fa-user fa-4x" style="height: auto;"
+                   aria-hidden="true" layout-margin>
+          </md-icon>
+          <md-tooltip md-direction="bottom">
+            {{revieweeFeedback.author.firstName}} {{revieweeFeedback.author.lastName}}
+          </md-tooltip>
+          <p>{{revieweeFeedback.author.firstName}}</p>
+        </div>
+        <div layout-align="start center" flex="90">
+          <p style="line-height: 1.5em;" > {{revieweeFeedback.overallComment}}</p>
+         <md-icon md-font-icon="fa fa-edit fa-lg" class="md-secondary" aria-label="Edit"></md-icon> 
+        </div>
+      </md-list-item>
+    </md-list>
+  </div>
 </div>
+
+
+
