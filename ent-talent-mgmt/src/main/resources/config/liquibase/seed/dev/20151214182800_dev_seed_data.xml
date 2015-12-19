@@ -10,24 +10,11 @@
     <!--
         Add dev seed data.
     -->
-    <changeSet id="20151104175500" context="!prod" author="ahmed">
+    <changeSet id="20151214182800" context="!prod" author="donovan">
         <loadUpdateData encoding="UTF-8" separator=";"
-                  file="config/liquibase/seed/dev/reviews.csv"
-                  tableName="T_REVIEW"
-                  primaryKey="id"/>
-        <loadUpdateData encoding="UTF-8" separator=";"
-                  file="config/liquibase/seed/dev/peers.csv"
-                  tableName="T_PEER"
-                  primaryKey="user_id,review_id"/>
-                  
-        <loadUpdateData encoding="UTF-8" separator=";"
-                  file="config/liquibase/seed/dev/feedback.csv"
+                  file="config/liquibase/seed/dev/feedback3.csv"
                   tableName="T_FEEDBACK"
                   primaryKey="id"/>
 
-        <loadUpdateData encoding="UTF-8" separator=";"
-                  file="config/liquibase/seed/dev/ratings.csv"
-                  tableName="T_RATING"
-                  primaryKey="id"/>
     </changeSet>
 </databaseChangeLog>
