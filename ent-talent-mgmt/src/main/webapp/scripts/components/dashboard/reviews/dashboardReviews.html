@@ -3,11 +3,11 @@
   <md-divider></md-divider>
   <div>
     <div layout-gt-sm="row" layout-sm="column">
-      <md-input-container flex-gt-sm="50">
+      <md-input-container class="md-block" flex-gt-sm="50">
         <label for="query">Filter</label>
         <input type="text" id="query" ng-model="query">
       </md-input-container>
-      <md-input-container flex-gt-sm>
+      <md-input-container class="md-block" flex-gt-sm>
         <label>Order By</label>
         <md-select ng-model="orderByExpression">
           <md-option ng-repeat="orderByItem in orderByItems" value="{{ orderByItem.value }}">
