@@ -1,6 +1,9 @@
 <div ng-cloak layout="column" layout-padding>
   <md-autocomplete md-selected-item="selectedItem" md-item-text="user.firstName + ' ' + user.lastName" md-selected-item-change="peerSelected(user)" md-search-text="searchText" md-min-length="3" placeholder="Type here to search for peers..." md-items="user in getMatches(searchText)">
-    <span md-highlight-text="searchText">{{user.firstName}} {{user.lastName}}</span>
+    <md-item-template>
+      <span md-highlight-text="searchText">{{user.firstName}} {{user.lastName}}</span>
+    </md-item-template>
+    <md-not-found>No peers matching "{{ searchText }}" were found.</md-not-found>
   </md-autocomplete>
 </div>
 
