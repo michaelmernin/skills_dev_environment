@@ -5,7 +5,7 @@
         <h2 class="md-display-1" translate="review.new.title">Create a Review</h2>
         <h3 translate="review.info">Review Info</h3>
         <div layout-gt-sm="row">
-          <md-input-container flex-gt-sm>
+          <md-input-container class="md-block" flex-gt-sm>
             <label translate="review.reviewType">Review Type</label>
             <md-select name="reviewType" ng-model="review.reviewType" ng-model-options="{trackBy: '$value.id'}" required>
               <md-option ng-value="reviewType" ng-repeat="reviewType in reviewTypes">{{ reviewType.name }}</md-option>
@@ -16,7 +16,7 @@
               </div>
             </div>
           </md-input-container>
-          <md-input-container flex-gt-sm>
+          <md-input-container class="md-block" flex-gt-sm>
             <label translate="review.reviewee">Reviewee</label>
             <md-select name="reviewee" ng-model="review.reviewee" ng-model-options="{trackBy: '$value.login'}" required>
               <md-option ng-value="reviewee" ng-repeat="reviewee in reviewees">{{ reviewee.firstName }} {{ reviewee.lastName }}</md-option>
@@ -30,7 +30,7 @@
         </div>
         <h3 translate="review.dates">Review Dates</h3>
         <div layout-gt-sm="row">
-          <md-input-container flex-gt-sm>
+          <md-input-container class="md-block" flex-gt-sm>
             <label translate="review.startDate">Start Date</label>
             <input type="date" name="startDate" ng-model="review.startDate" required/>
             <div ng-messages="reviewForm.startDate.$error" ng-if="reviewForm.$submitted || reviewForm.startDate.$dirty">
@@ -42,7 +42,7 @@
               </div>
             </div>
           </md-input-container>
-          <md-input-container flex-gt-sm>
+          <md-input-container class="md-block" flex-gt-sm>
             <label translate="review.endDate">End Date</label>
             <input type="date" name="endDate" ng-model="review.endDate" required min="{{ minEndDate() }}"/>
             <div ng-messages="reviewForm.endDate.$error" ng-if="reviewForm.$submitted || reviewForm.endDate.$dirty">
