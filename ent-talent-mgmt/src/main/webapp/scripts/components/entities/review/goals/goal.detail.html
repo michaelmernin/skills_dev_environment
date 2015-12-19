@@ -23,21 +23,25 @@
         <label translate="review.annual.goals.description">Description</label>
         <textarea name="description" ng-model="goal.description"></textarea>
       </md-input-container> 
-      <div layout="row">    
-        <md-input-container>
-          <label translate="review.annual.goals.targetDate">Target Date</label>
-          <input type="date" name="targetDate" ng-model="goal.targetDate"/>
-          <div ng-messages="goalForm.targetDate.$error">
-            <div ng-message="date">
-              <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.annual.goals.targetDate' | translate }}'}" >Please select a valid value.</span>
+      <div layout-gt-sm="row">
+        <div layout-gt-xs="row" flex-gt-sm>
+          <md-input-container class="md-block" flex-gt-xs>
+            <label translate="review.annual.goals.targetDate">Target Date</label>
+            <input type="date" name="targetDate" ng-model="goal.targetDate"/>
+            <div ng-messages="goalForm.targetDate.$error">
+              <div ng-message="date">
+                <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.annual.goals.targetDate' | translate }}'}" >Please select a valid value.</span>
+              </div>
             </div>
-          </div>
-        </md-input-container>
-        <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="isPopulated()">Completed?</md-switch>
-        <md-input-container>
-          <label translate="review.annual.goals.completionDate">Completion Date</label>
-          <input type="date" name="completionDate" ng-model="goal.completionDate" ng-disabled="!switchCompletion" />
-        </md-input-container> 
+          </md-input-container>
+        </div>
+        <div layout-gt-xs="row" flex-gt-sm>
+          <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="isPopulated()">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
+          <md-input-container class="md-block" flex-gt-xs>
+            <label translate="review.annual.goals.completionDate">Completion Date</label>
+            <input type="date" name="completionDate" ng-model="goal.completionDate" ng-disabled="!switchCompletion" />
+          </md-input-container>
+        </div>
       </div>      
       <md-input-container class="md-block">
         <label translate="review.annual.goals.note">Notes</label>
