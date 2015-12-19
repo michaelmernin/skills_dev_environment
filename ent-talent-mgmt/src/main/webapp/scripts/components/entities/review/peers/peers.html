@@ -13,7 +13,7 @@
     <md-checkbox ng-model="user.selected" class="md-primary"></md-checkbox>
     <h4 class="peer-name">{{user.firstName}} {{user.lastName}}</h4>
     <p>Not Sent</p>
-    <md-icon id="delete-peers-icon" ng-click="deletePeer(user, $event)" md-font-icon="fa fa-trash-o fa-lg" class="ng-scope ng-isolate-scope md-default-theme md-font fa fa-trash-o fa-lg"></md-icon>
+    <md-icon md-font-icon="fa fa-trash-o fa-lg" class="md-secondary" ng-click="deletePeer(user, $event)" aria-label="Remove Peer"></md-icon>
     <md-divider></md-divider>
   </md-list-item>
 </div>      
