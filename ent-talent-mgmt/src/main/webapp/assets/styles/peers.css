@@ -1,8 +1,7 @@
-#email-peers-icon, #delete-peers-icon {
-  margin-top: 15px;
-  color: grey;
+.peer-name {
+  margin-right: 15px;
 }
 
-md-list-item h4.peer-name {
-  margin-right: 15px;
+.email-peers {
+  margin-left: 19px;
 }
