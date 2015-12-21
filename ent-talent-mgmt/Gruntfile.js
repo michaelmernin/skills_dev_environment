@@ -346,6 +346,16 @@ module.exports = function (grunt) {
           }
         }
       },
+      test: {
+        options: {
+          args: {
+            baseUrl: 'https://stlerappdev.perficient.com:8443',
+            params: {
+              ENV: 'test'
+            }
+          }
+        }
+      },
       uat: {
         options: {
           args: {
