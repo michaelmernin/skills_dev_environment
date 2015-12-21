@@ -7,6 +7,7 @@
           <base value="OU=Employees,DC=perficient,DC=com" />
         </bases>
       </ldap>
+      <passwordFile path="/etc/go/passwd" />
       <admins>
         <user>donovan.mikrot</user>
       </admins>

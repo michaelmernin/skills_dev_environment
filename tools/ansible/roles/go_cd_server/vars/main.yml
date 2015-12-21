@@ -4,3 +4,7 @@ download_url: http://download.go.cd/gocd-rpm/go-server-15.1.0-1863.noarch.rpm
 download_folder: /opt
 gocd_package: "{{ download_folder }}/go-server-15.1.0-1863.noarch.rpm"
 gocd_config_folder: /etc/go
+slack_plugin_url: https://github.com/ashwanthkumar/gocd-slack-build-notifier/releases/download/v1.1.1/gocd-slack-notifier-1.1.1.jar
+external_plugins_folder: /var/lib/go-server/plugins/external
+slack_plugin_jar: "{{ external_plugins_folder }}/gocd-slack-notifier.jar"
+gocd_home_folder: /var/go

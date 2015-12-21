@@ -33,3 +33,41 @@
     force: yes
     backup: yes
 
+- name: Download Go CD Slack Notifier Plugin
+  tags: gocd_server
+  sudo: yes
+  command: "wget -q -O {{ slack_plugin_jar }} --no-check-certificate --no-cookies {{ slack_plugin_url }}"
+  args:
+    creates: "{{ slack_plugin_jar }}"
+
+- name: Load encrypted Slack info from vault
+  tags: gocd_server
+  include_vars: slack.yml
+
+- name: Copy Slack Notifier Plugin config
+  tags: gocd_server
+  sudo: yes
+  template:
+    src: go_notify.conf
+    dest: "{{ gocd_home_folder }}/go_notify.conf"
+    mode: 664
+    owner: go
+    group: go
+
+- name: Create password file for non-ldap users
+  tags: gocd_server
+  sudo: yes
+  htpasswd:
+    name: "{{ slack_user }}"
+    password: "{{ slack_user_password }}"
+    path: "{{ gocd_config_folder }}/passwd"
+    mode: 644
+    owner: go
+    group: go
+
+- name: Restart Go CD server
+  tags: gocd_server
+  sudo: yes
+  service:
+    name: go-server
+    state: restarted
