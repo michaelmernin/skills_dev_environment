@@ -6,14 +6,14 @@
   command: "wget -q -O {{ gocd_package }} --no-check-certificate --no-cookies {{ download_url }}"
   args:
     creates: "{{ gocd_package }}"
- 
+
 - name: Install Go CD
   tags: gocd_server
   sudo: yes
   yum:
     name: "{{ gocd_package }}"
     state: present
- 
+
 - name: Clean up
   tags: gocd_server
   sudo: yes
@@ -22,7 +22,7 @@
     state: absent
 
 - name: Copy Server config
-  tags: gocd_server
+  tags: gocd_config
   sudo: yes
   copy:
     src: cruise-config.xml
@@ -34,28 +34,42 @@
     backup: yes
 
 - name: Download Go CD Slack Notifier Plugin
-  tags: gocd_server
+  tags: gocd_slack
   sudo: yes
   command: "wget -q -O {{ slack_plugin_jar }} --no-check-certificate --no-cookies {{ slack_plugin_url }}"
   args:
     creates: "{{ slack_plugin_jar }}"
 
 - name: Load encrypted Slack info from vault
-  tags: gocd_server
+  tags: gocd_slack
   include_vars: slack.yml
 
 - name: Copy Slack Notifier Plugin config
-  tags: gocd_server
+  tags: gocd_slack
   sudo: yes
   template:
-    src: go_notify.conf
+    src: go_notify.conf.j2
     dest: "{{ gocd_home_folder }}/go_notify.conf"
     mode: 664
     owner: go
     group: go
 
+- name: Configure EPEL Repository
+  tags: gocd_slack
+  sudo: yes
+  yum:
+    name: epel-release
+    state: latest
+
+- name: Install passlib dependency of htpasswd module
+  tags: gocd_slack
+  sudo: yes
+  yum:
+    name: python-passlib
+    state: latest
+
 - name: Create password file for non-ldap users
-  tags: gocd_server
+  tags: gocd_slack
   sudo: yes
   htpasswd:
     name: "{{ slack_user }}"
@@ -66,7 +80,9 @@
     group: go
 
 - name: Restart Go CD server
-  tags: gocd_server
+  tags:
+    - gocd_slack
+    - gocd_server
   sudo: yes
   service:
     name: go-server
