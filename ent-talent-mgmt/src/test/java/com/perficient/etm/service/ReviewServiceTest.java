@@ -1,7 +1,6 @@
 package com.perficient.etm.service;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,10 +103,18 @@ public class ReviewServiceTest extends SpringAppTest {
 	
 	@Test
 	public void testTodoList(){
-		List<ToDo> tasks = reviewSvc.getUsersReviewTodo(new User());
+		User u = Mockito.mock(User.class);
+		Mockito.when(u.getId()).thenReturn(1L);
+		List<ToDo> tasks = reviewSvc.getUsersReviewTodo(u);
 		assertNotNull(tasks);
+		//assertFalse(tasks.isEmpty());
 	}
-	
-	
+
+	@Test
+	public void testTodoListWithNull(){
+		List<ToDo> tasks = reviewSvc.getUsersReviewTodo(null);
+		assertNotNull(tasks);
+		assertTrue(tasks.isEmpty());
+	}
 	
 }
