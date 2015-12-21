@@ -1,19 +1,13 @@
-# file: dev
+# file: test
 
 [appservers]
-stlerappdev.perficient.com
-
-[ciservers]
 stlerappdev.perficient.com
 
 [dbservers]
 stlerdbdev.perficient.com
 
 [appservers:vars]
-profile=dev
-
-[ciservers:vars]
-profile=dev
+profile=uat
 
 [dbservers:vars]
-profile=dev
+profile=uat
