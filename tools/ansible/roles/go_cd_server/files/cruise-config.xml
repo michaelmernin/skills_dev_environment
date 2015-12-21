@@ -10,11 +10,20 @@
       <passwordFile path="/etc/go/passwd" />
       <admins>
         <user>donovan.mikrot</user>
+        <user>david.brooks</user>
       </admins>
     </security>
     <mailhost hostname="mail2.perficient.com" port="25" tls="false" from="etm-go@perficient.com" admin="donovan.mikrot@perficient.com" />
   </server>
   <pipelines group="etm">
+    <authorization>
+      <view>
+        <user>david.brooks</user>
+      </view>
+      <operate>
+        <user>david.brooks</user>
+      </operate>
+    </authorization>
     <pipeline name="etm-build" labeltemplate="${COUNT}-${git[:7]}" isLocked="false">
       <materials>
         <git url="git@github.com:Perficient/ent-talent-mgmt.git" materialName="git">
@@ -82,7 +91,32 @@
         </jobs>
       </stage>
     </pipeline>
-    <pipeline name="etm-deploy-uat" labeltemplate="${etm-build}" isLocked="true" template="etm-deploy">
+    <pipeline name="etm-deploy-test" labeltemplate="${etm-build}" isLocked="true" template="etm-deploy-auto">
+      <params>
+        <param name="inventory">test</param>
+        <param name="url">https://stlerappdev.perficient.com:8443</param>
+      </params>
+      <materials>
+        <pipeline pipelineName="etm-build" stageName="build" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git">
+          <filter>
+            <ignore pattern="ent-talent-mgmt/**/*" />
+            <ignore pattern="docs/**/*" />
+            <ignore pattern="tools/ssl/**/*" />
+          </filter>
+        </git>
+      </materials>
+    </pipeline>
+    <pipeline name="etm-acceptance-test" labeltemplate="${etm-deploy-test}" isLocked="false" template="etm-acceptance">
+      <params>
+        <param name="environment">test</param>
+      </params>
+      <materials>
+        <pipeline pipelineName="etm-deploy-test" stageName="verify" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" />
+      </materials>
+    </pipeline>
+    <pipeline name="etm-deploy-uat" labeltemplate="${etm-build}" isLocked="true" template="etm-deploy-manual">
       <params>
         <param name="inventory">uat</param>
         <param name="url">https://stlerappuat.perficient.com:8443</param>
@@ -98,44 +132,53 @@
         </git>
       </materials>
     </pipeline>
-    <pipeline name="etm-test-uat" labeltemplate="${etm-deploy-uat}" isLocked="false">
+    <pipeline name="etm-acceptance-uat" labeltemplate="${etm-deploy-uat}" isLocked="false" template="etm-acceptance">
+      <params>
+        <param name="environment">uat</param>
+      </params>
       <materials>
         <pipeline pipelineName="etm-deploy-uat" stageName="verify" />
         <git url="git@github.com:Perficient/ent-talent-mgmt.git" />
       </materials>
-      <stage name="install">
+    </pipeline>
+  </pipelines>
+  <templates>
+    <pipeline name="etm-deploy-manual">
+      <stage name="deploy">
+        <approval type="manual" />
         <jobs>
-          <job name="npm">
+          <job name="server">
             <tasks>
-              <exec command="npm" workingdir="ent-talent-mgmt">
-                <arg>install</arg>
+              <fetchartifact pipeline="etm-build" stage="build" job="package" srcdir="etm-wars">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="tools/ansible">
+                <arg>-c</arg>
+                <arg>ansible-playbook appservers.yml -i #{inventory} -t ci_deploy -e "artifact_dir=../../etm-wars" --vault-password-file ~/.ansible/vault_key.txt</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
           </job>
         </jobs>
       </stage>
-      <stage name="test" fetchMaterials="false">
+      <stage name="verify" fetchMaterials="false">
         <jobs>
-          <job name="acceptance-test">
+          <job name="started">
             <tasks>
-              <exec command="env" workingdir="ent-talent-mgmt">
-                <arg>DISPLAY=:99</arg>
-                <arg>grunt</arg>
-                <arg>protractor:uat</arg>
+              <exec command="wget">
+                <arg>--retry-connrefused</arg>
+                <arg>--waitretry=60</arg>
+                <arg>--tries=20</arg>
+                <arg>--no-check-certificate</arg>
+                <arg>#{url}</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
-            <artifacts>
-              <test src="ent-talent-mgmt/build/e2e-test-reports/*.xml" dest="etm-test-results" />
-            </artifacts>
           </job>
         </jobs>
       </stage>
     </pipeline>
-  </pipelines>
-  <templates>
-    <pipeline name="etm-deploy">
+    <pipeline name="etm-deploy-auto">
       <stage name="deploy">
         <jobs>
           <job name="server">
@@ -165,6 +208,37 @@
                 <runif status="passed" />
               </exec>
             </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="etm-acceptance">
+      <stage name="install">
+        <jobs>
+          <job name="npm">
+            <tasks>
+              <exec command="npm" workingdir="ent-talent-mgmt">
+                <arg>install</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="test" fetchMaterials="false">
+        <jobs>
+          <job name="acceptance-test">
+            <tasks>
+              <exec command="env" workingdir="ent-talent-mgmt">
+                <arg>DISPLAY=:99</arg>
+                <arg>grunt</arg>
+                <arg>protractor:#{environment}</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <test src="ent-talent-mgmt/build/e2e-test-reports/*.xml" dest="etm-test-results" />
+            </artifacts>
           </job>
         </jobs>
       </stage>
