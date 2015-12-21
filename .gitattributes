@@ -1,0 +1,3 @@
+# Use "lf" (Unix) line endings for ansible vault files
+tools/ansible/roles/mysql_server/vars/password.yml text eol=lf
+tools/ansible/roles/etm_app/vars/ldap.yml text eol=lf
