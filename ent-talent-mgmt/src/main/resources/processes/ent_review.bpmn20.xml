@@ -21,7 +21,7 @@
     <userTask id="UserTask_3" name="Joint Review (Reviewer)" activiti:assignee="${Reviewer}"></userTask>
     <sequenceFlow id="SequenceFlow_22" sourceRef="UserTask_3" targetRef="FinalReview"></sequenceFlow>
     <startEvent id="anualReviewStart" name="Start"></startEvent>
-    <sequenceFlow id="SequenceFlow_13" sourceRef="anualReviewStart" targetRef="CompleteSelfReviewUserTask"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow_13" sourceRef="anualReviewStart" targetRef="startProcessEmailServiceTask"></sequenceFlow>
     <userTask id="ReviewerReviewsInputUserTask" name="Reviewer Reviews counselee input" activiti:assignee="${Reviewer}"></userTask>
     <sequenceFlow id="SequenceFlow_8" sourceRef="ReviewerReviewsInputUserTask" targetRef="ReviewersAcceptExclusiveGateway"></sequenceFlow>
     <userTask id="DirectorsReview" name="Directors Review" activiti:assignee="${Director}"></userTask>
@@ -33,6 +33,8 @@
     <sequenceFlow id="ReviewersAcceptFlow" name="Yes" sourceRef="ReviewersAcceptExclusiveGateway" targetRef="DirectorsReview">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "SUCCESS"}]]></conditionExpression>
     </sequenceFlow>
+    <sequenceFlow id="flow1" sourceRef="startProcessEmailServiceTask" targetRef="CompleteSelfReviewUserTask"></sequenceFlow>
+    <serviceTask id="startProcessEmailServiceTask" name="Start Process Mail" activiti:expression="${mailService.sendAnnualProcessStartedEmail()}"></serviceTask>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_annualReview">
     <bpmndi:BPMNPlane bpmnElement="annualReview" id="BPMNPlane_annualReview">
@@ -65,6 +67,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="ReviewersAcceptExclusiveGateway" id="BPMNShape_ReviewersAcceptExclusiveGateway">
         <omgdc:Bounds height="40.0" width="40.0" x="684.0" y="210.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="startProcessEmailServiceTask" id="BPMNShape_startProcessEmailServiceTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="90.0" y="318.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_9" id="BPMNEdge_SequenceFlow_9">
         <omgdi:waypoint x="831.0" y="210.0"></omgdi:waypoint>
@@ -118,7 +123,7 @@
         <omgdi:waypoint x="74.0" y="227.0"></omgdi:waypoint>
         <omgdi:waypoint x="128.0" y="225.0"></omgdi:waypoint>
         <omgdi:waypoint x="128.0" y="231.0"></omgdi:waypoint>
-        <omgdi:waypoint x="216.0" y="231.0"></omgdi:waypoint>
+        <omgdi:waypoint x="142.0" y="318.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_8" id="BPMNEdge_SequenceFlow_8">
         <omgdi:waypoint x="624.0" y="231.0"></omgdi:waypoint>
@@ -148,8 +153,12 @@
         <omgdi:waypoint x="611.0" y="284.0"></omgdi:waypoint>
         <omgdi:waypoint x="611.0" y="318.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="13.0" width="100.0" x="704.0" y="250.0"></omgdc:Bounds>
+          <omgdc:Bounds height="13.0" width="19.0" x="704.0" y="250.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="142.0" y="318.0"></omgdi:waypoint>
+        <omgdi:waypoint x="309.0" y="271.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

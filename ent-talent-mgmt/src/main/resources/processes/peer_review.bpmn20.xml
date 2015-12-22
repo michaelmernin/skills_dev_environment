@@ -3,22 +3,6 @@
   <process id="peerReview" name="Peer Review Process" isExecutable="true">
     <startEvent id="start" name="Start"></startEvent>
     <userTask id="giveFeedback" name="Give Peer Feedback" activiti:assignee="${Peer}"></userTask>
-    <serviceTask id="giveFeedbackReminderEmail" name="Give Feedback Reminder Email" activiti:type="mail">
-      <extensionElements>
-        <activiti:field name="to">
-          <activiti:expression><![CDATA[${peerEmail}]]></activiti:expression>
-        </activiti:field>
-        <activiti:field name="from">
-          <activiti:string><![CDATA[no-reply@perficient.com]]></activiti:string>
-        </activiti:field>
-        <activiti:field name="subject">
-          <activiti:string><![CDATA[Peer Feedback Reminder]]></activiti:string>
-        </activiti:field>
-        <activiti:field name="html">
-          <activiti:expression><![CDATA[Please give feedback to : ${Reviewee}]]></activiti:expression>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
     <sequenceFlow id="flow1" sourceRef="start" targetRef="giveFeedback"></sequenceFlow>
     <endEvent id="end" name="End"></endEvent>
     <sequenceFlow id="flow4" sourceRef="giveFeedback" targetRef="end"></sequenceFlow>
@@ -27,8 +11,9 @@
         <timeDuration>PT1M</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
-    <sequenceFlow id="flow5" sourceRef="boundarytimer1" targetRef="giveFeedbackReminderEmail"></sequenceFlow>
-    <sequenceFlow id="flow6" sourceRef="giveFeedbackReminderEmail" targetRef="giveFeedback"></sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="boundarytimer1" targetRef="peerReviewFeedbackEmailTask"></sequenceFlow>
+    <sequenceFlow id="flow6" sourceRef="peerReviewFeedbackEmailTask" targetRef="giveFeedback"></sequenceFlow>
+    <serviceTask id="peerReviewFeedbackEmailTask" name="Give Feedback Reminder Email" activiti:expression="${mailService.sendPeerReviewReminderEmail()}"></serviceTask>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_peerReview">
     <bpmndi:BPMNPlane bpmnElement="peerReview" id="BPMNPlane_peerReview">
@@ -41,11 +26,11 @@
       <bpmndi:BPMNShape bpmnElement="boundarytimer1" id="BPMNShape_boundarytimer1">
         <omgdc:Bounds height="30.0" width="30.0" x="290.0" y="210.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="giveFeedbackReminderEmail" id="BPMNShape_giveFeedbackReminderEmail">
-        <omgdc:Bounds height="71.0" width="105.0" x="230.0" y="290.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
         <omgdc:Bounds height="35.0" width="35.0" x="410.0" y="180.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="peerReviewFeedbackEmailTask" id="BPMNShape_peerReviewFeedbackEmailTask">
+        <omgdc:Bounds height="71.0" width="105.0" x="230.0" y="290.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
         <omgdi:waypoint x="155.0" y="197.0"></omgdi:waypoint>

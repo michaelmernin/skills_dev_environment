@@ -20,10 +20,14 @@ public class MissingReviewInfoException extends ETMException{
 	}
 
 	@Override
-	public String toString() {
-		return getMessage() + "["+ Arrays.toString(fields) + "]";
+	public String getMessage() {
+		return super.getMessage() + "["+ Arrays.toString(fields) + "]" ;
 	}
-	
+
+	@Override
+	public String getLocalizedMessage() {
+		return super.getLocalizedMessage() + "["+ Arrays.toString(fields) + "]" ;
+	}
 	
 	
 }

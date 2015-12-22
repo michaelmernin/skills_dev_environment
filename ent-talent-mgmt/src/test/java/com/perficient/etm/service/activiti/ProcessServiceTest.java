@@ -21,7 +21,7 @@ public class ProcessServiceTest extends SpringAppTest {
 	ProcessService processSvc;
 	
 	@Test
-	public void basicSetup() throws ETMException {
+	public void testStartReviewProcess() throws ETMException {
 		String instanceId = ServicesTestUtils.startAnnualReviewProcess(processSvc);
 		assertNotNull("Instance of the processId should not be null", instanceId);
 	}

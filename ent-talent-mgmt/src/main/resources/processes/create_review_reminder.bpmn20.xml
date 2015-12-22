@@ -8,7 +8,7 @@
     <sequenceFlow id="flow2" sourceRef="CreateReviewUserTask" targetRef="endevent1"></sequenceFlow>
     <boundaryEvent id="RemiderTimer" name="Timer" attachedToRef="CreateReviewUserTask" cancelActivity="true">
       <timerEventDefinition>
-        <timeDuration>P1H</timeDuration>
+        <timeDuration>PT1H</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
     <serviceTask id="mailtask1" name="Mail Task" activiti:type="mail">

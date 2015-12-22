@@ -83,4 +83,27 @@ public class MailService {
         String subject = messageSource.getMessage("email.activation.title", null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);
     }
+    
+    @Async
+    public void sendAnnualProcessStartedEmail(){
+    	log.debug("Sending annual review process started e-mail to '{}'");
+    	Locale locale = Locale.forLanguageTag("en-us");
+        Context context = new Context(locale);
+    	String content = templateEngine.process("reviewStartedEmail", context);
+        
+    	sendEmail("Test@test.org", "Test Subject", content, false, true);
+        
+    }
+    
+    @Async
+    public void sendPeerReviewReminderEmail(){
+    	log.debug("Sending peer review process reminder e-mail to '{}'");
+    	Locale locale = Locale.forLanguageTag("en-us");
+        Context context = new Context(locale);
+    	String content = templateEngine.process("peerReviewReminderEmail", context);
+        
+    	sendEmail("Test@test.org", "Test Subject", content, false, true);
+        
+    }
+    
 }

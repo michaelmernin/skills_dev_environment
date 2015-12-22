@@ -2,6 +2,7 @@ package com.perficient.etm.workflow;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.activiti.engine.task.Task;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.dumbster.smtp.MailMessage;
 import com.perficient.etm.utils.SpringAppTest;
 
 public class PeerReviewWorkflowTest extends SpringAppTest {
@@ -85,6 +87,9 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
 			//An email should be triggered and the task should be back to give feedback
 			//TODO check how to review the email
 			assertNotNull("Task should not be null",t);
+			MailMessage[] messages = getServer().getMessages();
+			System.out.println(messages.length); 
+			//assertTrue("There must be messages sent",messages.length > 1);
 		} catch (InterruptedException e) {
 			//If the sleep method fails do not fail the test. pass it with a warning
 			getLog().warn("Test email Trigger for Peer Review Workflow Failed to wait. This test will be useless");
