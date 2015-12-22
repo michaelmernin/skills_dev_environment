@@ -2,9 +2,9 @@
   "audits": {
     "title": "Audits",
     "filter": {
-      "title": "Filter per date",
-      "from": "from",
-      "to": "to",
+      "title": "Filter by Date",
+      "from": "From Date",
+      "to": "To Date",
       "button": {
         "weeks": "Weeks",
         "today": "today",

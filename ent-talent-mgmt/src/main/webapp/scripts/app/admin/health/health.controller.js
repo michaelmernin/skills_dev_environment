@@ -16,11 +16,11 @@ angular.module('etmApp').controller('HealthController', function ($scope, Monito
 
   $scope.refresh();
 
-  $scope.getLabelClass = function (statusState) {
-    if (statusState === 'UP') {
-      return 'label-success';
-    } else {
-      return 'label-danger';
-    }
+  $scope.getIconClass = function (statusState) {
+    return statusState === 'UP' ? 'fa-check' : 'fa-times';
   };
+
+  $scope.getIconColor = function (statusState) {
+    return statusState === 'UP' ? '#4CAF50' : '#dd2c00';
+  }
 });

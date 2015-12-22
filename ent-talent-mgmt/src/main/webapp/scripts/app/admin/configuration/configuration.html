@@ -8,26 +8,27 @@
         <input type="text" id="filter" ng-model="filter">
       </md-input-container>
     
-      <table class="table table-condensed table-striped table-bordered table-responsive">
+      <table class="admin-table">
         <thead>
           <tr>
-            <th ng-click="predicate = 'prefix'; reverse=!reverse">{{'configuration.table.prefix' | translate}}</th>
-            <th>{{'configuration.table.properties' | translate}}</th>
+            <th ng-click="predicate = 'prefix'; reverse=!reverse">{{ 'configuration.table.prefix' | translate }}</th>
+            <th>{{ 'configuration.table.properties' | translate }}</th>
           </tr>
         </thead>
-    
-        <tr ng-repeat="entry in configuration | filter:filter | orderBy:predicate:reverse">
-          <td>{{entry.prefix}}</span></td>
-          <td>
-            <div ng-repeat="(key, value) in entry.properties">
-              <span>
-                <md-tooltip ng-if="value">{{value}}</md-tooltip>
-                <i class="fa fa-info-circle" ng-if="value"></i>
-                {{key}}
-              </span>
-            </div>
-          </td>
-        </tr>
+        <tbody>
+          <tr ng-repeat="entry in configuration | filter:filter | orderBy:predicate:reverse">
+            <td>{{ entry.prefix }}</td>
+            <td>
+              <div ng-repeat="(key, value) in entry.properties">
+                <span>
+                  <md-tooltip ng-if="value">{{ value }}</md-tooltip>
+                  <i class="fa fa-info-circle" ng-if="value"></i>
+                  {{ key }}
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </md-content>

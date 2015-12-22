@@ -10,22 +10,22 @@
         <input type="text" id="filter" ng-model="filter">
       </md-input-container>
     
-      <table class="table table-condensed table-striped table-bordered table-responsive">
+      <table class="admin-table">
         <thead>
           <tr title="click to order">
-            <th ng-click="predicate = 'name'; reverse=!reverse" >{{'logs.table.name' | translate}}</th>
-            <th ng-click="predicate = 'level'; reverse=!reverse">{{'logs.table.level' | translate}}</th>
+            <th ng-click="predicate = 'name'; reverse=!reverse" >{{ 'logs.table.name' | translate }}</th>
+            <th style="text-align: center;" ng-click="predicate = 'level'; reverse=!reverse">{{ 'logs.table.level' | translate }}</th>
           </tr>
         </thead>
     
         <tr ng-repeat="logger in loggers | filter:filter | orderBy:predicate:reverse">
-          <td><small>{{splitClass(logger.name)}}</small></td>
+          <td><small>{{ splitClass(logger.name) }}</small></td>
           <td style="white-space: nowrap;">
-            <button ng-click="changeLevel(logger.name, 'TRACE')" ng-class="(logger.level=='TRACE') ? 'btn-danger' : 'btn-default'" class="btn btn-default btn-xs">TRACE</button>
-            <button ng-click="changeLevel(logger.name, 'DEBUG')" ng-class="(logger.level=='DEBUG') ? 'btn-warning' : 'btn-default'" class="btn btn-default btn-xs">DEBUG</button>
-            <button ng-click="changeLevel(logger.name, 'INFO')" ng-class="(logger.level=='INFO') ? 'btn-info' : 'btn-default'" class="btn btn-default btn-xs">INFO</button>
-            <button ng-click="changeLevel(logger.name, 'WARN')" ng-class="(logger.level=='WARN') ? 'btn-success' : 'btn-default'" class="btn btn-default btn-xs">WARN</button>
-            <button ng-click="changeLevel(logger.name, 'ERROR')" ng-class="(logger.level=='ERROR') ? 'btn-primary' : 'btn-default'" class="btn btn-default btn-xs">ERROR</button>
+            <md-button ng-click="changeLevel(logger.name, 'TRACE')" ng-class="(logger.level=='TRACE') ? 'md-primary' : ''">TRACE</md-button>
+            <md-button ng-click="changeLevel(logger.name, 'DEBUG')" ng-class="(logger.level=='DEBUG') ? 'md-primary' : ''">DEBUG</md-button>
+            <md-button ng-click="changeLevel(logger.name, 'INFO')" ng-class="(logger.level=='INFO') ? 'md-primary' : ''">INFO</md-button>
+            <md-button ng-click="changeLevel(logger.name, 'WARN')" ng-class="(logger.level=='WARN') ? 'md-primary' : ''">WARN</md-button>
+            <md-button ng-click="changeLevel(logger.name, 'ERROR')" ng-class="(logger.level=='ERROR') ? 'md-primary' : ''">ERROR</md-button>
           </td>
         </tr>
       </table>
