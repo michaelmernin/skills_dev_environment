@@ -10,21 +10,6 @@
     version: "{{ tag_name }}"
     accept_hostkey: yes
 
-- name: Copy war artifact
-  tags:
-    - ci_deploy
-  copy:
-    src: "{{ artifact_dir }}/"
-    dest: "{{ war_dir }}"
-
-- name: Kill currently running server
-  tags:
-    - deploy
-    - ci_deploy
-    - server
-  command: pkill -f etm
-  ignore_errors: yes
-
 - name: Copy application bash script
   tags: 
     - deploy
@@ -40,6 +25,27 @@
     src: etmRunWar.j2
     dest: "{{ script_dir }}/etmRunWar"
     mode: 0744
+
+- name: Kill currently running server
+  tags:
+    - deploy
+    - ci_deploy
+    - server
+  command: pkill -f etm
+  ignore_errors: yes
+
+- name: Copy war artifact
+  tags:
+    - ci_deploy
+  copy:
+    src: "{{ artifact_dir }}/"
+    dest: "{{ war_dir }}"
+
+- name: Pause 30 seconds for the server to finish stopping
+  tags:
+    - ci_deploy
+    - server
+  pause: seconds=30
 
 - name: Load encrypted LDAP password from vault
   tags:
