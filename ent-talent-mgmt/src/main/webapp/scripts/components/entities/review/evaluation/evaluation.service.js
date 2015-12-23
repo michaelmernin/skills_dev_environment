@@ -273,6 +273,11 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
         return true;
       }
       return false;
+    },
+    reset: function () {
+      categories = undefined;
+      questions = [];
+      questionsIndex = {};
     }
   };
 });

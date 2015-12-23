@@ -1,8 +1,9 @@
 'use strict';
 
-angular.module('etmApp').controller('ReviewEditController', function ($scope, $stateParams, Review, Principal) {
+angular.module('etmApp').controller('ReviewEditController', function ($scope, $stateParams, Review, Principal, Evaluation) {
   $scope.review = {};
   $scope.load = function (id) {
+    Evaluation.reset();
     Review.get({id: id}, function (result) {
       $scope.review = result;
     });
