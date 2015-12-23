@@ -4,15 +4,15 @@
       <md-list-item ng-click="toggle = !toggle;">
         <div class="md-list-item-text" flex>
           <span class="md-title">{{ category }}</span>
-          <span class="score" ng-if="getAvgScore(getRatings(questions, 'reviewee'))">
+          <span class="score" ng-if="showRevieweeRating() && getAvgScore(getRatings(questions, 'reviewee'))">
             <i class="fa fa-comment-o"></i>
             Self: {{ getAvgScore(getRatings(questions, 'reviewee')) }}
           </span>
-          <span class="score" ng-if="getAvgScore(getRatings(questions, 'reviewer'))">
+          <span class="score" ng-if="showReviewerRating() && getAvgScore(getRatings(questions, 'reviewer'))">
             <i class="fa fa-comment"></i>
             Reviewer: {{ getAvgScore(getRatings(questions, 'reviewer')) }}
           </span>
-          <span class="score" ng-if="getAvgScore(getRatings(questions, 'peer'))">
+          <span class="score" ng-if="showPeerAverage() && getAvgScore(getRatings(questions, 'peer'))">
             <i class="fa fa-comments-o"></i>
             Peers: {{ getAvgScore(getRatings(questions, 'peer')) }}
           </span>
@@ -23,17 +23,21 @@
         <div class="md-list-item-text">
           <h4>{{ question.title ? question.title : question.text | limitTo:titleLimit() }}</h4>
           <p>
-            <span class="score" ng-if="question.ratings.reviewee.score">
+            <span class="score" ng-if="showRevieweeRating() && question.ratings.reviewee.score">
               <i class="fa fa-comment-o"></i>
               Self Rating: {{ getScore(question.ratings.reviewee) }}
             </span>
-            <span class="score" ng-if="question.ratings.reviewer.score">
+            <span class="score" ng-if="showReviewerRating() && question.ratings.reviewer.score">
               <i class="fa fa-comment"></i>
               Reviewer Rating: {{ getScore(question.ratings.reviewer) }}
             </span>
-            <span class="score" ng-if="getAvgScore(question.ratings.peer)">
+            <span class="score" ng-if="showPeerAverage() && getAvgScore(question.ratings.peer)">
               <i class="fa fa-comments-o"></i>
               Average Peer Rating: {{ getAvgScore(question.ratings.peer) }}
+            </span>
+            <span class="score" ng-if="showPeerRating(question.editableRating) && question.editableRating.score">
+              <i class="fa fa-comments-o"></i>
+              Peer Rating: {{ getScore(question.editableRating) }}
             </span>
           </p>
         </div>

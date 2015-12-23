@@ -7,21 +7,21 @@
         <div layout="row" flex-gt-xs>
           <span flex>
             <i class="fa fa-comment-o"></i>
-            Self: {{ getAvgScore(getRatings(questions, 'reviewee')) }}
+            Self: {{ showRevieweeRating() ? getAvgScore(getRatings(questions, 'reviewee')) : 0 }}
           </span>
           <span flex>
             <i class="fa fa-comment"></i>
-            Reviewer: {{ getAvgScore(getRatings(questions, 'reviewer')) }}
+            Reviewer: {{ showReviewerRating() ? getAvgScore(getRatings(questions, 'reviewer')) : 0 }}
           </span>
         </div>
         <div layout="row" flex-gt-xs>
           <span flex>
             <i class="fa fa-comments-o"></i>
-            Peers: {{ getAvgScore(getRatings(questions, 'peer')) }}
+            Peers: {{ showPeerRatings() ? getAvgScore(getRatings(questions, 'peer')) : 0 }}
           </span>
           <span flex>
             <i class="fa fa-comments"></i>
-            All: {{ getAvgScore(getRatings(questions)) }}
+            All: {{ showAllRating() ? getAvgScore(getRatings(questions)) : 0 }}
           </span>
         </div>
       </div>
@@ -31,21 +31,21 @@
       <div layout="row" flex-gt-xs>
         <span flex>
           <i class="fa fa-comment-o"></i>
-          Self: {{ getAvgScore(getRatings(questions, 'reviewee')) }}
+          Self: {{ showRevieweeRating() ? getAvgScore(getRatings(questions, 'reviewee')) : 0 }}
         </span>
         <span flex>
           <i class="fa fa-comment"></i>
-          Reviewer: {{ getAvgScore(getRatings(questions, 'reviewer')) }}
+          Reviewer: {{ showReviewerRating() ? getAvgScore(getRatings(questions, 'reviewer')) : 0 }}
         </span>
       </div>
       <div layout="row" flex-gt-xs>
         <span flex>
           <i class="fa fa-comments-o"></i>
-          Peers: {{ getAvgScore(getRatings(questions, 'peer')) }}
+          Peers: {{ showPeerRatings() ? getAvgScore(getRatings(questions, 'peer')) : 0 }}
         </span>
         <span flex>
           <i class="fa fa-comments"></i>
-          All: {{ getAvgScore(getRatings(questions)) }}
+          All: {{ showAllRating() ? getAvgScore(getRatings(questions)) : 0 }}
         </span>
       </div>
     </div>

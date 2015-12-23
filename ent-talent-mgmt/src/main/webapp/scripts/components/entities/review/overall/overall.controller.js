@@ -22,6 +22,24 @@ angular.module('etmApp').controller('OverallController', function ($scope, $mdDi
     });
   });
 
+  $scope.showRevieweeRating = function () {
+    return Evaluation.showRevieweeRating(review, user);
+  };
+
+  $scope.showReviewerRating = function () {
+    return Evaluation.showReviewerRating(review, user);
+  };
+
+  $scope.showPeerRatings = function () {
+    return Evaluation.showPeerRatings(review, user);
+  };
+  
+  $scope.showAllRating = function () {
+    return Evaluation.showRevieweeRating(review, user)
+      && Evaluation.showReviewerRating(review, user)
+      && Evaluation.showPeerRatings(review, user);
+  };
+
   $scope.$parent.$watch('review.feedback', function (parentFeedback) {
     if (parentFeedback && parentFeedback.length) {
       parentFeedback.forEach(function (feedbackItem) {

@@ -51,6 +51,24 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
     return Math.floor((width - padding) * 0.136);
   };
 
+  $scope.showRevieweeRating = function () {
+    return Evaluation.showRevieweeRating(review, user);
+  };
+
+  $scope.showReviewerRating = function () {
+    return Evaluation.showReviewerRating(review, user);
+  };
+
+  $scope.showPeerAverage = function () {
+    return Evaluation.showReviewerRating(review, user);
+  };
+
+  $scope.showPeerRating = function (peerRating) {
+    return !Evaluation.showReviewerRating(review, user)
+      && !Evaluation.showRevieweeRating(review, user)
+      && Evaluation.showPeerRating(review, user, peerRating);
+  }
+
   function updateDirtyRating(rating) {
     if (rating && rating.$dirty) {
       Rating.update({
