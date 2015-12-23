@@ -24,8 +24,8 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
   }
 
   function showAlways(review, user) {
-    return eq(user, review.reviewee.counselor)
-        || eq(user, review.reviewee.generalManager);
+    return review && review.reviewee
+      && (eq(user, review.reviewee.counselor) || eq(user, review.reviewee.generalManager));
   }
 
   function showByReviewStatus(review) {
@@ -52,7 +52,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
     }
 
     if (!userHasFeedback(review.feedback, user)) {
-      review.feedback.push(createNewFeedback(review));
+      review.feedback.push(createNewFeedback(review, user));
     }
 
     return review.feedback;
@@ -69,7 +69,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
     return found;
   }
 
-  function createNewFeedback(review) {
+  function createNewFeedback(review, user) {
     var feedbackType = userFeedbackType(review, user);
     var userFeedback = {};
     userFeedback.author = {id: user.id, firstName: user.firstName, lastName: user.lastName};
