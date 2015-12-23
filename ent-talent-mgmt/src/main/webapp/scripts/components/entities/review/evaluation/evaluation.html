@@ -9,7 +9,7 @@
             Self: {{ getAvgScore(getRatings(questions, 'reviewee')) }}
           </span>
           <span class="score" ng-if="getAvgScore(getRatings(questions, 'reviewer'))">
-            <i class="fa fa-comment-o"></i>
+            <i class="fa fa-comment"></i>
             Reviewer: {{ getAvgScore(getRatings(questions, 'reviewer')) }}
           </span>
           <span class="score" ng-if="getAvgScore(getRatings(questions, 'peer'))">
@@ -21,14 +21,14 @@
       </md-list-item>
       <md-list-item ng-if="toggle" ng-repeat="question in questions | orderBy:'position'" ng-click="viewEvaluation(question, $event)" class="md-2-line">
         <div class="md-list-item-text">
-          <h5>{{ question.title ? question.title : question.text | limitTo:titleLimit() }}</h5>
+          <h4>{{ question.title ? question.title : question.text | limitTo:titleLimit() }}</h4>
           <p>
             <span class="score" ng-if="question.ratings.reviewee.score">
               <i class="fa fa-comment-o"></i>
               Self Rating: {{ getScore(question.ratings.reviewee) }}
             </span>
             <span class="score" ng-if="question.ratings.reviewer.score">
-              <i class="fa fa-comment-o"></i>
+              <i class="fa fa-comment"></i>
               Reviewer Rating: {{ getScore(question.ratings.reviewer) }}
             </span>
             <span class="score" ng-if="getAvgScore(question.ratings.peer)">

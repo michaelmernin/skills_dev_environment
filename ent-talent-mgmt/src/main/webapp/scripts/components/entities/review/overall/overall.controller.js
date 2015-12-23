@@ -1,69 +1,58 @@
 'use strict';
 
-angular.module('etmApp').controller('OverallController', function ($scope, $mdDialog, $mdMedia, $window, Principal, Review, Feedback,FeedbackType, Rating, Evaluation) {
-  
-  $scope.reviewerFeedback={};
-  $scope.revieweeFeedback={};
-  var reviewId=$scope.$parent && $scope.$parent.review && $scope.$parent.review.id ?  $scope.$parent.review.id : -1;
-  console.log(reviewId);
+angular.module('etmApp').controller('OverallController', function ($scope, $mdDialog, Principal, Feedback, FeedbackType, Evaluation) {
+  var review = {};
+  var user = {};
 
-  $scope.getCoreAvgScore = function (property) {
-    var ratings = Evaluation.getCoreAverage(property);
-    return Evaluation.avgScore(ratings);
-  };
+  $scope.reviewerFeedback = {};
+  $scope.revieweeFeedback = {};
+  $scope.categories = {};
+  $scope.questions = [];
+  $scope.getRatings = Evaluation.getRatings;
+  $scope.getAvgScore = Evaluation.avgScore;
 
-  $scope.getInternalAvgScore = function (property) {
-    var ratings = Evaluation.getInternalAverage(property);
-    return Evaluation.avgScore(ratings);
-  };
-
-  
-  $scope.getOverall = function (property) {
-    return (this.getCoreAvgScore(property) + this.getInternalAvgScore(property))/2;
-};
- 
-  $scope.overallComment =  function (id) {
-    Review.engagements({id: id}, function (result) {
-      $scope.engagements = result;
-    });
-  };
-  
-  Principal.identity().then(function () {
-    $scope.$parent.$watch('review.feedback', function (parentFeedback) {
-      if (parentFeedback && parentFeedback.length){
-        parentFeedback.forEach(function(feedbackItem) {
-        if(feedbackItem.feedbackType.id === FeedbackType.SELF.id){
-            $scope.revieweeFeedback= feedbackItem;
-          }
-          if(feedbackItem.feedbackType.id === FeedbackType.REVIEWER.id){
-            $scope.reviewerFeedback = feedbackItem;
-          }
-        });
+  Principal.identity().then(function (account) {
+    user = account;
+    $scope.$parent.$watch('review', function (parentReview) {
+      if (parentReview.id) {
+        review = parentReview;
+        $scope.categories = Evaluation.getCategories(review, user);
+        $scope.questions = Evaluation.getQuestions(review);
       }
     });
   });
-  
+
+  $scope.$parent.$watch('review.feedback', function (parentFeedback) {
+    if (parentFeedback && parentFeedback.length) {
+      parentFeedback.forEach(function (feedbackItem) {
+        if (feedbackItem.feedbackType.id === FeedbackType.SELF.id) {
+          $scope.revieweeFeedback = feedbackItem;
+        } else if (feedbackItem.feedbackType.id === FeedbackType.REVIEWER.id) {
+          $scope.reviewerFeedback = feedbackItem;
+        }
+      });
+    }
+  });
+
   $scope.viewFeedback = function (feedback,userRole, ev) {
     $mdDialog.show({
-	      controller: 'OverallDetailController',
-	      templateUrl: 'scripts/components/entities/review/overall/overall.detail.html',
-	      parent: angular.element(document.body),
-	      targetEvent: ev,
-	      locals: {
-            feedback:feedback,
-            userRole:userRole
-	      }
-	    }).then(function (feedback) {
-	      updateDirtyFeedback(feedback);
-	    });
-	  };
+      controller: 'OverallDetailController',
+      templateUrl: 'scripts/components/entities/review/overall/overall.detail.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      locals: {
+        feedback:feedback,
+        userRole:userRole
+      }
+    }).then(updateDirtyFeedback);
+  };
+
   function updateDirtyFeedback(feedback) {
     if (feedback && feedback.$dirty) {
       Feedback.update({
-        reviewId: reviewId,
+        reviewId: review.id,
         feedbackId: feedback.id
       }, feedback);
     }
   }
-
 });
