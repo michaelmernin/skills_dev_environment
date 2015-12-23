@@ -1,78 +1,101 @@
 <div ng-cloak>
-  <md-list>
-    <div>
-      <md-list-item ng-click="toggle = !toggle;">
-        <div class="md-list-item-text" flex>
-          <span class="md-title">Composite Scores</span>
-        </div>
-        <i class="fa fa-lg {{toggle ? 'fa-chevron-down' : 'fa-chevron-left'}}"></i>
-      </md-list-item>
-      <md-list-item ng-if="toggle" class="md-2-line">
-      	<div layout="column" >
-		  <md-whiteframe class="md-whiteframe-z1 core" style="margin-bottom: 15px;"> 
-		    <span style="display: inline-table;"><span class="header">Overall Average</span><span style="margin-right: 15px;">{{getOverall('reviewee')}}</span><span style="margin-right: 15px;">{{getOverall('reviewer')}}</span></span>
-		  </md-whiteframe>
-		   <md-whiteframe class="md-whiteframe-z1 core" style="margin-bottom: 15px;">
-		    <span style="display: inline-table;"><span class="header">Core Competencies</span><span style="margin-right: 15px;">{{getCoreAvgScore('reviewee')}}</span><span style="margin-right: 15px;">{{getCoreAvgScore('reviewer')}}</span></span>
-		  </md-whiteframe>
-		   <md-whiteframe class="md-whiteframe-z1 core" style="margin-bottom: 15px;">
-		    <span style="display: inline-table"><span class="header">Internal Contributions</span><span style="margin-right: 15px;">{{getInternalAvgScore('reviewee')}}</span><span style="margin-right: 15px;">{{getInternalAvgScore('reviewer')}}</span></span>
-		  </md-whiteframe>
-		</div>
-        <div class="md-list-item-text .md-whiteframe-z1">
-          <h5>{{ question.title ? question.title : question.text | limitTo:titleLimit() }}</h5>
-          <p>
-            <span class="score" ng-if="question.ratings.reviewee.score">
-              <i class="fa fa-comment-o"></i>
-              Self Rating: {{ getScore(question.ratings.reviewee) }}
-            </span>
-            <span class="score" ng-if="question.ratings.reviewer.score">
-              <i class="fa fa-comment-o"></i>
-              Reviewer Rating: {{ getScore(question.ratings.reviewer) }}
-            </span>
-            <span class="score" ng-if="getAvgScore(question.ratings.peer)">
-              <i class="fa fa-comments-o"></i>
-              Average Peer Rating: {{ getAvgScore(question.ratings.peer) }}
-            </span>
-          </p>
-        </div>
-      </md-list-item>
-    </div>
-  </md-list>
-  <div>
-    <md-list>
-      <md-list-item  ng-click="viewFeedback(reviewerFeedback,'reviewer' , $event)">
-        <div layout="column" layout-align="start center" layout-margin >
-          <md-icon md-font-icon="fa fa-user fa-4x" class="md-primary fa fa-user fa-4x" style="height: auto;"
-                   aria-hidden="true" layout-margin>
-          </md-icon>
-          <md-tooltip md-direction="bottom">
-            {{reviewerFeedback.author.firstName}} {{reviewerFeedback.author.lastName}}
-          </md-tooltip>
-          <p>{{reviewerFeedback.author.firstName}}</p>
-        </div>
-        <div layout-align="start center" flex="90">
-          <p style="line-height: 1.5em;" > {{reviewerFeedback.overallComment}}</p>
-         <md-icon md-font-icon="fa fa-edit fa-lg" class="md-secondary" aria-label="Edit"></md-icon> 
-        </div>
-      </md-list-item>
-      <md-list-item  ng-click="viewFeedback(revieweeFeedback,'reviewee', $event)">
-        <div layout="column" layout-align="start center" layout-margin >
-          <md-icon md-font-icon="fa fa-user fa-lg" class="md-primary fa fa-user fa-4x" style="height: auto;"
-                   aria-hidden="true" layout-margin>
-          </md-icon>
-          <md-tooltip md-direction="bottom">
-            {{revieweeFeedback.author.firstName}} {{revieweeFeedback.author.lastName}}
-          </md-tooltip>
-          <p>{{revieweeFeedback.author.firstName}}</p>
-        </div>
-        <div layout-align="start center" flex="90">
-          <p style="line-height: 1.5em;" > {{revieweeFeedback.overallComment}}</p>
-         <md-icon md-font-icon="fa fa-edit fa-lg" class="md-secondary" aria-label="Edit"></md-icon> 
-        </div>
-      </md-list-item>
-    </md-list>
-  </div>
+
+	<md-card> <md-toolbar>
+	<div class="overall-header md-toolbar-tools">
+		<h2>Composite Scores</h2>
+	</div>
+	</md-toolbar> <md-card-content> 
+	<md-grid-list md-cols-sm="1" md-cols-md="1" md-cols-lg="2" md-cols-gt-lg="2" md-gutter="5px" md-row-height-sm="4:1" md-row-height-md="4:1"  md-row-height-lg="4:1" md-row-height-gt-lg="5:1">
+		<md-grid-tile class="gray" md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+			<md-list-item>
+				<div layout="column" layout-align="center start" layout-margin>
+					<md-icon md-font-icon="fa fa-user fa-lg" class="md-primary fa fa-user fa-4x" style="height: auto;"
+							aria-hidden="true" layout-margin> </md-icon>
+						<md-tooltip md-direction="bottom"> {{review.reviewee.firstName }} {{ review.reviewee.lastName }} </md-tooltip>
+				</div>
+				<div layout-align="center start" flex="90">
+					<md-list-item>
+						<div layout="column" layout-padding layout-wrap layout-fill style="padding-bottom: 5px;  max-width: 65%;">
+							  <md-whiteframe class="md-whiteframe-1dp" flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout="" layout-align="start center">
+							    <span>Overall Average: {{getOverall('reviewee')}}</span>
+							  </md-whiteframe>
+							  <md-whiteframe class="md-whiteframe-2dp" flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout="" layout-align="start center">
+							    <span>Core Competencies: {{getCoreAvgScore('reviewee')}}</span>
+							  </md-whiteframe>
+								<md-whiteframe class="md-whiteframe-3dp" flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout="" layout-align="start center">
+							 	 <span>Internal Contributions: {{getInternalAvgScore('reviewee')}}</span>
+								</md-whiteframe>
+						</div>
+					</md-list-item>
+				</div>
+	</md-list-item> </md-grid-tile>
+	
+	<md-grid-tile class="gray" md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+			<md-list-item>
+				<div layout="column" layout-align="center start" layout-margin>
+					<md-icon md-font-icon="fa fa-user fa-lg" class="md-primary fa fa-user fa-4x" style="color: #9E9E9E; height: auto;"
+							aria-hidden="true" layout-margin> </md-icon>
+						<md-tooltip md-direction="bottom"> {{ review.reviewee.counselor.firstName }} {{ review.reviewee.counselor.lastName }} </md-tooltip>
+				</div>
+					<div layout-align="center start" flex="90">
+					<md-list-item>
+						<div layout="column" layout-padding layout-wrap layout-fill style="padding-bottom: 5px;  max-width: 65%;">
+							  <md-whiteframe class="md-whiteframe-1dp" flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout="" layout-align="start center">
+							    <span>Overall Average: {{getOverall('reviewer')}}</span>
+							  </md-whiteframe>
+							  <md-whiteframe class="md-whiteframe-2dp" flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout="" layout-align="start center">
+							    <span>Core Competencies: {{getCoreAvgScore('reviewer')}}</span>
+							  </md-whiteframe>
+								<md-whiteframe class="md-whiteframe-3dp" flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout="" layout-align="start center">
+							 	 <span>Internal Contributions: {{getInternalAvgScore('reviewer')}}</span>
+								</md-whiteframe>
+						</div>
+					</md-list-item>
+				</div>
+					</md-list-item> </md-grid-tile>
+	
+	</md-grid-list> </md-card-content> </md-card>
+
+
+	<md-card> <md-toolbar>
+	<div class="overall-header md-toolbar-tools">
+		<h2>Summary</h2>
+	</div>
+	</md-toolbar> <md-card-content> <md-list> <md-list-item
+		ng-click="viewFeedback(reviewerFeedback,'reviewer' , $event)">
+	<div layout="column" layout-align="start center" layout-margin>
+		<md-icon md-font-icon="fa fa-user fa-4x"
+			class="md-primary fa fa-user fa-4x" style="height: auto;"
+			aria-hidden="true" layout-margin> </md-icon>
+		<md-tooltip md-direction="bottom">
+		{{reviewerFeedback.author.firstName}}
+		{{reviewerFeedback.author.lastName}} </md-tooltip>
+		<p>{{reviewerFeedback.author.firstName}}</p>
+	</div>
+	<div layout-align="start center" flex="90">
+		<p style="line-height: 1.5em;">
+			{{reviewerFeedback.overallComment}}</p>
+		<md-icon md-font-icon="fa fa-edit fa-lg" class="md-secondary"
+			aria-label="Edit"></md-icon>
+	</div>
+	</md-list-item> <md-list-item
+		ng-click="viewFeedback(revieweeFeedback,'reviewee', $event)">
+	<div layout="column" layout-align="start center" layout-margin>
+		<md-icon md-font-icon="fa fa-user fa-lg"
+			class="md-primary fa fa-user fa-4x" style="height: auto;"
+			aria-hidden="true" layout-margin> </md-icon>
+		<md-tooltip md-direction="bottom">
+		{{revieweeFeedback.author.firstName}}
+		{{revieweeFeedback.author.lastName}} </md-tooltip>
+		<p>{{revieweeFeedback.author.firstName}}</p>
+	</div>
+	<div layout-align="start center" flex="90">
+		<p style="line-height: 1.5em;">
+			{{revieweeFeedback.overallComment}}</p>
+		<md-icon md-font-icon="fa fa-edit fa-lg" class="md-secondary"
+			aria-label="Edit"></md-icon>
+	</div>
+	</md-list-item> </md-list> </md-card-content> </md-card>
 </div>
 
 
