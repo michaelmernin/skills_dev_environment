@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('OverallController', function ($scope, $mdDialog, Principal, Feedback, FeedbackType, Evaluation) {
+angular.module('etmApp').controller('OverallController', function ($scope, Principal, Feedback, FeedbackType, Evaluation) {
   var review = {};
   var user = {};
 
@@ -45,32 +45,27 @@ angular.module('etmApp').controller('OverallController', function ($scope, $mdDi
       parentFeedback.forEach(function (feedbackItem) {
         if (feedbackItem.feedbackType.id === FeedbackType.SELF.id) {
           $scope.revieweeFeedback = feedbackItem;
+          $scope.revieweeFeedback.editable = (user.login)? user.login == feedbackItem.author.login : false;
         } else if (feedbackItem.feedbackType.id === FeedbackType.REVIEWER.id) {
           $scope.reviewerFeedback = feedbackItem;
+          $scope.reviewerFeedback.editable = (user.login)? user.login == feedbackItem.author.login : false;
+
         }
       });
     }
   });
+  
+   $scope.change = function() {
+        console.log("changed");
+      };
 
-  $scope.viewFeedback = function (feedback,userRole, ev) {
-    $mdDialog.show({
-      controller: 'OverallDetailController',
-      templateUrl: 'scripts/components/entities/review/overall/overall.detail.html',
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      locals: {
-        feedback:feedback,
-        userRole:userRole
-      }
-    }).then(updateDirtyFeedback);
-  };
 
-  function updateDirtyFeedback(feedback) {
-    if (feedback && feedback.$dirty) {
+  $scope.updateFeedback = function(feedback) {
+    if(delete feedback.ratings){
       Feedback.update({
         reviewId: review.id,
         feedbackId: feedback.id
       }, feedback);
     }
-  }
+  };
 });
