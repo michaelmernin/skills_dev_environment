@@ -1,5 +1,36 @@
 package com.perficient.etm.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Question;
@@ -10,30 +41,7 @@ import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.RatingRepository;
 import com.perficient.etm.utils.ResourceTestUtils;
 import com.perficient.etm.utils.SpringAppTest;
-
-import org.junit.Before;
-import org.junit.Test;
-import static org.hamcrest.Matchers.hasItem;
-
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.LongStream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.perficient.etm.web.error.RestExceptionHandler;
 
 /**
  * Test class for the FeedbackResource REST controller.
@@ -64,7 +72,17 @@ public class FeedbackResourceTest extends SpringAppTest {
         FeedbackResource feedbackResource = new FeedbackResource();
         ReflectionTestUtils.setField(feedbackResource, "feedbackRepository", feedbackRepository);
         ReflectionTestUtils.setField(feedbackResource, "ratingRepository", ratingRepository);
-        this.restFeedbackMockMvc = MockMvcBuilders.standaloneSetup(feedbackResource).build();
+        
+        final ExceptionHandlerExceptionResolver exceptionHandlerExceptionResolver = new ExceptionHandlerExceptionResolver();
+        //here we need to setup a dummy application context that only registers the RestExceptionHandler
+        final StaticApplicationContext applicationContext = new StaticApplicationContext();
+        applicationContext.registerBeanDefinition("advice", new RootBeanDefinition(RestExceptionHandler.class, null, null));
+        //set the application context of the resolver to the dummy application context we just created
+        exceptionHandlerExceptionResolver.setApplicationContext(applicationContext);
+        //needed in order to force the exception resolver to update it's internal caches
+        exceptionHandlerExceptionResolver.afterPropertiesSet();
+        
+        this.restFeedbackMockMvc = MockMvcBuilders.standaloneSetup(feedbackResource).setHandlerExceptionResolvers(exceptionHandlerExceptionResolver).build();
     }
 
     @Before
@@ -76,12 +94,14 @@ public class FeedbackResourceTest extends SpringAppTest {
         feedback.setFeedbackType(FeedbackType.PEER);
         User author = new User();
         author.setId(AUTHOR_ID);
+        author.setLogin("dev.user8");
         feedback.setAuthor(author);
         feedback.setRatings(getRatings());
     }
 
     @Test
     @Transactional
+    @WithUserDetails("dev.user2")
     public void createFeedback() throws Exception {
         int count = (int) feedbackRepository.count();
 
@@ -103,6 +123,7 @@ public class FeedbackResourceTest extends SpringAppTest {
 
     @Test
     @Transactional
+    @WithUserDetails("dev.user8")
     public void getAllFeedback() throws Exception {
         // Initialize the database
         feedbackRepository.saveAndFlush(feedback);
@@ -116,6 +137,7 @@ public class FeedbackResourceTest extends SpringAppTest {
 
     @Test
     @Transactional
+    @WithUserDetails("dev.user8")
     public void getFeedback() throws Exception {
         // Initialize the database
         feedbackRepository.saveAndFlush(feedback);
@@ -129,6 +151,7 @@ public class FeedbackResourceTest extends SpringAppTest {
 
     @Test
     @Transactional
+    @WithUserDetails("dev.user2")
     public void getNonExistingFeedback() throws Exception {
         // Get the feedback
         restFeedbackMockMvc.perform(get("/api/reviews/{reviewId}/feedback/{id}", REVIEW_ID, Long.MAX_VALUE))
