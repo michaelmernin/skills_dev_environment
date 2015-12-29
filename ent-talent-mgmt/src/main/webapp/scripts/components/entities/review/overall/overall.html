@@ -51,8 +51,11 @@
     </div>
     <md-divider></md-divider>
     <h2>Summary</h2>
+    <div class="md-title" ng-show="!reviewerFeedback.author && !revieweeFeedback.author ">
+        No summery feedback available at this time.
+      </div>
     <div>
-      <div class="md-title">
+      <div class="md-title" ng-show="reviewerFeedback.author">
         Overall feedback by: {{reviewerFeedback.author.firstName}} {{reviewerFeedback.author.lastName}}
       </div>
       <div ng-show="reviewerFeedback.editable">
@@ -79,7 +82,7 @@
       </div>
     </div>
     <div>
-      <div class="md-title">
+      <div class="md-title" ng-show="revieweeFeedback.author">
         Overall feedback by: {{revieweeFeedback.author.firstName}} {{revieweeFeedback.author.lastName}}
       </div>
       <div ng-show="revieweeFeedback.editable">
