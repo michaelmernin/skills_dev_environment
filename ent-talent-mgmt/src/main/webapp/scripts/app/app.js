@@ -119,6 +119,5 @@ angular.module('etmApp', [
   tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-i18n/angular-locale_{{locale}}.js');
   tmhDynamicLocaleProvider.useCookieStorage('NG_TRANSLATE_LANG_KEY');
 }).config(['$compileProvider', 'ENV', function ($compileProvider, ENV) {
-  var debugDisabled = ENV === 'prod' || ENV === 'uat';
-  $compileProvider.debugInfoEnabled(!debugDisabled);
+  $compileProvider.debugInfoEnabled(ENV === 'dev');
 }]);
