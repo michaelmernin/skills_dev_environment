@@ -48,10 +48,10 @@ exports.config = {
   // and
   // https://code.google.com/p/selenium/source/browse/javascript/webdriver/capabilities.js
   capabilities: {
-    'browserName': 'firefox'//,
-    //'chromeOptions': {
-    //  'args': ['no-sandbox','no-default-browser-check','no-first-run','disable-default-apps']
-    //}
+    'browserName': 'firefox',
+  //  'chromeOptions': {
+  //     'args': ['no-sandbox','no-default-browser-check','no-first-run','disable-default-apps']
+  // }
   },
 
   directConnect: false,

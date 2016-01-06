@@ -7,7 +7,9 @@ var LoginPage = function () {
     userNameInput: element(by.model('username')),
     passwordInput: element(by.model('password')),
     logInButton: element(by.translateKey('login.form.button')),
-    authError: element(by.translateKey('login.messages.error.authentication'))
+    authError: element(by.translateKey('login.messages.error.authentication')),
+    //logoutButton: element(by.xpath('/html/body/div/div[2]/md-sidenav/md-content/section[3]/md-list/md-list-item[3]/a/span'))
+    logoutButton: element(by.translateKey('global.menu.account.logout'))
   };
 
   Object.defineProperties(this, {
@@ -33,10 +35,16 @@ var LoginPage = function () {
 
   this.get = function () {
     browser.get('/#/login');
+    browser.driver.manage().window().maximize();
   };
 
   this.submit = function () {
     this.ui.logInButton.click();
+  };
+  
+  this.logout = function(){
+    this.ui.logoutButton.click();
+    
   };
 
   this.login = function (user, password) {

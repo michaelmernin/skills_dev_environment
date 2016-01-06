@@ -23,7 +23,17 @@ describe('Enterprise Talent Management', function () {
       expect(loginPage.password).toEqual('their.password');
     });
 
-    it('should display error with incorrect password', function () {
+    it('should require username value', function () {
+      loginPage.login('', 'not.their.password');
+      expect(loginPage.ui.authError.isPresent()).toBe(true);
+    });
+      
+    it('should require password value', function () {
+      loginPage.login('some.user', '');
+      expect(loginPage.ui.authError.isPresent()).toBe(true);
+    });
+      
+      it('should display error with incorrect password', function () {
       loginPage.login('some.user', 'not.their.password');
       expect(loginPage.ui.authError.isPresent()).toBe(true);
     });
@@ -31,7 +41,8 @@ describe('Enterprise Talent Management', function () {
     it('should successfuly authenticate', function () {
       loginPage.login(userData.users.admin);
       expect(loginPage.ui.authError.isPresent()).toBe(false);
-      expect(browser.getTitle()).not.toEqual('Log In');
+      expect(browser.getTitle()).toEqual('Enterprise Talent Management');
+      loginPage.logout();
     });
   });
 });
