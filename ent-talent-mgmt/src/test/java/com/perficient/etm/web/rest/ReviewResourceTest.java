@@ -235,7 +235,7 @@ public class ReviewResourceTest extends SpringAppTest {
     public void getNonAuthorizedReview() throws Exception {
         // dev.user4 does not have access to review 2 (not gm, reviewee, reviewer, councelor or peer on review 2)
         restReviewMockMvc.perform(get("/api/reviews/{id}", 2L))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
     
     @Test

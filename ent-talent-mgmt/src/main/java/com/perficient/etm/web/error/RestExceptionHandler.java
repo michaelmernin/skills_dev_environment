@@ -36,7 +36,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     
     @ExceptionHandler({ AccessDeniedException.class })
     protected ResponseEntity<Object> handleAccessDenied(AccessDeniedException exception, WebRequest request) {
-        return handleExceptionInternal(exception, null, buildHeaders(), HttpStatus.NOT_FOUND, request);
+        return handleExceptionInternal(exception, null, buildHeaders(), HttpStatus.FORBIDDEN, request);
     }
 
     @ExceptionHandler({ InvalidRequestException.class })

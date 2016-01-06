@@ -155,7 +155,7 @@ public class FeedbackResourceTest extends SpringAppTest {
     public void getNonExistingFeedback() throws Exception {
         // Get the feedback
         restFeedbackMockMvc.perform(get("/api/reviews/{reviewId}/feedback/{id}", REVIEW_ID, Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
 
     @Test
