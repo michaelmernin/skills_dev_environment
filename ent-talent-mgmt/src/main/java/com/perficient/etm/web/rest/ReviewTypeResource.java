@@ -2,6 +2,7 @@ package com.perficient.etm.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.ReviewType;
+import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.ReviewTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,8 @@ public class ReviewTypeResource {
             .map(reviewType -> new ResponseEntity<>(
                 reviewType,
                 HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> {
+                return new ResourceNotFoundException("Review Type " + id + " cannot be found.");
+            });
     }
 }

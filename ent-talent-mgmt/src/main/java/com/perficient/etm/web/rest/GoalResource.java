@@ -23,6 +23,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Goal;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.exception.InvalidRequestException;
+import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.GoalRepository;
 import com.perficient.etm.repository.ReviewRepository;
 
@@ -101,7 +102,9 @@ public class GoalResource {
             .map(goal -> new ResponseEntity<>(
                 goal,
                 HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> {
+                return new ResourceNotFoundException("Goal " + id + " cannot be found.");
+            });
     }
 
     /**

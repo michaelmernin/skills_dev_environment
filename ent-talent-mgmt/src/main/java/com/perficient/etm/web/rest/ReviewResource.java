@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +25,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.InvalidRequestException;
+import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.service.ReviewService;
 import com.perficient.etm.web.validator.ReviewValidator;
@@ -94,7 +94,9 @@ public class ReviewResource {
             .map(review -> new ResponseEntity<>(
                 review,
                 HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> {
+                return new ResourceNotFoundException("Review " + id + " cannot be found.");
+            });
     }
     
     /**

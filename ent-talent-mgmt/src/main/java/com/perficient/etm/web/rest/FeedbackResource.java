@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.exception.InvalidRequestException;
+import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.RatingRepository;
 
@@ -103,6 +104,8 @@ public class FeedbackResource {
 		log.debug("REST request to get Feedback : {} for Review : {}", id, reviewId);
 		return Optional.ofNullable(feedbackRepository.findOne(id))
 				.map(feedback -> new ResponseEntity<>(feedback, HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+				.orElseThrow(() -> {
+	                return new ResourceNotFoundException("Feedback " + id + " for Review " + reviewId + " cannot be found.");
+	            });
 	}
 }

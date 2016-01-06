@@ -9,14 +9,13 @@ import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
+import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.security.AuthoritiesConstants;
 import com.perficient.etm.security.SecurityUtils;
 import com.perficient.etm.web.view.View;
 
-import org.apache.catalina.manager.util.SessionUtils;
-import org.apache.geronimo.mail.util.SessionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.mail.Session;
 
 /**
  * REST controller for managing users.
@@ -73,7 +71,9 @@ public class UserResource {
         log.debug("REST request to get User : {}", login);
         return userRepository.findOneByLogin(login)
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> {
+                    return new ResourceNotFoundException("User " + login + " cannot be found.");
+                });
     }
     
     /**

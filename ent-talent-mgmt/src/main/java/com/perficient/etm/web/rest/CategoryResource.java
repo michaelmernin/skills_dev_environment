@@ -2,6 +2,7 @@ package com.perficient.etm.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Category;
+import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,8 @@ public class CategoryResource {
             .map(category -> new ResponseEntity<>(
                 category,
                 HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> {
+                return new ResourceNotFoundException("Category " + id + " cannot be found.");
+            });
     }
 }

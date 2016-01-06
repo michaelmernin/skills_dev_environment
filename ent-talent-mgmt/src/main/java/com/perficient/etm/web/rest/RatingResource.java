@@ -2,6 +2,7 @@ package com.perficient.etm.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Rating;
+import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.RatingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +86,8 @@ public class RatingResource {
             .map(rating -> new ResponseEntity<>(
                 rating,
                 HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> {
+                return new ResourceNotFoundException("Rating " + id + " cannot be found.");
+            });
     }
 }

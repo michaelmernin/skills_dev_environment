@@ -2,12 +2,12 @@ package com.perficient.etm.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.ReviewAudit;
+import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.ReviewAuditRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -93,7 +93,9 @@ public class ReviewAuditResource {
             .map(reviewAudit -> new ResponseEntity<>(
                 reviewAudit,
                 HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> {
+                return new ResourceNotFoundException("Review Audit " + id + " cannot be found.");
+            });
     }
 
     /**
