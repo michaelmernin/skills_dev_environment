@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.ReviewStatus;
 import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
@@ -78,6 +79,8 @@ public class ReviewService extends AbstractBaseService{
 		if (processType == null)
 			throw new ReviewProcessNotFound(type);
 		try{
+		    assignReviewer(review);
+		    review.setReviewStatus(ReviewStatus.OPEN);
 			String id = processSvc.initiateProcess(processType, review);
 			review.setReviewProcessId(id);
 	        review = reviewRepository.save(review);
@@ -88,7 +91,21 @@ public class ReviewService extends AbstractBaseService{
 		return review;
 	}
 	
-	/**
+	private void assignReviewer(Review review) {
+        switch(review.getReviewType().getInterval()) {
+        case ANNUAL:
+            userSvc.getUserFromLogin().ifPresent(u -> {
+                Optional.ofNullable(u.getCounselor()).ifPresent(c -> {
+                    review.setReviewer(c);
+                });
+            });
+            break;
+        default:
+            break;
+        }
+    }
+
+    /**
 	 * Will return all the Review objects from the review repository
 	 * based on the criteria of the applied Filter in the ReviewRepository
 	 * object associated with this service
