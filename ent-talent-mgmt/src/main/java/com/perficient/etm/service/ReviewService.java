@@ -94,11 +94,7 @@ public class ReviewService extends AbstractBaseService{
 	private void assignReviewer(Review review) {
         switch(review.getReviewType().getInterval()) {
         case ANNUAL:
-            userSvc.getUserFromLogin().ifPresent(u -> {
-                Optional.ofNullable(u.getCounselor()).ifPresent(c -> {
-                    review.setReviewer(c);
-                });
-            });
+            review.setReviewer(review.getReviewee().getCounselor());
             break;
         default:
             break;
