@@ -101,14 +101,9 @@ var AnnualReviewPage = function () {
       
   });
 
-  this.get = function (annualReviewName) {
-    
-    var annualReviewButton = element(by.css('.md-no-style.md-button.md-ink-ripple')).element(by.cssContainingText('.md-list-item-text', annualReviewName));
-    annualReviewButton.click();
+  this.get = function (id) {
+    browser.get('/#/review/' + id + '/edit');
   };
-      
-   
 
-      
 };
 module.exports = AnnualReviewPage;
