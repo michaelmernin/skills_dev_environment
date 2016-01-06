@@ -322,6 +322,15 @@ module.exports = function (grunt) {
           VERSION: parseVersionFromBuildGradle()
         }
       },
+      test: {
+        options: {
+          dest: '.tmp/scripts/app/app.constants.js',
+        },
+        constants: {
+          ENV: 'test',
+          VERSION: parseVersionFromBuildGradle()
+        }
+      },
       uat: {
         options: {
           dest: '.tmp/scripts/app/app.constants.js',
@@ -408,6 +417,24 @@ module.exports = function (grunt) {
     'clean:dist',
     'wiredep:app',
     'ngconstant:uat',
+    'useminPrepare',
+    'ngtemplates',
+    'concurrent:dist',
+    'concat',
+    'copy:dist',
+    'ngAnnotate',
+    'cssmin',
+    'autoprefixer',
+    'uglify',
+    'rev',
+    'usemin',
+    'htmlmin'
+  ]);
+  
+  grunt.registerTask('buildTest', [
+    'clean:dist',
+    'wiredep:app',
+    'ngconstant:test',
     'useminPrepare',
     'ngtemplates',
     'concurrent:dist',

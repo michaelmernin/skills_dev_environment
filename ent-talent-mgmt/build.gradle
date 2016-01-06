@@ -39,12 +39,16 @@ if (project.hasProperty('prod')) {
     profile = 'fast'
 } else if (project.hasProperty('uat')) {
     profile = 'uat'
+} else if (project.hasProperty('test')) {
+    profile = 'test'
 }
 
 if (profile == 'prod') {
     apply from: 'profile_prod.gradle'
 } else if (profile == 'uat') {
     apply from: 'profile_uat.gradle'
+} else if (profile == 'test') {
+    apply from: 'profile_test.gradle'
 } else if (profile == 'fast') {
     apply from: 'profile_fast.gradle'
 } else {

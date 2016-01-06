@@ -1,0 +1,35 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+apply plugin: 'spring-boot'
+apply plugin: 'com.moowork.node'
+
+
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: spring_boot_version
+}
+
+bootRun {
+  args = ["--spring.profiles.active=test"]
+}
+
+task setProdProperties(dependsOn: bootRun) << {
+    doFirst {
+        System.setProperty('spring.profiles.active', 'test')
+    }
+}
+
+ext {
+   gruntCommand = Os.isFamily(Os.FAMILY_WINDOWS) ? 'grunt.cmd' : 'grunt'
+}
+
+task gruntBuild(type: Exec) {
+   commandLine gruntCommand, '--force', 'buildTest'
+}
+task gruntTest(type: Exec) {
+   commandLine gruntCommand, 'test'
+}
+gruntBuild.dependsOn 'npmInstall'
+gruntBuild.dependsOn 'bower'
+processResources.dependsOn gruntBuild
+test.dependsOn gruntTest
+bootRun.dependsOn gruntTest

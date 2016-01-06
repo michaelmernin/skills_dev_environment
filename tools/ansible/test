@@ -7,7 +7,7 @@ stlerappdev.perficient.com
 stlerdbdev.perficient.com
 
 [appservers:vars]
-profile=uat
+profile=test
 
 [dbservers:vars]
-profile=uat
+profile=test
