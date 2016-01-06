@@ -72,6 +72,9 @@ angular.module('etmApp', [
   //enable CSRF
   $httpProvider.defaults.xsrfCookieName = 'CSRF-TOKEN';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRF-TOKEN';
+  
+  //enable global http error handling
+  $httpProvider.interceptors.push('HttpErrorInterceptor');
 
   //Cache everything except rest api requests
   httpRequestInterceptorCacheBusterProvider.setMatchlist([/.*api\/(?!authorities).*/, /.*protected.*/], true);

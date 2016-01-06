@@ -1,15 +1,8 @@
 <div ng-cloak>
-  <div class="row">
-    <div class="col-md-4">
-      <span class="hipster img-responsive img-rounded"></span>
+  <md-content md-scroll-y class="md-whiteframe-z1">
+    <div layout="column" layout-padding>
+      <h2 translate="errors.title.unexpected">Error Page!</h2>
+      <div ng-if="errorMessage">{{ errorMessage }}</div>
     </div>
-    <div class="col-md-8">
-      <h1 translate="errors.title">Error Page!</h1>
-
-      <div ng-show="errorMessage">
-        <div class="alert alert-danger" translate="{{errorMessage}}" >
-        </div>
-      </div>
-    </div>
-  </div>
+  </md-content>
 </div>

@@ -1,6 +1,11 @@
 {
   "errors": {
-    "title": "Error page!",
-    "403": "You are not authorized to access the page."
+    "title": {
+      "unexpected": "An error has occurred.",
+      "notfound": "Error 404",
+      "accessdenied": "Access Denied"
+    },
+    "403": "You are not authorized to access the page.",
+    "404": "The requested resource cannot be found."
   }
 }

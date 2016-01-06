@@ -1,23 +1,28 @@
 'use strict';
 
 angular.module('etmApp').config(function ($stateProvider) {
+  var translateLoader = ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+    $translatePartialLoader.addPart('error');
+    return $translate.refresh();
+  }];
+
   $stateProvider.state('error', {
     parent: 'site',
     url: '/error',
     data: {
-      roles: [],
-      pageTitle: 'errors.title'
+      roles: []
+    },
+    params: {
+      errorMessage: "Unexpected Error"
     },
     views: {
       'content@': {
-        templateUrl: 'scripts/app/error/error.html'
+        templateUrl: 'scripts/app/error/error.html',
+        controller: 'ErrorController'
       }
     },
     resolve: {
-      mainTranslatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate,$translatePartialLoader) {
-        $translatePartialLoader.addPart('error');
-        return $translate.refresh();
-      }]
+      mainTranslatePartialLoader: translateLoader
     }
   }).state('accessdenied', {
     parent: 'site',
@@ -31,10 +36,21 @@ angular.module('etmApp').config(function ($stateProvider) {
       }
     },
     resolve: {
-      mainTranslatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate,$translatePartialLoader) {
-        $translatePartialLoader.addPart('error');
-        return $translate.refresh();
-      }]
+      mainTranslatePartialLoader: translateLoader
+    }
+  }).state('notfound', {
+    parent: 'site',
+    url: '/notfound',
+    data: {
+      roles: []
+    },
+    views: {
+      'content@': {
+        templateUrl: 'scripts/app/error/notfound.html'
+      }
+    },
+    resolve: {
+      mainTranslatePartialLoader: translateLoader
     }
   });
 });
