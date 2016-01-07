@@ -64,9 +64,7 @@ public class ReviewServiceTest extends SpringAppTest {
 		
 		List<org.activiti.engine.task.Task> mockTasksList =  new ArrayList<>();
 		
-		Mockito.when(taskSvc.getTasks(Mockito.anyString())).thenReturn(
-					mockTasksList
-				);
+		Mockito.when(taskSvc.getTasks(Mockito.anyString())).thenReturn(mockTasksList);
 		
 		reviewSvc.setProcessSvc(processSvc);
 		reviewSvc.setTasksService(taskSvc);

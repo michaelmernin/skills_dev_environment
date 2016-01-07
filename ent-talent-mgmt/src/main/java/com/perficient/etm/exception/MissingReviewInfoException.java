@@ -8,26 +8,12 @@ import java.util.Arrays;
  * @author Alexandro Blanco <alex.blanco@perficient.com>
  *
  */
-public class MissingReviewInfoException extends ETMException{
+public class MissingReviewInfoException extends ETMException {
 
-	private String[] fields;
-	
-	private static final long serialVersionUID = 5911639227056945155L;
+    private static final long serialVersionUID = 8912140073173975618L;
 
-	public MissingReviewInfoException(String... fields) {
-		super("Missing information to start review process: ");
-		this.fields = fields;
+    public MissingReviewInfoException(String... fields) {
+		super("Missing information to start review process: " + Arrays.toString(fields));
 	}
 
-	@Override
-	public String getMessage() {
-		return super.getMessage() + "["+ Arrays.toString(fields) + "]" ;
-	}
-
-	@Override
-	public String getLocalizedMessage() {
-		return super.getLocalizedMessage() + "["+ Arrays.toString(fields) + "]" ;
-	}
-	
-	
 }
