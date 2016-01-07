@@ -11,6 +11,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -69,6 +70,7 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
 	}
 	
 	@Test
+	@Ignore //Test is taking too long due to Thread.sleep need a better way to test this
 	public void testEmailTrigger(){
 		Map<String, Object> variables = getVariables();
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(
