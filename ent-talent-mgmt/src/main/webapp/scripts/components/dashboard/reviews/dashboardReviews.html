@@ -23,7 +23,7 @@
       <md-list-item class="md-3-line" ng-repeat="review in reviews | orderBy:orderByExpression:reverseOrder | filter:reviewSearch" ng-click="goToReview(review.id)">
         <div layout="row">
           <div layout-padding layout="column">
-            <div class="md-title" style=" width: 50px; height: 50px; position: absolute; line-height: 50px; text-align: center;">
+            <div class="md-title" style=" width: 50px; height: 50px; position: absolute; line-height: 50px; text-align: center;padding-top:0px">
               {{ review.reviewStatus.name.substring(0,2).toUpperCase() }}
             </div>
             <md-tooltip>
