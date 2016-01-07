@@ -34,8 +34,9 @@ var LoginPage = function () {
   });
 
   this.get = function () {
-    browser.get('/#/login');
     browser.driver.manage().window().maximize();
+    browser.get('/#/login');
+    browser.waitForAngular();
   };
 
   this.submit = function () {
@@ -56,6 +57,7 @@ var LoginPage = function () {
       this.password = user.password;
     }
     this.submit();
+    browser.waitForAngular();
   };
 };
 

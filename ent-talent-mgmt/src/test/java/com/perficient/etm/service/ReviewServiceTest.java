@@ -20,6 +20,7 @@ import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.repository.ReviewTypeRepository;
+import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.service.activiti.TasksService;
 import com.perficient.etm.utils.SpringAppTest;
@@ -34,9 +35,12 @@ public class ReviewServiceTest extends SpringAppTest {
 
 	@Inject
 	ReviewService reviewSvc;
+
 	@Inject
 	ReviewTypeRepository reviewTypRepo;
-	
+
+	@Inject
+	UserRepository userRepository;
 	
 	@Mock
 	ProcessService processSvc;
@@ -53,15 +57,14 @@ public class ReviewServiceTest extends SpringAppTest {
 	public void init() throws ETMException{
 		MockitoAnnotations.initMocks(this);
 		review = ServicesTestUtils.createNewReviewForTests(reviewTypRepo);
+		review.setReviewee(userRepository.findOne(7L));
 		
 		Mockito.when(processSvc.initiateProcess(Mockito.any(), Mockito.any())).thenReturn("ProcessId[5]");
 		Mockito.when(processSvcWithException.initiateProcess(Mockito.any(), Mockito.any())).thenThrow(new RuntimeException("Test"));
 		
 		List<org.activiti.engine.task.Task> mockTasksList =  new ArrayList<>();
 		
-		Mockito.when(taskSvc.getTasks(Mockito.anyString())).thenReturn(
-					mockTasksList
-				);
+		Mockito.when(taskSvc.getTasks(Mockito.anyString())).thenReturn(mockTasksList);
 		
 		reviewSvc.setProcessSvc(processSvc);
 		reviewSvc.setTasksService(taskSvc);
