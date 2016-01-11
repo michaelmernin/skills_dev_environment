@@ -5,8 +5,8 @@ require('../locators.js');
 var CreateReviewPage = function () {
   this.ui = {
     startDateInput: element(by.model('review.startDate')),
-    endDateInput: element(by.model('review.endDate')), 
-    saveButton: element(by.translateKey('entity.action.save')), 
+    endDateInput: element(by.model('review.endDate')),
+    saveButton: element(by.translateKey('entity.action.save')),
     reviewTypeError: element(by.xpath('/html/body/div/div[1]/div[2]/div/div/md-content/form/div/div[1]/md-input-container[1]/div/div/span')),
     revieweeError:   element(by.xpath('/html/body/div/div[1]/div[2]/div/div/md-content/form/div/div[1]/md-input-container[2]/div/div/span')),
     startDateError: element(by.xpath('/html/body/div/div[1]/div[2]/div/div/md-content/form/div/div[2]/md-input-container[1]/div/div/span')),
@@ -16,8 +16,8 @@ var CreateReviewPage = function () {
     modalAcceptButton: element(by.xpath('html/body/div[5]/md-dialog/md-dialog-actions/button[2]')),
     linkToCreateReviewPage: element(by.translateKey('global.menu.createReview')),
     logoutButton: element(by.translateKey('global.menu.account.logout'))
-    
-    
+
+
 
   };
 
@@ -44,9 +44,7 @@ var CreateReviewPage = function () {
   });
 
   this.get = function () {
-    
-    this.ui.linkToCreateReviewPage.click();
-    
+    browser.get('/#/review/new');
   };
 
   this.save = function () {
@@ -62,10 +60,10 @@ var CreateReviewPage = function () {
     this.ui.modalAcceptButton.click();
 
   };
-  
+
    this.logout = function(){
     this.ui.logoutButton.click();
-    
+
   };
 
   this.getDropdownOptions = function (dropdownSelect){
@@ -83,8 +81,8 @@ var CreateReviewPage = function () {
     var selectedValue = element(by.model(dropdownSelect)).element(by.cssContainingText('.md-select-value', value));
     return selectedValue;
   };
-  
-  
+
+
   this.verifyDisplayText = function (elementClass, expectedValue){
     var modalContainer = element(by.tagName('md-dialog'));
     var textContainer = modalContainer.element(by.css('.md-dialog-content'));

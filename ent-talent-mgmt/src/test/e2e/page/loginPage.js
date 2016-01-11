@@ -36,16 +36,15 @@ var LoginPage = function () {
   this.get = function () {
     browser.driver.manage().window().maximize();
     browser.get('/#/login');
-    browser.waitForAngular();
   };
 
   this.submit = function () {
     this.ui.logInButton.click();
   };
-  
+
   this.logout = function(){
     this.ui.logoutButton.click();
-    
+
   };
 
   this.login = function (user, password) {
