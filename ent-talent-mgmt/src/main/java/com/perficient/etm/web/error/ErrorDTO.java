@@ -3,13 +3,13 @@ package com.perficient.etm.web.error;
 import java.util.List;
 
 public class ErrorDTO {
-    
+
     private int errorCount;
 
     private List<GlobalErrorDTO> errors;
 
     private List<FieldErrorDTO> fieldErrors;
-    
+
     public int getErrorCount() {
         return errorCount;
     }
@@ -17,7 +17,7 @@ public class ErrorDTO {
     public void setErrorCount(int errorCount) {
         this.errorCount = errorCount;
     }
-    
+
     public List<GlobalErrorDTO> getErrors() {
         return errors;
     }

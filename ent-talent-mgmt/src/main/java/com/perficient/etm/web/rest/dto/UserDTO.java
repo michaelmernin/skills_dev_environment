@@ -19,7 +19,7 @@ import com.perficient.etm.domain.util.CustomLocalDateSerializer;
 import com.perficient.etm.domain.util.ISO8601LocalDateDeserializer;
 
 public class UserDTO {
-    
+
     @NotNull
     private Long id;
 
@@ -46,29 +46,29 @@ public class UserDTO {
     private String langKey;
 
     private List<String> roles;
-    
+
     @Size(max = 50)
     private String title;
-    
+
     @Size(max = 50)
     private String targetTitle;
-    
+
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @JsonSerialize(using = CustomLocalDateSerializer.class)
     @JsonDeserialize(using = ISO8601LocalDateDeserializer.class)
     @Size(max = 50)
     private LocalDate startDate;
-    
+
     @Size(max = 50)
     private User counselor;
 
     public UserDTO() {
     }
-    
+
     public UserDTO(User user) {
-    	this.id = user.getId();
-    	this.login = user.getLogin();
-    	this.password = null;
+        this.id = user.getId();
+        this.login = user.getLogin();
+        this.password = null;
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
@@ -78,7 +78,7 @@ public class UserDTO {
         this.startDate = user.getStartDate();
         this.roles = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toList());
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -112,22 +112,22 @@ public class UserDTO {
     }
 
     public String getTitle() {
-		return title;
-	}
+        return title;
+    }
 
-	public String getTargetTitle() {
-		return targetTitle;
-	}
+    public String getTargetTitle() {
+        return targetTitle;
+    }
 
-	public LocalDate getStartDate() {
-		return startDate;
-	}
-	
-	public User getCounselor() {
-		return counselor;
-	}
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 
-	@Override
+    public User getCounselor() {
+        return counselor;
+    }
+
+    @Override
     public String toString() {
         return "UserDTO{" +
         "login='" + login + '\'' +

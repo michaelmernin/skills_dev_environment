@@ -102,7 +102,7 @@ public class ResourceTestUtils {
     public static void assertJsonArrayItemKeys(ResultActions result, int count, String... fields) {
         assertJsonArrayItemKeys(result, "$", count, fields);
     }
-    
+
     public static void assertJsonArrayItemKeys(ResultActions result, String path, int count, String... fields) {
         IntStream.range(0, count).forEach(i -> {
             assertJsonKeys(result, path + "[" + i + "]", fields);

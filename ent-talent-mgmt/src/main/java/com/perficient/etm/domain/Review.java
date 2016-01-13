@@ -93,7 +93,7 @@ public class Review implements Serializable {
     @JsonSerialize(using = PublicSerializer.class)
     @ManyToOne
     private User reviewer;
-    
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "T_PEER",
@@ -101,22 +101,22 @@ public class Review implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<User> peers = new HashSet<>();
-    
+
     @OneToMany(mappedBy = "review")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Feedback> feedback;
-    
+
     @OneToMany(mappedBy = "review")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Goal> goals;
 
     @Transient
     private Map<Long,String> peerReviewProcesses = new HashMap<>();
-    
+
     @Transient
     private String reviewProcessId;
-    
+
     public Long getId() {
         return id;
     }
@@ -244,31 +244,31 @@ public class Review implements Serializable {
     public void setReviewer(User user) {
         this.reviewer = user;
     }
-    
+
     public void sanitize(boolean isCreate) {
         if (isCreate) {
             id = null;
         }
         reviewStatus = null;
     }
-    
+
     public Map<Long,String> getPeerReviewProcesses() {
-		return peerReviewProcesses;
-	}
+        return peerReviewProcesses;
+    }
 
-	public void setPeerReviewProcesses(Map<Long,String> peerReviewProcesses) {
-		this.peerReviewProcesses = peerReviewProcesses;
-	}
+    public void setPeerReviewProcesses(Map<Long,String> peerReviewProcesses) {
+        this.peerReviewProcesses = peerReviewProcesses;
+    }
 
-	public String getReviewProcessId() {
-		return reviewProcessId;
-	}
+    public String getReviewProcessId() {
+        return reviewProcessId;
+    }
 
-	public void setReviewProcessId(String reviewProcessId) {
-		this.reviewProcessId = reviewProcessId;
-	}
+    public void setReviewProcessId(String reviewProcessId) {
+        this.reviewProcessId = reviewProcessId;
+    }
 
-	@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

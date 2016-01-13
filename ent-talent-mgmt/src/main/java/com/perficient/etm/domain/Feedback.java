@@ -38,13 +38,13 @@ public class Feedback implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @Column(name = "overall_score")
     private Double overallScore;
 
     @Column(name = "overall_comment")
     private String overallComment;
-    
+
     @ManyToOne
     private Review review;
 
@@ -67,7 +67,7 @@ public class Feedback implements Serializable {
     //@Transient
     @Column(name="activiti_process_id")
     private String feedbackProcessId;
-    
+
     public Long getId() {
         return id;
     }
@@ -77,22 +77,22 @@ public class Feedback implements Serializable {
     }
 
     public Double getOverallScore() {
-		return overallScore;
-	}
+        return overallScore;
+    }
 
-	public void setOverallScore(Double overallScore) {
-		this.overallScore = overallScore;
-	}
+    public void setOverallScore(Double overallScore) {
+        this.overallScore = overallScore;
+    }
 
-	public String getOverallComment() {
-		return overallComment;
-	}
+    public String getOverallComment() {
+        return overallComment;
+    }
 
-	public void setOverallComment(String overallComment) {
-		this.overallComment = overallComment;
-	}
+    public void setOverallComment(String overallComment) {
+        this.overallComment = overallComment;
+    }
 
-	@JsonIgnore
+    @JsonIgnore
     public Review getReview() {
         return review;
     }
@@ -133,22 +133,22 @@ public class Feedback implements Serializable {
     public void setRatings(Set<Rating> ratings) {
         this.ratings = ratings;
     }
-    
+
     public String getFeedbackProcessId() {
-		return feedbackProcessId;
-	}
+        return feedbackProcessId;
+    }
 
-	public void setFeedbackProcessId(String feedbackProcessId) {
-		this.feedbackProcessId = feedbackProcessId;
-	}
+    public void setFeedbackProcessId(String feedbackProcessId) {
+        this.feedbackProcessId = feedbackProcessId;
+    }
 
-	public boolean belongsToAuthor(User peer){
-		if (peer == null || this.author == null)
-			return false;
-		return (this.author.getId().equals(peer.getId()));
-	}
-	
-	@Override
+    public boolean belongsToAuthor(User peer) {
+        if (peer == null || this.author == null)
+            return false;
+        return (this.author.getId().equals(peer.getId()));
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

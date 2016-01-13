@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * Spring Data JPA repository for the Question entity.
  */
-public interface QuestionRepository extends JpaRepository<Question,Long>{
+public interface QuestionRepository extends JpaRepository<Question,Long> {
 
 }

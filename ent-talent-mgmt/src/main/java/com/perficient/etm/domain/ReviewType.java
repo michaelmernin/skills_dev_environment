@@ -21,10 +21,10 @@ public class ReviewType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @Column(name = "active")
     private Boolean active;
-    
+
     @Column(name = "interval")
     @Enumerated(EnumType.STRING)
     private ReviewInterval interval;
@@ -34,13 +34,13 @@ public class ReviewType implements Serializable {
 
     @Column(name = "description")
     private String description;
-    
+
     @Column(name = "version")
     private Integer version;
-    
+
     @Column(name = "process_name")
     private String processName;
-    
+
     @OneToMany(mappedBy = "reviewType", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Question> questions;
@@ -64,7 +64,7 @@ public class ReviewType implements Serializable {
     public ReviewInterval getInterval() {
         return interval;
     }
-    
+
     public void setInterval(ReviewInterval interval) {
         this.interval = interval;
     }
@@ -102,14 +102,14 @@ public class ReviewType implements Serializable {
     }
 
     public String getProcessName() {
-		return processName;
-	}
+        return processName;
+    }
 
-	public void setProcessName(String processName) {
-		this.processName = processName;
-	}
+    public void setProcessName(String processName) {
+        this.processName = processName;
+    }
 
-	@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

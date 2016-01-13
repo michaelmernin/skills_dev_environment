@@ -61,7 +61,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Size(max = 100)
     @Column(length = 100, unique = true)
     private String email;
-    
+
     @JsonView(View.Private.class)
     @Size(max = 50)
     @Column(name = "employee_id", length = 50)
@@ -80,17 +80,17 @@ public class User extends AbstractAuditingEntity implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Authority> authorities = new HashSet<>();
-    
+
     @OneToMany(mappedBy = "reviewee")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Review> selfReviews;
-    
+
     @OneToMany(mappedBy = "reviewer")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Review> colleagueReviews;
-    
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(
@@ -104,26 +104,26 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<PersistentToken> persistentTokens = new HashSet<>();
-    
+
     @JsonSerialize(using = PublicSerializer.class)
     @JsonView(View.Peer.class)
     @ManyToOne
     private User counselor;
-    
+
     @JsonSerialize(using = PublicSerializer.class)
     @JsonView(View.Peer.class)
     @ManyToOne
     @JoinColumn(name = "general_manager_id", referencedColumnName = "id")
     private User generalManager;
-    
+
     @JsonView(View.Counselee.class)
     @Column(name = "title")
     private String title;
-    
+
     @JsonView(View.Counselee.class)
     @Column(name = "target_title")
     private String targetTitle;
-    
+
     @JsonView(View.Counselee.class)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @JsonSerialize(using = CustomLocalDateSerializer.class)
@@ -170,7 +170,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setCounselor(User counselor) {
         this.counselor = counselor;
     }
-    
+
     public User getGeneralManager() {
         return generalManager;
     }
@@ -210,7 +210,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public String getEmployeeId() {
         return employeeId;
     }
@@ -234,7 +234,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
-    
+
     public Set<Review> getSelfReviews() {
         return selfReviews;
     }
@@ -287,7 +287,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Override
     public int hashCode() {
-      if(login != null){
+      if (login != null) {
         return login.hashCode();
       } else {
         return id.hashCode();

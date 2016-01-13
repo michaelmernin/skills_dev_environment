@@ -52,16 +52,16 @@ public class UserService {
     }
 
     public User getUser(Long userId) {
-    	return userRepository.getOne(userId);
+        return userRepository.getOne(userId);
     }
-    
+
     public User getUserWithAuthorities() {
         return userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())
             .orElseGet(() -> {
                 return this.getFromAppUserDetails().orElse(null);
             });
     }
-    
+
     public Optional<User> getFromAppUserDetails() {
         return SecurityUtils.getAppUserDetails().map(ud -> {
             return userRepository.findOneByEmployeeId(ud.getEmployeeId().toLowerCase())
@@ -85,14 +85,14 @@ public class UserService {
     @Scheduled(cron = "0 0 0 * * ?")
     public void removeOldPersistentTokens() {
         LocalDate now = new LocalDate();
-        persistentTokenRepository.findByTokenDateBefore(now.minusMonths(1)).stream().forEach(token ->{
+        persistentTokenRepository.findByTokenDateBefore(now.minusMonths(1)).stream().forEach(token -> {
             log.debug("Deleting token {}", token.getSeries());
             User user = token.getUser();
             user.getPersistentTokens().remove(token);
             persistentTokenRepository.delete(token);
         });
     }
-    
+
     private User createUser(AppUserDetails userDetails) {
         return createUser(userDetails, Locale.US.toLanguageTag());
     }
@@ -116,7 +116,7 @@ public class UserService {
 
         newUser.setAuthorities(authorities);
     }
-    
+
     private void setUserDetails(User user, AppUserDetails userDetails) {
         user.setLogin(userDetails.getUsername().toLowerCase());
         user.setFirstName(userDetails.getFirstName());
@@ -128,13 +128,13 @@ public class UserService {
 
     /**
      * Returns an Optional object with the User model from the database
-     * that is associated with the current login registered in the 
+     * that is associated with the current login registered in the
      * security context.
      * @return Optional of User object
      */
-    public Optional<User> getUserFromLogin(){
-    	String login = SecurityUtils.getCurrentLogin();
-    	Optional<User> user = userRepository.findOneByLogin(login);
-    	return user;
+    public Optional<User> getUserFromLogin() {
+        String login = SecurityUtils.getCurrentLogin();
+        Optional<User> user = userRepository.findOneByLogin(login);
+        return user;
     }
 }

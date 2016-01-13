@@ -30,18 +30,18 @@ import com.google.common.io.Files;
 
 @Component
 public class ApacheDSContainerPostProcessor implements ObjectPostProcessor<ApacheDSContainer> {
-    
+
     private static final String EMPLOYEE_ID_OID = "1.2.840.113556.1.4.35";
 
     private static final String EMPLOYEE_ID = "employeeID";
-    
+
     private static final String USERS_FILE = "classpath:auth/users-dev.ldif";
 
     private final Logger log = LoggerFactory.getLogger(ApacheDSContainerPostProcessor.class);
-    
+
     @Inject
     private ApplicationContext context;
-    
+
     @Override
     public <O extends ApacheDSContainer> O postProcess(O object) {
         ApacheDSContainer ldapContainer = object;
@@ -56,7 +56,7 @@ public class ApacheDSContainerPostProcessor implements ObjectPostProcessor<Apach
         loadLdif(adminSession, USERS_FILE);
         return object;
     }
-    
+
     private void createAttributeTypes(CoreSession adminSession) throws Exception {
         ServerEntry attributeEntry = attributeEntry(adminSession, EMPLOYEE_ID_OID, EMPLOYEE_ID);
         adminSession.add(attributeEntry);
@@ -67,7 +67,7 @@ public class ApacheDSContainerPostProcessor implements ObjectPostProcessor<Apach
         LdifEntry objectClassMod = objectClassMod(adminSession, EMPLOYEE_ID);
         adminSession.modify(objectClassMod.getDn(), objectClassMod.getModificationItems());
     }
-    
+
     private void registerAttribute(CoreSession adminSession, ServerEntry attributeEntry) throws Exception {
         Registries registries = adminSession.getDirectoryService().getRegistries();
         registries.getAttributeTypeRegistry().register(createAttributeType(registries, attributeEntry));
@@ -104,7 +104,7 @@ public class ApacheDSContainerPostProcessor implements ObjectPostProcessor<Apach
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             Resource ldif = context.getResource(file);
-            
+
             File ldifFile;
             LdifFileLoader loader;
             try {

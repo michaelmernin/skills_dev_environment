@@ -18,9 +18,9 @@ public abstract class DomainValidator<D> implements Validator {
     public void validate(Object target, Errors errors) {
         validateDomain((D) target, errors);
     }
-    
+
     protected abstract void validateDomain(D domain, Errors errors);
-    
+
     @Override
     public boolean supports(Class<?> clazz) {
         return domainType.isAssignableFrom(clazz);

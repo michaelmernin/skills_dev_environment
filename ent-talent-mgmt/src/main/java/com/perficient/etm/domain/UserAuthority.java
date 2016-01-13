@@ -29,7 +29,7 @@ public class UserAuthority implements Serializable {
     @Size(min = 0, max = 50)
     @Column(name = "authority_name", length = 50)
     private String authorityName;
-    
+
     @NotNull
     @Id
     @Column(name = "user_id")
@@ -65,7 +65,7 @@ public class UserAuthority implements Serializable {
         if (authorityName != null ? !authorityName.equals(UserAuthority.authorityName) : UserAuthority.authorityName != null) {
             return false;
         }
-        
+
         if (userId != null ? !userId.equals(UserAuthority.userId) : UserAuthority.userId != null) {
             return false;
         }

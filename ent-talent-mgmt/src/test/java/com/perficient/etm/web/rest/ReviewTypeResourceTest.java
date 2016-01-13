@@ -139,7 +139,7 @@ public class ReviewTypeResourceTest extends SpringAppTest {
     @Transactional
     public void updateReviewType() throws Exception {
         int count = (int) reviewTypeRepository.count();
-        
+
         // Read a review type
         ReviewType reviewType = reviewTypeRepository.findOne(1L);
 

@@ -1,25 +1,18 @@
 package com.perficient.etm.web.rest;
 
-import com.perficient.etm.Application;
 import com.perficient.etm.domain.ReviewAudit;
 import com.perficient.etm.repository.ReviewAuditRepository;
 import com.perficient.etm.utils.ResourceTestUtils;
 import com.perficient.etm.utils.SpringAppTest;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -33,14 +26,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 /**
  * Test class for the ReviewAuditResource REST controller.
  *
  * @see ReviewAuditResource
  */
 public class ReviewAuditResourceIntTest extends SpringAppTest {
-
 
     private static final Long DEFAULT_REVIEW_AUDIT_ID = 1L;
     private static final Long UPDATED_REVIEW_AUDIT_ID = 2L;
@@ -148,7 +139,7 @@ public class ReviewAuditResourceIntTest extends SpringAppTest {
         // Initialize the database
         reviewAuditRepository.saveAndFlush(reviewAudit);
 
-		int databaseSizeBeforeUpdate = reviewAuditRepository.findAll().size();
+        int databaseSizeBeforeUpdate = reviewAuditRepository.findAll().size();
 
         // Update the reviewAudit
         reviewAudit.setReviewAuditId(UPDATED_REVIEW_AUDIT_ID);
@@ -175,7 +166,7 @@ public class ReviewAuditResourceIntTest extends SpringAppTest {
         // Initialize the database
         reviewAuditRepository.saveAndFlush(reviewAudit);
 
-		int databaseSizeBeforeDelete = reviewAuditRepository.findAll().size();
+        int databaseSizeBeforeDelete = reviewAuditRepository.findAll().size();
 
         // Get the reviewAudit
         restReviewAuditMockMvc.perform(delete("/api/reviewAudits/{id}", reviewAudit.getId())

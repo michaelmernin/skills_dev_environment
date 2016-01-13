@@ -29,7 +29,7 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Inject
     private UserRepository userRepository;
-    
+
     @Inject
     private UserService userService;
 
@@ -47,7 +47,7 @@ public class UserDetailsService implements org.springframework.security.core.use
                     });
             });
     }
-    
+
     private AuthenticationException userNotFoundException(String login) {
         return new UsernameNotFoundException("Unable to locate user with login: " + login);
     }

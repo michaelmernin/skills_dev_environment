@@ -21,9 +21,9 @@ public enum FeedbackStatus {
     READY(3, "Ready"),
     COMPLETE(4, "Complete"),
     CLOSED(5, "Closed");
-    
+
     private static final Map<Integer, FeedbackStatus> REGISTRY;
-    
+
     static {
         REGISTRY = Collections.unmodifiableMap(Stream.of(FeedbackStatus.values()).collect(Collectors.toMap((FeedbackStatus fs) -> {
             return fs.getId();
@@ -41,7 +41,7 @@ public enum FeedbackStatus {
     private Integer id;
 
     private String name;
-    
+
     private FeedbackStatus(int id, String name) {
         this.id = id;
         this.name = name;

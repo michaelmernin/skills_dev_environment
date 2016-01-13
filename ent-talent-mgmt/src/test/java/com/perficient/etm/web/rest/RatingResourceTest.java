@@ -32,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class RatingResourceTest extends SpringAppTest {
 
-
     private static final long FEEDBACK_ID = 1L;
     private static final long REVIEW_ID = 2L;
     private static final Double DEFAULT_SCORE = 0.0;

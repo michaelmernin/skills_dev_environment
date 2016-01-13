@@ -38,7 +38,7 @@ public class GoalResource {
 
     @Inject
     private GoalRepository goalRepository;
-    
+
     @Inject
     private ReviewRepository reviewRepository;
 
@@ -54,7 +54,7 @@ public class GoalResource {
     public ResponseEntity<Goal> create(@PathVariable Long reviewId, @RequestBody Goal goal, BindingResult result) throws URISyntaxException {
         log.debug("REST request to save Goal : {}", goal);
         if (result.hasErrors()) {
-        	throw new InvalidRequestException("Invalid goal", result);
+            throw new InvalidRequestException("Invalid goal", result);
         }
         Review review = reviewRepository.findOne(reviewId);
         goal.setReview(review);
@@ -109,7 +109,7 @@ public class GoalResource {
 
     /**
      * DELETE  review/:reviewId/goals/:id -> delete the "id" goal.
-     * @return 
+     * @return
      */
     @RequestMapping(value = "reviews/{reviewId}/goals/{id}",
             method = RequestMethod.DELETE,

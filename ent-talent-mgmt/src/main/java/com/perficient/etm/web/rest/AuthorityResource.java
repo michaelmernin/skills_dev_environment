@@ -9,14 +9,12 @@ import com.perficient.etm.domain.Authority;
 import com.perficient.etm.repository.AuthorityRepository;
 import com.perficient.etm.security.AuthoritiesConstants;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;

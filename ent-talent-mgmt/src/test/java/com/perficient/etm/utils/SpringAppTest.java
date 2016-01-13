@@ -2,15 +2,12 @@ package com.perficient.etm.utils;
 
 import javax.inject.Inject;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.IntegrationTestPropertiesListener;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -28,9 +25,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-
 import static java.lang.System.out;
 
 /**
@@ -42,30 +36,30 @@ import static java.lang.System.out;
 @ActiveProfiles("dev")
 @Transactional
 public class SpringAppTest {
-	
-	static SmtpServer server;
-	
-	@BeforeClass
-	public static void initSmtp(){
-		server = new SmtpServer();
-		server.setPort(1025);
-		server.setMailStore(new RollingMailStore());
-		Executors.newSingleThreadExecutor().execute(()->{
-			server.run();
-			boolean ready = server.isReady();
-			out.println(ready);
-		});
-		
-	}
-	
-	@AfterClass
-	public static void stopSmtp() throws InterruptedException, ExecutionException{
-		if (server != null && !server.isStopped())
-			server.stop();
-	}
-	
-	private static final Logger log = LoggerFactory.getLogger("SpringAppTest");
-	
+
+    static SmtpServer server;
+
+    @BeforeClass
+    public static void initSmtp() {
+        server = new SmtpServer();
+        server.setPort(1025);
+        server.setMailStore(new RollingMailStore());
+        Executors.newSingleThreadExecutor().execute(() -> {
+            server.run();
+            boolean ready = server.isReady();
+            out.println(ready);
+        });
+
+    }
+
+    @AfterClass
+    public static void stopSmtp() throws InterruptedException, ExecutionException {
+        if (server != null && !server.isStopped())
+            server.stop();
+    }
+
+    private static final Logger log = LoggerFactory.getLogger("SpringAppTest");
+
     @Inject
     protected ApplicationContext context;
 
@@ -79,16 +73,15 @@ public class SpringAppTest {
         assertThat(context.getBean(ReviewService.class)).isNotNull();
     }
 
-	public Logger getLog() {
-		return log;
-	}
+    public Logger getLog() {
+        return log;
+    }
 
-	public static SmtpServer getServer() {
-		return server;
-	}
+    public static SmtpServer getServer() {
+        return server;
+    }
 
-	public static void setServer(SmtpServer server) {
-		SpringAppTest.server = server;
-	}
-	
+    public static void setServer(SmtpServer server) {
+        SpringAppTest.server = server;
+    }
 }

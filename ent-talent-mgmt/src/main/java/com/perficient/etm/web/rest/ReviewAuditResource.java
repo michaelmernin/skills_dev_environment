@@ -109,7 +109,7 @@ public class ReviewAuditResource {
         log.debug("REST request to delete ReviewAudit : {}", id);
         reviewAuditRepository.delete(id);
         return ResponseEntity.ok()
-        		//.headers(HeaderUtil.createEntityDeletionAlert("reviewAudit", id.toString()))
-        		.build();
+                //.headers(HeaderUtil.createEntityDeletionAlert("reviewAudit", id.toString()))
+                .build();
     }
 }

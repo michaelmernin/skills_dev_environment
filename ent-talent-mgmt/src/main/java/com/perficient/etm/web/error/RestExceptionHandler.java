@@ -26,14 +26,14 @@ import com.perficient.etm.exception.InvalidRequestException;
 
 @ControllerAdvice(annotations = { RestController.class })
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
-    
+
     private static <E, D> List<D> mapList(List<E> list, Function<E, D> mapper) {
         return list.stream().map(mapper).collect(Collectors.toList());
     }
-    
+
     @Inject
     private MessageSource messageSource;
-    
+
     @ExceptionHandler({ AccessDeniedException.class })
     protected ResponseEntity<Object> handleAccessDenied(AccessDeniedException exception, WebRequest request) {
         return handleExceptionInternal(exception, null, buildHeaders(), HttpStatus.FORBIDDEN, request);
@@ -52,7 +52,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         error.setFieldErrors(fieldErrors);
         return error;
     }
-    
+
     private List<GlobalErrorDTO> getGlobalErrorDTOs(InvalidRequestException exception) {
         return mapList(exception.getErrors().getGlobalErrors(), this::mapGlobalError);
     }
@@ -60,14 +60,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private List<FieldErrorDTO> getFieldErrorDTOs(InvalidRequestException exception) {
         return mapList(exception.getErrors().getFieldErrors(), this::mapFieldError);
     }
-    
+
     private GlobalErrorDTO mapGlobalError(ObjectError error) {
         GlobalErrorDTO fieldError = new GlobalErrorDTO();
         fieldError.setCode(error.getCode());
         fieldError.setMessage(getMessage(error));
         return fieldError;
     }
-    
+
     private FieldErrorDTO mapFieldError(FieldError error) {
         FieldErrorDTO fieldError = new FieldErrorDTO();
         fieldError.setField(error.getField());
@@ -75,7 +75,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         fieldError.setMessage(getMessage(error));
         return fieldError;
     }
-    
+
     private String getMessage(MessageSourceResolvable error) {
         return messageSource.getMessage(error, Locale.US);
     }

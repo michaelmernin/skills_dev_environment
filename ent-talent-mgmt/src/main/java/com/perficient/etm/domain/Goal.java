@@ -32,7 +32,7 @@ public class Goal implements Serializable {
 
     @Column(name = "note")
     private String note;
-    
+
     @Column(name = "description")
     private String description;
 
@@ -55,20 +55,20 @@ public class Goal implements Serializable {
     private User author;
 
     public Goal(Goal goal) {
-		this.author = goal.author;
-		this.completionDate = goal.completionDate;
-		this.description = goal.description;
-		this.id = goal.id;
-		this.name = goal.name;
-		this.note = goal.note;
-		this.review = goal.review;
-		this.targetDate = goal.targetDate;
-	}
+        this.author = goal.author;
+        this.completionDate = goal.completionDate;
+        this.description = goal.description;
+        this.id = goal.id;
+        this.name = goal.name;
+        this.note = goal.note;
+        this.review = goal.review;
+        this.targetDate = goal.targetDate;
+    }
 
-	public Goal() {
-	}
+    public Goal() {
+    }
 
-	public Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -93,14 +93,14 @@ public class Goal implements Serializable {
     }
 
     public String getDescription() {
-		return description;
-	}
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public LocalDate getTargetDate() {
+    public LocalDate getTargetDate() {
         return targetDate;
     }
 

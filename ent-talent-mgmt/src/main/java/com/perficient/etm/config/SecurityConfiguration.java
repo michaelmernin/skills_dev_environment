@@ -43,28 +43,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Inject
     private RememberMeServices rememberMeServices;
-    
+
     @Inject
     private CustomLdapUserDetailsMapper ldapUserDetailsMapper;
-    
+
     @Inject
     private LdapAuthenticatorPostProcessor authenticatorPostProcessor;
-    
+
     @Inject
     private ApacheDSContainerPostProcessor apacheDSContainerPostProcessor;
-    
+
     @Value("${spring.ldap.domain}")
     private String ldapDomain;
 
     @Value("${spring.ldap.port}")
     private int ldapPort;
-    
+
     @Value("${spring.ldap.root}")
     private String ldapRoot;
-    
+
     @Value("${spring.ldap.accountdn}")
     private String ldapAccountDn;
-    
+
     @Value("${spring.ldap.password}")
     private String ldapPassword;
 

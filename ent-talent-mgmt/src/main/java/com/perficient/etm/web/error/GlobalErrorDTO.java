@@ -3,7 +3,7 @@ package com.perficient.etm.web.error;
 public class GlobalErrorDTO {
 
     private String code;
-    
+
     private String message;
 
     public String getCode() {

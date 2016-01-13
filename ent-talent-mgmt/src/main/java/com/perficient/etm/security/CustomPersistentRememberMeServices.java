@@ -74,8 +74,8 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
     @Inject
     private UserRepository userRepository;
-    
-    @Inject 
+
+    @Inject
     private UserService userService;
 
     @Inject

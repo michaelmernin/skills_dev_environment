@@ -53,7 +53,7 @@ public class FeedbackResourceTest extends SpringAppTest {
     private static final long AUTHOR_ID = 8L;
 
     private static final long REVIEW_ID = 1L;
-    
+
     private static final int NUM_RATINGS = 21;
 
     @Inject
@@ -72,7 +72,7 @@ public class FeedbackResourceTest extends SpringAppTest {
         FeedbackResource feedbackResource = new FeedbackResource();
         ReflectionTestUtils.setField(feedbackResource, "feedbackRepository", feedbackRepository);
         ReflectionTestUtils.setField(feedbackResource, "ratingRepository", ratingRepository);
-        
+
         final ExceptionHandlerExceptionResolver exceptionHandlerExceptionResolver = new ExceptionHandlerExceptionResolver();
         //here we need to setup a dummy application context that only registers the RestExceptionHandler
         final StaticApplicationContext applicationContext = new StaticApplicationContext();
@@ -81,7 +81,7 @@ public class FeedbackResourceTest extends SpringAppTest {
         exceptionHandlerExceptionResolver.setApplicationContext(applicationContext);
         //needed in order to force the exception resolver to update it's internal caches
         exceptionHandlerExceptionResolver.afterPropertiesSet();
-        
+
         this.restFeedbackMockMvc = MockMvcBuilders.standaloneSetup(feedbackResource).setHandlerExceptionResolvers(exceptionHandlerExceptionResolver).build();
     }
 
@@ -176,7 +176,7 @@ public class FeedbackResourceTest extends SpringAppTest {
         List<Feedback> feedback = feedbackRepository.findAll();
         assertThat(feedback).hasSize(count);
     }
-    
+
     private Set<Rating> getRatings() {
         return LongStream.range(1, NUM_RATINGS + 1).mapToObj(id -> {
           Question question = new Question();

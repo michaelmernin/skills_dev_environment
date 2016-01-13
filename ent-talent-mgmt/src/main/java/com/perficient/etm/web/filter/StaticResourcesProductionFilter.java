@@ -1,6 +1,5 @@
 package com.perficient.etm.web.filter;
 
-
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.*;

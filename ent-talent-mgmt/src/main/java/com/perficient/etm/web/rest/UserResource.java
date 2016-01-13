@@ -42,7 +42,7 @@ public class UserResource {
 
     @Inject
     private UserRepository userRepository;
-    
+
     @Inject
     private ReviewRepository reviewRepository;
 
@@ -58,7 +58,7 @@ public class UserResource {
         log.debug("REST request to get all Users");
         return userRepository.findAllNormalUsers();
     }
-    
+
     /**
      * GET  /users/:login -> get the "login" user.
      */
@@ -75,7 +75,7 @@ public class UserResource {
                     return new ResourceNotFoundException("User " + login + " cannot be found.");
                 });
     }
-    
+
     /**
      * PUT  /users/:id -> Updates an existing user.
      */
@@ -92,7 +92,7 @@ public class UserResource {
         userRepository.save(user);
         return ResponseEntity.ok().build();
     }
-    
+
     /**
      * DELETE  /users/:id -> delete the "id" user.
      */
@@ -105,7 +105,7 @@ public class UserResource {
         log.debug("REST request to delete User : {}", id);
         userRepository.delete(id);
     }
-    
+
     /**
      * GET  /counselees -> get all the counselees of the current user.
      */
@@ -119,7 +119,7 @@ public class UserResource {
         log.debug("REST request to get user's counselees");
         return userRepository.findCounseleesForCurrentUser();
     }
-    
+
     /**
      * GET  /profile -> get the profile of the current user.
      */
@@ -131,8 +131,7 @@ public class UserResource {
         log.debug("REST request to get Profile");
         return getUser(SecurityUtils.getCurrentLogin());
     }
-    
-    
+
     /**
      * GET  /users/autocomplete/query -> get all users with name containing query
      */

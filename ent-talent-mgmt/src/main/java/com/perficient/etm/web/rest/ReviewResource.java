@@ -42,7 +42,7 @@ public class ReviewResource {
 
     @Inject
     private ReviewValidator reviewValidator;
-    
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.setValidator(reviewValidator);
@@ -50,11 +50,11 @@ public class ReviewResource {
 
     @Inject
     private ReviewService reviewSvc;
-    
+
     /**
      * POST  /reviews -> Create a new review.
      * @throws ReviewProcessNotFound If the type specified in the Review.getReviewType method has
-     * not been registered in the back-end services. 
+     * not been registered in the back-end services.
      */
     @RequestMapping(value = "/reviews",
             method = RequestMethod.POST,
@@ -69,7 +69,7 @@ public class ReviewResource {
         return new ResponseEntity<>(review, HttpStatus.CREATED);
     }
 
-    /**	
+    /**
      * GET  /reviews -> get all the reviews.
      */
     @RequestMapping(value = "/reviews",
@@ -98,7 +98,7 @@ public class ReviewResource {
                 return new ResourceNotFoundException("Review " + id + " cannot be found.");
             });
     }
-    
+
     /**
      * PUT  /reviews/:id -> Update a review.
      */
@@ -126,8 +126,7 @@ public class ReviewResource {
         log.debug("REST request to delete Review : {}", id);
         getReviewSvc().delete(id);
     }
-   
-    
+
     /**
      * GET  /reviews/:id/engagements -> get the engagements in the timeframe of a review.
      */
@@ -160,21 +159,20 @@ public class ReviewResource {
         return enagagements;
     }
 
-	public ReviewService getReviewSvc() {
-		return reviewSvc;
-	}
+    public ReviewService getReviewSvc() {
+        return reviewSvc;
+    }
 
-	public void setReviewSvc(ReviewService reviewSvc) {
-		this.reviewSvc = reviewSvc;
-	}
-    
-	/**
+    public void setReviewSvc(ReviewService reviewSvc) {
+        this.reviewSvc = reviewSvc;
+    }
+
+    /**
      * GET /todo -> get the todo list for the user
      */
     @RequestMapping(value = "/todo",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ToDo> getToDo() {
-    	log.debug("REST request to get ToDo");
-    	return getReviewSvc().getCurrentUserReviewTodo();
+        log.debug("REST request to get ToDo");
+        return getReviewSvc().getCurrentUserReviewTodo();
     }
-    
 }

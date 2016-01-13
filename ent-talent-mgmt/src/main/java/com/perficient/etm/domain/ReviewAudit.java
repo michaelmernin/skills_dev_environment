@@ -31,11 +31,11 @@ import com.perficient.etm.domain.util.ISO8601LocalDateDeserializer;
 public class ReviewAudit implements Serializable {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -1673042382141616065L;
+     *
+     */
+    private static final long serialVersionUID = -1673042382141616065L;
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -55,7 +55,7 @@ public class ReviewAudit implements Serializable {
     @JoinColumn(name = "review_id")
     private Review review;
 
-//    @ManyToOne   
+//    @ManyToOne
 //    @JoinColumn(name= "id")
 //    private User user;
 

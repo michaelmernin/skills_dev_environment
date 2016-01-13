@@ -39,9 +39,9 @@ public class UserResourceTest extends SpringAppTest {
 
     @Inject
     private UserRepository userRepository;
-    
+
     private MockMvc restUserMockMvc;
-    
+
     private User user;
 
     @PostConstruct
@@ -50,14 +50,14 @@ public class UserResourceTest extends SpringAppTest {
         ReflectionTestUtils.setField(userResource, "userRepository", userRepository);
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
     }
-    
+
     @Before
     public void initTest() {
         userRepository.findOneByLogin(DEFAULT_LOGIN).ifPresent(u -> {
             user = u;
         });
     }
-    
+
     @Test
     public void getAllUsers() throws Exception {
         int count = (int) userRepository.count() - 2; // exclude System, Anonymous users from count
@@ -74,7 +74,7 @@ public class UserResourceTest extends SpringAppTest {
                 .andExpect(jsonPath("$[2].login").value("dev.user3"))
                 .andExpect(jsonPath("$[3].id").value(6))
                 .andExpect(jsonPath("$[3].login").value("dev.user4"));
-        
+
         ResourceTestUtils.assertJsonCount(result, count);
         ResourceTestUtils.assertJsonArrayItemKeys(result, count, ResourceTestUtils.PRIVATE_USER_FIELDS);
     }
@@ -94,11 +94,11 @@ public class UserResourceTest extends SpringAppTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
-    
+
     @Test
     public void testUpdateUser() throws Exception {
         int count = (int) userRepository.count();
-        
+
         // Update the user
         user.setLogin(UPDATED_LOGIN);
         user.setFirstName(UPDATED_FIRST_NAME);
@@ -108,7 +108,7 @@ public class UserResourceTest extends SpringAppTest {
                 .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
                 .content(ResourceTestUtils.convertObjectToJsonBytes(user, objectMapper)))
                 .andExpect(status().isOk());
-        
+
         // Validate the User in the database
         List<User> users = userRepository.findAll();
         assertThat(users).hasSize(count);
@@ -130,7 +130,6 @@ public class UserResourceTest extends SpringAppTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(3))
                 .andExpect(jsonPath("$[0].login").value(DEFAULT_LOGIN));
-
 
         ResourceTestUtils.assertJsonCount(result, 3);
         ResourceTestUtils.assertJsonArrayItemKeys(result, 3, ResourceTestUtils.COUNSELEE_USER_FIELDS);

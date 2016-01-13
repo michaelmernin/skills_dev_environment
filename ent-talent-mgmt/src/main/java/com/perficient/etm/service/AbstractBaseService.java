@@ -11,13 +11,12 @@ import org.slf4j.LoggerFactory;
  */
 public class AbstractBaseService {
 
-	/**
-	 * Common logger object for the back end services.
-	 */
-	private static final Logger log = LoggerFactory.getLogger("BackendService");
+    /**
+     * Common logger object for the back end services.
+     */
+    private static final Logger log = LoggerFactory.getLogger("BackendService");
 
-	public static Logger getLog() {
-		return log;
-	}
-	
+    public static Logger getLog() {
+        return log;
+    }
 }

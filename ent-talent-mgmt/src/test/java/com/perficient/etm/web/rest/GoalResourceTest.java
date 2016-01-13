@@ -50,12 +50,12 @@ public class GoalResourceTest extends SpringAppTest {
 
     private static final LocalDate DEFAULT_COMPLETION_DATE = new LocalDate(0L);
     private static final LocalDate UPDATED_COMPLETION_DATE = new LocalDate();
-    
+
     private static final long REVIEW_ID = 1L;
 
     @Inject
     private GoalRepository goalRepository;
-    
+
     @Inject
     private ReviewRepository reviewRepository;
 

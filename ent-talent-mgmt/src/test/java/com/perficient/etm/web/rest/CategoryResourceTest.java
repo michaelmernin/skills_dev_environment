@@ -115,7 +115,7 @@ public class CategoryResourceTest extends SpringAppTest {
     @Transactional
     public void updateCategory() throws Exception {
         int count = (int) categoryRepository.count();
-        
+
         // Read a category
         Category category = categoryRepository.findOne(1L);
 

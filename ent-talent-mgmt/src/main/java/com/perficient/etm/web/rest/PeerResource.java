@@ -33,10 +33,10 @@ public class PeerResource {
 
     @Inject
     private PeerService peerSvc;
-    
+
     /**
      * POST  /reviews/:reviewId/peers -> Add peers to a review
-     * @throws URISyntaxException 
+     * @throws URISyntaxException
      */
     @RequestMapping(value = "reviews/{reviewId}/peers",
             method = RequestMethod.POST,
@@ -52,11 +52,9 @@ public class PeerResource {
         return ResponseEntity.created(new URI("/api/reviews/" + reviewId + "/peers/" + peer.getId())).build();
     }
 
-
-
-	/**
+    /**
      * DELETE  /reviews/:reviewId/peers -> Remove peers from a review
-     * @throws URISyntaxException 
+     * @throws URISyntaxException
      */
     @RequestMapping(value = "reviews/{reviewId}/peers/{id}",
             method = RequestMethod.DELETE,
@@ -68,5 +66,5 @@ public class PeerResource {
         peerSvc.removePeerFeedback(reviewId, id);
         return ResponseEntity.ok().build();
     }
-    
+
 }

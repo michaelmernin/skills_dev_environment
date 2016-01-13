@@ -13,7 +13,6 @@ public class MissingReviewInfoException extends ETMException {
     private static final long serialVersionUID = 8912140073173975618L;
 
     public MissingReviewInfoException(String... fields) {
-		super("Missing information to start review process: " + Arrays.toString(fields));
-	}
-
+        super("Missing information to start review process: " + Arrays.toString(fields));
+    }
 }

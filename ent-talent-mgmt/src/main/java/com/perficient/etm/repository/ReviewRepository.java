@@ -15,7 +15,7 @@ import com.perficient.etm.domain.Review;
 /**
  * Spring Data JPA repository for the Review entity.
  */
-public interface ReviewRepository extends JpaRepository<Review,Long>{
+public interface ReviewRepository extends JpaRepository<Review,Long> {
 
     /**
      * Will return a list of completed project reviews for a reviewee
@@ -28,7 +28,7 @@ public interface ReviewRepository extends JpaRepository<Review,Long>{
     @PostFilter(ReviewAuthorizer.FILTER)
     @Override
     List<Review> findAll();
-    
+
     @PostAuthorize(ReviewAuthorizer.AUTHORIZE)
     @Override
     Review findOne(Long id);

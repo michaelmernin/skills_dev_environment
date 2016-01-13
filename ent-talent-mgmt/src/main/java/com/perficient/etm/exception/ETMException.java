@@ -5,15 +5,15 @@ package com.perficient.etm.exception;
  * @author Alexandro Blanco <alex.blanco@perficient.com>
  *
  */
-public class ETMException extends Exception{
+public class ETMException extends Exception {
 
-	private static final long serialVersionUID = -7849765648678750790L;
+    private static final long serialVersionUID = -7849765648678750790L;
 
-	public ETMException(String msg){
-		super(msg);
-	}
-	
-	public ETMException(String msg, Throwable t){
-		super(msg, t);
-	}
+    public ETMException(String msg) {
+        super(msg);
+    }
+
+    public ETMException(String msg, Throwable t) {
+        super(msg, t);
+    }
 }

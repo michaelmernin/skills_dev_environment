@@ -19,9 +19,9 @@ public enum FeedbackType {
     SELF(1, "Self"),
     REVIEWER(2, "Reviewer"),
     PEER(3, "Peer");
-    
+
     private static final Map<Integer, FeedbackType> REGISTRY;
-    
+
     static {
         REGISTRY = Collections.unmodifiableMap(Stream.of(FeedbackType.values()).collect(Collectors.toMap((FeedbackType ft) -> {
             return ft.getId();
@@ -39,7 +39,7 @@ public enum FeedbackType {
     private Integer id;
 
     private String name;
-    
+
     private FeedbackType(int id, String name) {
         this.id = id;
         this.name = name;

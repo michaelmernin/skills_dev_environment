@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * Spring Data JPA repository for the ReviewType entity.
  */
-public interface ReviewTypeRepository extends JpaRepository<ReviewType,Long>{
+public interface ReviewTypeRepository extends JpaRepository<ReviewType,Long> {
 
 }

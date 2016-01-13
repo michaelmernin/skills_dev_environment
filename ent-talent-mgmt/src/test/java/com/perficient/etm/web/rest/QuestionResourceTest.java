@@ -127,7 +127,7 @@ public class QuestionResourceTest extends SpringAppTest {
         int count = (int) questionRepository.count();
 
         Question question = questionRepository.findOne(1L);
-        
+
         // Update the question
         question.setText(UPDATED_TEXT);
         question.setPosition(UPDATED_POSITION);

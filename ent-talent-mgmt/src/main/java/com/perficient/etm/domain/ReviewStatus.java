@@ -19,9 +19,9 @@ public enum ReviewStatus {
     GM_APPROVAL(4, "GM Approval"),
     COMPLETE(5, "Complete"),
     CLOSED(6, "Closed");
-    
+
     private static final Map<Integer, ReviewStatus> REGISTRY;
-    
+
     static {
         REGISTRY = Collections.unmodifiableMap(Stream.of(ReviewStatus.values()).collect(Collectors.toMap((ReviewStatus rs) -> {
             return rs.getId();
@@ -39,7 +39,7 @@ public enum ReviewStatus {
     private Integer id;
 
     private String name;
-    
+
     private ReviewStatus(int id, String name) {
         this.id = id;
         this.name = name;

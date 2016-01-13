@@ -11,17 +11,17 @@ import com.perficient.etm.repository.UserRepository;
 
 @WebValidator
 public class ReviewValidator extends DomainValidator<Review> {
-    
+
     @Inject
     ReviewTypeRepository reviewTypeRepository;
-    
+
     @Inject
     UserRepository userRepository;
 
     @Override
     public void validateDomain(Review review, Errors errors) {
         validateRequiredFields(errors);
-        
+
         if (!errors.hasFieldErrors()) {
             validateEndDate(review, errors);
         }

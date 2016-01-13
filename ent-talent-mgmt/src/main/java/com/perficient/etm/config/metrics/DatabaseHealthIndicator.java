@@ -15,7 +15,7 @@ import java.util.Map;
  * SpringBoot Actuator HealthIndicator check for the Database.
  */
 public class DatabaseHealthIndicator extends AbstractHealthIndicator {
-    
+
     @SuppressWarnings("unused")
     private DataSource dataSource;
 

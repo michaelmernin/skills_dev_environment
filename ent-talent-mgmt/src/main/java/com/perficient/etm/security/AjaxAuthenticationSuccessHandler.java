@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 @Component
 public class AjaxAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    
+
     @Inject
     private UserService userService;
 
@@ -26,7 +26,7 @@ public class AjaxAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication)
             throws IOException, ServletException {
-        
+
         userService.getUserWithAuthorities(); // if user entity is missing, create one from ldap details
 
         response.setStatus(HttpServletResponse.SC_OK);

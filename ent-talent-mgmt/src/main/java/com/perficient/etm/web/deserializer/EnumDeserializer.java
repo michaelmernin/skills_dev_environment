@@ -14,15 +14,15 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 public abstract class EnumDeserializer<E> extends StdDeserializer<E> {
-    
+
     private static final long serialVersionUID = 7568144951035706157L;
-    
+
     private static final TypeReference<HashMap<String, Object>> MAP_TYPE = new TypeReference<HashMap<String, Object>>() {};
 
     protected EnumDeserializer(Class<?> vc) {
         super(vc);
     }
-    
+
     protected EnumDeserializer(JavaType valueType) {
         super(valueType);
     }
@@ -50,11 +50,11 @@ public abstract class EnumDeserializer<E> extends StdDeserializer<E> {
         }
         return null;
     }
-    
+
     private E getById(Integer id) {
         return castToEnumClass(invokeStaticMethod("getById", Integer.class, id));
     }
-    
+
     private E getByName(String name) {
         return castToEnumClass(invokeStaticMethod("valueOf", String.class, name));
     }
@@ -71,7 +71,7 @@ public abstract class EnumDeserializer<E> extends StdDeserializer<E> {
         }
         return null;
     }
-    
+
     @SuppressWarnings("unchecked")
     private E castToEnumClass(Object value) {
         if (value != null && handledType().isAssignableFrom(value.getClass())) {
