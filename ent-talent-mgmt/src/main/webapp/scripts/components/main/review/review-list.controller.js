@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('DashboardReviewsController', function ($scope, $state, $stateParams, Review, Principal, ReviewStatus) {
+angular.module('etmApp').controller('ReviewListController', function ($scope, $state, $stateParams, Review, Principal, ReviewStatus) {
   var NUM_STEPS = 5;
   $scope.reviews = [];
 

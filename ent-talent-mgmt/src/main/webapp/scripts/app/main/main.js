@@ -13,8 +13,8 @@ angular.module('etmApp').config(function ($stateProvider) {
         controller: 'MainController'
       },
       'dashboard.reviews@home': {
-        templateUrl: 'scripts/components/dashboard/reviews/dashboardReviews.html',
-        controller: 'DashboardReviewsController'
+        templateUrl: 'scripts/components/main/review/review-list.html',
+        controller: 'ReviewListController'
       }
     },
     resolve: {

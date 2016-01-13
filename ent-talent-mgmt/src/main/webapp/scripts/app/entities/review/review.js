@@ -29,8 +29,8 @@ angular.module('etmApp').config(function ($stateProvider) {
     },
     views: {
       'content@': {
-        templateUrl: 'scripts/app/entities/review/new-review.html',
-        controller: 'NewReviewController'
+        templateUrl: 'scripts/app/entities/review/review-new.html',
+        controller: 'ReviewNewController'
       }
     }
   }).state('review.detail', {

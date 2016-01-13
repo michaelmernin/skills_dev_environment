@@ -71,6 +71,7 @@
   <!-- build:js({.tmp,src/main/webapp}) scripts/app.js -->
   <script src="scripts/app/app.js"></script>
   <script src="scripts/app/app.constants.js"></script>
+  <!-- Core Services -->
   <script src="scripts/components/util/httpError.interceptor.js"></script>
   <script src="scripts/components/util/dateutil.service.js"></script>
   <script src="scripts/components/util/truncate.filter.js"></script>
@@ -78,19 +79,19 @@
   <script src="scripts/components/auth/auth.service.js"></script>
   <script src="scripts/components/auth/principal.service.js"></script>
   <script src="scripts/components/auth/services/account.service.js"></script>
-  <script src="scripts/components/language/language.service.js"></script>
-  <script src="scripts/components/language/language.controller.js"></script>
-  <script src="scripts/components/admin/audits.service.js"></script>
-  <script src="scripts/components/admin/authority.service.js"></script>
-  <script src="scripts/components/admin/logs.service.js"></script>
-  <script src="scripts/components/admin/configuration.service.js"></script>
-  <script src="scripts/components/admin/monitoring.service.js"></script>
-  <script src="scripts/components/admin/user.service.js"></script>
+  <script src="scripts/components/auth/services/sessions.service.js"></script>
+  <script src="scripts/components/auth/provider/auth.session.service.js"></script>
+  <!-- Core Components -->
   <script src="scripts/components/sidenav/sidenav.service.js"></script>
   <script src="scripts/components/sidenav/sidenav.controller.js"></script>
   <script src="scripts/components/toolbar/toolbar.directive.js"></script>
   <script src="scripts/components/toolbar/toolbar.controller.js"></script>
-  <script src="scripts/app/error/error.controller.js"></script>
+  <script src="scripts/components/language/language.service.js"></script>
+  <script src="scripts/components/language/language.controller.js"></script>
+  <!-- Core Pages -->
+  <script src="scripts/app/main/main.js"></script>
+  <script src="scripts/components/main/review/review-list.controller.js"></script>
+  <script src="scripts/app/main/main.controller.js"></script>
   <script src="scripts/app/account/account.js"></script>
   <script src="scripts/app/account/login/login.js"></script>
   <script src="scripts/app/account/login/login.controller.js"></script>
@@ -98,7 +99,47 @@
   <script src="scripts/app/account/logout/logout.controller.js"></script>
   <script src="scripts/app/account/settings/settings.js"></script>
   <script src="scripts/app/account/settings/settings.controller.js"></script>
+  <script src="scripts/app/account/sessions/sessions.js"></script>
+  <script src="scripts/app/account/sessions/sessions.controller.js"></script>
+  <script src="scripts/app/error/error.js"></script>
+  <script src="scripts/app/error/error.controller.js"></script>
+  <!--  Entity Services -->
+  <script src="scripts/app/entities/entity.js"></script>
+  <script src="scripts/components/entities/reviewType/reviewType.service.js"></script>
+  <script src="scripts/components/entities/category/category.service.js"></script>
+  <script src="scripts/components/entities/feedbackType/feedbackType.service.js"></script>
+  <script src="scripts/components/entities/feedbackStatus/feedbackStatus.service.js"></script>
+  <script src="scripts/components/entities/reviewStatus/reviewStatus.service.js"></script>
+  <script src="scripts/components/entities/question/question.service.js"></script>
+  <script src="scripts/components/entities/feedback/feedback.service.js"></script>
+  <script src="scripts/components/entities/rating/rating.service.js"></script>
+  <script src="scripts/components/entities/rating/rating.directive.js"></script>
+  <script src="scripts/components/entities/goal/goal.service.js"></script>
+  <!-- Review Page -->
+  <script src="scripts/app/entities/review/review.js"></script>
+  <script src="scripts/components/entities/review/review.service.js"></script>
+  <script src="scripts/components/entities/review/peers/peers.service.js"></script>
+  <script src="scripts/components/entities/review/evaluation/evaluation.service.js"></script>
+  <script src="scripts/components/entities/review/peers/peers.controller.js"></script>
+  <script src="scripts/components/entities/review/engagements/engagements.controller.js"></script>
+  <script src="scripts/components/entities/review/goals/goals.controller.js"></script>
+  <script src="scripts/components/entities/review/goals/goal.detail.controller.js"></script>
+  <script src="scripts/components/entities/review/evaluation/evaluation.controller.js"></script>
+  <script src="scripts/components/entities/review/evaluation/evaluation.detail.controller.js"></script>
+  <script src="scripts/components/entities/review/overall/overall.controller.js"></script>
+  <script src="scripts/components/entities/review/overall/overall.detail.controller.js"></script>
+  <script src="scripts/app/entities/review/review.controller.js"></script>
+  <script src="scripts/app/entities/review/review-new.controller.js"></script>
+  <script src="scripts/app/entities/review/review-edit.controller.js"></script>
+  <script src="scripts/app/entities/review/review-detail.controller.js"></script>
+  <!-- Admin Pages -->
   <script src="scripts/app/admin/admin.js"></script>
+  <script src="scripts/components/admin/audits.service.js"></script>
+  <script src="scripts/components/admin/authority.service.js"></script>
+  <script src="scripts/components/admin/logs.service.js"></script>
+  <script src="scripts/components/admin/configuration.service.js"></script>
+  <script src="scripts/components/admin/monitoring.service.js"></script>
+  <script src="scripts/components/admin/user.service.js"></script>
   <script src="scripts/app/admin/audits/audits.js"></script>
   <script src="scripts/app/admin/audits/audits.controller.js"></script>
   <script src="scripts/app/admin/configuration/configuration.js"></script>
@@ -113,42 +154,6 @@
   <script src="scripts/app/admin/users/users.js"></script>
   <script src="scripts/app/admin/users/users.controller.js"></script>
   <script src="scripts/app/admin/users/user.detail.controller.js"></script>
-  <script src="scripts/app/entities/entity.js"></script>
-  <script src="scripts/app/error/error.js"></script>
-  <script src="scripts/app/main/main.js"></script>
-  <script src="scripts/app/main/main.controller.js"></script>
-  <script src="scripts/components/auth/services/sessions.service.js"></script>
-  <script src="scripts/components/auth/provider/auth.session.service.js"></script>
-  <script src="scripts/app/account/sessions/sessions.js"></script>
-  <script src="scripts/app/account/sessions/sessions.controller.js"></script>
-  <script src="scripts/components/entities/reviewType/reviewType.service.js"></script>
-  <script src="scripts/components/entities/category/category.service.js"></script>
-  <script src="scripts/components/entities/feedbackType/feedbackType.service.js"></script>
-  <script src="scripts/components/entities/feedbackStatus/feedbackStatus.service.js"></script>
-  <script src="scripts/components/entities/reviewStatus/reviewStatus.service.js"></script>
-  <script src="scripts/app/entities/review/review.js"></script>
-  <script src="scripts/app/entities/review/review.controller.js"></script>
-  <script src="scripts/components/dashboard/reviews/dashboardReviews.controller.js"></script>
-  <script src="scripts/app/entities/review/review-detail.controller.js"></script>
-  <script src="scripts/app/entities/review/new-review.controller.js"></script>
-  <script src="scripts/app/entities/review/review-edit.controller.js"></script>
-  <script src="scripts/components/entities/review/peers/peers.controller.js"></script>
-  <script src="scripts/components/entities/review/engagements/engagements.controller.js"></script>
-  <script src="scripts/components/entities/review/goals/goals.controller.js"></script>
-  <script src="scripts/components/entities/review/goals/goal.detail.controller.js"></script>
-  <script src="scripts/components/entities/review/evaluation/evaluation.controller.js"></script>
-  <script src="scripts/components/entities/review/evaluation/evaluation.detail.controller.js"></script>
-  <script src="scripts/components/entities/review/evaluation/evaluation.service.js"></script>
-  <script src="scripts/components/entities/review/review.service.js"></script>
-  <script src="scripts/components/entities/review/peers/peers.service.js"></script>
-  <script src="scripts/components/entities/review/peers/peers.controller.js"></script>
-  <script src="scripts/components/entities/question/question.service.js"></script>
-  <script src="scripts/components/entities/feedback/feedback.service.js"></script>
-  <script src="scripts/components/entities/rating/rating.service.js"></script>
-  <script src="scripts/components/entities/rating/rating.directive.js"></script>
-  <script src="scripts/components/entities/goal/goal.service.js"></script>
-  <script src="scripts/components/entities/review/overall/overall.controller.js"></script>
-  <script src="scripts/components/entities/review/overall/overall.detail.controller.js"></script>
   <!-- endbuild -->
 </body>
 </html>

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('NewReviewController', function ($scope, $state, $mdDialog, $translate, Review, ReviewType, Principal, User) {
+angular.module('etmApp').controller('ReviewNewController', function ($scope, $state, $mdDialog, $translate, Review, ReviewType, Principal, User) {
   $scope.review = new Review();
   $scope.reviewTypes = [];
   $scope.reviewees = [];
