@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" 
-		targetNamespace="http://www.perficient.com/etm"
-		xmlns:activiti="http://activiti.org/bpmn">
-		
-	<process id="annualReviewTest" name="annualReview">
-		<startEvent id="startevent1" name="Start"/>
-		<sequenceFlow id="sequenceflow1" name="Self Review" sourceRef="startevent1" targetRef="employeeFeedback"/>
-		<userTask id="employeeFeedback" name="employeeFeedback"/>
-		<sequenceFlow id="sequenceflow2" name="Counselor Review" sourceRef="employeeFeedback" targetRef="counselorFeedback"/>
-		<userTask id="counselorFeedback" name="counselorFeedback"/>
-		<sequenceFlow id="sequenceflow3" name="Management Review" sourceRef="counselorFeedback" targetRef="mgmtReview"/>
-		<userTask id="mgmtReview" name="mgmtReview"/>
-		<sequenceFlow id="sequenceflow4" name="Counselor Review" sourceRef="mgmtReview" targetRef="endevent1"/>
-		<endEvent id="endevent1" name="End"/>
-	</process>
+    targetNamespace="http://www.perficient.com/etm"
+    xmlns:activiti="http://activiti.org/bpmn">
+
+  <process id="annualReviewTest" name="annualReview">
+    <startEvent id="startevent1" name="Start"/>
+    <sequenceFlow id="sequenceflow1" name="Self Review" sourceRef="startevent1" targetRef="employeeFeedback"/>
+    <userTask id="employeeFeedback" name="employeeFeedback"/>
+    <sequenceFlow id="sequenceflow2" name="Counselor Review" sourceRef="employeeFeedback" targetRef="counselorFeedback"/>
+    <userTask id="counselorFeedback" name="counselorFeedback"/>
+    <sequenceFlow id="sequenceflow3" name="Management Review" sourceRef="counselorFeedback" targetRef="mgmtReview"/>
+    <userTask id="mgmtReview" name="mgmtReview"/>
+    <sequenceFlow id="sequenceflow4" name="Counselor Review" sourceRef="mgmtReview" targetRef="endevent1"/>
+    <endEvent id="endevent1" name="End"/>
+  </process>
 </definitions>

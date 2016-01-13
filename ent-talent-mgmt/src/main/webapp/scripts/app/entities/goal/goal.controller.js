@@ -5,15 +5,15 @@ angular.module('etmApp')
         $scope.goals = [];
         $scope.reviews = Review.query();
         $scope.users = User.query();
-        $scope.loadAll = function() {
-            Goal.query(function(result) {
+        $scope.loadAll = function () {
+            Goal.query(function (result) {
                $scope.goals = result;
             });
         };
         $scope.loadAll();
 
         $scope.showUpdate = function (id) {
-            Goal.get({id: id}, function(result) {
+            Goal.get({id: id}, function (result) {
                 $scope.goal = result;
                 $('#saveGoalModal').modal('show');
             });
@@ -34,7 +34,7 @@ angular.module('etmApp')
         };
 
         $scope.delete = function (id) {
-            Goal.get({id: id}, function(result) {
+            Goal.get({id: id}, function (result) {
                 $scope.goal = result;
                 $('#deleteGoalConfirmation').modal('show');
             });

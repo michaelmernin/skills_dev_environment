@@ -4,7 +4,7 @@ angular.module('etmApp')
     .controller('GoalDetailController', function ($scope, $stateParams, Goal, Review, User) {
         $scope.goal = {};
         $scope.load = function (id) {
-            Goal.get({id: id}, function(result) {
+            Goal.get({id: id}, function (result) {
               $scope.goal = result;
             });
         };

@@ -42,7 +42,7 @@ var LoginPage = function () {
     this.ui.logInButton.click();
   };
 
-  this.logout = function(){
+  this.logout = function (){
     this.ui.logoutButton.click();
 
   };

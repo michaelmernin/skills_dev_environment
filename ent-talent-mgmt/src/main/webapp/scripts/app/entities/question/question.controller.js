@@ -5,8 +5,8 @@ angular.module('etmApp')
         $scope.questions = [];
         $scope.reviewtypes = ReviewType.query();
         $scope.categorys = Category.query();
-        $scope.loadAll = function() {
-            Question.query(function(result) {
+        $scope.loadAll = function () {
+            Question.query(function (result) {
                $scope.questions = result;
             });
         };
@@ -22,14 +22,14 @@ angular.module('etmApp')
         };
 
         $scope.update = function (id) {
-            Question.get({id: id}, function(result) {
+            Question.get({id: id}, function (result) {
                 $scope.question = result;
                 $('#saveQuestionModal').modal('show');
             });
         };
 
         $scope.delete = function (id) {
-            Question.get({id: id}, function(result) {
+            Question.get({id: id}, function (result) {
                 $scope.question = result;
                 $('#deleteQuestionConfirmation').modal('show');
             });

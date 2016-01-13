@@ -8,7 +8,7 @@ angular.module('etmApp').controller('SettingsController', function ($scope, Prin
     $scope.user = account;
   });
   
-  $scope.loadProfile = function() {
+  $scope.loadProfile = function () {
     User.profile(function (result) {
       $scope.profile = result;
     });

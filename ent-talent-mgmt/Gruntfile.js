@@ -3,7 +3,7 @@
 var fs = require('fs');
 
 // Returns the first occurence of the version number
-var parseVersionFromBuildGradle = function() {
+var parseVersionFromBuildGradle = function () {
   var versionRegex = /^version\s*=\s*[',"]([^',"]*)[',"]/gm; // Match and group the version number
   var buildGradle = fs.readFileSync('build.gradle', "utf8");
   return versionRegex.exec(buildGradle)[1];

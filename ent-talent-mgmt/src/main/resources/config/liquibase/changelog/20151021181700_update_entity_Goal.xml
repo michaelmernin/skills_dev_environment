@@ -13,7 +13,7 @@
       </addColumn>
       
       <addNotNullConstraint tableName="T_GOAL"
-      						columnName="review_id"
-      						columnDataType="bigint"/>
+                  columnName="review_id"
+                  columnDataType="bigint"/>
     </changeSet>
 </databaseChangeLog>

@@ -9,8 +9,8 @@
     -->
     <changeSet id="20151209172300" author="ahmed">
       <addColumn tableName="T_FEEDBACK">
-      	<column name="overall_score" type="double"/>
-       	<column name="overall_comment" type="varchar(255)"/>
+        <column name="overall_score" type="double"/>
+        <column name="overall_comment" type="varchar(255)"/>
       </addColumn>
     </changeSet>
 </databaseChangeLog>

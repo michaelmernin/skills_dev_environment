@@ -23,7 +23,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
         goal: new Goal()
       }
     }).then(function (goal) {
-      goal.$save({reviewId: review.id}, function(savedGoal) {
+      goal.$save({reviewId: review.id}, function (savedGoal) {
         $scope.goals.push(savedGoal);
       });      
     });
@@ -63,7 +63,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     });
   };
   
-  $scope.getIcon = function(completionDate) {
+  $scope.getIcon = function (completionDate) {
     if (completionDate) {
       return 'fa fa-lg fa-check-circle-o'
     } else {
@@ -71,7 +71,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     }
   };
   
-  $scope.getColor = function(completionDate) {
+  $scope.getColor = function (completionDate) {
     if(completionDate) {
       return 'green;'
     } else {

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etmApp').controller('SessionsController', function ($scope, Sessions, Principal) {
-  Principal.identity().then(function(account) {
+  Principal.identity().then(function (account) {
     $scope.account = account;
   });
 

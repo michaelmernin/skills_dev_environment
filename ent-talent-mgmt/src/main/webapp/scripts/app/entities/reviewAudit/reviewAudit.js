@@ -33,7 +33,7 @@ angular.module('etmApp')
                     }
                 },
                 resolve: {
-                    entity: ['$stateParams', 'ReviewAudit', function($stateParams, ReviewAudit) {
+                    entity: ['$stateParams', 'ReviewAudit', function ($stateParams, ReviewAudit) {
                         return ReviewAudit.get({id : $stateParams.id});
                     }]
                 }
@@ -44,7 +44,7 @@ angular.module('etmApp')
                 data: {
                     authorities: ['ROLE_USER'],
                 },
-                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
+                onEnter: ['$stateParams', '$state', '$modal', function ($stateParams, $state, $modal) {
                     $modal.open({
                         templateUrl: 'scripts/app/entities/reviewAudit/reviewAudit-dialog.html',
                         controller: 'ReviewAuditDialogController',
@@ -59,9 +59,9 @@ angular.module('etmApp')
                                 };
                             }
                         }
-                    }).result.then(function(result) {
+                    }).result.then(function (result) {
                         $state.go('reviewAudit', null, { reload: true });
-                    }, function() {
+                    }, function () {
                         $state.go('reviewAudit');
                     })
                 }]
@@ -72,19 +72,19 @@ angular.module('etmApp')
                 data: {
                     authorities: ['ROLE_USER'],
                 },
-                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
+                onEnter: ['$stateParams', '$state', '$modal', function ($stateParams, $state, $modal) {
                     $modal.open({
                         templateUrl: 'scripts/app/entities/reviewAudit/reviewAudit-dialog.html',
                         controller: 'ReviewAuditDialogController',
                         size: 'lg',
                         resolve: {
-                            entity: ['ReviewAudit', function(ReviewAudit) {
+                            entity: ['ReviewAudit', function (ReviewAudit) {
                                 return ReviewAudit.get({id : $stateParams.id});
                             }]
                         }
-                    }).result.then(function(result) {
+                    }).result.then(function (result) {
                         $state.go('reviewAudit', null, { reload: true });
-                    }, function() {
+                    }, function () {
                         $state.go('^');
                     })
                 }]
@@ -95,19 +95,19 @@ angular.module('etmApp')
                 data: {
                     authorities: ['ROLE_USER'],
                 },
-                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
+                onEnter: ['$stateParams', '$state', '$modal', function ($stateParams, $state, $modal) {
                     $modal.open({
                         templateUrl: 'scripts/app/entities/reviewAudit/reviewAudit-delete-dialog.html',
                         controller: 'ReviewAuditDeleteController',
                         size: 'md',
                         resolve: {
-                            entity: ['ReviewAudit', function(ReviewAudit) {
+                            entity: ['ReviewAudit', function (ReviewAudit) {
                                 return ReviewAudit.get({id : $stateParams.id});
                             }]
                         }
-                    }).result.then(function(result) {
+                    }).result.then(function (result) {
                         $state.go('reviewAudit', null, { reload: true });
-                    }, function() {
+                    }, function () {
                         $state.go('^');
                     })
                 }]

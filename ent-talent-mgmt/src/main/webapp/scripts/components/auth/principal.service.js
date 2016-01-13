@@ -57,7 +57,7 @@ angular.module('etmApp').factory('Principal', function Principal($q, Account) {
         _authenticated = true;
         deferred.resolve(_identity);
       })
-        .catch(function() {
+        .catch(function () {
         _identity = null;
         _authenticated = false;
         deferred.resolve(_identity);

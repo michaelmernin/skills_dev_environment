@@ -35,7 +35,7 @@ describe('Controllers Tests ', function () {
       };
     }));
     
-    afterEach(function() {
+    afterEach(function () {
       $httpBackend.verifyNoOutstandingExpectation();
       $httpBackend.verifyNoOutstandingRequest();
     });

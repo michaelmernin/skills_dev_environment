@@ -20,7 +20,7 @@ angular.module('etmApp', [
     });
   });
 
-  $rootScope.$on('$stateChangeSuccess',  function(event, toState, toParams, fromState, fromParams) {
+  $rootScope.$on('$stateChangeSuccess',  function (event, toState, toParams, fromState, fromParams) {
     var titleKey = 'global.title';
 
     $rootScope.previousStateName = fromState.name;
@@ -36,7 +36,7 @@ angular.module('etmApp', [
     });
   });
 
-  $rootScope.back = function() {
+  $rootScope.back = function () {
     // If previous state is 'activate' or do not exist go to 'home'
     if ($rootScope.previousStateName === 'activate' || $state.get($rootScope.previousStateName) === null) {
       $state.go('home');
@@ -44,7 +44,7 @@ angular.module('etmApp', [
       $state.go($rootScope.previousStateName, $rootScope.previousStateParams);
     }
   };
-}).config(["$mdThemingProvider", function($mdThemingProvider) {
+}).config(["$mdThemingProvider", function ($mdThemingProvider) {
     $mdThemingProvider.definePalette('prft-red', {
       '50': 'fae2e2',
       '100': 'efb9ba',

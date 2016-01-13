@@ -4,7 +4,7 @@ angular.module('etmApp')
     .controller('RatingDetailController', function ($scope, $stateParams, Rating, Question, Feedback) {
         $scope.rating = {};
         $scope.load = function (id) {
-            Rating.get({id: id}, function(result) {
+            Rating.get({id: id}, function (result) {
               $scope.rating = result;
             });
         };

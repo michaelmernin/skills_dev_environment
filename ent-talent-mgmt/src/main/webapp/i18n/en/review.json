@@ -60,15 +60,15 @@
       "counselor": "Counselor:",
       "reviewInformation": "Review Information",
       "goals": {
-      	"addGoal": "Add Goal",
-      	"goalDetailHeader": "Fill out fields to create goal",
-      	"goal": "Goal",
-      	"targetDate": "Target Date",
-      	"note": "Status Notes",
-      	"cancel": "Cancel",
-      	"save": "Save",
-      	"completionDate": "Completion Date",
-      	"description": "Description"
+        "addGoal": "Add Goal",
+        "goalDetailHeader": "Fill out fields to create goal",
+        "goal": "Goal",
+        "targetDate": "Target Date",
+        "note": "Status Notes",
+        "cancel": "Cancel",
+        "save": "Save",
+        "completionDate": "Completion Date",
+        "description": "Description"
       }
     },
     "a": {

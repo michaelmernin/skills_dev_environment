@@ -1,11 +1,11 @@
 'use strict';
 
-describe('ReviewAudit Detail Controller', function() {
+describe('ReviewAudit Detail Controller', function () {
     var $scope, $rootScope;
     var MockEntity, MockReviewAudit, MockReview, MockUser;
     var createController;
 
-    beforeEach(inject(function($injector) {
+    beforeEach(inject(function ($injector) {
         $rootScope = $injector.get('$rootScope');
         $scope = $rootScope.$new();
         MockEntity = jasmine.createSpy('MockEntity');
@@ -22,14 +22,14 @@ describe('ReviewAudit Detail Controller', function() {
             'Review': MockReview,
             'User': MockUser
         };
-        createController = function() {
+        createController = function () {
             $injector.get('$controller')("ReviewAuditDetailController", locals);
         };
     }));
 
 
-    xdescribe('Root Scope Listening', function() {
-        it('Unregisters root scope listener upon scope destruction', function() {
+    xdescribe('Root Scope Listening', function () {
+        it('Unregisters root scope listener upon scope destruction', function () {
             var eventType = 'etmApp:reviewAuditUpdate';
 
             createController();

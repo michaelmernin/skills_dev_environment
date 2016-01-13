@@ -5,7 +5,7 @@ angular.module('etmApp').controller('NewReviewController', function ($scope, $st
   $scope.reviewTypes = [];
   $scope.reviewees = [];
 
-  Principal.identity().then(function(account) {
+  Principal.identity().then(function (account) {
     $scope.reviewees.push(account);
     if (Principal.isInRole('ROLE_COUNSELOR')) {
       User.queryCounselees(function (result) {

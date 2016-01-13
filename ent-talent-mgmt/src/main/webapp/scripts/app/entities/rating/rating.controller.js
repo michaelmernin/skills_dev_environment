@@ -5,15 +5,15 @@ angular.module('etmApp')
         $scope.ratings = [];
         $scope.questions = Question.query();
         $scope.feedbacks = Feedback.query();
-        $scope.loadAll = function() {
-            Rating.query(function(result) {
+        $scope.loadAll = function () {
+            Rating.query(function (result) {
                $scope.ratings = result;
             });
         };
         $scope.loadAll();
 
         $scope.showUpdate = function (id) {
-            Rating.get({id: id}, function(result) {
+            Rating.get({id: id}, function (result) {
                 $scope.rating = result;
                 $('#saveRatingModal').modal('show');
             });
@@ -34,7 +34,7 @@ angular.module('etmApp')
         };
 
         $scope.delete = function (id) {
-            Rating.get({id: id}, function(result) {
+            Rating.get({id: id}, function (result) {
                 $scope.rating = result;
                 $('#deleteRatingConfirmation').modal('show');
             });

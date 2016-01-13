@@ -2,13 +2,13 @@
 
 angular.module('etmApp').controller('ReviewAuditDialogController',
     ['$scope', '$stateParams', '$modalInstance', '$q', 'entity', 'ReviewAudit', 'Review', 'User',
-        function($scope, $stateParams, $modalInstance, $q, entity, ReviewAudit, Review, User) {
+        function ($scope, $stateParams, $modalInstance, $q, entity, ReviewAudit, Review, User) {
 
         $scope.reviewAudit = entity;
         $scope.reviews = Review.query();
         $scope.users = User.query();
-        $scope.load = function(id) {
-            ReviewAudit.get({id : id}, function(result) {
+        $scope.load = function (id) {
+            ReviewAudit.get({id : id}, function (result) {
                 $scope.reviewAudit = result;
             });
         };
@@ -32,7 +32,7 @@ angular.module('etmApp').controller('ReviewAuditDialogController',
             }
         };
 
-        $scope.clear = function() {
+        $scope.clear = function () {
             $modalInstance.dismiss('cancel');
         };
 }]);

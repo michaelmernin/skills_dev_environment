@@ -3,8 +3,8 @@
 angular.module('etmApp')
     .controller('CategoryController', function ($scope, Category) {
         $scope.categories = [];
-        $scope.loadAll = function() {
-            Category.query(function(result) {
+        $scope.loadAll = function () {
+            Category.query(function (result) {
                $scope.categories = result;
             });
         };
@@ -20,14 +20,14 @@ angular.module('etmApp')
         };
 
         $scope.update = function (id) {
-            Category.get({id: id}, function(result) {
+            Category.get({id: id}, function (result) {
                 $scope.category = result;
                 $('#saveCategoryModal').modal('show');
             });
         };
 
         $scope.delete = function (id) {
-            Category.get({id: id}, function(result) {
+            Category.get({id: id}, function (result) {
                 $scope.category = result;
                 $('#deleteCategoryConfirmation').modal('show');
             });

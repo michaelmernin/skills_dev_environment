@@ -3,8 +3,8 @@
 angular.module('etmApp')
     .controller('ReviewTypeController', function ($scope, ReviewType) {
         $scope.reviewTypes = [];
-        $scope.loadAll = function() {
-            ReviewType.query(function(result) {
+        $scope.loadAll = function () {
+            ReviewType.query(function (result) {
                $scope.reviewTypes = result;
             });
         };
@@ -20,14 +20,14 @@ angular.module('etmApp')
         };
 
         $scope.update = function (id) {
-            ReviewType.get({id: id}, function(result) {
+            ReviewType.get({id: id}, function (result) {
                 $scope.reviewType = result;
                 $('#saveReviewTypeModal').modal('show');
             });
         };
 
         $scope.delete = function (id) {
-            ReviewType.get({id: id}, function(result) {
+            ReviewType.get({id: id}, function (result) {
                 $scope.reviewType = result;
                 $('#deleteReviewTypeConfirmation').modal('show');
             });

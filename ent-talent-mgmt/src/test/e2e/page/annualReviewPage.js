@@ -47,19 +47,19 @@ var AnnualReviewPage = function () {
     },
       
     reviewTypeValue: {
-      get: function(){
+      get: function (){
         return this.ui.reviewTypeValue.getAttribute('value');
       }
     },
     
     startDateLabel: {
-      get: function(){
+      get: function (){
         return this.ui.startDateLabel.getAttribute('value');
       }
     },
     
     startDateValue: {
-      get: function(){
+      get: function (){
         return this.ui.startDateValue.getAttribute('value');
       }
     },
@@ -82,19 +82,19 @@ var AnnualReviewPage = function () {
     },
     
     statusValue: {
-      get: function(){
+      get: function (){
         return this.ui.statusValue.getAttribute('value');
       }
     },
     
     counselorLabel: {
-      get: function(){
+      get: function (){
         return this.ui.counselorLabel.getAttribute('value');
       }
     },
     
     counselorValue: {
-      get: function(){
+      get: function (){
         return this.ui.counselorValue.getAttribute('value');
       }
     },

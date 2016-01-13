@@ -42,9 +42,9 @@ angular.module('etmApp').factory('User', function ($resource, DateUtils) {
       }
     },
     'autocomplete': {
-    	url: 'api/users/autocomplete',
-    	method: 'GET',
-    	isArray: true
+      url: 'api/users/autocomplete',
+      method: 'GET',
+      isArray: true
     },
     'profile': {
       url: 'api/profile',

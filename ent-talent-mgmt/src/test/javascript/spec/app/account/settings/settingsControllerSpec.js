@@ -7,9 +7,9 @@ describe('Controllers Tests ', function () {
   var $scope, q, Principal;
 
   // define the mock Principal
-  beforeEach(function() {
+  beforeEach(function () {
     Principal = {
-      identity: function() {
+      identity: function () {
         var deferred = q.defer();
         return deferred.promise;
       }

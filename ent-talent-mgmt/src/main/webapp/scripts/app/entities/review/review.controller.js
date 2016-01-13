@@ -6,8 +6,8 @@ angular.module('etmApp')
         $scope.reviewtypes = ReviewType.query();
         $scope.reviewstatuss = ReviewStatus.query();
         $scope.users = User.query();
-        $scope.loadAll = function() {
-            Review.query(function(result) {
+        $scope.loadAll = function () {
+            Review.query(function (result) {
                $scope.reviews = result;
             });
         };
@@ -23,14 +23,14 @@ angular.module('etmApp')
         };
 
         $scope.update = function (id) {
-            Review.get({id: id}, function(result) {
+            Review.get({id: id}, function (result) {
                 $scope.review = result;
                 $('#saveReviewModal').modal('show');
             });
         };
 
         $scope.delete = function (id) {
-            Review.get({id: id}, function(result) {
+            Review.get({id: id}, function (result) {
                 $scope.review = result;
                 $('#deleteReviewConfirmation').modal('show');
             });

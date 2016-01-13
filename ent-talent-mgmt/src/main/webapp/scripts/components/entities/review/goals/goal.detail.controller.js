@@ -4,17 +4,17 @@ angular.module('etmApp').controller('GoalDetailController', function ($scope, $m
   $scope.goal = goal;
   $scope.switchCompletion = goal.completionDate ? true : false;
 
-  $scope.cancel = function() {
+  $scope.cancel = function () {
     $mdDialog.cancel();
   };
   
-  $scope.hide = function() {
+  $scope.hide = function () {
     if ($scope.goalForm.$valid) {
       $mdDialog.hide($scope.goal);
     }
   };
   
-  $scope.isPopulated = function() {
+  $scope.isPopulated = function () {
     if ($scope.goal.completionDate) {
       return true;
     } else {

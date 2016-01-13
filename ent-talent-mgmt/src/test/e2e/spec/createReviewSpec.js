@@ -51,7 +51,7 @@ describe('Enterprise Talent Management', function () {
       expect(listedUsers.get(3).getText()).toBe('Dev UserSeven');
     });
 
-    it('should select a desired reviewee in the dropdown.', function(){
+    it('should select a desired reviewee in the dropdown.', function (){
       var selectedValue = createReviewPage.selectDropdownOption('review.reviewee', 'Dev UserOne');
       expect(selectedValue.isDisplayed()).toBe(true);
     });

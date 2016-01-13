@@ -55,12 +55,12 @@ angular.module('etmApp').controller('OverallController', function ($scope, Princ
     }
   });
   
-   $scope.change = function() {
+   $scope.change = function () {
         console.log("changed");
       };
 
 
-  $scope.updateFeedback = function(feedback) {
+  $scope.updateFeedback = function (feedback) {
     if(delete feedback.ratings){
       Feedback.update({
         reviewId: review.id,

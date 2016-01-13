@@ -4,7 +4,7 @@ angular.module('etmApp').factory('AuthServerProvider', function loginService($ht
   var DOMAIN_REGEX = /@perficient\.com$/;
 
   return {
-    login: function(credentials) {
+    login: function (credentials) {
       if (DOMAIN_REGEX.test(credentials.username)) {
         credentials.username = credentials.username.replace(DOMAIN_REGEX, '');
       }
@@ -20,7 +20,7 @@ angular.module('etmApp').factory('AuthServerProvider', function loginService($ht
         return response;
       });
     },
-    logout: function() {
+    logout: function () {
       // logout from the server
       return $http.post('api/logout').success(function (response) {
         localStorageService.clearAll();

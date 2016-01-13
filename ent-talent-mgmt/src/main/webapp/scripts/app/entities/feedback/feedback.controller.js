@@ -8,15 +8,15 @@ angular.module('etmApp')
         $scope.feedbacktypes = FeedbackType.query();
         $scope.feedbackstatuss = FeedbackStatus.query();
         $scope.ratings = Rating.query();
-        $scope.loadAll = function() {
-            Feedback.query(function(result) {
+        $scope.loadAll = function () {
+            Feedback.query(function (result) {
                $scope.feedback = result;
             });
         };
         $scope.loadAll();
 
         $scope.showUpdate = function (id) {
-            Feedback.get({id: id}, function(result) {
+            Feedback.get({id: id}, function (result) {
                 $scope.feedback = result;
                 $('#saveFeedbackModal').modal('show');
             });
@@ -37,7 +37,7 @@ angular.module('etmApp')
         };
 
         $scope.delete = function (id) {
-            Feedback.get({id: id}, function(result) {
+            Feedback.get({id: id}, function (result) {
                 $scope.feedback = result;
                 $('#deleteFeedbackConfirmation').modal('show');
             });

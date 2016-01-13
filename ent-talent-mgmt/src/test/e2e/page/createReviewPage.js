@@ -51,17 +51,17 @@ var CreateReviewPage = function () {
     this.ui.saveButton.click();
   };
 
-  this.cancel = function(){
+  this.cancel = function (){
     this.ui.modalCancelButton.click();
 
   };
 
-  this.accept = function(){
+  this.accept = function (){
     this.ui.modalAcceptButton.click();
 
   };
 
-   this.logout = function(){
+   this.logout = function (){
     this.ui.logoutButton.click();
 
   };
