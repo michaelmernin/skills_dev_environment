@@ -31,5 +31,4 @@ task gruntTest(type: Exec) {
 gruntBuild.dependsOn 'npmInstall'
 gruntBuild.dependsOn 'bower'
 processResources.dependsOn gruntBuild
-test.dependsOn gruntTest
 bootRun.dependsOn gruntTest
