@@ -31,7 +31,7 @@
     - deploy
     - ci_deploy
     - server
-  command: pkill -f etm
+  command: pkill -f app/etm
   ignore_errors: yes
 
 - name: Copy war artifact
