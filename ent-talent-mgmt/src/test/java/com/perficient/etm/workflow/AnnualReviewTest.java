@@ -152,6 +152,7 @@ public class AnnualReviewTest extends SpringAppTest {
      * by calling the TaskService.complete method
      * @param t The Task object to complete
      */
+    @SuppressWarnings("unused")
     private void completeATaskWithSucess(Task t) {
         completeATaskWith(t, "SUCCESS");
     }
