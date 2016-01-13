@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('GoalsController', function ($scope, $mdDialog, $stateParams, Goal, $window, $mdMedia) {
+angular.module('etmApp').controller('GoalsController', function ($scope, $mdDialog, $stateParams, $state, $window, $mdMedia, Goal) {
   var review = {};
   $scope.goals = [];  
 
@@ -40,7 +40,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     }    
     $mdDialog.show({
       controller: 'GoalDetailController',
-      templateUrl: 'scripts/components/entities/review/goals/goal.detail.html',
+      templateUrl: $state.current.data.goalsConfig,
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {
