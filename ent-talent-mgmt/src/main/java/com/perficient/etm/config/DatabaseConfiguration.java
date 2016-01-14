@@ -14,7 +14,6 @@ import org.springframework.context.ApplicationContextException;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -46,7 +45,6 @@ public class DatabaseConfiguration implements EnvironmentAware {
 
     @Bean(destroyMethod = "shutdown")
     @ConditionalOnMissingClass(name = "com.perficient.etm.config.HerokuDatabaseConfiguration")
-    @Profile("!" + Constants.SPRING_PROFILE_CLOUD)
     public DataSource dataSource() {
         log.debug("Configuring Datasource");
         if (propertyResolver.getProperty("url") == null && propertyResolver.getProperty("databaseName") == null) {
@@ -86,17 +84,7 @@ public class DatabaseConfiguration implements EnvironmentAware {
         liquibase.setDataSource(dataSource);
         liquibase.setChangeLog("classpath:config/liquibase/master.xml");
         liquibase.setContexts(String.join(",", env.getActiveProfiles()));
-        if (env.acceptsProfiles(Constants.SPRING_PROFILE_FAST)) {
-            if ("org.h2.jdbcx.JdbcDataSource".equals(propertyResolver.getProperty("dataSourceClassName"))) {
-                liquibase.setShouldRun(true);
-                log.warn("Using '{}' profile with H2 database in memory is not optimal, you should consider switching to" +
-                    " MySQL or Postgresql to avoid rebuilding your database upon each start.", Constants.SPRING_PROFILE_FAST);
-            } else {
-                liquibase.setShouldRun(false);
-            }
-        } else {
-            log.debug("Configuring Liquibase");
-        }
+        log.debug("Configuring Liquibase");
         return liquibase;
     }
 
