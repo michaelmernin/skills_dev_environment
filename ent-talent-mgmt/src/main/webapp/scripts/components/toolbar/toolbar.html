@@ -2,18 +2,18 @@
   <h1 class="md-toolbar-tools">
     <img class="perficient-logo-sm" src="/assets/images/Perficient-Logo-Reversed_Small.png" alt="Perficient Logo" height="50px"/>
     <a ui-sref="home">
-      <span hide-sm translate="global.title">Enterprise Talent Management</span>
-      <span hide-gt-sm translate="global.abbr">ETM</span>
-      <span hide-sm class="toolbar-version">v{{VERSION}}</span>
+      <span hide-xs translate="global.title">Enterprise Talent Management</span>
+      <span hide-gt-xs translate="global.abbr">ETM</span>
+      <span hide-xs class="toolbar-version">v{{VERSION}}</span>
     </a>
     <span flex></span>
-    <md-button ui-sref="settings" ng-show="isAuthenticated() && $mdMedia('gt-md')">
+    <md-button ui-sref="settings" ng-show="isAuthenticated() && $mdMedia('gt-sm')">
       {{account.firstName}} {{account.lastName}} <i class="fa fa-lg fa-user"></i>
     </md-button>
-    <md-button ui-sref="settings" ng-show="isAuthenticated() && ($mdMedia('md') || $mdMedia('sm'))" class="md-fab md-primary" aria-label="Show User Profile">
+    <md-button ui-sref="settings" ng-show="isAuthenticated() && ($mdMedia('sm') || $mdMedia('xs'))" class="md-fab md-primary" aria-label="Show User Profile">
       <i class="fa fa-lg fa-user"></i>
     </md-button>
-    <md-button class="md-fab md-primary" ng-show="$mdMedia('md') || $mdMedia('sm')" ng-click="toggleSideNav()" aria-label="Open Right Nav">
+    <md-button class="md-fab md-primary" ng-show="$mdMedia('md') || $mdMedia('sm') || $mdMedia('xs')" ng-click="toggleSideNav()" aria-label="Open Right Nav">
       <i class="fa fa-lg fa-navicon"></i>
     </md-button>
   </h1>

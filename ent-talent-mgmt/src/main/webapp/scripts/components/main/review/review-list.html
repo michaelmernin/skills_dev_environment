@@ -2,7 +2,7 @@
   <h2>Reviews</h2>
   <md-divider></md-divider>
   <div>
-    <div layout-gt-sm="row" layout-sm="column">
+    <div layout-gt-sm="row" layout="column">
       <md-input-container class="md-block" flex-gt-sm="50">
         <label for="query">Filter</label>
         <input type="text" id="query" ng-model="query">
@@ -39,7 +39,7 @@
             <h4 ng-show="{{ !!review.project || !!review.client }}">
               {{ review.project }}<span ng-show="{{ !!review.project && !!review.client }}"> at </span>{{ review.client }}
             </h4>
-            <p hide-sm>{{ review.startDate | date:'MM/dd/yyyy' }} to {{ review.endDate | date:'MM/dd/yyyy' }}</p>
+            <p hide-xs hide-sm>{{ review.startDate | date:'MM/dd/yyyy' }} to {{ review.endDate | date:'MM/dd/yyyy' }}</p>
           </div>
         </div>
       </md-list-item>

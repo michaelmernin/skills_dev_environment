@@ -3,11 +3,11 @@
     <md-list-item class="md-3-line" ng-repeat="engagement in engagements">
       <h4 class="md-avatar md-headline" layout layout-align="start center">{{engagement.rating  | number:2}}</h4>
       <div class="md-list-item-text">
-        <h3 hide-sm>{{engagement.role}} on  {{engagement.project}} at {{engagement.client}}</h3>
+        <h3 hide-xs hide-sm>{{engagement.role}} on  {{engagement.project}} at {{engagement.client}}</h3>
         <h3 hide-gt-sm>{{engagement.role}}</h3>
-        <h4 hide-sm>{{engagement.responsibilities}}</h4>
+        <h4 hide-xs hide-sm>{{engagement.responsibilities}}</h4>
         <h4 hide-gt-sm>{{engagement.project}}</h4>
-        <p hide-sm>{{engagement.startDate | date:'MM/dd/yyyy'}} to {{engagement.endDate | date:'MM/dd/yyyy'}}</p>
+        <p hide-xs hide-sm>{{engagement.startDate | date:'MM/dd/yyyy'}} to {{engagement.endDate | date:'MM/dd/yyyy'}}</p>
         <p hide-gt-sm>{{engagement.client}}</p>
       </div>
       <md-divider ng-if="!$last"></md-divider>
