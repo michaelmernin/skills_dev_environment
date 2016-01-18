@@ -113,3 +113,16 @@ mail: Dev.User8@email.com
 employeeID: 4328
 userPassword: password!D8
 title: Technical Consultant
+
+dn: cn=dev.user9,ou=people,dc=perficient,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: dev.user9
+sn: UserNine
+givenName: Dev
+mail: Dev.User9@email.com
+employeeID: 4329
+userPassword: password!D9
+title: Director

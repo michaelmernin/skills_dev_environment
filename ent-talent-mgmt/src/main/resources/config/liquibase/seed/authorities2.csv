@@ -1,0 +1,6 @@
+name;description
+ROLE_ADMIN;Administrator
+ROLE_USER;User
+ROLE_GENERAL_MANAGER;General Manager
+ROLE_COUNSELOR;Counselor
+ROLE_DIRECTOR;Director
