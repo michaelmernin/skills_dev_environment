@@ -65,7 +65,7 @@ public class ReviewResource {
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid new review", result);
         }
-        getReviewSvc().startReviewProcess(review);
+        review = getReviewSvc().startReviewProcess(review);
         return new ResponseEntity<>(review, HttpStatus.CREATED);
     }
 

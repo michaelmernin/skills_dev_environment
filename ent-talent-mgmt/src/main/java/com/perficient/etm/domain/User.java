@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.perficient.etm.domain.util.CustomLocalDateSerializer;
 import com.perficient.etm.domain.util.ISO8601LocalDateDeserializer;
 import com.perficient.etm.domain.util.PublicSerializer;
+import com.perficient.etm.security.AuthoritiesConstants;
+import com.perficient.etm.security.SecurityUtils;
 import com.perficient.etm.web.view.View;
 
 import org.hibernate.annotations.Cache;
@@ -107,14 +109,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @JsonSerialize(using = PublicSerializer.class)
     @JsonView(View.Peer.class)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private User counselor;
-
-    @JsonSerialize(using = PublicSerializer.class)
-    @JsonView(View.Peer.class)
-    @ManyToOne
-    @JoinColumn(name = "general_manager_id", referencedColumnName = "id")
-    private User generalManager;
 
     @JsonView(View.Counselee.class)
     @Column(name = "title")
@@ -171,12 +167,36 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.counselor = counselor;
     }
 
-    public User getGeneralManager() {
-        return generalManager;
+    @JsonSerialize(using = PublicSerializer.class)
+    @JsonView(View.Peer.class)
+    public User getDirector() {
+        if (counselor == null) {
+            return null;
+        }
+        if (counselor.isDirector()) {
+            return counselor;
+        }
+        return counselor.getDirector();
     }
 
-    public void setGeneralManager(User generalManager) {
-        this.generalManager = generalManager;
+    public boolean isDirector() {
+        return SecurityUtils.hasRole(this, AuthoritiesConstants.DIRECTOR);
+    }
+
+    @JsonSerialize(using = PublicSerializer.class)
+    @JsonView(View.Peer.class)
+    public User getGeneralManager() {
+        if (counselor == null) {
+            return null;
+        }
+        if (counselor.isGeneralManager()) {
+            return counselor;
+        }
+        return counselor.getGeneralManager();
+    }
+
+    public boolean isGeneralManager() {
+        return SecurityUtils.hasRole(this, AuthoritiesConstants.GENERAL_MANAGER);
     }
 
     public String getTitle() {

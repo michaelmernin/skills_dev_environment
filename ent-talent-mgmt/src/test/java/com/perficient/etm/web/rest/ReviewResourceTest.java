@@ -137,11 +137,8 @@ public class ReviewResourceTest extends SpringAppTest {
         review.setRole(DEFAULT_ROLE);
         review.setResponsibilities(DEFAULT_RESPONSIBILITIES);
         review.setRating(DEFAULT_RATING);
-        User gm = new User();
-        gm.setLogin("dev.user2");
         User reviewee = new User();
         reviewee.setId(7L);
-        reviewee.setGeneralManager(gm);
         review.setReviewee(reviewee);
         ReviewType revType = reviewTypeRepository.findOne(1L);
         review.setReviewType(revType);
@@ -167,8 +164,8 @@ public class ReviewResourceTest extends SpringAppTest {
                 .andExpect(status().isCreated());
 
         // Validate the Review in the database
-        List<Review> reviews = reviewRepository.findAll();
         int newCount = (int) reviewRepository.count();
+        List<Review> reviews = reviewRepository.findAll();
         assertThat(newCount).isEqualTo(count + 1);
         Optional<Review> optional = reviews.stream().filter(r -> {
             return DEFAULT_TITLE.equals(r.getTitle());

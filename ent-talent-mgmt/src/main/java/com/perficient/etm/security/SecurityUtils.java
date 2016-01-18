@@ -5,6 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.perficient.etm.domain.User;
+
 import java.util.Collection;
 import java.util.Optional;
 
@@ -77,5 +80,16 @@ public final class SecurityUtils {
             }
         }
         return true;
+    }
+    
+    /**
+     * Check if a user has a role.
+     *
+     * @return true if the user has the authority, false otherwise
+     */
+    public static boolean hasRole(User user, String role) {
+        return user.getAuthorities().stream().anyMatch(a -> {
+            return a.getName().equals(role);
+        });
     }
 }

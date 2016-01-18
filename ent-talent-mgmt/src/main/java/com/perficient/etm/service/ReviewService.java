@@ -20,6 +20,7 @@ import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.repository.ReviewAuditRepository;
 import com.perficient.etm.repository.ReviewRepository;
+import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.service.activiti.ReviewTypeProcess;
 import com.perficient.etm.service.activiti.TasksService;
@@ -52,6 +53,9 @@ public class ReviewService extends AbstractBaseService {
 
     @Inject
     private UserService userSvc;
+    
+    @Inject
+    private UserRepository userRepository;
 
     @Inject
     private ReviewAuditRepository reviewAuditRepo;
@@ -79,7 +83,7 @@ public class ReviewService extends AbstractBaseService {
         if (processType == null)
             throw new ReviewProcessNotFound(type);
         try {
-            assignReviewer(review);
+            populateUsers(review);
             review.setReviewStatus(ReviewStatus.OPEN);
             String id = processSvc.initiateProcess(processType, review);
             review.setReviewProcessId(id);
@@ -91,14 +95,21 @@ public class ReviewService extends AbstractBaseService {
         return review;
     }
 
-    private void assignReviewer(Review review) {
-        switch(review.getReviewType().getInterval()) {
-        case ANNUAL:
-            review.setReviewer(review.getReviewee().getCounselor());
-            break;
-        default:
-            break;
-        }
+    private void populateUsers(Review review) {
+        Optional.ofNullable(review.getReviewee()).map(u -> {
+            return u.getId();
+        }).map(id -> {
+            return userRepository.findOne(id);
+        }).ifPresent(u -> {
+            review.setReviewee(u);
+            switch(review.getReviewType().getInterval()) {
+            case ANNUAL:
+                review.setReviewer(u.getCounselor());
+                break;
+            default:
+                break;
+            }
+        });
     }
 
     /**

@@ -19,6 +19,7 @@ public class ReviewAuthorizer extends Authorizer {
                         || isReviewee(optionalReview, login)
                         || isCounselor(optionalReview, login)
                         || isGeneralManager(optionalReview, login)
+                        || isDirector(optionalReview, login)
                         || isPeer(optionalReview, login);
             }).orElse(false);
         }).orElse(true);
@@ -44,6 +45,18 @@ public class ReviewAuthorizer extends Authorizer {
         return Optional.ofNullable(review).map(nullableReview -> {
             return Optional.ofNullable(nullableReview.getReviewee()).map(reviewee -> {
                 return Optional.ofNullable(reviewee.getGeneralManager()).map(gm -> {
+                    return Optional.ofNullable(gm.getLogin()).map(login -> {
+                        return login.equals(username);
+                    }).orElse(false);
+                }).orElse(false);
+            }).orElse(false);
+        }).orElse(false);
+    }
+    
+    private static boolean isDirector(Review review, String username) {
+        return Optional.ofNullable(review).map(nullableReview -> {
+            return Optional.ofNullable(nullableReview.getReviewee()).map(reviewee -> {
+                return Optional.ofNullable(reviewee.getDirector()).map(gm -> {
                     return Optional.ofNullable(gm.getLogin()).map(login -> {
                         return login.equals(username);
                     }).orElse(false);
