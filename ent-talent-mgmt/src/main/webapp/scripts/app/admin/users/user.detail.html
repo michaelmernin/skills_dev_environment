@@ -63,12 +63,6 @@
             <md-option ng-value="counselor" ng-repeat="counselor in counselors">{{ counselor.firstName }} {{ counselor.lastName }}</md-option>
           </md-select>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
-          <label>General Manager</label>
-          <md-select ng-model="user.generalManager" ng-model-options="{trackBy: '$value.id'}">
-            <md-option ng-value="generalManager" ng-repeat="generalManager in generalManagers">{{ generalManager.firstName }} {{ generalManager.lastName }}</md-option>
-          </md-select>
-        </md-input-container>
       </div>
       <h3>Employment</h3>
       <div layout-gt-sm="row">

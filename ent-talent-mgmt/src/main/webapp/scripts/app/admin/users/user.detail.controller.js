@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('UserDetailController', function ($scope, $mdDialog, Authority, user, counselors, generalManagers) {
+angular.module('etmApp').controller('UserDetailController', function ($scope, $mdDialog, Authority, user, counselors) {
   $scope.roles = [];
   Authority.query(function (result) {
     $scope.roles = result;
@@ -8,7 +8,6 @@ angular.module('etmApp').controller('UserDetailController', function ($scope, $m
 
   $scope.user = angular.copy(user);
   $scope.counselors = counselors;
-  $scope.generalManagers = generalManagers;
 
   $scope.cancel = function () {
     $mdDialog.cancel();

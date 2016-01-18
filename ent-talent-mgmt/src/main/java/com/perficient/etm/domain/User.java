@@ -25,6 +25,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A user.
@@ -249,6 +250,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public Set<Authority> getAuthorities() {
         return authorities;
+    }
+    
+    @JsonView(View.Private.class)
+    public Set<String> getRoles() {
+       return authorities.stream().map(Authority::getName).collect(Collectors.toSet());
     }
 
     public void setAuthorities(Set<Authority> authorities) {

@@ -17,7 +17,6 @@ angular.module('etmApp').controller('UsersController', function ($scope, $mdDial
 
   $scope.viewUserDetails = function (user, ev) {
     var counselors = $scope.users.filter(userHasRole.bind(null, 'ROLE_COUNSELOR'));
-    var generalManagers = $scope.users.filter(userHasRole.bind(null, 'ROLE_GENERAL_MANAGER'));
     $mdDialog.show({
       controller: 'UserDetailController',
       templateUrl: 'scripts/app/admin/users/user.detail.html',
@@ -25,8 +24,7 @@ angular.module('etmApp').controller('UsersController', function ($scope, $mdDial
       targetEvent: ev,
       locals: {
         user: user,
-        counselors: counselors,
-        generalManagers: generalManagers
+        counselors: counselors
       }
     }).then(function (updatedUser) {
       angular.copy(updatedUser, user);
