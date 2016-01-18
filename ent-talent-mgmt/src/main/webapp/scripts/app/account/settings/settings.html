@@ -23,6 +23,16 @@
             <h5 flex-gt-xs>{{ profile.startDate | date:'MM/dd/yyyy' }}</h5>
           </div>
         </div>
+        <div layout-gt-xs="row">
+          <div flex-gt-xs>
+            <h4>Director</h4>
+            <h5 flex-gt-xs>{{ profile.director.firstName }} {{ profile.director.lastName }}</h5>
+          </div>
+          <div flex-gt-xs>
+            <h4>General Manager</h4>
+            <h5 flex-gt-xs>{{ profile.generalManager.firstName }} {{ profile.generalManager.lastName }}</h5>
+          </div>
+        </div>
       </div>
     </div>
   </md-content>
