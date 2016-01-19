@@ -4,38 +4,38 @@ angular.module('etmApp').factory('Review', function ($resource, DateUtils) {
   function convertFromServer(data) {
     data.startDate = DateUtils.convertLocaleDateFromServer(data.startDate);
     data.endDate = DateUtils.convertLocaleDateFromServer(data.endDate);
+    return data;
   }
 
   function convertToServer(data) {
     data.startDate = DateUtils.convertLocaleDateToServer(data.startDate);
     data.endDate = DateUtils.convertLocaleDateToServer(data.endDate);
+    return data;
+  }
+  
+  function transformArray(data) {
+    data = angular.fromJson(data);
+    data.forEach(convertFromServer);
+    return data;
+  }
+  
+  function transformSingle(data) {
+    return convertFromServer(angular.fromJson(data));
   }
 
   return $resource('api/reviews/:id', {}, {
     'query': {
       method: 'GET',
       isArray: true,
-      transformResponse: function (data) {
-        data = angular.fromJson(data);
-        data.forEach(convertFromServer);
-        return data;
-      }
+      transformResponse: transformArray
     },
     'get': {
       method: 'GET',
-      transformResponse: function (data) {
-        data = angular.fromJson(data);
-        convertFromServer(data);
-        return data;
-      }
+      transformResponse: transformSingle
     },
     'save': {
       method: 'POST',
-      transformResponse: function (data) {
-        data = angular.fromJson(data);
-        convertFromServer(data);
-        return data;
-      }
+      transformResponse: transformSingle
     },
     'update': {
       method:'PUT',
@@ -50,31 +50,26 @@ angular.module('etmApp').factory('Review', function ($resource, DateUtils) {
       url: 'api/reviews/:id/engagements',
       method: 'GET',
       isArray: true,
-      transformResponse: function (data) {
-        data = angular.fromJson(data);
-        data.forEach(convertFromServer);
-        return data;
-      }
+      transformResponse: transformArray
     },
     'peers': {
       url: 'api/reviews/:id/peers',
       method: 'GET',
-      isArray: true,
-      transformResponse: function (data) {
-        data = angular.fromJson(data);
-        //data.forEach(convertFromServer);
-        return data;
-      }
+      isArray: true
     },
     'addPeer': {
       url: 'api/reviews/:id/peers',
       method: 'POST',
-      isArray: true,
+      isArray: true
+    },
+    'todo': {
+      url: 'api/reviews/:id/todo',
+      method: 'GET',
       transformResponse: function (data) {
         data = angular.fromJson(data);
-        convertFromServer(data);
+        data.dueDate = DateUtils.convertLocaleDateFromServer(data.dueDate);
         return data;
       }
-    }    
+    }
   });
 });
