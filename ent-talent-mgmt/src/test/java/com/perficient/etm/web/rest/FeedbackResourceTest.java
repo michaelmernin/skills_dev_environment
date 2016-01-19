@@ -20,17 +20,12 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Question;
@@ -41,7 +36,6 @@ import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.RatingRepository;
 import com.perficient.etm.utils.ResourceTestUtils;
 import com.perficient.etm.utils.SpringAppTest;
-import com.perficient.etm.web.error.RestExceptionHandler;
 
 /**
  * Test class for the FeedbackResource REST controller.
@@ -73,16 +67,7 @@ public class FeedbackResourceTest extends SpringAppTest {
         ReflectionTestUtils.setField(feedbackResource, "feedbackRepository", feedbackRepository);
         ReflectionTestUtils.setField(feedbackResource, "ratingRepository", ratingRepository);
 
-        final ExceptionHandlerExceptionResolver exceptionHandlerExceptionResolver = new ExceptionHandlerExceptionResolver();
-        //here we need to setup a dummy application context that only registers the RestExceptionHandler
-        final StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerBeanDefinition("advice", new RootBeanDefinition(RestExceptionHandler.class, null, null));
-        //set the application context of the resolver to the dummy application context we just created
-        exceptionHandlerExceptionResolver.setApplicationContext(applicationContext);
-        //needed in order to force the exception resolver to update it's internal caches
-        exceptionHandlerExceptionResolver.afterPropertiesSet();
-
-        this.restFeedbackMockMvc = MockMvcBuilders.standaloneSetup(feedbackResource).setHandlerExceptionResolvers(exceptionHandlerExceptionResolver).build();
+        this.restFeedbackMockMvc = ResourceTestUtils.exceptionHandlingMockMvc(feedbackResource).build();
     }
 
     @Before

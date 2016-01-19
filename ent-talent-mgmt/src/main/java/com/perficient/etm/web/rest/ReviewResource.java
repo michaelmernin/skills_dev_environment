@@ -35,7 +35,7 @@ import com.perficient.etm.web.validator.ReviewValidator;
  */
 @RestController
 @RequestMapping("/api")
-public class ReviewResource {
+public class ReviewResource implements RestResource {
 
     private final Logger log = LoggerFactory.getLogger(ReviewResource.class);
 

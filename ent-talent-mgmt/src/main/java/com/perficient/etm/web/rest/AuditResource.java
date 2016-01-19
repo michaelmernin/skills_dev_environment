@@ -18,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api")
-public class AuditResource {
+public class AuditResource implements RestResource {
 
     @Inject
     private AuditEventService auditEventService;

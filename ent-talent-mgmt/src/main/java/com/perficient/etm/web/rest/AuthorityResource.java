@@ -24,7 +24,7 @@ import javax.inject.Inject;
  */
 @RestController
 @RequestMapping("/api")
-public class AuthorityResource {
+public class AuthorityResource implements RestResource {
 
     private final Logger log = LoggerFactory.getLogger(AuthorityResource.class);
 

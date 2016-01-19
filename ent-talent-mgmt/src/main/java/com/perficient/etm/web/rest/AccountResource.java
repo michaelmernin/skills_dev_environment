@@ -32,7 +32,7 @@ import com.perficient.etm.service.UserService;
  */
 @RestController
 @RequestMapping("/api")
-public class AccountResource {
+public class AccountResource implements RestResource {
 
     private final Logger log = LoggerFactory.getLogger(AccountResource.class);
 

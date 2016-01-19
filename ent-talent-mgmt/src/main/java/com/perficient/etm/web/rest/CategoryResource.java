@@ -20,7 +20,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-public class CategoryResource {
+public class CategoryResource implements RestResource {
 
     private final Logger log = LoggerFactory.getLogger(CategoryResource.class);
 

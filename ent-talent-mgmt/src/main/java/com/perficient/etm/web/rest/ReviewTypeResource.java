@@ -20,7 +20,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-public class ReviewTypeResource {
+public class ReviewTypeResource implements RestResource {
 
     private final Logger log = LoggerFactory.getLogger(ReviewTypeResource.class);
 

@@ -36,7 +36,7 @@ import javax.inject.Inject;
  */
 @RestController
 @RequestMapping("/api")
-public class UserResource {
+public class UserResource implements RestResource {
 
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
 

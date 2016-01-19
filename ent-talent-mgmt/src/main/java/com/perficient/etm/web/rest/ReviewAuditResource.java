@@ -24,7 +24,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-public class ReviewAuditResource {
+public class ReviewAuditResource implements RestResource {
 
     private final Logger log = LoggerFactory.getLogger(ReviewAuditResource.class);
 

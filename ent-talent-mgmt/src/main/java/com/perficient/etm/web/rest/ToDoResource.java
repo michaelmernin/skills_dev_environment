@@ -20,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api")
-public class ToDoResource {
+public class ToDoResource implements RestResource {
 
     private final Logger log = LoggerFactory.getLogger(ToDoResource.class);
 

@@ -27,7 +27,7 @@ import com.perficient.etm.service.PeerService;
  */
 @RestController
 @RequestMapping("/api")
-public class PeerResource {
+public class PeerResource implements RestResource {
 
     private final Logger log = LoggerFactory.getLogger(PeerResource.class);
 

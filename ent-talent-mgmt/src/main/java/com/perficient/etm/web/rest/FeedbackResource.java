@@ -25,7 +25,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-public class FeedbackResource {
+public class FeedbackResource implements RestResource {
 
     private final Logger log = LoggerFactory.getLogger(FeedbackResource.class);
 

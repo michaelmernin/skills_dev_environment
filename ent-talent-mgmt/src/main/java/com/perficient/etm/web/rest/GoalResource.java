@@ -32,7 +32,7 @@ import com.perficient.etm.repository.ReviewRepository;
  */
 @RestController
 @RequestMapping("/api")
-public class GoalResource {
+public class GoalResource implements RestResource {
 
     private final Logger log = LoggerFactory.getLogger(GoalResource.class);
 

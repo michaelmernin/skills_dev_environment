@@ -4,10 +4,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.perficient.etm.web.error.RestExceptionHandler;
+import com.perficient.etm.web.rest.RestResource;
 
 import org.hamcrest.Matchers;
+import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -107,5 +114,18 @@ public class ResourceTestUtils {
         IntStream.range(0, count).forEach(i -> {
             assertJsonKeys(result, path + "[" + i + "]", fields);
         });
+    }
+
+    public static MockMvcBuilder exceptionHandlingMockMvc(RestResource restResource) {
+        final ExceptionHandlerExceptionResolver exceptionHandlerExceptionResolver = new ExceptionHandlerExceptionResolver();
+        // here we need to setup a dummy application context that only registers the RestExceptionHandler
+        final StaticApplicationContext applicationContext = new StaticApplicationContext();
+        applicationContext.registerBeanDefinition("advice", new RootBeanDefinition(RestExceptionHandler.class, null, null));
+        // set the application context of the resolver to the dummy application context we just created
+        exceptionHandlerExceptionResolver.setApplicationContext(applicationContext);
+        // needed in order to force the exception resolver to update it's internal caches
+        exceptionHandlerExceptionResolver.afterPropertiesSet();
+    
+        return MockMvcBuilders.standaloneSetup(restResource).setHandlerExceptionResolvers(exceptionHandlerExceptionResolver);
     }
 }
