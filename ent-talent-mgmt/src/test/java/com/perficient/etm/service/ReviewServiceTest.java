@@ -9,15 +9,18 @@ import javax.inject.Inject;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
+import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.repository.ReviewTypeRepository;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.service.activiti.ProcessService;
@@ -32,55 +35,54 @@ import com.perficient.etm.utils.SpringAppTest;
 public class ReviewServiceTest extends SpringAppTest {
 
     @Inject
-    ReviewService reviewSvc;
+    private ReviewTypeRepository reviewTypeRepo;
 
     @Inject
-    ReviewTypeRepository reviewTypRepo;
-
+    private UserRepository userRepository;
+    
     @Inject
-    UserRepository userRepository;
+    private ReviewRepository reviewRepository;
 
     @Mock
-    ProcessService processSvc;
+    private ProcessService processSvc;
 
     @Mock
-    ProcessService processSvcWithException;
+    private TasksService taskSvc;
+    
+    @InjectMocks
+    private ReviewService reviewSvc;
 
-    @Mock
-    TasksService taskSvc;
-
-    Review review;
+    private Review review;
 
     @Before
     public void init() throws ETMException {
         MockitoAnnotations.initMocks(this);
-        review = ServicesTestUtils.createNewReviewForTests(reviewTypRepo);
+        ReflectionTestUtils.setField(reviewSvc, "userRepository", userRepository);
+        ReflectionTestUtils.setField(reviewSvc, "reviewRepository", reviewRepository);
+        review = ServicesTestUtils.createNewReviewForTests(reviewTypeRepo);
         review.setReviewee(userRepository.findOne(7L));
-
-        Mockito.when(processSvc.initiateProcess(Mockito.any(), Mockito.any())).thenReturn("ProcessId[5]");
-        Mockito.when(processSvcWithException.initiateProcess(Mockito.any(), Mockito.any())).thenThrow(new RuntimeException("Test"));
 
         List<org.activiti.engine.task.Task> mockTasksList =  new ArrayList<>();
 
         Mockito.when(taskSvc.getTasks(Mockito.anyLong())).thenReturn(mockTasksList);
-
-        reviewSvc.setProcessSvc(processSvc);
-        reviewSvc.setTasksService(taskSvc);
     }
 
     @Test
     public void testStartReviewProcess() throws ETMException {
-        //List<Review> revs = reviewSvc.findAll();
+        Mockito.when(processSvc.initiateProcess(Mockito.any(), Mockito.any())).thenReturn("ProcessId[5]");
+        
         reviewSvc.startReviewProcess(review);
-        //List<Review> revsAfter = reviewSvc.findAll();
+
         assertNotNull("A New Review object should have been created in db and it's id should be set in ReviewProcessId",
                 review.getProcessId());
     }
 
     @Test(expected=ActivitiProcessInitiationException.class)
     public void testExceptionDuringInitiation() throws ETMException {
-        reviewSvc.setProcessSvc(processSvcWithException);
+        Mockito.when(processSvc.initiateProcess(Mockito.any(), Mockito.any())).thenThrow(new RuntimeException("Test"));
+        
         reviewSvc.startReviewProcess(review);
+        
         assertNull("No process id should be set", review.getProcessId());
     }
 
@@ -93,12 +95,12 @@ public class ReviewServiceTest extends SpringAppTest {
     @Test
     public void testUpdate() {
         reviewSvc.update(review);
-
     }
 
     @Test
     public void testFindAll() {
         List<Review> list = reviewSvc.findAll();
+        
         assertNotNull(list);
     }
 }

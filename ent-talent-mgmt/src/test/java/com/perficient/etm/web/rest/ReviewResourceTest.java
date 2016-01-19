@@ -18,19 +18,12 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.domain.User;
@@ -38,11 +31,8 @@ import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.repository.ReviewTypeRepository;
 import com.perficient.etm.service.ReviewService;
-import com.perficient.etm.service.UserService;
-import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.utils.ResourceTestUtils;
 import com.perficient.etm.utils.SpringAppTest;
-import com.perficient.etm.web.error.RestExceptionHandler;
 
 /**
  * Test class for the ReviewResource REST controller.
@@ -76,54 +66,23 @@ public class ReviewResourceTest extends SpringAppTest {
     @Inject
     private ReviewRepository reviewRepository;
 
-    private MockMvc restReviewMockMvc;
-
-    private Review review;
-
     @Inject
     private ReviewService reviewService;
 
-    @Mock
-    private ProcessService mockProcessService;
-
     @Inject
     private ReviewTypeRepository reviewTypeRepository;
+    
+    private MockMvc restReviewMockMvc;
 
-    @Inject
-    private UserService userService;
-
-    /*
-     * The resource to be used during the test. Keep globally to update
-     * properties when needed
-     */
-    ReviewResource reviewResource = new ReviewResource();
+    private Review review;
 
     @PostConstruct
     public void setup() throws ETMException {
         MockitoAnnotations.initMocks(this);
         ReviewResource reviewResource = new ReviewResource();
-        Mockito.when(mockProcessService.initiateProcess(Mockito.anyObject(),
-                Mockito.anyObject())).thenReturn("Process{1}");
-        ReflectionTestUtils.setField(reviewResource, "reviewSvc",
-                reviewService);
+        ReflectionTestUtils.setField(reviewResource, "reviewSvc", reviewService);
 
-        final ExceptionHandlerExceptionResolver exceptionHandlerExceptionResolver = new ExceptionHandlerExceptionResolver();
-        // here we need to setup a dummy application context that only registers
-        // the RestExceptionHandler
-        final StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerBeanDefinition("advice",
-                new RootBeanDefinition(RestExceptionHandler.class, null, null));
-        // set the application context of the resolver to the dummy application
-        // context we just created
-        exceptionHandlerExceptionResolver
-                .setApplicationContext(applicationContext);
-        // needed in order to force the exception resolver to update it's
-        // internal caches
-        exceptionHandlerExceptionResolver.afterPropertiesSet();
-
-        this.restReviewMockMvc = MockMvcBuilders.standaloneSetup(reviewResource)
-                .setHandlerExceptionResolvers(exceptionHandlerExceptionResolver)
-                .build();
+        this.restReviewMockMvc = ResourceTestUtils.exceptionHandlingMockMvc(reviewResource).build();
     }
 
     @Before
@@ -142,18 +101,12 @@ public class ReviewResourceTest extends SpringAppTest {
         review.setReviewee(reviewee);
         ReviewType revType = reviewTypeRepository.findOne(1L);
         review.setReviewType(revType);
-        // Set<Review> selfReviewSet = new HashSet<Review>(1);
-        // selfReviewSet.add(review);
-        // reviewee.setSelfReviews(selfReviewSet);
-
-        // review.setReviewee(userRepository.findOne(DEFAULT_SEEDED_USER_ID));
     }
 
     @Test
     @WithUserDetails("dev.user2")
     public void createReview() throws Exception {
         int count = (int) reviewRepository.count();
-        reviewService.setProcessSvc(mockProcessService);
 
         // Create the Review
         restReviewMockMvc
@@ -321,29 +274,4 @@ public class ReviewResourceTest extends SpringAppTest {
         List<Review> reviews = reviewRepository.findAll();
         assertThat(reviews).hasSize(count - 1);
     }
-
-    @Test
-    @WithUserDetails("dev.user7")
-    public void getTodoList() throws Exception {
-        Optional<User> user = userService.getUserFromLogin();
-        if (user.isPresent()) {
-            // Start a review process to generate tasks
-            review.setReviewee(user.get());
-            reviewService.startReviewProcess(review);
-
-            restReviewMockMvc
-                    .perform(get("/api/todo")
-                            .accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
-                    .andExpect(status().isOk())
-                    // .andDo(print())
-                    .andExpect(jsonPath("$.").isArray())
-                    // .andExpect(jsonPath("$[0].name").exists())
-                    // .andExpect(jsonPath("$[0].activitiTaskId").exists())
-                    // .andExpect(jsonPath("$[0].user").exists())
-                    // .andExpect(jsonPath("$[0].description").exists())
-            ;
-        }
-
-    }
-
 }

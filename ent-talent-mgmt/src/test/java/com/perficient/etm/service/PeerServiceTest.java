@@ -29,9 +29,6 @@ import com.perficient.etm.utils.SpringAppTest;
 
 public class PeerServiceTest extends SpringAppTest {
 
-    @InjectMocks
-    PeerService peerSvc;
-
     @Mock
     private ReviewService reviewSvc;
 
@@ -49,6 +46,9 @@ public class PeerServiceTest extends SpringAppTest {
 
     @Mock
     private FeedbackRepository feedbackRepository;
+    
+    @InjectMocks
+    private PeerService peerSvc;
 
     @Before
     public void initMocks() {
