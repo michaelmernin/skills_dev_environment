@@ -13,14 +13,14 @@ import org.springframework.stereotype.Service;
 
 import com.perficient.etm.authorize.ReviewAuthorizer;
 import com.perficient.etm.domain.Review;
-import com.perficient.etm.domain.ToDo;
+import com.perficient.etm.domain.Todo;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.service.activiti.TasksService;
 
 @Service
-public class ToDoService extends AbstractBaseService {
+public class TodoService extends AbstractBaseService {
     
     @Inject
     private TasksService tasksService;
@@ -34,18 +34,18 @@ public class ToDoService extends AbstractBaseService {
     @Inject
     private FeedbackRepository feedbackRepository;
 
-    public Optional<ToDo> findOneActiveByReviewForCurrentUser(Long reviewId) {
+    public Optional<Todo> findOneActiveByReviewForCurrentUser(Long reviewId) {
         return userService.getUserFromLogin().map(user -> {
             return getReviewActiveTodo(reviewId, user);
         });
     }
 
-    public List<ToDo> findActiveForCurrentUser() {
+    public List<Todo> findActiveForCurrentUser() {
         return userService.getUserFromLogin().map(this::getUserTodos)
             .orElse(Collections.emptyList());
     }
     
-    private ToDo getReviewActiveTodo(Long reviewId, User user) {
+    private Todo getReviewActiveTodo(Long reviewId, User user) {
         return Optional.ofNullable(reviewRepository.findOne(reviewId))
             .map(findProcessId(user))
             .map(processId -> {
@@ -55,7 +55,7 @@ public class ToDoService extends AbstractBaseService {
             .orElse(null);
     }
     
-    private List<ToDo> getUserTodos(User user) {
+    private List<Todo> getUserTodos(User user) {
         return tasksService.getTasks(user.getId())
             .stream().map(mapTask(user))
             .collect(Collectors.toList());
@@ -74,9 +74,9 @@ public class ToDoService extends AbstractBaseService {
         };
     }
 
-    private Function<? super Task, ? extends ToDo> mapTask(User user) {
+    private Function<? super Task, ? extends Todo> mapTask(User user) {
         return task -> {
-            return ToDo.fromTask(task, user);
+            return Todo.fromTask(task, user);
         };
     }
 }

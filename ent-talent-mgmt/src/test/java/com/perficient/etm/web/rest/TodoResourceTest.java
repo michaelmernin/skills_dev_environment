@@ -21,16 +21,16 @@ import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.repository.ReviewTypeRepository;
 import com.perficient.etm.service.ReviewService;
-import com.perficient.etm.service.ToDoService;
+import com.perficient.etm.service.TodoService;
 import com.perficient.etm.utils.ResourceTestUtils;
 import com.perficient.etm.utils.SpringAppTest;
 
 /**
- * Test class for the ToDoResource REST controller.
+ * Test class for the TodoResource REST controller.
  *
- * @see ToDoResource
+ * @see TodoResource
  */
-public class ToDoResourceTest extends SpringAppTest {
+public class TodoResourceTest extends SpringAppTest {
 
     private static final String DEFAULT_TITLE = "SAMPLE_TEXT";
 
@@ -52,22 +52,22 @@ public class ToDoResourceTest extends SpringAppTest {
     private ReviewService reviewService;
 
     @Inject
-    private ToDoService toDoService;
+    private TodoService todoService;
 
     @Inject
     private ReviewTypeRepository reviewTypeRepository;
     
-    private MockMvc restToDoMockMvc;
+    private MockMvc restTodoMockMvc;
 
     private Review review;
 
     @PostConstruct
     public void setup() throws ETMException {
         MockitoAnnotations.initMocks(this);
-        ToDoResource toDoResource = new ToDoResource();
-        ReflectionTestUtils.setField(toDoResource, "toDoService", toDoService);
+        TodoResource todoResource = new TodoResource();
+        ReflectionTestUtils.setField(todoResource, "todoService", todoService);
 
-        this.restToDoMockMvc = ResourceTestUtils.exceptionHandlingMockMvc(toDoResource).build();
+        this.restTodoMockMvc = ResourceTestUtils.exceptionHandlingMockMvc(todoResource).build();
     }
 
     @Before
@@ -94,7 +94,7 @@ public class ToDoResourceTest extends SpringAppTest {
         // Start a review process to generate tasks
         reviewService.startReviewProcess(review);
 
-        restToDoMockMvc.perform(get("/api/todo").accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
+        restTodoMockMvc.perform(get("/api/todo").accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.").isArray())
                 .andExpect(jsonPath("$[0].name").exists())
@@ -109,7 +109,7 @@ public class ToDoResourceTest extends SpringAppTest {
         // Start a review process to generate tasks
         reviewService.startReviewProcess(review);
 
-        restToDoMockMvc.perform(get("/api/reviews/{id}/todo", review.getId()).accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
+        restTodoMockMvc.perform(get("/api/reviews/{id}/todo", review.getId()).accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 // .andDo(print())
                 .andExpect(jsonPath("$.").exists())

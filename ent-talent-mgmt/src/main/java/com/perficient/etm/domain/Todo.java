@@ -19,7 +19,7 @@ import com.perficient.etm.service.activiti.ProcessConstants;
  * @author Alexandro Blanco <alex.blanco@perficient.com>
  *
  */
-public class ToDo implements Serializable {
+public class Todo implements Serializable {
 
     private static final long serialVersionUID = 1033412703245531184L;
 
@@ -86,15 +86,15 @@ public class ToDo implements Serializable {
     }
 
     /**
-     * Builds a new ToDo object based on the Activiti Task object and the
+     * Builds a new Todo object based on the Activiti Task object and the
      * designated user
      * @param task the Task object that will serve as based for the
      * new object
      * @param user the User object used that this task belongs to
-     * @return ToDo object with the information from the Task
+     * @return Todo object with the information from the Task
      */
-    public static ToDo fromTask(Task task, User user) {
-        ToDo todo = new ToDo();
+    public static Todo fromTask(Task task, User user) {
+        Todo todo = new Todo();
         todo.setName(task.getName());
         todo.setTaskId(task.getId());
         todo.setUserId(user.getId());

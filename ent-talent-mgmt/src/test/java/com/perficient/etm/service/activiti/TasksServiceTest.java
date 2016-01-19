@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.perficient.etm.domain.ToDo;
+import com.perficient.etm.domain.Todo;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.service.ServicesTestUtils;
@@ -35,7 +35,7 @@ public class TasksServiceTest extends SpringAppTest {
     }
 
     @Test
-    public void testToDoList() {
+    public void testTodoList() {
         List<Task> tasks = taskSvc.getTasks(2L);
         assertEquals("At the beginign one task has to be assigned to the reviewee",tasks.size(), 1);
         tasks = taskSvc.getTasks(1L);
@@ -43,18 +43,18 @@ public class TasksServiceTest extends SpringAppTest {
     }
 
     @Test
-    public void testToDoListUsingToDoObjects() {
+    public void testTodoListUsingTodoObjects() {
         User u = Mockito.mock(User.class);
 
         List<Task> tasks = taskSvc.getTasks(2L);
-        //Convert them to ToDo objects
-        List<ToDo> todos = tasks.stream().map(t->ToDo.fromTask(t , u)).collect(Collectors.toList());
+        //Convert them to Todo objects
+        List<Todo> todos = tasks.stream().map(t->Todo.fromTask(t , u)).collect(Collectors.toList());
         assertEquals("Todos and Tasks lists should have the same number of elements",todos.size(), tasks.size());
-        ToDo t = todos.get(0);
+        Todo t = todos.get(0);
         //Assert the content of the todo lists
-        assertNotNull("Task id from activiti should be populated in the ToDo object", t.getTaskId());
-        assertNotNull("User should be populated in the ToDo object", t.getUserId());
-        assertNotNull("Task name from activiti should be populated in the ToDo object", t.getName());
+        assertNotNull("Task id from activiti should be populated in the Todo object", t.getTaskId());
+        assertNotNull("User should be populated in the Todo object", t.getUserId());
+        assertNotNull("Task name from activiti should be populated in the Todo object", t.getName());
     }
 
     @Test
