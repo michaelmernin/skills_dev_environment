@@ -42,5 +42,6 @@
     <include file="classpath:config/liquibase/seed/20160118100100_director_seed_data.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/seed/dev/20160118100400_dev_director_seed_data.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20160118140200_update_entity_User.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20160118185600_update_entities_Review_Feedback.xml" relativeToChangelogFile="false"/>
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

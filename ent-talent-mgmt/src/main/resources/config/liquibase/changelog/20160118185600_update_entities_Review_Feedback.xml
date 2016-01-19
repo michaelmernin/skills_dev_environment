@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+        Add process id columns to Feedback and Review
+    -->
+    <changeSet id="20160118185600" author="donovan">
+      <addColumn tableName="T_FEEDBACK">
+        <column name="process_id" type="varchar(50)"/>
+      </addColumn>
+      
+      <addColumn tableName="T_REVIEW">
+        <column name="process_id" type="varchar(50)"/>
+      </addColumn>
+    </changeSet>
+</databaseChangeLog>

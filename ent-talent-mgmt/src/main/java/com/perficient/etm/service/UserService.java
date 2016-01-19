@@ -134,7 +134,6 @@ public class UserService {
      */
     public Optional<User> getUserFromLogin() {
         String login = SecurityUtils.getCurrentLogin();
-        Optional<User> user = userRepository.findOneByLogin(login);
-        return user;
+        return userRepository.findOneByLogin(login);
     }
 }

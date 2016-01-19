@@ -29,7 +29,7 @@ public class ReviewAuthorizer extends Authorizer {
         return authorize(review);
     }
 
-    private static boolean isCounselor(Review review, String username) {
+    public static boolean isCounselor(Review review, String username) {
         return Optional.ofNullable(review).map(nullableReview -> {
             return Optional.ofNullable(nullableReview.getReviewee()).map(reviewee -> {
                 return Optional.ofNullable(reviewee.getCounselor()).map(counselor -> {
@@ -41,7 +41,7 @@ public class ReviewAuthorizer extends Authorizer {
         }).orElse(false);
     }
 
-    private static boolean isGeneralManager(Review review, String username) {
+    public static boolean isGeneralManager(Review review, String username) {
         return Optional.ofNullable(review).map(nullableReview -> {
             return Optional.ofNullable(nullableReview.getReviewee()).map(reviewee -> {
                 return Optional.ofNullable(reviewee.getGeneralManager()).map(gm -> {
@@ -53,7 +53,7 @@ public class ReviewAuthorizer extends Authorizer {
         }).orElse(false);
     }
     
-    private static boolean isDirector(Review review, String username) {
+    public static boolean isDirector(Review review, String username) {
         return Optional.ofNullable(review).map(nullableReview -> {
             return Optional.ofNullable(nullableReview.getReviewee()).map(reviewee -> {
                 return Optional.ofNullable(reviewee.getDirector()).map(gm -> {
@@ -65,7 +65,7 @@ public class ReviewAuthorizer extends Authorizer {
         }).orElse(false);
     }
 
-    private static boolean isPeer(Review review, String username) {
+    public static boolean isPeer(Review review, String username) {
         return Optional.ofNullable(review).map(nullableReview -> {
             return Optional.ofNullable(nullableReview.getPeers()).map(peers -> {
                 return peers.stream().anyMatch(u -> {
@@ -75,7 +75,7 @@ public class ReviewAuthorizer extends Authorizer {
         }).orElse(false);
     }
 
-    private static boolean isReviewee(Review review, String username) {
+    public static boolean isReviewee(Review review, String username) {
         return Optional.ofNullable(review).map(nullableReview -> {
             return Optional.ofNullable(nullableReview.getReviewee()).map(reviewee -> {
                 return Optional.ofNullable(reviewee.getLogin()).map(login -> {
@@ -85,7 +85,7 @@ public class ReviewAuthorizer extends Authorizer {
         }).orElse(false);
     }
 
-    private static boolean isReviewer(Review review, String username) {
+    public static boolean isReviewer(Review review, String username) {
         return Optional.ofNullable(review).map(nullableReview -> {
             return Optional.ofNullable(nullableReview.getReviewer()).map(reviewer -> {
                 return Optional.ofNullable(reviewer.getLogin()).map(login -> {

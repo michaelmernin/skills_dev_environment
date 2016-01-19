@@ -37,8 +37,9 @@ public class ProcessService {
             throw new MissingReviewInfoException("review.revieweer");
 
         Map<String, Object> variables = new HashMap<>();
-        variables.put("Reviewer", review.getReviewer().getId());
-        variables.put("Reviewee", review.getReviewee().getId());
+        variables.put(ProcessConstants.REVIEWER_VARIABLE, review.getReviewer().getId());
+        variables.put(ProcessConstants.REVIEWEE_VARIABLE, review.getReviewee().getId());
+        variables.put(ProcessConstants.REVIEW_VARIABLE, review.getId());
         try {
             ProcessInstance processInstance = runtimeSvc.startProcessInstanceByKey(reviewType.getProcessId(), variables );
             return processInstance.getId();
@@ -75,9 +76,10 @@ public class ProcessService {
      */
     public String createPeerReview(User reviewee, User peer) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put("Reviewee",reviewee.getId());
-        variables.put("Peer", peer.getId());
-        variables.put("peerEmail", peer.getEmail());
+        variables.put(ProcessConstants.REVIEWEE_VARIABLE, reviewee.getId());
+        variables.put(ProcessConstants.PEER_VARIABLE, peer.getId());
+        variables.put(ProcessConstants.PEER_EMAIL_VARIABLE, peer.getEmail());
+        //TODO variables.put(TaskConstants.REVIEW_VARIABLE, review);
 
         ProcessInstance pId =
                 runtimeSvc.startProcessInstanceByKey(ReviewTypeProcess.PEER.getProcessId(),variables );

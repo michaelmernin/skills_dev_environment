@@ -54,7 +54,7 @@ public class FeedbackAuthorizer extends Authorizer {
      * @param username
      * @return
      */
-    private static boolean isAuthor(Feedback feedback, String username) {
+    public static boolean isAuthor(Feedback feedback, String username) {
         return Optional.ofNullable(feedback.getAuthor()).map(author -> {
             return Optional.ofNullable(author.getLogin()).map(login -> {
                 return login.equals(username);

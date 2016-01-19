@@ -29,7 +29,6 @@ import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.service.ReviewService;
 import com.perficient.etm.web.validator.ReviewValidator;
-import com.perficient.etm.web.view.ToDo;
 
 /**
  * REST controller for managing Review.
@@ -165,14 +164,5 @@ public class ReviewResource {
 
     public void setReviewSvc(ReviewService reviewSvc) {
         this.reviewSvc = reviewSvc;
-    }
-
-    /**
-     * GET /todo -> get the todo list for the user
-     */
-    @RequestMapping(value = "/todo",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ToDo> getToDo() {
-        log.debug("REST request to get ToDo");
-        return getReviewSvc().getCurrentUserReviewTodo();
     }
 }

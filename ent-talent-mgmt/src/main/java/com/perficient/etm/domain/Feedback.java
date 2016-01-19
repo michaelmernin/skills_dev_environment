@@ -64,9 +64,8 @@ public class Feedback implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Rating> ratings = new HashSet<>();
 
-    //@Transient
-    @Column(name="activiti_process_id")
-    private String feedbackProcessId;
+    @Column(name="process_id")
+    private String processId;
 
     public Long getId() {
         return id;
@@ -134,12 +133,12 @@ public class Feedback implements Serializable {
         this.ratings = ratings;
     }
 
-    public String getFeedbackProcessId() {
-        return feedbackProcessId;
+    public String getProcessId() {
+        return processId;
     }
 
-    public void setFeedbackProcessId(String feedbackProcessId) {
-        this.feedbackProcessId = feedbackProcessId;
+    public void setProcessId(String processId) {
+        this.processId = processId;
     }
 
     public boolean belongsToAuthor(User peer) {

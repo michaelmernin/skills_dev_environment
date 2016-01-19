@@ -1,13 +1,9 @@
 package com.perficient.etm.service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import javax.inject.Inject;
 
-import org.activiti.engine.task.Task;
 import org.springframework.stereotype.Service;
 
 import com.perficient.etm.domain.Feedback;
@@ -24,7 +20,6 @@ import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.service.activiti.ReviewTypeProcess;
 import com.perficient.etm.service.activiti.TasksService;
-import com.perficient.etm.web.view.ToDo;
 
 /**
  * Service class to manage the available operations for the
@@ -85,9 +80,10 @@ public class ReviewService extends AbstractBaseService {
         try {
             populateUsers(review);
             review.setReviewStatus(ReviewStatus.OPEN);
-            String id = processSvc.initiateProcess(processType, review);
-            review.setReviewProcessId(id);
             review = reviewRepository.save(review);
+            String id = processSvc.initiateProcess(processType, review);
+            review.setProcessId(id);
+            reviewRepository.save(review);
         } catch(Exception e) {
             getLog().warn("Exception while launching the review process in activiti",e);
             throw new ActivitiProcessInitiationException(e);
@@ -163,32 +159,6 @@ public class ReviewService extends AbstractBaseService {
         Optional<Feedback> feedback =
                 review.getFeedback().stream().filter(f-> {return f.belongsToAuthor(peer);}).findFirst();
         return feedback;
-    }
-
-    /**
-     * Returns the list of ToDo objects assigned to a user across the
-     * activiti processes that are started in the system
-     * @return List of ToDo objects representing the tasks
-     * for the user
-     */
-    public List<ToDo> getUsersReviewTodo(final User user) {
-        if (user == null)
-            return Arrays.asList();
-        List<Task> tasks = tasksService.getTasks(String.valueOf(user.getId()));
-        List<ToDo> todos = tasks.stream().map(t->{ return ToDo.fromTask(t, user);}).collect(Collectors.toList());
-
-        return todos;
-    }
-
-    /**
-     * Returns the List of ToDo objects related to the current user registarted
-     * in the SecurityContext
-     * @return List of ToDo objects representing the tasks
-     * for the user
-     */
-    public List<ToDo> getCurrentUserReviewTodo() {
-        Optional<User> userOpt = userSvc.getUserFromLogin();
-        return getUsersReviewTodo(userOpt.orElse(null));
     }
 
     //Getters and Setters

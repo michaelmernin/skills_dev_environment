@@ -15,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.test.context.support.WithUserDetails;
 
 import com.perficient.etm.domain.Review;
-import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
@@ -24,7 +23,6 @@ import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.service.activiti.TasksService;
 import com.perficient.etm.utils.SpringAppTest;
-import com.perficient.etm.web.view.ToDo;
 /**
  * JUnit for the ReviewService class
  * @author Alexandro Blanco <alex.blanco@perficient.com>
@@ -64,7 +62,7 @@ public class ReviewServiceTest extends SpringAppTest {
 
         List<org.activiti.engine.task.Task> mockTasksList =  new ArrayList<>();
 
-        Mockito.when(taskSvc.getTasks(Mockito.anyString())).thenReturn(mockTasksList);
+        Mockito.when(taskSvc.getTasks(Mockito.anyLong())).thenReturn(mockTasksList);
 
         reviewSvc.setProcessSvc(processSvc);
         reviewSvc.setTasksService(taskSvc);
@@ -76,14 +74,14 @@ public class ReviewServiceTest extends SpringAppTest {
         reviewSvc.startReviewProcess(review);
         //List<Review> revsAfter = reviewSvc.findAll();
         assertNotNull("A New Review object should have been created in db and it's id should be set in ReviewProcessId",
-                review.getReviewProcessId());
+                review.getProcessId());
     }
 
     @Test(expected=ActivitiProcessInitiationException.class)
     public void testExceptionDuringInitiation() throws ETMException {
         reviewSvc.setProcessSvc(processSvcWithException);
         reviewSvc.startReviewProcess(review);
-        assertNull("No process id should be set", review.getReviewProcessId());
+        assertNull("No process id should be set", review.getProcessId());
     }
 
     @Test(expected=ReviewProcessNotFound.class)
@@ -102,21 +100,5 @@ public class ReviewServiceTest extends SpringAppTest {
     public void testFindAll() {
         List<Review> list = reviewSvc.findAll();
         assertNotNull(list);
-    }
-
-    @Test
-    public void testTodoList() {
-        User u = Mockito.mock(User.class);
-        Mockito.when(u.getId()).thenReturn(1L);
-        List<ToDo> tasks = reviewSvc.getUsersReviewTodo(u);
-        assertNotNull(tasks);
-        //assertFalse(tasks.isEmpty());
-    }
-
-    @Test
-    public void testTodoListWithNull() {
-        List<ToDo> tasks = reviewSvc.getUsersReviewTodo(null);
-        assertNotNull(tasks);
-        assertTrue(tasks.isEmpty());
     }
 }

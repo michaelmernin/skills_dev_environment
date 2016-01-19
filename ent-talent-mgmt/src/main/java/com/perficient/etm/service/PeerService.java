@@ -75,7 +75,7 @@ public class PeerService {
         if (!feedback.isPresent()) {
             throw new ResourceNotFoundException("No peer review found for peer " + peerId + " on review " + reviewId);
         }
-        processSvc.cancel(feedback.get().getFeedbackProcessId());
+        processSvc.cancel(feedback.get().getProcessId());
         // TODO: Set the feedback status to cancelled and save. Or does that happen by Activiti?
         Review review = reviewSvc.findById(reviewId);
         User peer = userSvc.getUser(peerId);

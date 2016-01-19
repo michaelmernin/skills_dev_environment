@@ -1,9 +1,7 @@
 package com.perficient.etm.domain;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -19,14 +17,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.perficient.etm.domain.util.CustomLocalDateSerializer;
@@ -34,6 +31,7 @@ import com.perficient.etm.domain.util.ISO8601LocalDateDeserializer;
 import com.perficient.etm.domain.util.PeerSerializer;
 import com.perficient.etm.domain.util.PublicSerializer;
 import com.perficient.etm.domain.util.ReviewStatusConverter;
+import com.perficient.etm.web.view.View;
 
 /**
  * A Review.
@@ -45,55 +43,69 @@ public class Review implements Serializable {
 
     private static final long serialVersionUID = 2795196200930205346L;
 
+    @JsonView(View.Identity.class)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @JsonView(View.Public.class)
     @Column(name = "title")
     private String title;
 
+    @JsonView(View.Public.class)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @JsonSerialize(using = CustomLocalDateSerializer.class)
     @JsonDeserialize(using = ISO8601LocalDateDeserializer.class)
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
+    @JsonView(View.Public.class)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @JsonSerialize(using = CustomLocalDateSerializer.class)
     @JsonDeserialize(using = ISO8601LocalDateDeserializer.class)
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+    @JsonView(View.Public.class)
     @Column(name = "client")
     private String client;
 
+    @JsonView(View.Public.class)
     @Column(name = "project")
     private String project;
 
+    @JsonView(View.Public.class)
     @Column(name = "role")
     private String role;
 
+    @JsonView(View.Public.class)
     @Column(name = "responsibilities")
     private String responsibilities;
 
+    @JsonView(View.Public.class)
     @Column(name = "rating")
     private Double rating;
 
+    @JsonView(View.Public.class)
     @ManyToOne
     private ReviewType reviewType;
 
+    @JsonView(View.Public.class)
     @Column(name = "reviewstatus_id")
     @Convert(converter = ReviewStatusConverter.class)
     private ReviewStatus reviewStatus;
 
+    @JsonView(View.Public.class)
     @JsonSerialize(using = PeerSerializer.class)
     @ManyToOne
     private User reviewee;
 
+    @JsonView(View.Public.class)
     @JsonSerialize(using = PublicSerializer.class)
     @ManyToOne
     private User reviewer;
 
+    @JsonView(View.Public.class)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "T_PEER",
@@ -107,15 +119,14 @@ public class Review implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Feedback> feedback;
 
+    @JsonView(View.Public.class)
     @OneToMany(mappedBy = "review")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Goal> goals;
 
-    @Transient
-    private Map<Long,String> peerReviewProcesses = new HashMap<>();
-
-    @Transient
-    private String reviewProcessId;
+    @JsonView(View.Public.class)
+    @Column(name = "process_id")
+    private String processId;
 
     public Long getId() {
         return id;
@@ -252,20 +263,12 @@ public class Review implements Serializable {
         reviewStatus = null;
     }
 
-    public Map<Long,String> getPeerReviewProcesses() {
-        return peerReviewProcesses;
+    public String getProcessId() {
+        return processId;
     }
 
-    public void setPeerReviewProcesses(Map<Long,String> peerReviewProcesses) {
-        this.peerReviewProcesses = peerReviewProcesses;
-    }
-
-    public String getReviewProcessId() {
-        return reviewProcessId;
-    }
-
-    public void setReviewProcessId(String reviewProcessId) {
-        this.reviewProcessId = reviewProcessId;
+    public void setProcessId(String processId) {
+        this.processId = processId;
     }
 
     @Override

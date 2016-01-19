@@ -106,7 +106,7 @@ public class PeerServiceTest extends SpringAppTest {
         String feedbackProcessId = "fp1";
 
         when(reviewSvc.getFeedbackForPeer(reviewId, peerId)).thenReturn(Optional.of(peerFeedback));
-        when(peerFeedback.getFeedbackProcessId()).thenReturn(feedbackProcessId);
+        when(peerFeedback.getProcessId()).thenReturn(feedbackProcessId);
         when(processSvc.cancel(feedbackProcessId)).thenReturn(true);
         when(reviewSvc.findById(reviewId)).thenReturn(review);
         when(userSvc.getUser(peerId)).thenReturn(peer);
