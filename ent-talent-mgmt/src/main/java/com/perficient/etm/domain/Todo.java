@@ -21,8 +21,10 @@ import com.perficient.etm.service.activiti.ProcessConstants;
  */
 public class Todo implements Serializable {
 
-    private static final long serialVersionUID = 1033412703245531184L;
+    private static final long serialVersionUID = -8220058339083524517L;
 
+    private String id;
+    
     private Long userId;
 
     @JsonSerialize(using = CustomLocalDateSerializer.class)
@@ -32,8 +34,6 @@ public class Todo implements Serializable {
     private String name;
 
     private String description;
-
-    private String taskId;
 
     private Long reviewId;
 
@@ -69,12 +69,12 @@ public class Todo implements Serializable {
         this.description = description;
     }
 
-    public String getTaskId() {
-        return taskId;
+    public String getId() {
+        return id;
     }
 
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Long getReviewId() {
@@ -96,7 +96,7 @@ public class Todo implements Serializable {
     public static Todo fromTask(Task task, User user) {
         Todo todo = new Todo();
         todo.setName(task.getName());
-        todo.setTaskId(task.getId());
+        todo.setId(task.getId());
         todo.setUserId(user.getId());
         Optional.ofNullable(task.getProcessVariables()).ifPresent(vars -> {
             todo.setReviewId((Long) vars.get(ProcessConstants.REVIEW_VARIABLE));

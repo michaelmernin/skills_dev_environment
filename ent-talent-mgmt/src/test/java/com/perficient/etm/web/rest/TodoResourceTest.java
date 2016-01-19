@@ -98,7 +98,7 @@ public class TodoResourceTest extends SpringAppTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.").isArray())
                 .andExpect(jsonPath("$[0].name").exists())
-                .andExpect(jsonPath("$[0].taskId").exists())
+                .andExpect(jsonPath("$[0].id").exists())
                 .andExpect(jsonPath("$[0].userId").value(7))
                 .andExpect(jsonPath("$[0].reviewId").value(review.getId().intValue()));
     }
@@ -114,7 +114,7 @@ public class TodoResourceTest extends SpringAppTest {
                 // .andDo(print())
                 .andExpect(jsonPath("$.").exists())
                 .andExpect(jsonPath("$.name").exists())
-                .andExpect(jsonPath("$.taskId").exists())
+                .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.userId").value(7))
                 .andExpect(jsonPath("$.reviewId").value(review.getId().intValue()));
     }

@@ -52,7 +52,7 @@ public class TasksServiceTest extends SpringAppTest {
         assertEquals("Todos and Tasks lists should have the same number of elements",todos.size(), tasks.size());
         Todo t = todos.get(0);
         //Assert the content of the todo lists
-        assertNotNull("Task id from activiti should be populated in the Todo object", t.getTaskId());
+        assertNotNull("Task id from activiti should be populated in the Todo object", t.getId());
         assertNotNull("User should be populated in the Todo object", t.getUserId());
         assertNotNull("Task name from activiti should be populated in the Todo object", t.getName());
     }
