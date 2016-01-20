@@ -69,7 +69,8 @@ var CreateReviewPage = function () {
   this.getDropdownOptions = function (dropdownSelect){
     element(by.model(dropdownSelect)).click();
     var optionsContainer = element(by.css('.md-select-menu-container.md-active.md-clickable')).element(by.tagName('md-select-menu')).element(by.tagName('md-content'));
-    var options = optionsContainer.all(by.css('.md-ink-ripple'));
+    var options = [];
+    options = optionsContainer.all(by.tagName('md-option'));
     return options;
 
   };
