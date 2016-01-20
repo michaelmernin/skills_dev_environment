@@ -3,13 +3,17 @@
 angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewStatus) {
   function convertFromServer(data) {
     data.dueDate = DateUtils.convertLocaleDateFromServer(data.dueDate);
+    return data;
   }
 
   function convertToServer(data) {
-    data.dueDate = DateUtils.convertLocaleDateToServer(data.dueDate);
+    if (data.dueDate) {
+      data.dueDate = DateUtils.convertLocaleDateToServer(data.dueDate);
+    }
+    return data;
   }
 
-  return angular.extend($resource('api/todos', {}, {
+  return angular.extend($resource('api/todos/:id', {}, {
     'query': {
       method: 'GET',
       isArray: true,
@@ -17,6 +21,15 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
         data = angular.fromJson(data);
         data.forEach(convertFromServer);
         return data;
+      }
+    },
+    'update': {
+      method:'PUT',
+      transformRequest: function (data) {
+        return angular.toJson(convertToServer({
+          todoId: data.todoId,
+          result: data.result
+        }));
       }
     }
   }), {
@@ -29,8 +42,9 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
           // Then action is Reviewer Approve/Reject
           actions.push({
             name: 'Submit Feedback',
+            confirm: 'Confirm Feedback Submission?',
             todoId: todo.id,
-            result: 'SUCCESS',
+            result: 'SUBMIT',
             theme: '',
             icon: 'fa-send'
           });
@@ -38,14 +52,16 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
         default:
           actions.push({
             name: 'Approve',
+            confirm: 'Confirm Review Approval?',
             todoId: todo.id,
-            result: 'SUCCESS',
+            result: 'APPROVE',
             theme: '',
             icon: 'fa-check'
           }, {
             name: 'Reject',
+            confirm: 'Confirm Review Rejection?',
             todoId: todo.id,
-            result: 'FAILURE',
+            result: 'REJECT',
             theme: 'md-warn',
             icon: 'fa-cross'
           });

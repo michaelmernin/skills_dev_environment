@@ -66,8 +66,10 @@ angular.module('etmApp').factory('Review', function ($resource, DateUtils) {
       url: 'api/reviews/:id/todo',
       method: 'GET',
       transformResponse: function (data) {
-        data = angular.fromJson(data);
-        data.dueDate = DateUtils.convertLocaleDateFromServer(data.dueDate);
+        data = angular.fromJson(data || "{}");
+        if (data.dueDate) {
+          data.dueDate = DateUtils.convertLocaleDateFromServer(data.dueDate);
+        }
         return data;
       }
     }
