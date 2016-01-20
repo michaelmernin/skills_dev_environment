@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dumbster.smtp.MailMessage;
+import com.perficient.etm.service.activiti.ProcessConstants;
 import com.perficient.etm.utils.SpringAppTest;
 
 public class PeerReviewWorkflowTest extends SpringAppTest {
@@ -27,9 +28,9 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
 
     private Map<String, Object> getVariables() {
         Map<String, Object> variables = new HashMap<>();
-        variables.put("Peer", "Alex");
-        variables.put("PeerEmail", "alex@perficient.com");
-        variables.put("Reviewee", "David Brooks");
+        variables.put(ProcessConstants.PEER_VARIABLE, "Alex");
+        variables.put(ProcessConstants.PEER_EMAIL_VARIABLE, "alex@perficient.com");
+        variables.put(ProcessConstants.REVIEWEE_VARIABLE, "David Brooks");
 
         return variables;
     }

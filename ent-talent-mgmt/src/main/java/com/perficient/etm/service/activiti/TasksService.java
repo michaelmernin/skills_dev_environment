@@ -63,7 +63,7 @@ public class TasksService {
      */
     public void complete(String taskId, String result) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put("RESULT", result);
+        variables.put(ProcessConstants.RESULT_VARIABLE, result);
         tasksService.complete(taskId, variables);
     }
 }

@@ -19,6 +19,8 @@ import org.activiti.engine.task.Task;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.perficient.etm.domain.TodoResult;
+import com.perficient.etm.service.activiti.ProcessConstants;
 import com.perficient.etm.utils.SpringAppTest;
 
 public class AnnualReviewTest extends SpringAppTest {
@@ -41,9 +43,9 @@ public class AnnualReviewTest extends SpringAppTest {
 
     private Map<String, Object> getProcessVariables() {
         Map<String,Object> variables = new HashMap<>();
-        variables.put("Reviewee", "Alex");
-        variables.put("Reviewer", "Craig");
-        variables.put("Director", "David");
+        variables.put(ProcessConstants.REVIEWEE_VARIABLE, "Alex");
+        variables.put(ProcessConstants.REVIEWER_VARIABLE, "Craig");
+        variables.put(ProcessConstants.DIRECTOR_VARIABLE, "David");
         return variables;
     }
 
@@ -140,7 +142,7 @@ public class AnnualReviewTest extends SpringAppTest {
         t = completeAndGetNextTask(t, processInstance.getId());
         assertNotNullAndAsignee(t,"Craig");
         //Fail the reviewers review
-        t = completeWithAndGetNextTask(t, "FAILURE", processInstance.getId());
+        t = completeWithAndGetNextTask(t, TodoResult.REJECT.getName(), processInstance.getId());
 
         //flow has to go back to initial reviewer
         assertNotNullAndAsignee(t,"Alex");
@@ -154,7 +156,7 @@ public class AnnualReviewTest extends SpringAppTest {
      */
     @SuppressWarnings("unused")
     private void completeATaskWithSucess(Task t) {
-        completeATaskWith(t, "SUCCESS");
+        completeATaskWith(t, TodoResult.SUBMIT.getName());
     }
 
     /**
@@ -165,7 +167,7 @@ public class AnnualReviewTest extends SpringAppTest {
      */
     private void completeATaskWith(Task t, String result) {
         Map<String, Object> properties = new HashMap<>();
-        properties.put("RESULT", result);
+        properties.put(ProcessConstants.RESULT_VARIABLE, result);
         taskSvc.complete(t.getId(), properties);
     }
 
@@ -179,7 +181,7 @@ public class AnnualReviewTest extends SpringAppTest {
      * ended
      */
     private Task completeAndGetNextTask(Task t, String processInstanceId) {
-        return completeWithAndGetNextTask(t,"SUCCESS", processInstanceId);
+        return completeWithAndGetNextTask(t,TodoResult.SUBMIT.getName(), processInstanceId);
     }
 
     /**

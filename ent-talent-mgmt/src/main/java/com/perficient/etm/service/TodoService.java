@@ -18,6 +18,7 @@ import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.service.activiti.TasksService;
+import com.perficient.etm.web.rest.dto.TodoActionDTO;
 
 @Service
 public class TodoService extends AbstractBaseService {
@@ -43,6 +44,10 @@ public class TodoService extends AbstractBaseService {
     public List<Todo> findActiveForCurrentUser() {
         return userService.getUserFromLogin().map(this::getUserTodos)
             .orElse(Collections.emptyList());
+    }
+    
+    public void complete(TodoActionDTO action) {
+        tasksService.complete(action.getTodoId(), action.getResult().getName());
     }
     
     private Todo getReviewActiveTodo(Long reviewId, User user) {
