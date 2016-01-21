@@ -72,7 +72,7 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
             //An email should be triggered and the task should be back to give feedback
             //TODO check how to review the email
             assertNotNull("Task should not be null",t);
-            MailMessage[] messages = getServer().getMessages();
+            MailMessage[] messages = smtpServer.getMessages();
             System.out.println(messages.length);
             //assertTrue("There must be messages sent",messages.length > 1);
         } catch (InterruptedException e) {
