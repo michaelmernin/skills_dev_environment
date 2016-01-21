@@ -11,25 +11,24 @@
     </md-toolbar>
     <md-dialog-content>
 
-        <label translate="review.annual.goals.goal">Goal Title</label>
+        <strong translate="review.annual.goals.goal">Goal Title</strong>
         <br/>
         <span flex>{{ goal.name }}</span>
         <br/><br/>
-        <label translate="review.annual.goals.description">Description</label>
+        <strong translate="review.annual.goals.description">Description</strong>
         <br/>
         <span flex>{{ goal.description }}</span>
         <br/><br/>
-        <label translate="review.annual.goals.targetDate">Target Date</label>
+        <strong translate="review.annual.goals.targetDate">Target Date</strong>
         <br/>
         <span flex>{{ goal.targetDate | date:'MM/dd/yyyy' }}</span>
         <br/><br/>
-        <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="isPopulated()">Completed?</md-switch>
-        <md-input-container>
-          <label translate="review.annual.goals.completionDate">Completion Date</label>
-          <input type="date" name="completionDate" ng-model="goal.completionDate" ng-disabled="!switchCompletion" />
-        </md-input-container> 
-        <br/>   
-        <label translate="review.annual.goals.note">Notes</label>
+        <strong ng-if="switchCompletion" translate="review.annual.goals.completionDate">Completion Date</strong>
+        <br ng-if="switchCompletion" />
+        <span ng-if="goal.completionDate" flex>{{ goal.completionDate | date:'MM/dd/yyyy' }}</span>
+        <strong ng-if="!switchCompletion">Not Completed</strong>
+        <br/><br/>
+        <strong translate="review.annual.goals.note">Notes</strong>
         <br/>
         <span flex>{{ goal.note }}</span>
         <br/>
