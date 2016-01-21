@@ -70,7 +70,7 @@ public class ReviewService extends AbstractBaseService {
         getLog().info("Starting a new review process");
 
         populateUsers(review);
-        review.setReviewStatus(ReviewStatus.OPEN);
+        review.setReviewStatus(Optional.ofNullable(review.getReviewStatus()).orElse(ReviewStatus.OPEN));
 
         try {
             String id = processSvc.initiateProcess(getProcessType(review), review);
