@@ -296,14 +296,9 @@ public class Review implements Serializable {
     public String toString() {
         return "Review{" +
                 "id=" + id +
-                ", title='" + title + "'" +
-                ", startDate='" + startDate + "'" +
-                ", endDate='" + endDate + "'" +
-                ", client='" + client + "'" +
-                ", project='" + project + "'" +
-                ", role='" + role + "'" +
-                ", responsibilities='" + responsibilities + "'" +
-                ", rating='" + rating + "'" +
+                ", status='" + reviewStatus + "'" +
+                ", reviewee='" + (reviewee != null ? reviewee.getLogin() : null) + "'" +
+                ", reviewer='" + (reviewer != null ? reviewer.getLogin() : null) + "'" +
                 '}';
     }
 }
