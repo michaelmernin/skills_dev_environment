@@ -31,7 +31,7 @@ public class TasksService {
      *            The String user id to check
      * @return List of String objects with the ids of the tasks
      */
-    public List<Task> getTasks(Long userId) {
+    public List<Task> getUserTasks(Long userId) {
         return getCurrentUserTaskQuery(userId).list();
     }
     
@@ -43,12 +43,20 @@ public class TasksService {
      *            engine
      * @return List of String objects with the ids of the tasks
      */
-    public Task getProcessTask(String processId, Long userId) {
+    public Task getProcessUserTask(String processId, Long userId) {
         return getCurrentUserTaskQuery(userId).processInstanceId(processId).singleResult();
+    }
+    
+    public List<Task> getProcessTasks(String processId) {
+        return getTaskQuery().processInstanceId(processId).list();
     }
 
     private TaskQuery getCurrentUserTaskQuery(Long userId) {
-        return tasksService.createTaskQuery().taskAssignee(String.valueOf(userId)).active().includeProcessVariables();
+        return getTaskQuery().taskAssignee(String.valueOf(userId));
+    }
+    
+    private TaskQuery getTaskQuery() {
+        return tasksService.createTaskQuery().active().includeProcessVariables();
     }
 
     /**

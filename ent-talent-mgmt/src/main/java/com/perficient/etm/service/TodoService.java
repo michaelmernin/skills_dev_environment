@@ -54,14 +54,14 @@ public class TodoService extends AbstractBaseService {
         return Optional.ofNullable(reviewRepository.findOne(reviewId))
             .map(findProcessId(user))
             .map(processId -> {
-                return tasksService.getProcessTask(processId, user.getId());
+                return tasksService.getProcessUserTask(processId, user.getId());
             })
             .map(mapTask(user))
             .orElse(null);
     }
     
     private List<Todo> getUserTodos(User user) {
-        return tasksService.getTasks(user.getId())
+        return tasksService.getUserTasks(user.getId())
             .stream().map(mapTask(user))
             .collect(Collectors.toList());
     }
