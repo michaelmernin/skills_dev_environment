@@ -39,13 +39,17 @@ public class ProcessService {
         Map<String, Object> variables = new HashMap<>();
         variables.put(ProcessConstants.REVIEWER_VARIABLE, review.getReviewer().getId());
         variables.put(ProcessConstants.REVIEWEE_VARIABLE, review.getReviewee().getId());
-        variables.put(ProcessConstants.REVIEW_VARIABLE, review.getId());
+        //variables.put(ProcessConstants.REVIEW_VARIABLE, review.getId());
         try {
             ProcessInstance processInstance = runtimeSvc.startProcessInstanceByKey(reviewType.getProcessId(), variables );
             return processInstance.getId();
         } catch(Exception e) {
             throw new ReviewProcessNotFound("Unable to start review process",e);
         }
+    }
+    
+    public void addReviewId(String processId, Long reviewId) {
+        runtimeSvc.setVariable(processId, ProcessConstants.REVIEW_VARIABLE, reviewId);
     }
 
     /**

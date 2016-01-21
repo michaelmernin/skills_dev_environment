@@ -5,7 +5,6 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
-
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewStatus;
@@ -70,25 +69,30 @@ public class ReviewService extends AbstractBaseService {
     public Review startReviewProcess(Review review) throws ETMException {
         getLog().info("Starting a new review process");
 
-        getLog().debug("Sanitizing the review obejct");
-        review.sanitize(true);
+        populateUsers(review);
+        review.setReviewStatus(ReviewStatus.OPEN);
 
-        ReviewType type = review.getReviewType();
-        ReviewTypeProcess processType = ReviewTypeProcess.fromReviewType(type);
-        if (processType == null)
-            throw new ReviewProcessNotFound(type);
         try {
-            populateUsers(review);
-            review.setReviewStatus(ReviewStatus.OPEN);
-            review = reviewRepository.save(review);
-            String id = processSvc.initiateProcess(processType, review);
+            String id = processSvc.initiateProcess(getProcessType(review), review);
             review.setProcessId(id);
-            reviewRepository.save(review);
-        } catch(Exception e) {
+            review = reviewRepository.save(review);
+            processSvc.addReviewId(id, review.getId());
+        } catch (Exception e) {
             getLog().warn("Exception while launching the review process in activiti",e);
             throw new ActivitiProcessInitiationException(e);
         }
+
         return review;
+    }
+
+    private ReviewTypeProcess getProcessType(Review review) {
+        ReviewType type = review.getReviewType();
+        ReviewTypeProcess processType = ReviewTypeProcess.fromReviewType(type);
+
+        if (processType == null) {
+            throw new ReviewProcessNotFound(type);
+        }
+        return processType;
     }
 
     private void populateUsers(Review review) {

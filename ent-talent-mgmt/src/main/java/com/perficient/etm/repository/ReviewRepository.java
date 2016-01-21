@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PostFilter;
 
 import com.perficient.etm.authorize.ReviewAuthorizer;
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.ReviewStatus;
 
 /**
  * Spring Data JPA repository for the Review entity.
@@ -32,4 +33,6 @@ public interface ReviewRepository extends JpaRepository<Review,Long> {
     @PostAuthorize(ReviewAuthorizer.AUTHORIZE)
     @Override
     Review findOne(Long id);
+
+    List<Review> findAllByReviewStatus(ReviewStatus reviewStatus);
 }
