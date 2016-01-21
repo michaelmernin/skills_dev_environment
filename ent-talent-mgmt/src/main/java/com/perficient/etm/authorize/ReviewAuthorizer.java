@@ -1,8 +1,9 @@
 package com.perficient.etm.authorize;
 
+import java.util.Collection;
 import java.util.Optional;
-
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.User;
 
 public class ReviewAuthorizer extends Authorizer {
 
@@ -20,7 +21,8 @@ public class ReviewAuthorizer extends Authorizer {
                         || isCounselor(optionalReview, login)
                         || isGeneralManager(optionalReview, login)
                         || isDirector(optionalReview, login)
-                        || isPeer(optionalReview, login);
+                        || isPeer(optionalReview, login)
+                        || isSystem(login);
             }).orElse(false);
         }).orElse(true);
     }
@@ -30,70 +32,35 @@ public class ReviewAuthorizer extends Authorizer {
     }
 
     public static boolean isCounselor(Review review, String username) {
-        return Optional.ofNullable(review).map(nullableReview -> {
-            return Optional.ofNullable(nullableReview.getReviewee()).map(reviewee -> {
-                return Optional.ofNullable(reviewee.getCounselor()).map(counselor -> {
-                    return Optional.ofNullable(counselor.getLogin()).map(login -> {
-                        return login.equals(username);
-                    }).orElse(false);
-                }).orElse(false);
-            }).orElse(false);
-        }).orElse(false);
+        return loginIs(getReviewee(review).map(User::getCounselor), username);
     }
 
     public static boolean isGeneralManager(Review review, String username) {
-        return Optional.ofNullable(review).map(nullableReview -> {
-            return Optional.ofNullable(nullableReview.getReviewee()).map(reviewee -> {
-                return Optional.ofNullable(reviewee.getGeneralManager()).map(gm -> {
-                    return Optional.ofNullable(gm.getLogin()).map(login -> {
-                        return login.equals(username);
-                    }).orElse(false);
-                }).orElse(false);
-            }).orElse(false);
-        }).orElse(false);
+        return loginIs(getReviewee(review).map(User::getGeneralManager), username);
     }
     
     public static boolean isDirector(Review review, String username) {
-        return Optional.ofNullable(review).map(nullableReview -> {
-            return Optional.ofNullable(nullableReview.getReviewee()).map(reviewee -> {
-                return Optional.ofNullable(reviewee.getDirector()).map(gm -> {
-                    return Optional.ofNullable(gm.getLogin()).map(login -> {
-                        return login.equals(username);
-                    }).orElse(false);
-                }).orElse(false);
-            }).orElse(false);
-        }).orElse(false);
+        return loginIs(getReviewee(review).map(User::getDirector), username);
     }
 
     public static boolean isPeer(Review review, String username) {
-        return Optional.ofNullable(review).map(nullableReview -> {
-            return Optional.ofNullable(nullableReview.getPeers()).map(peers -> {
-                return peers.stream().anyMatch(u -> {
-                    return u.getLogin().equals(username);
-                });
-            }).orElse(false);
-        }).orElse(false);
+        return Optional.ofNullable(review)
+            .map(Review::getPeers)
+            .map(Collection::stream)
+            .map(stream -> stream.map(User::getLogin))
+            .map(stream -> stream.anyMatch(loginIs(username)))
+            .orElse(false);
     }
 
     public static boolean isReviewee(Review review, String username) {
-        return Optional.ofNullable(review).map(nullableReview -> {
-            return Optional.ofNullable(nullableReview.getReviewee()).map(reviewee -> {
-                return Optional.ofNullable(reviewee.getLogin()).map(login -> {
-                    return login.equals(username);
-                }).orElse(false);
-            }).orElse(false);
-        }).orElse(false);
+        return loginIs(getReviewee(review), username);
     }
 
     public static boolean isReviewer(Review review, String username) {
-        return Optional.ofNullable(review).map(nullableReview -> {
-            return Optional.ofNullable(nullableReview.getReviewer()).map(reviewer -> {
-                return Optional.ofNullable(reviewer.getLogin()).map(login -> {
-                    return login.equals(username);
-                }).orElse(false);
-            }).orElse(false);
-        }).orElse(false);
-
-        // review.getReviewer().getLogin().equals(username);
+        return loginIs(Optional.ofNullable(review).map(Review::getReviewer), username);
+    }
+    
+    private static Optional<User> getReviewee(Review review) {
+        return Optional.ofNullable(review).map(Review::getReviewee);
     }
 }

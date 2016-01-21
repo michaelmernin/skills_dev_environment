@@ -19,7 +19,8 @@ public class FeedbackAuthorizer extends Authorizer {
         return Optional.ofNullable(feedback).map(nullableFeedback -> {
             return getLogin().map(login -> {
                 return isAuthorized(nullableFeedback,login)
-                    || isAuthor(nullableFeedback,login);
+                    || isAuthor(nullableFeedback,login)
+                    || isSystem(login);
             }).orElse(false);
         }).orElse(false);
     }
