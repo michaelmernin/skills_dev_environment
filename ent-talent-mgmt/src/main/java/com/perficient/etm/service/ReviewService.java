@@ -5,17 +5,18 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
-import com.perficient.etm.domain.Feedback;
+
+import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewStatus;
 import com.perficient.etm.domain.ReviewType;
-import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.repository.ReviewAuditRepository;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.repository.UserRepository;
+import com.perficient.etm.security.SecurityUtils;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.service.activiti.ReviewTypeProcess;
 import com.perficient.etm.service.activiti.TasksService;
@@ -53,6 +54,9 @@ public class ReviewService extends AbstractBaseService {
 
     @Inject
     private ReviewAuditRepository reviewAuditRepo;
+    
+    @Inject
+    private FeedbackService feedbackService;
 
     public ReviewService() {
         super();
@@ -78,12 +82,20 @@ public class ReviewService extends AbstractBaseService {
             review.setProcessId(id);
             review = reviewRepository.save(review);
             processSvc.addReviewId(id, review.getId());
+            createFeedback(review);
         } catch (Exception e) {
             getLog().warn("Exception while launching the review process in activiti",e);
             throw new ActivitiProcessInitiationException(e);
         }
 
         return review;
+    }
+
+    private void createFeedback(final Review review) {
+        SecurityUtils.runAsSystem(userRepository, () -> {
+            feedbackService.addFeedback(review, review.getReviewee(), FeedbackType.SELF);
+            feedbackService.addFeedback(review, review.getReviewer(), FeedbackType.REVIEWER);
+        });
     }
 
     private ReviewTypeProcess getProcessType(Review review) {
@@ -139,7 +151,7 @@ public class ReviewService extends AbstractBaseService {
      * @param id The Long value of the id for the Review object to locate
      */
     public void delete(Long id) {
-        reviewRepository.delete(id);
+        // TODO set feedback and review as closed;
     }
 
     /**
@@ -150,20 +162,6 @@ public class ReviewService extends AbstractBaseService {
     public void update(Review review) {
         review.sanitize(false);
         review = reviewRepository.save(review);
-    }
-
-    /**
-     * Retrieves the feedback on this review for a given peer
-     * @param reviewId
-     * @param peerId
-     * @return
-     */
-    public Optional<Feedback> getFeedbackForPeer(Long reviewId, Long peerId) {
-        Review review = reviewRepository.getOne(reviewId);
-        User peer = userSvc.getUser(peerId);
-        Optional<Feedback> feedback =
-                review.getFeedback().stream().filter(f-> {return f.belongsToAuthor(peer);}).findFirst();
-        return feedback;
     }
 
     //Getters and Setters

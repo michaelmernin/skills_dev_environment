@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.perficient.etm.domain.Feedback;
-import com.perficient.etm.domain.FeedbackStatus;
+import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.FeedbackRepository;
@@ -34,6 +34,9 @@ public class PeerService {
     private ProcessService processSvc;
 
     @Inject
+    private FeedbackService feedbackService;
+    
+    @Inject
     private FeedbackRepository feedbackRepository;
 
     /**
@@ -46,13 +49,9 @@ public class PeerService {
      * @return
      */
     public Review addPeerFeedback(Long reviewId, User peer) {
-        log.debug("Adding peer feedback for review {} and peer {}", reviewId, peer.getEmployeeId());
+        log.debug("Adding peer feedback for review {} and peer {}", reviewId, peer.getId());
         Review review = reviewSvc.findById(reviewId);
-        Feedback feedback = reviewSvc.getFeedbackForPeer(reviewId, peer.getId()).orElse(new Feedback());
-        feedback.setAuthor(peer);
-        feedback.setReview(review);
-        feedback.setFeedbackStatus(FeedbackStatus.NOT_SENT);
-        feedbackRepository.save(feedback);
+        Feedback feedback = feedbackService.addFeedback(review, peer, FeedbackType.PEER);
         review.getFeedback().add(feedback);
         review.getPeers().add(peer);
         reviewSvc.update(review);
@@ -69,8 +68,8 @@ public class PeerService {
     public void removePeerFeedback(Long reviewId, Long peerId) {
         removePeerFromReview(reviewId, peerId);
 
-        reviewSvc.getFeedbackForPeer(reviewId, peerId)
-            .map(this::closeFeedback)
+        feedbackRepository.findOneByReviewIdAndAuthorId(reviewId, peerId)
+            .map(feedbackService::closeFeedback)
             .map(Feedback::getProcessId)
             .filter(Objects::nonNull)
             .map(processSvc::cancel);
@@ -84,10 +83,5 @@ public class PeerService {
         if (removed) {
             reviewSvc.update(review);
         }
-    }
-
-    private Feedback closeFeedback(Feedback feedback) {
-        feedback.setFeedbackStatus(FeedbackStatus.CLOSED);
-        return feedbackRepository.save(feedback);
     }
 }

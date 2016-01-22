@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.FeedbackRepository;
@@ -28,6 +29,9 @@ public class PeerServiceTest extends SpringMockTest {
     @Mock
     private FeedbackRepository feedbackRepository;
     
+    @Mock
+    private FeedbackService feedbackService;
+    
     @InjectMocks
     private PeerService peerSvc;
 
@@ -38,20 +42,21 @@ public class PeerServiceTest extends SpringMockTest {
         Long reviewId = 1L;
         Review review = mock(Review.class);
         Set<User> peers = new HashSet<User>();
+        Feedback peerFeedback = mock(Feedback.class);
         Set<Feedback> feedbacks = new HashSet<Feedback>();
         User peer = mock(User.class);
         when(peer.getId()).thenReturn(3L);
         when(reviewSvc.findById(reviewId)).thenReturn(review);
-        when(reviewSvc.getFeedbackForPeer(1L, 3L)).thenReturn(Optional.empty());
+        when(feedbackService.addFeedback(review, peer, FeedbackType.PEER)).thenReturn(peerFeedback);
         when(review.getPeers()).thenReturn(peers);
         when(review.getFeedback()).thenReturn(feedbacks);
+
         peerSvc.addPeerFeedback(reviewId, peer);
 
         verify(reviewSvc).update(review);
         assertEquals(1, peers.size());
         assertEquals(1, feedbacks.size());
-        Feedback f = feedbacks.stream().findFirst().get();
-        verify(feedbackRepository).save(f);
+        verify(feedbackService).addFeedback(review, peer, FeedbackType.PEER);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +75,7 @@ public class PeerServiceTest extends SpringMockTest {
         when(reviewSvc.findById(reviewId)).thenReturn(review);
         when(review.getPeers()).thenReturn(peers);
         when(peer.getId()).thenReturn(peerId);
-        when(reviewSvc.getFeedbackForPeer(reviewId, peerId)).thenReturn(Optional.empty());
+        when(feedbackRepository.findOneByReviewIdAndAuthorId(reviewId, peerId)).thenReturn(Optional.empty());
 
         peerSvc.removePeerFeedback(reviewId, peerId);
         verify(reviewSvc).update(review);
@@ -92,15 +97,15 @@ public class PeerServiceTest extends SpringMockTest {
         when(reviewSvc.findById(reviewId)).thenReturn(review);
         when(review.getPeers()).thenReturn(peers);
         when(peer.getId()).thenReturn(peerId);
-        when(reviewSvc.getFeedbackForPeer(reviewId, peerId)).thenReturn(Optional.of(peerFeedback));
-        when(feedbackRepository.save(peerFeedback)).thenReturn(peerFeedback);
+        when(feedbackRepository.findOneByReviewIdAndAuthorId(reviewId, peerId)).thenReturn(Optional.of(peerFeedback));
+        when(feedbackService.closeFeedback(peerFeedback)).thenReturn(peerFeedback);
         when(peerFeedback.getProcessId()).thenReturn(feedbackProcessId);
         when(processSvc.cancel(feedbackProcessId)).thenReturn(true);
 
         peerSvc.removePeerFeedback(reviewId, peerId);
 
         verify(processSvc).cancel(feedbackProcessId);
-        verify(feedbackRepository).save(peerFeedback);
+        verify(feedbackService).closeFeedback(peerFeedback);
         verify(reviewSvc).update(review);
     }
 }
