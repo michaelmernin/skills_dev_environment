@@ -100,7 +100,7 @@ public class TodoResourceTest extends SpringAppTest {
                 .andExpect(jsonPath("$[0].name").exists())
                 .andExpect(jsonPath("$[0].id").exists())
                 .andExpect(jsonPath("$[0].userId").value(7))
-                .andExpect(jsonPath("$[0].reviewId").value(review.getId().intValue()));
+                .andExpect(jsonPath("$[0].reviewId").exists());
     }
     
     @Test
