@@ -12,6 +12,7 @@ import org.activiti.engine.task.Task;
 import org.springframework.stereotype.Service;
 
 import com.perficient.etm.authorize.ReviewAuthorizer;
+import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.Todo;
 import com.perficient.etm.domain.User;
@@ -70,9 +71,8 @@ public class TodoService extends AbstractBaseService {
         return review -> {
           if (ReviewAuthorizer.isPeer(review, user.getLogin())) {
               return Optional.ofNullable(feedbackRepository.findOneByReviewAndAuthor(review, user))
-                  .map(feedback -> {
-                      return feedback.getProcessId();
-                  }).orElse(null);
+                  .map(Feedback::getProcessId)
+                  .orElse(null);
           } else {
               return review.getProcessId();
           }
