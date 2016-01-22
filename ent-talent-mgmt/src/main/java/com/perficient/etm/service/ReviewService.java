@@ -69,11 +69,12 @@ public class ReviewService extends AbstractBaseService {
     public Review startReviewProcess(Review review) throws ETMException {
         getLog().info("Starting a new review process");
 
+        ReviewTypeProcess processType = getProcessType(review);
         populateUsers(review);
         review.setReviewStatus(Optional.ofNullable(review.getReviewStatus()).orElse(ReviewStatus.OPEN));
 
         try {
-            String id = processSvc.initiateProcess(getProcessType(review), review);
+            String id = processSvc.initiateProcess(processType, review);
             review.setProcessId(id);
             review = reviewRepository.save(review);
             processSvc.addReviewId(id, review.getId());
