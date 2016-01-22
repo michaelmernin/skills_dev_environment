@@ -43,6 +43,18 @@ public class FeedbackService extends AbstractBaseService {
             });
     }
 
+    public Feedback openFeedback(Feedback feedback) {
+        feedback.setFeedbackStatus(FeedbackStatus.OPEN);
+        if (feedback.getFeedbackType() == FeedbackType.PEER) {
+            if (feedback.getProcessId() == null) {
+                // TODO start Peer process
+            } else {
+                // TODO reopen Peer process
+            }
+        }
+        return feedbackRepository.save(feedback);
+    }
+
     public Feedback closeFeedback(Feedback feedback) {
         feedback.setFeedbackStatus(FeedbackStatus.CLOSED);
         return feedbackRepository.save(feedback);

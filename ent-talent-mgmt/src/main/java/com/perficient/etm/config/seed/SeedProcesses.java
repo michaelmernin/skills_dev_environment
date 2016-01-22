@@ -14,11 +14,14 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.FeedbackStatus;
+import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewStatus;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.security.SecurityUtils;
+import com.perficient.etm.service.FeedbackService;
 import com.perficient.etm.service.ReviewService;
 import com.perficient.etm.service.activiti.ProcessService;
 
@@ -34,20 +37,31 @@ public class SeedProcesses implements ApplicationListener<ContextRefreshedEvent>
     private ReviewService reviewService;
     
     @Inject 
+    private FeedbackService feedbackService;
+    
+    @Inject 
     private ProcessService processService;
 
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        SecurityUtils.runAsSystem(userRepository, this::startAllActivitiProcesses);
+        SecurityUtils.runAsSystem(userRepository, this::startAllReviewProcesses);
     }
 
-    private void startAllActivitiProcesses() {
+    private void startAllReviewProcesses() {
         Stream<Review> reviewStream = reviewRepository.findAll().stream()
             .filter(review -> review.getProcessId() == null)
-            .peek(reviewService::startReviewProcess);
+            .peek(reviewService::startReviewProcess)
+            .peek(this::startAllPeerProcesses);
 
         completeTasksByStatus(reviewStream);
+    }
+
+    private void startAllPeerProcesses(Review review) {
+        review.getPeers().stream()
+            .map(peer -> feedbackService.addFeedback(review, peer, FeedbackType.PEER))
+            .filter(feedback -> feedback.getFeedbackStatus() == FeedbackStatus.OPEN)
+            .forEach(feedbackService::openFeedback);
     }
 
     private void completeTasksByStatus(Stream<Review> reviewStream) {
