@@ -16,12 +16,16 @@ public class FeedbackAuthorizer extends Authorizer {
     public static final String FILTER = TYPE + FILTER_METHOD;
 
     public static boolean authorize(Feedback feedback) {
-        return Optional.ofNullable(feedback).map(nullableFeedback -> {
-            return getLogin().map(login -> {
+        return authorize(Optional.ofNullable(feedback));
+    }
+
+    public static boolean authorize(Optional<Feedback> feedback) {
+        return getLogin().map(login -> {
+            return feedback.map(nullableFeedback -> {
                 return isAuthorized(nullableFeedback,login)
-                    || isAuthor(nullableFeedback,login)
-                    || isSystem(login);
-            }).orElse(false);
+                        || isAuthor(nullableFeedback,login)
+                        || isSystem(login);
+            }).orElse(isSystem(login));
         }).orElse(false);
     }
 

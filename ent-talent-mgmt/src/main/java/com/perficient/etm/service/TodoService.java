@@ -70,7 +70,7 @@ public class TodoService extends AbstractBaseService {
     private Function<? super Review, ? extends String> findProcessId(User user) {
         return review -> {
           if (ReviewAuthorizer.isPeer(review, user.getLogin())) {
-              return Optional.ofNullable(feedbackRepository.findOneByReviewAndAuthor(review, user))
+              return feedbackRepository.findOneByReviewIdAndAuthorId(review.getId(), user.getId())
                   .map(Feedback::getProcessId)
                   .orElse(null);
           } else {
