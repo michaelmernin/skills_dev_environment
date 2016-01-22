@@ -16,7 +16,7 @@ async:
 spring:
     mail:
         host: localhost
-        port: 1025
+        port: 2525
         user:
         password:
         protocol: smtp

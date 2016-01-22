@@ -1,6 +1,7 @@
 package com.perficient.etm.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
@@ -23,6 +24,7 @@ public class MailServiceTest extends SpringAppTest {
     
     @Test
     public void testEmail() throws InterruptedException, MessagingException {
+        assertTrue(smtpServer.isReady());
         int count = smtpServer.getEmailCount();
         
         SimpleMailMessage message = new SimpleMailMessage();
