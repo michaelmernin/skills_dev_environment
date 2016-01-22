@@ -1,29 +1,23 @@
 package com.perficient.etm.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import javassist.NotFoundException;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.service.activiti.ProcessService;
-import com.perficient.etm.utils.SpringAppTest;
+import com.perficient.etm.utils.SpringMockTest;
 
-public class PeerServiceTest extends SpringAppTest {
+public class PeerServiceTest extends SpringMockTest {
 
     @Mock
     private ReviewService reviewSvc;
@@ -36,11 +30,6 @@ public class PeerServiceTest extends SpringAppTest {
     
     @InjectMocks
     private PeerService peerSvc;
-
-    @Before
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // PeerService.addPeerFeedback tests.
