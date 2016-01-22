@@ -63,7 +63,7 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
             todoId: todo.id,
             result: 'REJECT',
             theme: 'md-warn',
-            icon: 'fa-cross'
+            icon: 'fa-exclamation'
           });
           break;
         }
