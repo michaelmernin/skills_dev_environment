@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
 import com.perficient.etm.domain.User;
+import com.perficient.etm.repository.UserRepository;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -16,6 +17,8 @@ import java.util.Optional;
  * Utility class for Spring Security.
  */
 public final class SecurityUtils {
+
+    public static final String SYSTEM_USERNAME = "system";
 
     private SecurityUtils() {
     }
@@ -100,5 +103,13 @@ public final class SecurityUtils {
         security.setAuthentication(new PreAuthenticatedAuthenticationToken(user, user.getUsername(), user.getAuthorities()));
         function.run();
         security.setAuthentication(currentAuth);
+    }
+    
+    public static void runAsSystem(UserRepository userRepository, Runnable function) {
+        userRepository.findOneByLogin(SYSTEM_USERNAME)
+        .map(UserDetailsService::mapUserDetails)
+        .ifPresent(systemUser -> {
+            SecurityUtils.runAs(systemUser, function);
+        });
     }
 }

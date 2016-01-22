@@ -16,8 +16,6 @@ public class Authorizer {
 
     protected static final String FILTER_METHOD = ".filter(filterObject)";
 
-    private static final String SYSTEM_USERNAME = "system";
-
     protected static Optional<String> getLogin() {
         return Optional.ofNullable(SecurityUtils.getCurrentLogin());
     }
@@ -31,6 +29,6 @@ public class Authorizer {
     }
     
     protected static boolean isSystem(String login) {
-        return loginIs(SYSTEM_USERNAME).test(login);
+        return loginIs(SecurityUtils.SYSTEM_USERNAME).test(login);
     }
 }

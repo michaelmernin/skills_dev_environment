@@ -19,7 +19,6 @@ import com.perficient.etm.domain.ReviewStatus;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.security.SecurityUtils;
-import com.perficient.etm.security.UserDetailsService;
 import com.perficient.etm.service.ReviewService;
 import com.perficient.etm.service.activiti.ProcessService;
 
@@ -40,11 +39,7 @@ public class SeedProcesses implements ApplicationListener<ContextRefreshedEvent>
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        userRepository.findOneByLogin("system")
-            .map(UserDetailsService::mapUserDetails)
-            .ifPresent(systemUser -> {
-                SecurityUtils.runAs(systemUser, this::startAllActivitiProcesses);
-            });
+        SecurityUtils.runAsSystem(userRepository, this::startAllActivitiProcesses);
     }
 
     private void startAllActivitiProcesses() {
