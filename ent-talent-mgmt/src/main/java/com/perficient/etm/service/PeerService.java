@@ -1,6 +1,6 @@
 package com.perficient.etm.service;
 
-import java.util.Optional;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
-import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.service.activiti.ProcessService;
 
@@ -29,9 +29,6 @@ public class PeerService {
 
     @Inject
     private ReviewService reviewSvc;
-
-    @Inject
-    private UserService userSvc;
 
     @Inject
     private ProcessService processSvc;
@@ -51,12 +48,12 @@ public class PeerService {
     public Review addPeerFeedback(Long reviewId, User peer) {
         log.debug("Adding peer feedback for review {} and peer {}", reviewId, peer.getEmployeeId());
         Review review = reviewSvc.findById(reviewId);
-        Feedback f = new Feedback();
-        f.setAuthor(peer);
-        f.setReview(review);
-        // TODO: Set the feedback status to initiated/not sent
-        feedbackRepository.save(f);
-        review.getFeedback().add(f);
+        Feedback feedback = reviewSvc.getFeedbackForPeer(reviewId, peer.getId()).orElse(new Feedback());
+        feedback.setAuthor(peer);
+        feedback.setReview(review);
+        feedback.setFeedbackStatus(FeedbackStatus.NOT_SENT);
+        feedbackRepository.save(feedback);
+        review.getFeedback().add(feedback);
         review.getPeers().add(peer);
         reviewSvc.update(review);
         return review;
@@ -68,18 +65,29 @@ public class PeerService {
      *
      * @param reviewId
      * @param peerId
-     * @throws ResourceNotFoundException
      */
     public void removePeerFeedback(Long reviewId, Long peerId) {
-        Optional<Feedback> feedback = reviewSvc.getFeedbackForPeer(reviewId, peerId);
-        if (!feedback.isPresent()) {
-            throw new ResourceNotFoundException("No peer review found for peer " + peerId + " on review " + reviewId);
-        }
-        processSvc.cancel(feedback.get().getProcessId());
-        // TODO: Set the feedback status to cancelled and save. Or does that happen by Activiti?
+        removePeerFromReview(reviewId, peerId);
+
+        reviewSvc.getFeedbackForPeer(reviewId, peerId)
+            .map(this::closeFeedback)
+            .map(Feedback::getProcessId)
+            .filter(Objects::nonNull)
+            .map(processSvc::cancel);
+    }
+
+    private void removePeerFromReview(Long reviewId, Long peerId) {
         Review review = reviewSvc.findById(reviewId);
-        User peer = userSvc.getUser(peerId);
-        review.getPeers().remove(peer);
-        reviewSvc.update(review);
+        boolean removed = review.getPeers().removeIf(peer -> {
+            return peer.getId().equals(peerId); 
+        });
+        if (removed) {
+            reviewSvc.update(review);
+        }
+    }
+
+    private Feedback closeFeedback(Feedback feedback) {
+        feedback.setFeedbackStatus(FeedbackStatus.CLOSED);
+        return feedbackRepository.save(feedback);
     }
 }
