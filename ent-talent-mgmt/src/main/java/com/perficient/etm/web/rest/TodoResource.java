@@ -40,13 +40,13 @@ public class TodoResource implements RestResource {
         log.debug("REST request to get active todo for Review : {}", reviewId);
         return todoService.findOneActiveByReviewForCurrentUser(reviewId)
                 .map(todo -> new ResponseEntity<>(todo, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(null, HttpStatus.NO_CONTENT));
+                .orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     /**
      * GET /todos -> get the todo for a review.
      */
-    @RequestMapping(value = "/todo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/todos", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public List<Todo> getAll() {
         log.debug("REST request to get all todos for current user");

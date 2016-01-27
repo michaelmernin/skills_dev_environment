@@ -1,14 +1,16 @@
 'use strict';
 
 angular.module('etmApp').controller('TodoController', function ($scope, $stateParams, $mdDialog, Todo, Review, ReviewStatus) {
-  $scope.todo = {};
+  $scope.todo = Todo.query();
   var review = {};
-  $scope.$parent.$watch('review', function (parentReview) {
+  
+  
+  /*$scope.$parent.$watch('review', function (parentReview) {
     if (parentReview.id) {
       review = parentReview;
       loadTodo();
     }
-  });
+  });*/
 
   $scope.confirm = function (action, ev) {
     var confirmAction = $mdDialog.confirm()
