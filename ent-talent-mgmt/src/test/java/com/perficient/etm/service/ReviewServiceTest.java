@@ -43,6 +43,9 @@ public class ReviewServiceTest extends SpringAppTest {
     @Inject
     private ReviewRepository reviewRepository;
 
+    @Inject
+    private FeedbackService feedbackService;
+
     @Mock
     private ProcessService processSvc;
 
@@ -59,12 +62,13 @@ public class ReviewServiceTest extends SpringAppTest {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(reviewSvc, "userRepository", userRepository);
         ReflectionTestUtils.setField(reviewSvc, "reviewRepository", reviewRepository);
+        ReflectionTestUtils.setField(reviewSvc, "feedbackService", feedbackService);
         review = ServicesTestUtils.createNewReviewForTests(reviewTypeRepo);
         review.setReviewee(userRepository.findOne(7L));
 
         List<org.activiti.engine.task.Task> mockTasksList =  new ArrayList<>();
 
-        Mockito.when(taskSvc.getTasks(Mockito.anyLong())).thenReturn(mockTasksList);
+        Mockito.when(taskSvc.getUserTasks(Mockito.anyLong())).thenReturn(mockTasksList);
     }
 
     @Test

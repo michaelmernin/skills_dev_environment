@@ -66,5 +66,4 @@ public class PeerResource implements RestResource {
         peerSvc.removePeerFeedback(reviewId, id);
         return ResponseEntity.ok().build();
     }
-
 }

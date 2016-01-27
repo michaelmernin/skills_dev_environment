@@ -70,6 +70,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
   }
 
   function createNewFeedback(review, user) {
+    console.warn('Feedback not found: Creating new feedback');
     var feedbackType = userFeedbackType(review, user);
     var userFeedback = {};
     userFeedback.author = {id: user.id, firstName: user.firstName, lastName: user.lastName};

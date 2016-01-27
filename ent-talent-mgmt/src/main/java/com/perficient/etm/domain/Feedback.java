@@ -141,12 +141,6 @@ public class Feedback implements Serializable {
         this.processId = processId;
     }
 
-    public boolean belongsToAuthor(User peer) {
-        if (peer == null || this.author == null)
-            return false;
-        return (this.author.getId().equals(peer.getId()));
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -1,5 +1,5 @@
 <div ng-cloak ng-if="todo">
-  <div layout="column" layout-align="center end">
+  <div layout="row" layout-align="end center">
     <md-button ng-repeat="action in actions" class="md-raised {{ action.theme }}" ng-click="confirm(action, $event)">
       {{ action.name }}
       <i ng-if="action.icon" class="fa {{ action.icon }}"/>

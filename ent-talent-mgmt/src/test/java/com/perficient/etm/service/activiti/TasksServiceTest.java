@@ -36,9 +36,9 @@ public class TasksServiceTest extends SpringAppTest {
 
     @Test
     public void testTodoList() {
-        List<Task> tasks = taskSvc.getTasks(2L);
+        List<Task> tasks = taskSvc.getUserTasks(2L);
         assertEquals("At the beginign one task has to be assigned to the reviewee",tasks.size(), 1);
-        tasks = taskSvc.getTasks(1L);
+        tasks = taskSvc.getUserTasks(1L);
         assertEquals("At the beginign 0 tasks has to be assigned to the reviewer",tasks.size(), 0);
     }
 
@@ -46,7 +46,7 @@ public class TasksServiceTest extends SpringAppTest {
     public void testTodoListUsingTodoObjects() {
         User u = Mockito.mock(User.class);
 
-        List<Task> tasks = taskSvc.getTasks(2L);
+        List<Task> tasks = taskSvc.getUserTasks(2L);
         //Convert them to Todo objects
         List<Todo> todos = tasks.stream().map(t->Todo.fromTask(t , u)).collect(Collectors.toList());
         assertEquals("Todos and Tasks lists should have the same number of elements",todos.size(), tasks.size());
@@ -59,7 +59,7 @@ public class TasksServiceTest extends SpringAppTest {
 
     @Test
     public void testCompleteTask() {
-        List<Task> tasks = taskSvc.getTasks(2L);
+        List<Task> tasks = taskSvc.getUserTasks(2L);
 
         taskSvc.complete(tasks.get(0).getId(), "COMPLETE");
 
@@ -67,7 +67,7 @@ public class TasksServiceTest extends SpringAppTest {
 
     @Test
     public void testRetrieveProcessTasks() {
-        Task task = taskSvc.getProcessTask(processsIdStarted, 2L);
+        Task task = taskSvc.getProcessUserTask(processsIdStarted, 2L);
         assertNotNull(task);
     }
 }

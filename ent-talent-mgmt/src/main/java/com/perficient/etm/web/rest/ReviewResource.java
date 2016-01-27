@@ -64,6 +64,7 @@ public class ReviewResource implements RestResource {
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid new review", result);
         }
+        review.sanitize(true);
         review = getReviewSvc().startReviewProcess(review);
         return new ResponseEntity<>(review, HttpStatus.CREATED);
     }

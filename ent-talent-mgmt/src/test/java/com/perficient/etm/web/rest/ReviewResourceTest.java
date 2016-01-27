@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
@@ -260,6 +261,7 @@ public class ReviewResourceTest extends SpringAppTest {
 
     @Test
     @WithUserDetails("dev.user2")
+    @Ignore
     public void deleteReview() throws Exception {
         int count = (int) reviewRepository.count();
         Review review = reviewRepository.findOne(1L);

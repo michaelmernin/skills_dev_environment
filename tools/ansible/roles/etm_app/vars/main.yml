@@ -7,3 +7,4 @@ deploy_dir: "{{ script_dir }}/etm"
 app_dir: "{{ deploy_dir }}/ent-talent-mgmt"
 war_dir: "{{ script_dir }}/etm-wars"
 war_version: 0.1-SNAPSHOT
+log_dir: ~/log

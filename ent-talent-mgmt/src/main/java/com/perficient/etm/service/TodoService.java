@@ -12,6 +12,7 @@ import org.activiti.engine.task.Task;
 import org.springframework.stereotype.Service;
 
 import com.perficient.etm.authorize.ReviewAuthorizer;
+import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.Todo;
 import com.perficient.etm.domain.User;
@@ -54,14 +55,14 @@ public class TodoService extends AbstractBaseService {
         return Optional.ofNullable(reviewRepository.findOne(reviewId))
             .map(findProcessId(user))
             .map(processId -> {
-                return tasksService.getProcessTask(processId, user.getId());
+                return tasksService.getProcessUserTask(processId, user.getId());
             })
             .map(mapTask(user))
             .orElse(null);
     }
     
     private List<Todo> getUserTodos(User user) {
-        return tasksService.getTasks(user.getId())
+        return tasksService.getUserTasks(user.getId())
             .stream().map(mapTask(user))
             .collect(Collectors.toList());
     }
@@ -69,10 +70,9 @@ public class TodoService extends AbstractBaseService {
     private Function<? super Review, ? extends String> findProcessId(User user) {
         return review -> {
           if (ReviewAuthorizer.isPeer(review, user.getLogin())) {
-              return Optional.ofNullable(feedbackRepository.findOneByReviewAndAuthor(review, user))
-                  .map(feedback -> {
-                      return feedback.getProcessId();
-                  }).orElse(null);
+              return feedbackRepository.findOneByReviewIdAndAuthorId(review.getId(), user.getId())
+                  .map(Feedback::getProcessId)
+                  .orElse(null);
           } else {
               return review.getProcessId();
           }

@@ -1,7 +1,9 @@
 package com.perficient.etm.authorize;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
+import com.perficient.etm.domain.User;
 import com.perficient.etm.security.SecurityUtils;
 
 public class Authorizer {
@@ -17,5 +19,16 @@ public class Authorizer {
     protected static Optional<String> getLogin() {
         return Optional.ofNullable(SecurityUtils.getCurrentLogin());
     }
+    
+    protected static boolean loginIs(Optional<User> user, String username) {
+        return user.map(User::getLogin).filter(loginIs(username)).isPresent();
+    }
 
+    protected static Predicate<String> loginIs(String username) {
+        return login -> login.equals(username);
+    }
+    
+    protected static boolean isSystem(String login) {
+        return loginIs(SecurityUtils.SYSTEM_USERNAME).test(login);
+    }
 }

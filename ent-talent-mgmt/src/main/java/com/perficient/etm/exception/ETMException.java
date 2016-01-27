@@ -5,7 +5,7 @@ package com.perficient.etm.exception;
  * @author Alexandro Blanco <alex.blanco@perficient.com>
  *
  */
-public class ETMException extends Exception {
+public class ETMException extends RuntimeException {
 
     private static final long serialVersionUID = -7849765648678750790L;
 
