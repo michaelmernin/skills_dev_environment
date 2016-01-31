@@ -1,5 +1,8 @@
 package com.perficient.etm.web.rest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -19,7 +22,10 @@ import com.dumbster.smtp.SmtpServer;
 @RestController
 @RequestMapping("/api")
 public class MailResource {
-
+    
+    private final String MESSAGE_HEADER_FROM= "From";
+    private final String MESSAGE_HEADER_TO= "To";
+    private final String MESSAGE_HEADER_SUBJECT= "Subject";
 
     private final Logger log = LoggerFactory.getLogger(ReviewTypeResource.class);
 
@@ -36,10 +42,20 @@ public class MailResource {
     @RequestMapping(value = "/mail/messages",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public MailMessage[] getAllMessages() {
+    public  List<Message> getAllMessages() {
         log.debug("REST request to get all mail messages");
-        return smtpServer.getMessages();
+        MailMessage[] messages = smtpServer.getMessages();
+        List<Message> returnMessages = new ArrayList<Message>();
+        for(MailMessage message :messages){
+            Message msg = new Message();
+            msg.setBody(message.getBody());
+            msg.setFrom(message.getFirstHeaderValue(MESSAGE_HEADER_FROM));
+            msg.setTo(message.getFirstHeaderValue(MESSAGE_HEADER_TO));
+            msg.setSubject(message.getFirstHeaderValue(MESSAGE_HEADER_SUBJECT));
+            returnMessages.add(msg);
+        }
+        
+        return returnMessages; 
     }
     
     /**
@@ -55,10 +71,43 @@ public class MailResource {
         message.setFrom("test@sender.com");
         message.setTo("test@receiver.com");
         message.setSubject("test subject");
-        message.setText("test message");
+        message.setText("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s");
         mailsender.send(message);
         return new ResponseEntity<SimpleMailMessage>(HttpStatus.CREATED);
     }
     
+    
+}
+
+class Message{
+    String to=null;
+    String from=null;
+    String subject=null;
+    String body=null;
+    public Message(){}
+    public String getTo() {
+        return to;
+    }
+    public void setTo(String to) {
+        this.to = to;
+    }
+    public String getFrom() {
+        return from;
+    }
+    public void setFrom(String from) {
+        this.from = from;
+    }
+    public String getSubject() {
+        return subject;
+    }
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+    public String getBody() {
+        return body;
+    }
+    public void setBody(String body) {
+        this.body = body;
+    }
     
 }

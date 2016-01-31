@@ -1,0 +1,11 @@
+{
+  "mail": {
+    "title": "Mail",
+    "nbMessages": "There are {{ total }} Messages.",
+    "filter": "Filter",
+    "table": {
+      "name": "Name",
+      "level": "Level"
+    }
+  }
+}
