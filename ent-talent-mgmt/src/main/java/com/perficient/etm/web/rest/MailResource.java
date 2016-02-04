@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,34 +20,33 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.dumbster.smtp.MailMessage;
 import com.dumbster.smtp.SmtpServer;
+
 @RestController
 @RequestMapping("/api")
 public class MailResource {
-    
-    private final String MESSAGE_HEADER_FROM= "From";
-    private final String MESSAGE_HEADER_TO= "To";
-    private final String MESSAGE_HEADER_SUBJECT= "Subject";
+
+    private final String MESSAGE_HEADER_FROM = "From";
+    private final String MESSAGE_HEADER_TO = "To";
+    private final String MESSAGE_HEADER_SUBJECT = "Subject";
+    private final String MESSAGE_ID = "Message-ID";
 
     private final Logger log = LoggerFactory.getLogger(ReviewTypeResource.class);
 
     @Inject
     protected SmtpServer smtpServer;
-    
+
     @Inject
     JavaMailSenderImpl mailsender;
-    
 
     /**
-     * GET  /mail/messages -> get all the mail messages.
+     * GET /mail/messages -> get all the mail messages.
      */
-    @RequestMapping(value = "/mail/messages",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public  List<Message> getAllMessages() {
+    @RequestMapping(value = "/mail/messages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Message> getAllMessages() {
         log.debug("REST request to get all mail messages");
         MailMessage[] messages = smtpServer.getMessages();
         List<Message> returnMessages = new ArrayList<Message>();
-        for(MailMessage message :messages){
+        for (MailMessage message : messages) {
             Message msg = new Message();
             msg.setBody(message.getBody());
             msg.setFrom(message.getFirstHeaderValue(MESSAGE_HEADER_FROM));
@@ -54,16 +54,14 @@ public class MailResource {
             msg.setSubject(message.getFirstHeaderValue(MESSAGE_HEADER_SUBJECT));
             returnMessages.add(msg);
         }
-        
-        return returnMessages; 
+
+        return returnMessages;
     }
-    
+
     /**
-     * POST  /mail/test -> send a new test email.
+     * POST /mail/test -> send a new test email.
      */
-    @RequestMapping(value = "/mail/test",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/mail/test", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<SimpleMailMessage> SendTestMail() {
         log.debug("REST request to send test mail");
@@ -71,12 +69,38 @@ public class MailResource {
         message.setFrom("test@sender.com");
         message.setTo("test@receiver.com");
         message.setSubject("test subject");
-        message.setText("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s");
+        message.setText(
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s");
         mailsender.send(message);
         return new ResponseEntity<SimpleMailMessage>(HttpStatus.CREATED);
     }
-    
-    
+
+    /**
+     * DELETE /mail/clear -> delete all existing mail
+     */
+    @RequestMapping(value = "/mail/clear", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<SimpleMailMessage> clear() {
+        log.debug("REST request to delete all mail");
+        smtpServer.clearMessages();
+        return new ResponseEntity<SimpleMailMessage>(HttpStatus.OK);
+    }
+
+    /**
+     * POST /mail/save -> send a new email.
+     */
+    @RequestMapping(value = "/mail/send", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Message> SendMail(@RequestBody Message msg) {
+        log.debug("REST request to send new mail");
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(msg.getFrom());
+        message.setTo(msg.getTo());
+        message.setSubject(msg.getSubject());
+        message.setText(msg.getBody());
+        mailsender.send(message);
+        return new ResponseEntity<Message>(HttpStatus.OK);
+    }
 }
 
 class Message{
@@ -84,6 +108,7 @@ class Message{
     String from=null;
     String subject=null;
     String body=null;
+    String id=null;
     public Message(){}
     public String getTo() {
         return to;
@@ -109,5 +134,13 @@ class Message{
     public void setBody(String body) {
         this.body = body;
     }
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    
     
 }

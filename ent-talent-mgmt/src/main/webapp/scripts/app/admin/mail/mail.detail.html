@@ -1,0 +1,36 @@
+<md-dialog flex="65">
+  <form name="mailForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 translate="">Fill out fields to send new mail</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+      <md-input-container class="md-block">
+        <label >from</label>
+        <input name="from" ng-model="mail.from"></input>
+      </md-input-container> 
+      <md-input-container class="md-block">
+        <label>to</label>
+        <input name="to" ng-model="mail.to"></input>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>Subject</label>
+        <input name="from" ng-model="mail.subject"></input>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>Message</label>
+        <textarea name="body" ng-model="mail.body"></textarea>
+      </md-input-container>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+      <span flex></span>
+      <md-button ng-click="cancel()" class="md-primary" >Cancel</md-button>
+      <md-button type="submit" ng-click="hide()" class="md-primary" >Save</md-button>
+    </div>
+  </form>
+</md-dialog>
