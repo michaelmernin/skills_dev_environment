@@ -50,7 +50,8 @@ public class TodoResource implements RestResource {
     @Timed
     public List<Todo> getAll() {
         log.debug("REST request to get all todos for current user");
-        return todoService.findActiveForCurrentUser();
+        List<Todo> todos = todoService.findActiveForCurrentUser();
+        return todos;
     }
     
     /**

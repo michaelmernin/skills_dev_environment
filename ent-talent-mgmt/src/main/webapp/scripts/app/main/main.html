@@ -9,9 +9,11 @@
             You are logged in as user "Admin".
 
           </p>
+          <div ui-view="dashboard.todos"></div>
           <div ui-view="dashboard.reviews"></div>
         </div>
         <div ng-switch-when="false">
+          <div ui-view="dashboard.todos"></div>
           <div ui-view="dashboard.reviews"></div>
         </div>
       </div>
