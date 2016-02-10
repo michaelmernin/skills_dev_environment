@@ -23,7 +23,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
         goal: new Goal()
       }
     }).then(function (goal) {
-      goal.$save({reviewId: review.id}, function (savedGoal) {
+      goal.$save({}, function (savedGoal) {
         $scope.goals.push(savedGoal);
       });      
     });
