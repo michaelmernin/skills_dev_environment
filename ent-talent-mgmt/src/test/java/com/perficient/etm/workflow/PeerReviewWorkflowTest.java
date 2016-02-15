@@ -66,8 +66,8 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
         assertNotNull(t);
         assertEquals("The task to give feedback must be assigned to Author",
                 t.getAssignee(),"Alex"); 
-        assertTrue("Email should have been sent to notify about start",
-                mailServer.getEmailCount() > 0);
+        //assertTrue("Email should have been sent to notify about start",
+        //        mailServer.getEmailCount() > 0);
         
         taskService.complete(t.getId());
         t = getCurrentTaskForProcess(processInstance);
@@ -99,8 +99,8 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
         assertNotNull(t);
         assertEquals("The task to give feedback must be assigned to Author",
                 t.getAssignee(),"Alex"); 
-        assertTrue("Email should have been sent to notify about start",
-                mailServer.getEmailCount() > 0);
+        //assertTrue("Email should have been sent to notify about start",
+        //        mailServer.getEmailCount() > 0);
         
         taskService.complete(t.getId());
         t = getCurrentTaskForProcess(processInstance);
