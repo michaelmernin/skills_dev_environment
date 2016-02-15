@@ -103,4 +103,24 @@ public class MailService {
 
         sendEmail("Test@test.org", "Test Subject", content, false, true);
     }
+    
+    @Async
+    public void sendPeerReviewFeedbackRequestedEmail() {
+        log.debug("Sending peer review requested e-mail to '{}'");
+        Locale locale = Locale.forLanguageTag("en-us");
+        Context context = new Context(locale);
+        String content = templateEngine.process("peerReviewFeedbackRequested", context);
+
+        sendEmail("Test@test.org", "Test Subject", content, false, true);
+    }
+    
+    @Async
+    public void sendPeerReviewSubmittedEmail() {
+        log.debug("Sending peer review submitted e-mail to '{}'");
+        Locale locale = Locale.forLanguageTag("en-us");
+        Context context = new Context(locale);
+        String content = templateEngine.process("peerReviewFeedbackSubmitted", context);
+
+        sendEmail("Test@test.org", "Test Subject", content, false, true);
+    }
 }

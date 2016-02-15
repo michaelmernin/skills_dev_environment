@@ -7,13 +7,17 @@ import javax.inject.Inject;
 
 import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.Review;
-import com.perficient.etm.domain.User;
+import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.MissingReviewInfoException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
@@ -29,7 +33,10 @@ public class ProcessService {
 
     @Inject
     private RuntimeService runtimeSvc;
-
+    
+    @Inject
+    private TaskService taskSvc;
+    
     public String initiateProcess(ReviewTypeProcess reviewType, Review review) throws ETMException {
         if (reviewType == null)
             throw new ReviewProcessNotFound("null");
@@ -73,20 +80,32 @@ public class ProcessService {
      * Starts a new Peer Review process in the acitivi engine and returns the
      * id of the new started process. This process is defined in the
      * peer_review.bpmn20.xml file.
-     * @param reviewee The User this peer review is for
-     * @param peer The User (peer) that should give feedback to. The peer review
-     * task will be assigned to this user
+     * @param feedback the Feedback object that will be related to the peer review
+     * process
      * @return String with the id of the process started in the activiti engine
      */
-    public String createPeerReview(User reviewee, User peer) {
+    public String initiatePeerReview(Feedback feedback)  {
         Map<String, Object> variables = new HashMap<>();
-        variables.put(ProcessConstants.REVIEWEE_VARIABLE, reviewee.getId());
-        variables.put(ProcessConstants.PEER_VARIABLE, peer.getId());
-        variables.put(ProcessConstants.PEER_EMAIL_VARIABLE, peer.getEmail());
-        //TODO variables.put(TaskConstants.REVIEW_VARIABLE, review);
+        variables.put(ProcessConstants.PEER_VARIABLE, feedback.getAuthor().getId());
+        variables.put(ProcessConstants.PEER_EMAIL_VARIABLE, feedback.getAuthor().getEmail());
+        try{
+            ProcessInstance pId =
+                    runtimeSvc.startProcessInstanceByKey(ReviewTypeProcess.PEER.getProcessId(),variables );
+            return pId.getId();
+        }catch(Exception e){
+            log.error("Exception while starting peer review process for feedback "+feedback,e);
+            throw new ActivitiProcessInitiationException(e);
+        }
+    }
 
-        ProcessInstance pId =
-                runtimeSvc.startProcessInstanceByKey(ReviewTypeProcess.PEER.getProcessId(),variables );
-        return pId.getId();
+    public Feedback completePeerReviewTask(Feedback feedback, String result) {
+        String pId = feedback.getProcessId();
+        ProcessInstance processInstance = runtimeSvc.createProcessInstanceQuery().variableValueEquals("processId", pId)
+            .singleResult();
+        Task t = taskSvc.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
+        taskSvc.complete(t.getId());
+        
+        feedback.setFeedbackStatus(FeedbackStatus.COMPLETE);
+        return feedback;
     }
 }

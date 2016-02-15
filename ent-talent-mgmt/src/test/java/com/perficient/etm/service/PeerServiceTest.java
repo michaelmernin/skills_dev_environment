@@ -7,13 +7,16 @@ import java.util.Set;
 
 import javassist.NotFoundException;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
+import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.utils.SpringMockTest;
@@ -35,6 +38,11 @@ public class PeerServiceTest extends SpringMockTest {
     @InjectMocks
     private PeerService peerSvc;
 
+    @Before
+    public void init(){
+        when(processSvc.initiatePeerReview(anyObject())).thenReturn("Process");
+    }
+    
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // PeerService.addPeerFeedback tests.
     @Test
@@ -108,4 +116,23 @@ public class PeerServiceTest extends SpringMockTest {
         verify(feedbackService).closeFeedback(peerFeedback);
         verify(reviewSvc).update(review);
     }
+    
+    @Test
+    public void startPeerReviewProcess() {
+        Feedback feedback = mock(Feedback.class);
+        User peer = mock(User.class);
+        when(peer.getId()).thenReturn(1L);
+        when(peer.getEmail()).thenReturn("peer@test.com");
+        when(feedback.getAuthor()).thenReturn(peer);
+        peerSvc.startPeerProcess(feedback);
+    }
+    
+    @Test(expected=ActivitiProcessInitiationException.class)
+    public void startPeerReviewProcessOnStartedFeedback() {
+        Feedback feedback = mock(Feedback.class);
+        when(feedback.getFeedbackStatus()).thenReturn(FeedbackStatus.OPEN);
+        
+        peerSvc.startPeerProcess(feedback);
+    }
+    
 }
