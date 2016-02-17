@@ -4,17 +4,18 @@
       <h2 translate="mail.title">Mail</h2>
     
       <p translate="mail.nbMessages" translate-values="{total: '{{ messages.length }}'}">There are n Message.</p>
-      <md-input-container>
+      
+    <section layout="row" layout-sm="column" layout-align="start start" layout-wrap>
+    <md-input-container>
         <label for="filter" translate="mail.filter">Filter</label>
         <input type="text" id="filter" ng-model="filter">
       </md-input-container>
-    <section layout="row" layout-sm="column" layout-align="start start" layout-wrap>
       <md-button class="md-raised" ng-click="sendTest()">send test</md-button>
       <md-button class="md-raised md-primary" ng-click="newMail()">new mail</md-button>
       <md-button class="md-raised md-primary" ng-click="clear()">Clear</md-button>
     </section>
     <md-list>
-      <md-subheader class="md-no-sticky">All Messages</md-subheader>
+      <md-subheader class="md-no-sticky">All Messages {{messages.length}}</md-subheader>
       <md-list-item class="md-3-line" ng-repeat="message in messages" layout="row">
         <md-icon md-font-icon="fa fa-envelope fa-2x" class="md-avatar md-primary ng-isolate-scope md-font fa fa-envelope fa-2x material-icons" aria-hidden="true"></md-icon>
         <div class="md-list-item-text" layout="column">
