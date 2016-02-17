@@ -51,4 +51,5 @@ public class ProcessServiceTest extends SpringAppTest {
         String id = ServicesTestUtils.startPeerReview(processSvc);
         assertNotNull("Id of the peer review process should not be null", id);
     }
+    
 }

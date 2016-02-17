@@ -94,7 +94,7 @@ public class TodoResourceTest extends SpringAppTest {
         // Start a review process to generate tasks
         reviewService.startReviewProcess(review);
 
-        restTodoMockMvc.perform(get("/api/todo").accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
+        restTodoMockMvc.perform(get("/api/todos").accept(ResourceTestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.").isArray())
                 .andExpect(jsonPath("$[0].name").exists())

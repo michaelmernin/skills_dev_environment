@@ -2,51 +2,109 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <process id="peerReview" name="Peer Review Process" isExecutable="true">
     <startEvent id="start" name="Start"></startEvent>
+    <serviceTask id="peerFeedbackRequested" name="Peer Feedback Requested" activiti:expression="${mailService.sendPeerReviewFeedbackRequestedEmail()}"></serviceTask>
     <userTask id="giveFeedback" name="Give Peer Feedback" activiti:assignee="${Peer}"></userTask>
-    <sequenceFlow id="flow1" sourceRef="start" targetRef="giveFeedback"></sequenceFlow>
-    <endEvent id="end" name="End"></endEvent>
-    <sequenceFlow id="flow4" sourceRef="giveFeedback" targetRef="end"></sequenceFlow>
     <boundaryEvent id="boundarytimer1" name="Timer" attachedToRef="giveFeedback" cancelActivity="false">
       <timerEventDefinition>
         <timeDuration>PT1M</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
-    <sequenceFlow id="flow5" sourceRef="boundarytimer1" targetRef="peerReviewFeedbackEmailTask"></sequenceFlow>
-    <sequenceFlow id="flow6" sourceRef="peerReviewFeedbackEmailTask" targetRef="giveFeedback"></sequenceFlow>
     <serviceTask id="peerReviewFeedbackEmailTask" name="Give Feedback Reminder Email" activiti:expression="${mailService.sendPeerReviewReminderEmail()}"></serviceTask>
+    <serviceTask id="peerFeedbackSubmitted" name="Peer Feedback Submitted" activiti:expression="${mailService.sendPeerReviewSubmittedEmail()}"></serviceTask>
+    <endEvent id="end" name="End"></endEvent>
+    <sequenceFlow id="flow1" sourceRef="start" targetRef="peerFeedbackNotSent"></sequenceFlow>
+    <sequenceFlow id="flow2" sourceRef="peerFeedbackNotSent" targetRef="peerFeedbackRequested"></sequenceFlow>
+    <sequenceFlow id="flow3" sourceRef="peerFeedbackRequested" targetRef="giveFeedback"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="boundarytimer1" targetRef="peerReviewFeedbackEmailTask"></sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="peerReviewFeedbackEmailTask" targetRef="boundarytimer1"></sequenceFlow>
+    <sequenceFlow id="flow6" sourceRef="giveFeedback" targetRef="peerFeedbackSubmitted"></sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="peerFeedbackSubmitted" targetRef="peerFeedbackReady"></sequenceFlow>
+    <sequenceFlow id="flow8" sourceRef="peerFeedbackReady" targetRef="peerFeedbackGood"></sequenceFlow>
+    <userTask id="peerFeedbackNotSent" name="Peer Feedback Not Sent"></userTask>
+    <userTask id="peerFeedbackReady" name="Peer Feedback Ready"></userTask>
+    <exclusiveGateway id="peerFeedbackGood" name="Is Peer Feedback Good?"></exclusiveGateway>
+    <sequenceFlow id="endFlow" sourceRef="peerFeedbackGood" targetRef="end">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "TRUE"}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="returnGivePeerFeedbackFlow" sourceRef="peerFeedbackGood" targetRef="giveFeedback">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "FALSE"}]]></conditionExpression>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_peerReview">
     <bpmndi:BPMNPlane bpmnElement="peerReview" id="BPMNPlane_peerReview">
       <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
-        <omgdc:Bounds height="35.0" width="35.0" x="120.0" y="180.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="20.0" y="180.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="peerFeedbackRequested" id="BPMNShape_peerFeedbackRequested">
+        <omgdc:Bounds height="70.0" width="121.0" x="260.0" y="163.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="giveFeedback" id="BPMNShape_giveFeedback">
-        <omgdc:Bounds height="55.0" width="105.0" x="230.0" y="170.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="431.0" y="170.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="boundarytimer1" id="BPMNShape_boundarytimer1">
-        <omgdc:Bounds height="30.0" width="30.0" x="290.0" y="210.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="35.0" width="35.0" x="410.0" y="180.0"></omgdc:Bounds>
+        <omgdc:Bounds height="30.0" width="30.0" x="491.0" y="210.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="peerReviewFeedbackEmailTask" id="BPMNShape_peerReviewFeedbackEmailTask">
-        <omgdc:Bounds height="71.0" width="105.0" x="230.0" y="290.0"></omgdc:Bounds>
+        <omgdc:Bounds height="71.0" width="105.0" x="431.0" y="286.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="peerFeedbackSubmitted" id="BPMNShape_peerFeedbackSubmitted">
+        <omgdc:Bounds height="71.0" width="111.0" x="570.0" y="162.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="35.0" width="35.0" x="900.0" y="304.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="peerFeedbackNotSent" id="BPMNShape_peerFeedbackNotSent">
+        <omgdc:Bounds height="75.0" width="111.0" x="110.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="peerFeedbackReady" id="BPMNShape_peerFeedbackReady">
+        <omgdc:Bounds height="65.0" width="111.0" x="710.0" y="165.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="peerFeedbackGood" id="BPMNShape_peerFeedbackGood">
+        <omgdc:Bounds height="40.0" width="40.0" x="745.0" y="301.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
-        <omgdi:waypoint x="155.0" y="197.0"></omgdi:waypoint>
-        <omgdi:waypoint x="230.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="55.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="110.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="221.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="260.0" y="198.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="381.0" y="198.0"></omgdi:waypoint>
+        <omgdi:waypoint x="431.0" y="197.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
-        <omgdi:waypoint x="335.0" y="197.0"></omgdi:waypoint>
-        <omgdi:waypoint x="410.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="506.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="483.0" y="286.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
-        <omgdi:waypoint x="305.0" y="240.0"></omgdi:waypoint>
-        <omgdi:waypoint x="282.0" y="290.0"></omgdi:waypoint>
+        <omgdi:waypoint x="483.0" y="286.0"></omgdi:waypoint>
+        <omgdi:waypoint x="530.0" y="267.0"></omgdi:waypoint>
+        <omgdi:waypoint x="506.0" y="240.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
-        <omgdi:waypoint x="282.0" y="290.0"></omgdi:waypoint>
-        <omgdi:waypoint x="282.0" y="225.0"></omgdi:waypoint>
+        <omgdi:waypoint x="536.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="570.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="681.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="710.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="765.0" y="230.0"></omgdi:waypoint>
+        <omgdi:waypoint x="765.0" y="301.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="endFlow" id="BPMNEdge_endFlow">
+        <omgdi:waypoint x="785.0" y="321.0"></omgdi:waypoint>
+        <omgdi:waypoint x="900.0" y="321.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="returnGivePeerFeedbackFlow" id="BPMNEdge_returnGivePeerFeedbackFlow">
+        <omgdi:waypoint x="765.0" y="341.0"></omgdi:waypoint>
+        <omgdi:waypoint x="765.0" y="402.0"></omgdi:waypoint>
+        <omgdi:waypoint x="340.0" y="402.0"></omgdi:waypoint>
+        <omgdi:waypoint x="340.0" y="274.0"></omgdi:waypoint>
+        <omgdi:waypoint x="483.0" y="225.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

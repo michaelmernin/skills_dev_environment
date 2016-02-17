@@ -3,6 +3,7 @@ package com.perficient.etm.service;
 import org.joda.time.LocalDate;
 import org.mockito.Mockito;
 
+import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.domain.User;
@@ -107,8 +108,11 @@ public class ServicesTestUtils {
      * @return The String id of the started process
      */
     public static String startPeerReview(ProcessService processSvc) {
+        Review review = createMockReviewObject();
         User[] users = createMockReviewUsers();
-        return processSvc.createPeerReview(users[0], users[1]);
+        Feedback feedback = Mockito.mock(Feedback.class);
+        Mockito.when(feedback.getAuthor()).thenReturn(users[1]);
+        return processSvc.initiatePeerReview(feedback);
     }
 
     /**
