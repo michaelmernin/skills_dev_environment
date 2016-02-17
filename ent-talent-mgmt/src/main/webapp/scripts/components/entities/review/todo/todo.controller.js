@@ -5,12 +5,12 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
   var review = {};
   
   
-  /*$scope.$parent.$watch('review', function (parentReview) {
+  $scope.$parent.$watch('review', function (parentReview) {
     if (parentReview.id) {
       review = parentReview;
       loadTodo();
     }
-  });*/
+  });
 
   $scope.confirm = function (action, ev) {
     var confirmAction = $mdDialog.confirm()

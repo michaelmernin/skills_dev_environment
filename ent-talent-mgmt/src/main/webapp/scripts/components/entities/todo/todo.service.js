@@ -31,6 +31,16 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
           result: data.result
         }));
       }
+    },
+    'queryTodoList': {
+      url: 'api/todoList',
+      method: 'GET',
+      isArray: true,
+      transformResponse: function (data) {
+        data = angular.fromJson(data);
+        data.forEach(convertFromServer);
+        return data;
+      }
     }
   }), {
     getActions: function (todo, review) {

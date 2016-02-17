@@ -18,6 +18,7 @@ import com.perficient.etm.domain.Todo;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.ReviewRepository;
+import com.perficient.etm.service.activiti.ProcessConstants;
 import com.perficient.etm.service.activiti.TasksService;
 import com.perficient.etm.web.rest.dto.TodoActionDTO;
 
@@ -81,7 +82,9 @@ public class TodoService extends AbstractBaseService {
 
     private Function<? super Task, ? extends Todo> mapTask(User user) {
         return task -> {
-            return Todo.fromTask(task, user);
+            Long reviewId = (long)task.getProcessVariables().get(ProcessConstants.REVIEW_VARIABLE);
+            Review review = reviewRepository.findOne(reviewId);
+            return Todo.fromTask(task, user, review);
         };
     }
 }

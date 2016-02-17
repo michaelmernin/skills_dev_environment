@@ -35,7 +35,7 @@ public class Todo implements Serializable {
 
     private String description;
 
-    private Long reviewId;
+    private Review review;
 
     public Long getUserId() {
         return userId;
@@ -77,12 +77,12 @@ public class Todo implements Serializable {
         this.id = id;
     }
 
-    public Long getReviewId() {
-        return reviewId;
+    public Review getReview() {
+        return review;
     }
 
-    public void setReviewId(Long reviewId) {
-        this.reviewId = reviewId;
+    public void setReview(Review review) {
+        this.review = review;
     }
 
     /**
@@ -93,14 +93,15 @@ public class Todo implements Serializable {
      * @param user the User object used that this task belongs to
      * @return Todo object with the information from the Task
      */
-    public static Todo fromTask(Task task, User user) {
+    public static Todo fromTask(Task task, User user, Review review) {
         Todo todo = new Todo();
         todo.setName(task.getName());
         todo.setId(task.getId());
         todo.setUserId(user.getId());
-        Optional.ofNullable(task.getProcessVariables()).ifPresent(vars -> {
+        todo.setReview(review);
+        /*Optional.ofNullable(task.getProcessVariables()).ifPresent(vars -> {
             todo.setReviewId((Long) vars.get(ProcessConstants.REVIEW_VARIABLE));
-        });
+        });*/
         return todo;
     }
 }

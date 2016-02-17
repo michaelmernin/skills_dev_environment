@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.Todo;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ETMException;
@@ -48,7 +50,7 @@ public class TasksServiceTest extends SpringAppTest {
 
         List<Task> tasks = taskSvc.getUserTasks(2L);
         //Convert them to Todo objects
-        List<Todo> todos = tasks.stream().map(t->Todo.fromTask(t , u)).collect(Collectors.toList());
+        List<Todo> todos = tasks.stream().map(t->Todo.fromTask(t , u, new Review())).collect(Collectors.toList());
         assertEquals("Todos and Tasks lists should have the same number of elements",todos.size(), tasks.size());
         Todo t = todos.get(0);
         //Assert the content of the todo lists

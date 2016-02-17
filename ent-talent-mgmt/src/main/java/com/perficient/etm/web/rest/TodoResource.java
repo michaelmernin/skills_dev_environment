@@ -55,6 +55,17 @@ public class TodoResource implements RestResource {
     }
     
     /**
+     * GET /todos -> get the todo list for a user.
+     */
+    @RequestMapping(value = "/todoList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<Todo> getTodoList() {
+        log.debug("REST request to get todo list for current user");
+        List<Todo> todos = todoService.findActiveForCurrentUser();
+        return todos;
+    }
+    
+    /**
      * PUT /todos/:id -> complete the todo
      */
     @RequestMapping(value = "/todos/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
