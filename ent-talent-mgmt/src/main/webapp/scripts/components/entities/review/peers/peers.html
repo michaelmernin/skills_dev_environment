@@ -6,7 +6,9 @@
     <md-not-found>No peers matching "{{ searchText }}" were found.</md-not-found>
   </md-autocomplete>
   <br/>
-  <md-button class="md-raised email-peers" ng-click="sendEmail()" translate="review.peers.sendEmail">Email Peers</md-button>
+  <div id="peer-actions">
+    <md-button ng-repeat="action in availableActions()" class="md-raised peer-action" ng-click="performAction(action)" translate="{{ action.translateKey }}"></md-button>
+  </div>
   <md-list-item ng-repeat="user in peers | orderBy:'lastName'">
     <md-checkbox ng-model="user.selected" class="md-primary"></md-checkbox>
     <h4 class="peer-name">{{user.firstName}} {{user.lastName}}</h4>
