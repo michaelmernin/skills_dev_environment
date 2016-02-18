@@ -21,10 +21,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.perficient.etm.domain.util.FeedbackStatusConverter;
 import com.perficient.etm.domain.util.FeedbackTypeConverter;
 import com.perficient.etm.domain.util.PublicSerializer;
+import com.perficient.etm.web.view.View;
 /**
  * A Feedback.
  */
@@ -37,6 +39,7 @@ public class Feedback implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView(View.Identity.class)
     private Long id;
 
     @Column(name = "overall_score")
@@ -50,14 +53,17 @@ public class Feedback implements Serializable {
 
     @JsonSerialize(using = PublicSerializer.class)
     @ManyToOne
+    @JsonView(View.Public.class)
     private User author;
 
     @Column(name = "feedbacktype_id")
     @Convert(converter = FeedbackTypeConverter.class)
+    @JsonView(View.Public.class)
     private FeedbackType feedbackType;
 
     @Column(name = "feedbackstatus_id")
     @Convert(converter = FeedbackStatusConverter.class)
+    @JsonView(View.Public.class)
     private FeedbackStatus feedbackStatus;
 
     @OneToMany(mappedBy = "feedback", fetch = FetchType.EAGER)

@@ -1,8 +1,10 @@
 package com.perficient.etm.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.perficient.etm.web.deserializer.FeedbackTypeDeserializer;
+import com.perficient.etm.web.view.View;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -36,8 +38,10 @@ public enum FeedbackType {
         return REGISTRY.get(id);
     }
 
+    @JsonView(View.Identity.class)
     private Integer id;
 
+    @JsonView(View.Public.class)
     private String name;
 
     private FeedbackType(int id, String name) {

@@ -2,6 +2,8 @@ package com.perficient.etm.repository;
 
 import com.perficient.etm.authorize.FeedbackAuthorizer;
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.FeedbackType;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -26,4 +28,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long> {
 
     @PostAuthorize(FeedbackAuthorizer.AUTHORIZE)
     Feedback findOne(Long id);
+
+    List<Feedback> findAllByReviewIdAndFeedbackType(Long reviewId, FeedbackType feedbackType);
 }

@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.perficient.etm.web.deserializer.FeedbackStatusDeserializer;
+import com.perficient.etm.web.view.View;
 
 /**
  * A FeedbackStatus.
@@ -38,8 +40,10 @@ public enum FeedbackStatus {
         return REGISTRY.get(id);
     }
 
+    @JsonView(View.Identity.class)
     private Integer id;
 
+    @JsonView(View.Public.class)
     private String name;
 
     private FeedbackStatus(int id, String name) {
