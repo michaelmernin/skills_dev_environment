@@ -42,7 +42,6 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
     validStatuses: [FeedbackStatus.NOT_SENT],
     translateKey: 'review.peers.open',
     fn: openPeers
-    
   }, {
     action: 'reopen',
     validStatuses: [FeedbackStatus.READY],
@@ -56,19 +55,40 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   
   $scope.availableActions = function () {
     var selectedPeers = getSelectedPeers();
-    
+    if (selectedPeers.length) {
+      var actions = [];
+      angular.forEach(allActions, function (action) {
+        if (isActionValid(action, selectedPeers)) {
+          actions.push(action);
+        }
+      });
+      return actions;
+    } else {
+      return allActions;
+    }
   };
 
   $scope.performAction = function (action) {
     action.fn(getSelectedPeers());
   };
+  
+  function isActionValid(action, peers) {
+    var valid = true;
+    if (action.validStatuses && action.validStatuses.length) {
+      angular.forEach(peers, function (peer) {
+        if (valid && !has(action.validStatuses, peer.feedbackStatus)) {
+          valid = false;
+        }
+      });
+    }
+    return valid;
+  }
 
   function getSelectedPeers() {
     var selectedPeers = [];
     angular.forEach($scope.peers, function (peer) {
       if (peer.selected) {
         selectedPeers.push(peer);
-        peer.selected = false;
       }
     });
     return selectedPeers;
@@ -96,5 +116,23 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   function deletePeer(peer) {
     $scope.peers.splice($scope.peers.indexOf(peer), 1);
     Peer.delete({reviewId: review.id, id: peer.id});
+  }
+  
+  function has(array, element) {
+    var result = false;
+    for (var i = 0; i < array.length; ++i) {
+      if (eq(array[i], element)) {
+        result = true;
+        break;
+      }
+    }
+    return result;
+  }
+  
+  function eq(e1, e2) {
+    if (e1 === undefined || e2 === undefined) {
+      return e1 === e2;
+    }
+    return e1.id === e2.id;
   }
 });
