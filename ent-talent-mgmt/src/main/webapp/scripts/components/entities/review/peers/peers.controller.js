@@ -6,7 +6,9 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   $scope.$parent.$watch('review', function (parentReview) {
     if (parentReview.id) {
       review = parentReview;
-      $scope.peers = review.peers;
+      Peer.query({reviewId: review.id}, function (peers) {
+        $scope.peers = peers;
+      });
     }
   });
 
