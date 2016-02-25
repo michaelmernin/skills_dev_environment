@@ -10,21 +10,21 @@
       <md-input-container class="md-block" flex-gt-sm>
         <label>Order By</label>
         <md-select ng-model="orderByExpression">
-          <md-option ng-repeat="orderByItem in orderByItems" value="{{ orderByItem.value }}">
+          <md-option ng-repeat="orderByItem in orderByItems" value="{{ orderByItem.value }}" id="todoOrderValue">
             {{ orderByItem.key }}
           </md-option>
         </md-select>
       </md-input-container>
-      <md-switch class="md-primary" ng-model="reverseOrder" aria-label="reverse order switch" ng-show="orderByExpression">
-        Reverse Order
-      </md-switch>
+      <div flex-gt-sm="" layout="column" layout-align="start start">
+        <md-button class="md-raised md-primary" ng-click="reverseOrderFunction()"><span class="todoOrder">ASC</span><span class="todoOrder" hidden>DESC</span></md-button>
+      </div>
     </div>
     <md-list flex-gt-sm>
       <md-list-item class="md-3-line" ng-repeat="todo in todoList | orderBy:orderByExpression:reverseOrder | filter:todoSearch" ng-click="goToTodo(todo.review.id)">
         <div class="md-list-item-text" layout="column">
           <h3>{{ todo.name }}</h3>
           <h4>{{ todo.review.reviewType.name }} for {{ todo.review.reviewee.firstName }} {{ todo.review.reviewee.lastName }} by {{ todo.review.reviewer.firstName }} {{ todo.review.reviewer.lastName }}</h4>
-          <p ng-if="todo.dueDate">Due Date: {{ todo.dueDate }}</p>
+          <p ng-if="todo.createDate">Todo Created Date: {{ todo.createDate }}</p>
         </div>
       </md-list-item>
     </md-list>

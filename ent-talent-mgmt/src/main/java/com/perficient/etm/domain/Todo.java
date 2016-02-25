@@ -36,6 +36,10 @@ public class Todo implements Serializable {
     private String description;
 
     private Review review;
+    
+    @JsonSerialize(using = CustomLocalDateSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateDeserializer.class)
+    private LocalDate createDate;
 
     public Long getUserId() {
         return userId;
@@ -99,9 +103,18 @@ public class Todo implements Serializable {
         todo.setId(task.getId());
         todo.setUserId(user.getId());
         todo.setReview(review);
+        todo.setCreateDate(LocalDate.fromDateFields(task.getCreateTime()));
         /*Optional.ofNullable(task.getProcessVariables()).ifPresent(vars -> {
             todo.setReviewId((Long) vars.get(ProcessConstants.REVIEW_VARIABLE));
         });*/
         return todo;
+    }
+
+    public LocalDate getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
     }
 }
