@@ -3,6 +3,7 @@ package com.perficient.etm.config.seed;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -77,7 +78,8 @@ public class SeedProcesses implements ApplicationListener<ContextRefreshedEvent>
     }
 
     private void cancelProcesses(List<Review> reviews) {
-        reviews.stream()
+        Optional.ofNullable(reviews).ifPresent(r -> {
+            r.stream()
             .peek(review -> {
                 processService.cancel(review.getProcessId());
             })
@@ -86,5 +88,6 @@ public class SeedProcesses implements ApplicationListener<ContextRefreshedEvent>
             .map(Feedback::getProcessId)
             .filter(Objects::nonNull)
             .forEach(processService::cancel);
+        });
     }
 }
