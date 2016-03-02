@@ -31,10 +31,12 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   
   $scope.editGoal = function (goal, ev) {
     if (goal.targetDate != null) {
-      goal.targetDate = new Date(goal.targetDate);
+      var tempGoal = new Date(goal.targetDate);
+      goal.targetDate = new Date(tempGoal.getTime() + tempGoal.getTimezoneOffset() * 60000);
     }
     if (goal.completionDate != null) {
-      goal.completionDate = new Date(goal.completionDate);
+      var tempGoal = new Date(goal.completionDate);
+      goal.completionDate = new Date(tempGoal.getTime() + tempGoal.getTimezoneOffset() * 60000);
     }    
     $mdDialog.show({
       controller: 'GoalDetailController',

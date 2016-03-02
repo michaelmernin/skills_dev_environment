@@ -12,7 +12,7 @@ angular.module('etmApp').controller('TodoListController', function ($scope, $sta
   }
   
   $scope.orderByItems = [
-    {key: 'Start date', value: 'createDate'},
+    {key: 'Created date', value: 'createDate'},
     {key: 'Review name',value: 'name'},
     {key: 'Review type', value: 'review.reviewType.name'}
   ];

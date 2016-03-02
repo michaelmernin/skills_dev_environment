@@ -3,11 +3,11 @@
   <md-divider></md-divider>
   <div>
     <div layout-gt-sm="row" layout="column">
-      <md-input-container class="md-block" flex-gt-sm="50">
+      <md-input-container class="md-block" flex-gt-sm="60">
         <label for="query">Filter</label>
         <input type="text" id="query" ng-model="query">
       </md-input-container>
-      <md-input-container class="md-block" flex-gt-sm>
+      <md-input-container class="md-block" flex-gt-sm="30">
         <label>Order By</label>
         <md-select ng-model="orderByExpression">
           <md-option ng-repeat="orderByItem in orderByItems" value="{{ orderByItem.value }}" id="todoOrderValue">
@@ -15,8 +15,8 @@
           </md-option>
         </md-select>
       </md-input-container>
-      <div flex-gt-sm="" layout="column" layout-align="start start">
-        <md-button class="md-raised md-primary" ng-click="reverseOrderFunction()"><span class="todoOrder">ASC</span><span class="todoOrder" hidden>DESC</span></md-button>
+      <div flex-gt-sm layout="column" layout-align="start start">
+        <md-button class="md-primary" ng-click="reverseOrderFunction()"><span class="todoOrder">ASC</span><span class="todoOrder" hidden>DESC</span></md-button>
       </div>
     </div>
     <md-list flex-gt-sm>
@@ -24,7 +24,7 @@
         <div class="md-list-item-text" layout="column">
           <h3>{{ todo.name }}</h3>
           <h4>{{ todo.review.reviewType.name }} for {{ todo.review.reviewee.firstName }} {{ todo.review.reviewee.lastName }} by {{ todo.review.reviewer.firstName }} {{ todo.review.reviewer.lastName }}</h4>
-          <p ng-if="todo.createDate">Todo Created Date: {{ todo.createDate }}</p>
+          <p ng-if="todo.createDate">Created Date: {{ todo.createDate }}</p>
         </div>
       </md-list-item>
     </md-list>
