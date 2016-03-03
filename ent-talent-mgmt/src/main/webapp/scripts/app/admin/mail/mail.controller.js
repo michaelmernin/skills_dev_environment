@@ -25,7 +25,18 @@ angular.module('etmApp').controller('MailController', function ($scope, $mdDialo
     }).then(function (mail) {
       mail.$send({}, function (savedmail) {
         $scope.messages = Mail.findAll();
-      });      
+      });
+    });
+  };
+  $scope.previewMessage = function (message,ev) {
+    $mdDialog.show({
+      controller: 'MessageDetailController',
+      templateUrl: 'scripts/app/admin/mail/message.detail.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      locals: {
+        message: message
+      }
     });
   };
 });
