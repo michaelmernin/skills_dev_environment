@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
+import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.User;
 
 /**
@@ -110,14 +111,17 @@ public class MailService {
     }
     
     @Async
-    public void sendPeerReviewFeedbackRequestedEmail() {
+    public void sendPeerReviewFeedbackRequestedEmail(Feedback feedback) {
+        User author = feedback.getAuthor();
+        
+        
         log.debug("Sending peer review requested e-mail to '{}'");
         Locale locale = Locale.forLanguageTag("en-us");
         
         Context context = new Context(locale);
         String content = templateEngine.process("peerReviewFeedbackRequested", context);
 
-        sendEmail("Test@test.org", "Test Subject", content, false, true);
+        sendEmail(author.getEmail(), "ETM Feedback", content, false, true);
     }
     
     @Async
