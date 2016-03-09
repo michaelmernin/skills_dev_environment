@@ -75,9 +75,10 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   function isActionValid(action, peers) {
     var valid = true;
     if (action.validStatuses && action.validStatuses.length) {
+      valid = false;
       angular.forEach(peers, function (peer) {
-        if (valid && !has(action.validStatuses, peer.feedbackStatus)) {
-          valid = false;
+        if (!valid && has(action.validStatuses, peer.feedbackStatus)) {
+          valid = true;
         }
       });
     }
