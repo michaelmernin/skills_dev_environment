@@ -47,6 +47,7 @@ angular.module('etmApp').config(function ($stateProvider) {
         templateUrl: 'scripts/app/entities/review/review-detail.html',
         controller: 'ReviewDetailController'
       },
+      },
       'evaluation@review.detail': {
         templateUrl: 'scripts/components/entities/review/evaluation/evaluation.html',
         controller: 'EvaluationController'

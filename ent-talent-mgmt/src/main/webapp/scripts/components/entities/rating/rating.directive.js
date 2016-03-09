@@ -6,7 +6,8 @@ angular.module('etmApp').directive('etmRating', function () {
     templateUrl: 'scripts/components/entities/rating/rating.directive.html',
     scope: {
       rating: '=ngModel',
-      disabled: '=ngDisabled'
+      disabled: '=ngDisabled',
+      readonly: '=ngReadonly'
     },
     controller: function ($scope) {
       var score = null;
