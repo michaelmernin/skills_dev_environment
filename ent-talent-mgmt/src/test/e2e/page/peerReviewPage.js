@@ -6,7 +6,7 @@ var PeerReviewPage = function () {
   this.ui = {
 
     peerTabContainer: element(by.css('md-tab-item:nth-child(1)')),
-    peerSearchInput: element(by.css('md-tab-content :nth-child(1)')).element(by.model('$mdAutocompleteCtrl.scope.searchText')),
+    peerSearchInput: element(by.css('md-tab-content#tab-content-1')).element(by.model('$mdAutocompleteCtrl.scope.searchText')),
 
     removePeerModaldialog: element(by.tagName('md-dialog')),
     cancelButton: element(by.tagName('md-dialog-actions')).element(by.cssContainingText('button', 'Cancel')),
@@ -48,7 +48,7 @@ this.getPeerOptions = function(searchKey){
 
 this.selectPeer = function(peerName){
   var peerListContainer = element(by.css('.md-autocomplete-suggestions'));
-  var desiredPeer = peerListContainer.element(by.tagName('li')).element(by.cssContainingText('span', peerName))
+  var desiredPeer = peerListContainer.element(by.tagName('li')).element(by.cssContainingText('md-autocomplete-parent-scope > span', peerName));
   desiredPeer.click();
 };
   
