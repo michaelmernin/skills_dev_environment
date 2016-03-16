@@ -1,6 +1,12 @@
 package com.perficient.etm.service;
 
-import com.perficient.etm.domain.User;
+import java.util.Locale;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +19,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.mail.internet.MimeMessage;
-import java.util.Locale;
+import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.User;
 
 /**
  * Service for sending e-mails.
@@ -41,6 +45,9 @@ public class MailService {
 
     @Inject
     private SpringTemplateEngine templateEngine;
+    
+    @Inject
+    private UserService userService;
 
     /**
      * System default email address that sends the e-mails.
@@ -90,7 +97,6 @@ public class MailService {
         Locale locale = Locale.forLanguageTag("en-us");
         Context context = new Context(locale);
         String content = templateEngine.process("reviewStartedEmail", context);
-
         sendEmail("Test@test.org", "Test Subject", content, false, true);
     }
 
@@ -105,13 +111,17 @@ public class MailService {
     }
     
     @Async
-    public void sendPeerReviewFeedbackRequestedEmail() {
+    public void sendPeerReviewFeedbackRequestedEmail(Feedback feedback) {
+        User author = feedback.getAuthor();
+        
+        
         log.debug("Sending peer review requested e-mail to '{}'");
         Locale locale = Locale.forLanguageTag("en-us");
+        
         Context context = new Context(locale);
         String content = templateEngine.process("peerReviewFeedbackRequested", context);
 
-        sendEmail("Test@test.org", "Test Subject", content, false, true);
+        sendEmail(author.getEmail(), "ETM Feedback", content, false, true);
     }
     
     @Async
@@ -122,5 +132,46 @@ public class MailService {
         String content = templateEngine.process("peerReviewFeedbackSubmitted", context);
 
         sendEmail("Test@test.org", "Test Subject", content, false, true);
+    }
+    
+    public void sendEMail(final String recipientEmail,String subject, String EmailTemplate, final Locale locale)
+                    throws MessagingException {
+        User recipientUser = userService.getUserByEmail(recipientEmail);
+        // default recipient name
+        String recipientFirst = "";
+        String recipientLast = "";
+        // if the recipient user does not exist, return.
+        if(recipientUser==null){
+            return;
+        }
+        else{
+            String first = recipientUser.getFirstName();
+            String last = recipientUser.getLastName();
+            recipientFirst = (first == null)? "":first;
+            recipientLast = (last == null)? "":last;
+        }
+        // Prepare the evaluation context
+        final Context ctx = new Context(locale);
+        ctx.setVariable("recipient_firstname", recipientFirst);
+        ctx.setVariable("recipient_lastname", recipientLast);
+
+        // Prepare message using a Spring helper
+        final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+        message.setSubject(subject);
+        message.setFrom("ETM@perficient.com");
+        message.setTo(recipientEmail);
+
+        // Create the HTML body using Thymeleaf
+        final String htmlContent = this.templateEngine.process(EmailTemplate, ctx);
+        message.setText(htmlContent, true); // true = isHtml
+
+        // Add the inline image, referenced from the HTML code as
+        // "cid:${imageResourceName}"
+       // final InputStreamSource imageSource = new ByteArrayResource(imageBytes);
+       // message.addInline(imageResourceName, imageSource, imageContentType);
+
+        // Send mail
+        javaMailSender.send(mimeMessage);
     }
 }

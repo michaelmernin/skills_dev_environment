@@ -54,6 +54,21 @@ public class UserService {
     public User getUser(Long userId) {
         return userRepository.getOne(userId);
     }
+    
+    /**
+     * will get the User by email, or null otherwise.
+     * @param email
+     * @return
+     */
+    public User getUserByEmail(String email){
+        User user;
+        Optional<User> optionalUser = userRepository.findOneByEmail(email);
+        if(optionalUser.isPresent()){
+            user = optionalUser.get();
+            return user;
+        }
+        return null;
+    }
 
     public User getUserWithAuthorities() {
         return userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())

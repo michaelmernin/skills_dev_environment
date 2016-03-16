@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
-import org.activiti.engine.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.UserRepository;
-import com.perficient.etm.security.SecurityUtils;
 import com.perficient.etm.service.activiti.ProcessService;
 
 /**
@@ -46,6 +44,9 @@ public class PeerService {
 
     @Inject
     private UserRepository userRepository;
+    
+    @Inject
+    private MailService mailService;
     
     /**
      * Creates an empty feedback form, associates it with the review, assigns to the peer and
@@ -87,10 +88,12 @@ public class PeerService {
             feedback.setProcessId(processId);
             feedback.setFeedbackStatus(FeedbackStatus.OPEN);
             feedbackRepository.save(feedback);
+            mailService.sendPeerReviewFeedbackRequestedEmail(feedback);
         }catch (Exception e){
             log.error("Error starting peer bpm process",e);
             throw new ActivitiProcessInitiationException(e);
         }
+        
         return feedback;
     }
     
