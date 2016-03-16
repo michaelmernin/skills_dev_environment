@@ -2,7 +2,7 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <process id="peerReview" name="Peer Review Process" isExecutable="true">
     <startEvent id="start" name="Start"></startEvent>
-    <serviceTask id="peerFeedbackRequested" name="Peer Feedback Requested" activiti:expression="${mailService.sendPeerReviewFeedbackRequestedEmail()}"></serviceTask>
+    <serviceTask id="peerFeedbackRequested" name="Peer Feedback Requested" activiti:expression="${mailService.sendPeerReviewFeedbackRequestedEmail(PeerEmail)}"></serviceTask>
     <userTask id="giveFeedback" name="Give Peer Feedback" activiti:assignee="${Peer}"></userTask>
     <boundaryEvent id="boundarytimer1" name="Timer" attachedToRef="giveFeedback" cancelActivity="false">
       <timerEventDefinition>

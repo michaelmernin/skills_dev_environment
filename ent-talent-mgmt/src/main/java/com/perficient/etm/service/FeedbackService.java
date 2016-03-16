@@ -24,6 +24,9 @@ import com.perficient.etm.repository.RatingRepository;
 public class FeedbackService extends AbstractBaseService {
 
     @Inject
+    private PeerService peerService;
+    
+    @Inject
     private FeedbackRepository feedbackRepository;
 
     @Inject
@@ -48,6 +51,7 @@ public class FeedbackService extends AbstractBaseService {
         if (feedback.getFeedbackType() == FeedbackType.PEER) {
             if (feedback.getProcessId() == null) {
                 // TODO start Peer process
+                peerService.startPeerProcess(feedback);
             } else {
                 // TODO reopen Peer process
             }

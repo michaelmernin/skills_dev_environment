@@ -35,6 +35,9 @@ public class PeerServiceTest extends SpringMockTest {
     @Mock
     private FeedbackService feedbackService;
     
+    @Mock
+    private MailService mailService;
+    
     @InjectMocks
     private PeerService peerSvc;
 
