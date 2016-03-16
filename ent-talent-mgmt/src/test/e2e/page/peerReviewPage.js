@@ -48,16 +48,18 @@ this.getPeerOptions = function(searchKey){
 
 this.selectPeer = function(peerName){
   var peerListContainer = element(by.css('.md-autocomplete-suggestions'));
-  var desiredPeer = peerListContainer.element(by.tagName('li')).element(by.cssContainingText('md-autocomplete-parent-scope > span', peerName));
+ //var desiredPeer = peerListContainer.element(by.tagName('li')).element(by.cssContainingText('md-autocomplete-parent-scope', peerName));
+  
+  var desiredPeer = peerListContainer.element(by.cssContainingText('li', peerName));
   desiredPeer.click();
 };
   
-this.getSelectedPeer = function(){
+this.getSelectedPeer = function(itemNumber){
   var listedPeerContainer = element(by.css('md-tab-content:nth-child(1)'));
   var listedPeers = [];
   listedPeers = listedPeerContainer.all(by.tagName('md-list-item'));
-  var lastPeer= listedPeers.first();
-  return lastPeer;  
+  var selectedPeer= listedPeers.get(itemNumber);
+  return selectedPeer;  
   
 };
 
@@ -70,9 +72,6 @@ this.deletePeer = function(peerName){
   
 
 };
-
-
-
 
 };
 module.exports = PeerReviewPage;

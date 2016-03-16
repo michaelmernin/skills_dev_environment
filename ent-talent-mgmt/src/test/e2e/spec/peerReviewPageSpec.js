@@ -43,16 +43,26 @@ describe('Enterprise Talent Management', function () {
       expect(availablePeers.get(3).getText()).toBe('Dev UserNine');
     });
     
-//    it('shoud allow users to select a peer', function(){
+    it('shoud allow users to select a peer', function(){
+      
+      var availablePeers = peerReviewPage.getPeerOptions('dev');
+      peerReviewPage.selectPeer('Dev UserSeven');
+     
+      var selectedPeer = peerReviewPage.getSelectedPeer();
+      expect(selectedPeer.element(by.css('.peer-name')).getText()).toBe('Dev UserTwo');
+      
+    });
+    
+    it('should list selected peer', function(){
+       
+       
+       var selectedPeer = peerReviewPage.getSelectedPeer(0);
+       expect(selectedPeer.getText()).toBe('Dev UserOne');
+       
+       
+       });
 //    
-//      peerReviewPage.selectPeer('Dev UserTwo');
-//     
-//     var selectedPeer = peerReviewPage.getSelectedPeer();
-//      expect(selectedPeer.element(by.css('.peer-name')).getText()).toBe('Dev UserTwo');
-//      
-//    });
-//    
-//    xit('should allow users to delete a peer', function(){
+//    it('should allow users to delete a peer', function(){
 //      
 //      peerReviewPage.deletePeer('Dev UserEight');
 //     
