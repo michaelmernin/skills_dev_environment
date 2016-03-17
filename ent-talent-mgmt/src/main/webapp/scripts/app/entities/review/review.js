@@ -47,10 +47,13 @@ angular.module('etmApp').config(function ($stateProvider) {
         templateUrl: 'scripts/app/entities/review/review-detail.html',
         controller: 'ReviewDetailController'
       },
-      },
       'evaluation@review.detail': {
         templateUrl: 'scripts/components/entities/review/evaluation/evaluation.html',
         controller: 'EvaluationController'
+      },
+      'engagements@review.detail': {
+        templateUrl: 'scripts/components/entities/review/engagements/engagements.html',
+        controller: 'EngagementsController'
       },
       'goals@review.detail': {
         templateUrl: 'scripts/components/entities/review/goals/goal.summary.html',
@@ -59,6 +62,10 @@ angular.module('etmApp').config(function ($stateProvider) {
       'peers@review.detail': {
         templateUrl: 'scripts/components/entities/review/peers/peers.summary.html',
         controller: 'PeersController'
+      },
+      'overall@review.detail': {
+        templateUrl: 'scripts/components/entities/review/overall/overall.summary.html',
+        controller: 'OverallController'
       }
     }
   }).state('review.edit', {
