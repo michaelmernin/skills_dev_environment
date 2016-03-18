@@ -36,7 +36,7 @@ public class FeedbackService extends AbstractBaseService {
                 feedback.setAuthor(author);
                 feedback.setReview(review);
                 feedback.setFeedbackStatus(initialFeedbackStatus(type));
-                feedback.setFeedbackType(FeedbackType.PEER);
+                feedback.setFeedbackType(type);
                 feedback = feedbackRepository.save(feedback);
                 addRatings(review, feedback);
                 return feedback;
