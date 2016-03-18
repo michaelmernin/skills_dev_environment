@@ -1,0 +1,37 @@
+<md-dialog flex="65">
+  <form name="goalForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 translate="review.annual.goals.goalDetailSummaryHeader">Goal Details</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+
+        <strong translate="review.annual.goals.goal">Goal Title</strong>
+        <br/>
+        <span flex>{{ goal.name }}</span>
+        <br/><br/>
+        <strong translate="review.annual.goals.description">Description</strong>
+        <br/>
+        <span flex>{{ goal.description }}</span>
+        <br/><br/>
+        <strong translate="review.annual.goals.targetDate">Target Date</strong>
+        <br/>
+        <span flex>{{ goal.targetDate | date:'MM/dd/yyyy' }}</span>
+        <br/><br/>
+        <strong ng-if="switchCompletion" translate="review.annual.goals.completionDate">Completion Date</strong>
+        <br ng-if="switchCompletion" />
+        <span ng-if="goal.completionDate" flex>{{ goal.completionDate | date:'MM/dd/yyyy' }}</span>
+        <strong ng-if="!switchCompletion">Not Completed</strong>
+        <br/><br/>
+        <strong ng-if="goal.note" translate="review.annual.goals.note">Notes</strong>
+        <br ng-if="goal.note" />
+        <span ng-if="goal.note" flex>{{ goal.note }}</span>
+        <br ng-if="goal.note" />
+    </md-dialog-content>
+  </form>
+</md-dialog>

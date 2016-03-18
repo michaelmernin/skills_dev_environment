@@ -63,6 +63,7 @@
       "goals": {
         "addGoal": "Add Goal",
         "goalDetailHeader": "Fill out fields to create goal",
+      	"goalDetailSummaryHeader": "Goal Details",
         "goal": "Goal",
         "targetDate": "Target Date",
         "note": "Status Notes",

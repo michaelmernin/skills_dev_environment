@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('EvaluationController', function ($scope, $mdDialog, $mdMedia, $window, Principal, Rating, Evaluation) {
+angular.module('etmApp').controller('EvaluationController', function ($scope, $mdDialog, $state, $mdMedia, $window, Principal, Rating, Evaluation) {
   var review = {};
   var user = {};
 
@@ -22,7 +22,7 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
   $scope.viewEvaluation = function (question, ev) {
     $mdDialog.show({
       controller: 'EvaluationDetailController',
-      templateUrl: 'scripts/components/entities/review/evaluation/evaluation.detail.html',
+      templateUrl: $state.current.data.evaluationConfig,
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {

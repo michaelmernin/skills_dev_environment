@@ -111,17 +111,14 @@ public class MailService {
     }
     
     @Async
-    public void sendPeerReviewFeedbackRequestedEmail(Feedback feedback) {
-        User author = feedback.getAuthor();
-        
-        
+    public void sendPeerReviewFeedbackRequestedEmail(String email) {
         log.debug("Sending peer review requested e-mail to '{}'");
         Locale locale = Locale.forLanguageTag("en-us");
         
         Context context = new Context(locale);
         String content = templateEngine.process("peerReviewFeedbackRequested", context);
 
-        sendEmail(author.getEmail(), "ETM Feedback", content, false, true);
+        sendEmail(email, "ETM Feedback", content, false, true);
     }
     
     @Async

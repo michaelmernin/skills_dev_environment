@@ -1,118 +1,60 @@
-
-<div>
-    <h2><span translate="review.detail.title">Review</span> {{review.id}}</h2>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th translate="entity.detail.field">Field</th>
-                    <th translate="entity.detail.value">Value</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <span translate="review.title">Title</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{review.title}}" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span translate="review.startDate">StartDate</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{review.startDate}}" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span translate="review.endDate">EndDate</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{review.endDate}}" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span translate="review.client">Client</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{review.client}}" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span translate="review.project">Project</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{review.project}}" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span translate="review.role">Role</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{review.role}}" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span translate="review.responsibilities">Responsibilities</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{review.responsibilities}}" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span translate="review.rating">Rating</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{review.rating}}" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span translate="review.ReviewType">ReviewType</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{review.ReviewType.name}}" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span translate="review.ReviewStatus">ReviewStatus</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{review.ReviewStatus.name}}" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span translate="review.reviewee">reviewee</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{review.reviewee.firstName}}" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span translate="review.reviewer">reviewer</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{review.reviewer.firstName}}" readonly>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <button type="submit"
-            ui-sref="review"
-            class="btn btn-info">
-        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
-    </button>
-</div>
+<div ng-cloak>
+  <md-content md-scroll-y class="md-whiteframe-z1">
+    <form name="reviewForm" novalidate>
+      <div layout="column">
+        <h2 layout-padding class="md-display-1">
+          {{ review.startDate.getFullYear() }}-{{ review.endDate.getFullYear() }} {{ review.reviewType.name }} for {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}
+        </h2>
+        <md-card>
+          <md-toolbar>
+            <div class="md-toolbar-tools">
+              <h2 translate="review.annual.reviewInformation">Review Information</h2>
+            </div>
+          </md-toolbar>
+          <md-card-content>
+            <md-grid-list md-cols-sm="1" md-cols-md="1" md-cols-lg="2" md-cols-gt-lg="3" md-gutter="5px"
+              md-row-height-sm="20:1" md-row-height-md="34:1" md-row-height-lg="16:1" md-row-height-gt-lg="16:1">
+              <md-grid-tile class="gray" md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+                <strong flex translate="review.annual.reviewType">Review Type:</strong>
+                <span flex>{{ review.reviewType.name }}</span>
+              </md-grid-tile>
+              <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+                <strong flex translate="review.annual.startDate">Start Date:</strong>
+                <span flex>{{ review.startDate | date:'MM/dd/yyyy' }}</span>
+              </md-grid-tile>
+              <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+                <strong flex translate="review.annual.endDate">End Date:</strong>
+                <span flex>{{ review.endDate | date:'MM/dd/yyyy' }}</span>
+              </md-grid-tile>
+              <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+                <strong flex translate="review.annual.status">Status:</strong>
+                <span flex>{{ review.reviewStatus.name }}</span>
+              </md-grid-tile>
+              <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+                <strong flex translate="review.annual.counselor">Counselor:</strong>
+                <span flex>{{ review.reviewee.counselor.firstName }} {{ review.reviewee.counselor.lastName }}</span>
+              </md-grid-tile>
+            </md-grid-list>
+          </md-card-content>
+        </md-card>
+        <md-tabs md-dynamic-height md-border-bottom>
+          <md-tab label="peers" ng-if="allTabs()">
+            <div ui-view="peers"></div>
+          </md-tab>
+          <md-tab label="engagements" ng-if="allTabs()">
+            <div ui-view="engagements"></div>
+          </md-tab>
+          <md-tab label="goals" ng-if="allTabs()">
+            <div ui-view="goals"></div>
+          </md-tab>
+          <md-tab label="evaluation">
+            <div ui-view="evaluation"></div>
+          </md-tab>
+          <md-tab label="overall" ng-if="allTabs()">
+            <div ui-view="overall"></div>
+          </md-tab>
+        </md-tabs>
+      </div>
+    </form>
+  </md-content>
+</div>  
