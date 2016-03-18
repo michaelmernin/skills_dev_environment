@@ -1,0 +1,8 @@
+<div ng-cloak>
+ <md-list-item ng-repeat="user in peers | orderBy:'lastName'">
+    <h4 class="peer-name">{{user.firstName}} {{user.lastName}}</h4>
+    <p>{{ user.feedbackStatus.name }}</p>
+    <md-divider></md-divider>
+  </md-list-item>
+</div>
+  

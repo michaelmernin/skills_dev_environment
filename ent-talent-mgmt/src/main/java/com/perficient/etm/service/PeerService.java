@@ -88,12 +88,15 @@ public class PeerService {
             feedback.setProcessId(processId);
             feedback.setFeedbackStatus(FeedbackStatus.OPEN);
             feedbackRepository.save(feedback);
-            mailService.sendPeerReviewFeedbackRequestedEmail(feedback);
+            //sending email to peer requisting feedback
         }catch (Exception e){
             log.error("Error starting peer bpm process",e);
             throw new ActivitiProcessInitiationException(e);
         }
-        
+        String email = (feedback.getAuthor() == null)? null : feedback.getAuthor().getEmail();
+        if(email != null){
+            mailService.sendPeerReviewFeedbackRequestedEmail(email);
+        }
         return feedback;
     }
     

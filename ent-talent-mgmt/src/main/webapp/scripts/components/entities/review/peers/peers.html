@@ -7,7 +7,7 @@
   </md-autocomplete>
   <br/>
   <div id="peer-actions">
-    <md-button ng-repeat="action in availableActions()" class="md-raised peer-action" ng-click="performAction(action)" translate="{{ action.translateKey }}"></md-button>
+    <md-button ng-repeat="action in availableActions()" class="md-raised peer-action" ng-click="performAction(action, $event)" translate="{{ action.translateKey }}"></md-button>
   </div>
   <md-list-item ng-repeat="user in peers | orderBy:'lastName'">
     <md-checkbox ng-model="user.selected" class="md-primary"></md-checkbox>

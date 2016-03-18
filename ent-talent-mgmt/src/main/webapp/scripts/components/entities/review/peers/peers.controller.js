@@ -68,8 +68,8 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
     }
   };
 
-  $scope.performAction = function (action) {
-    action.fn(getSelectedPeers());
+  $scope.performAction = function (action, ev) {
+    action.fn(getSelectedPeers(), ev);
   };
   
   function isActionValid(action, peers) {
@@ -95,15 +95,15 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
     return selectedPeers;
   }
   
-  function openPeers(peers) {
+  function openPeers(peers, ev) {
     console.dir("Open Peers", peers);
   }
 
-  function reopenPeers(peers) {
+  function reopenPeers(peers, ev) {
     console.dir("Reopen Peers", peers);
   }
 
-  function deletePeers(peers) {
+  function deletePeers(peers, ev) {
     var confirmDelete = $mdDialog.confirm()
       .title('Remove Peers from Review')
       .ariaLabel('Remove Peers')

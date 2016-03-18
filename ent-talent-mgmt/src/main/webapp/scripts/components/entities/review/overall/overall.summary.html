@@ -1,0 +1,78 @@
+<div ng-cloak>
+  <div layout-padding>
+    <h2>Composite Scores</h2>
+    <div ng-repeat="(category, questions) in categories | orderBy:'toString()'">
+      <div class="md-title">{{ category }}</div>
+      <div layout-gt-xs="row" class="md-body-1">
+        <div layout="row" flex-gt-xs>
+          <span flex>
+            <i class="fa fa-comment-o"></i>
+            Self: {{ showRevieweeRating() ? getAvgScore(getRatings(questions, 'reviewee')) : 0 }}
+          </span>
+          <span flex>
+            <i class="fa fa-comment"></i>
+            Reviewer: {{ showReviewerRating() ? getAvgScore(getRatings(questions, 'reviewer')) : 0 }}
+          </span>
+        </div>
+        <div layout="row" flex-gt-xs>
+          <span flex>
+            <i class="fa fa-comments-o"></i>
+            Peers: {{ showPeerRatings() ? getAvgScore(getRatings(questions, 'peer')) : 0 }}
+          </span>
+          <span flex>
+            <i class="fa fa-comments"></i>
+            All: {{ showAllRating() ? getAvgScore(getRatings(questions)) : 0 }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <h2>Overall Scores</h2>
+    <div layout-gt-xs="row" class="md-body-2">
+      <div layout="row" flex-gt-xs>
+        <span flex>
+          <i class="fa fa-comment-o"></i>
+          Self: {{ showRevieweeRating() ? getAvgScore(getRatings(questions, 'reviewee')) : 0 }}
+        </span>
+        <span flex>
+          <i class="fa fa-comment"></i>
+          Reviewer: {{ showReviewerRating() ? getAvgScore(getRatings(questions, 'reviewer')) : 0 }}
+        </span>
+      </div>
+      <div layout="row" flex-gt-xs>
+        <span flex>
+          <i class="fa fa-comments-o"></i>
+          Peers: {{ showPeerRatings() ? getAvgScore(getRatings(questions, 'peer')) : 0 }}
+        </span>
+        <span flex>
+          <i class="fa fa-comments"></i>
+          All: {{ showAllRating() ? getAvgScore(getRatings(questions)) : 0 }}
+        </span>
+      </div>
+    </div>
+    <md-divider></md-divider>
+    <h2>Summary</h2>
+    <div class="md-title" ng-show="!reviewerFeedback.author && !revieweeFeedback.author ">
+        No summary feedback available at this time.
+      </div>
+    <div>
+      <div class="md-title" ng-show="reviewerFeedback.author">
+        Reviewer Summary by: {{reviewerFeedback.author.firstName}} {{reviewerFeedback.author.lastName}}
+      </div>
+      <div layout="row" layout-align="start center">
+        <div class="md-headline">{{reviewerFeedback.overallScore}} &nbsp;</div>
+        <p>{{reviewerFeedback.overallComment}}</p>
+      </div>
+    </div>
+    <div>
+      <div class="md-title" ng-show="revieweeFeedback.author">
+        Self Summary by: {{revieweeFeedback.author.firstName}} {{revieweeFeedback.author.lastName}}
+      </div>
+      <div>
+        <p>{{revieweeFeedback.overallComment}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

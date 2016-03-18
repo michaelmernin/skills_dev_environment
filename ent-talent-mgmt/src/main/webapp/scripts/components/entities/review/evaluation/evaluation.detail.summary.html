@@ -2,7 +2,7 @@
   <form name="evalForm" novalidate>
     <md-toolbar>
       <div class="md-toolbar-tools">
-        <h2>Give Feedback about {{ question.category.title }}</h2>
+        <h2>{{ question.category.title }}</h2>
         <span flex></span>
         <md-button class="md-icon-button" ng-click="close()">
           <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
@@ -13,23 +13,22 @@
       <h3 class="md-headline" ng-if="!!question.title">{{ question.title }}</h3>
       <p class="md-title">{{ question.text }}</p>
       <div ng-if="question.ratings.reviewee && showRevieweeRating()">
-        <h3>Self Feedback</h3>
-        <h4>By {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}</h4>
-        <etm-rating ng-model="question.ratings.reviewee" ng-disabled="!question.ratings.reviewee.canEdit" ng-readOnly="false"></etm-rating>
+        <h3>Self Feedback by {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}</h3>
+        <etm-rating ng-model="question.ratings.reviewee" ng-disabled="true" ng-readonly="true"></etm-rating>
       </div>
       <div ng-if="question.ratings.reviewer && showReviewerRating()">
-        <h3>Reviewer Feedback</h3>
-        <h4>By {{ review.reviewer.firstName }} {{ review.reviewer.lastName }}</h4>
-        <etm-rating ng-model="question.ratings.reviewer" ng-disabled="!question.ratings.reviewer.canEdit" ng-readOnly="false"></etm-rating>
+        <h3>Reviewer Feedback by {{ review.reviewer.firstName }} {{ review.reviewer.lastName }}</h3>
+        <etm-rating ng-model="question.ratings.reviewer" ng-disabled="true" ng-readonly="true"></etm-rating>
       </div>
       <div ng-if="showPeerRatings()">
         <div ng-if="question.ratings.peer.length">
           <h3>Peer Feedback</h3>
           <div ng-repeat="peerRating in question.ratings.peer">
             <div ng-if="showPeerRating(peerRating)">
-              <h4>By {{ peerRating.feedback.author.firstName }} {{ peerRating.feedback.author.lastName }}</h4>
-              <etm-rating ng-model="peerRating" ng-disabled="!peerRating.canEdit" ng-readOnly="false"></etm-rating>
-              <md-divider ng-if="!$last"></md-divider>
+              <strong>By {{ peerRating.feedback.author.firstName }} {{ peerRating.feedback.author.lastName }}</strong>
+              <br/>
+              <etm-rating ng-model="peerRating" ng-disabled="true" ng-readonly="true"></etm-rating>
+              <br/><br/>
             </div>
           </div>
         </div>
