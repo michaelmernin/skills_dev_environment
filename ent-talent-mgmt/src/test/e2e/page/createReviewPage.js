@@ -27,7 +27,6 @@ var CreateReviewPage = function () {
         return this.ui.startDateInput.getAttribute('value');
       },
       set: function (startDate) {
-        this.ui.startDateInput.clear();
         this.ui.startDateInput.sendKeys(startDate);
       }
     },
@@ -36,7 +35,6 @@ var CreateReviewPage = function () {
         return this.ui.endDateInput.getAttribute('value');
       },
       set: function (endDate) {
-        this.ui.endDateInput.clear();
         this.ui.endDateInput.sendKeys(endDate);
       }
     },
@@ -69,6 +67,9 @@ var CreateReviewPage = function () {
   this.getDropdownOptions = function (dropdownSelect){
     element(by.model(dropdownSelect)).click();
     var optionsContainer = element(by.css('.md-select-menu-container.md-active.md-clickable')).element(by.tagName('md-select-menu')).element(by.tagName('md-content'));
+    browser.wait(function() {
+      return browser.isElementPresent(optionsContainer);
+    }, 10000);
     var options = [];
     options = optionsContainer.all(by.tagName('md-option'));
     return options;
