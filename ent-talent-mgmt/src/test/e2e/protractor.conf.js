@@ -1,3 +1,17 @@
+
+var HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
+
+var htmlReporter = new HtmlScreenshotReporter({
+  dest: './build/protractor-screenshots',
+  filename: 'protractor-test-report.html',
+  reportTitle: "ETM Protractor Test Report",
+  reportOnlyFailedSpecs: false,
+  captureOnlyFailedSpecs: true,
+  cleanDestination: true,
+  showSummary: true,
+  showQuickLinks: true,
+});
+
 // A reference configuration file.
 exports.config = {
   // ----- How to setup Selenium -----
@@ -68,17 +82,42 @@ exports.config = {
   // before the specs are executed
   // You can specify a file containing code to run by setting onPrepare to
   // the filename string.
+  
+ 
+  
+  // Setup the report before any tests start
+  beforeLaunch: function() {
+     return new Promise(function(resolve){
+    	 htmlReporter.beforeLaunch(resolve);
+     });
+  },
+  
   onPrepare: function () {
     // At this point, global 'protractor' object will be set up, and jasmine
     // will be available. For example, you can add a Jasmine reporter with:
     var jasmineReporters = require('jasmine-reporters');
+
     var jUnitReporter = new jasmineReporters.JUnitXmlReporter({
       savePath: 'build/e2e-test-reports',
       filePrefix: 'TEST-protractor-results',
       consolidateAll: true
     });
+  
+    
     jasmine.getEnv().addReporter(jUnitReporter);
+    jasmine.getEnv().addReporter(htmlReporter);
+    setTimeout(function() {
+      browser.driver.executeScript(function() {
+          return {
+              width: window.screen.availWidth,
+              height: window.screen.availHeight
+          };
+      }).then(function(result) {
+          browser.driver.manage().window().setSize(result.width, result.height);
+      });
+  });
   },
+  
 
   framework: 'jasmine2',
   // ----- Options to be passed to minijasminenode -----
