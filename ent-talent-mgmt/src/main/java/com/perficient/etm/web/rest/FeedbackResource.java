@@ -1,12 +1,15 @@
 package com.perficient.etm.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.RatingRepository;
+import com.perficient.etm.service.FeedbackService;
+import com.perficient.etm.web.view.View;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,9 @@ public class FeedbackResource implements RestResource {
 
     @Inject
     private RatingRepository ratingRepository;
+    
+    @Inject
+    private FeedbackService feedbackService;
 
     /**
      * POST /reviews/:id/feedback -> Create a new feedback.
@@ -103,6 +109,24 @@ public class FeedbackResource implements RestResource {
     public ResponseEntity<Feedback> get(@PathVariable Long reviewId, @PathVariable Long id) {
         log.debug("REST request to get Feedback : {} for Review : {}", id, reviewId);
         return Optional.ofNullable(feedbackRepository.findOne(id))
+                .map(feedback -> new ResponseEntity<>(feedback, HttpStatus.OK))
+                .orElseThrow(() -> {
+                    return new ResourceNotFoundException("Feedback " + id + " for Review " + reviewId + " cannot be found.");
+                });
+    }
+    
+    /**
+     * PUT  /reviews/:reviewId/feedback/:id/open
+     */
+    @RequestMapping(value = "/reviews/{reviewId}/feedback/{id}/open",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    @JsonView(View.Public.class)
+    public ResponseEntity<Feedback> open(@PathVariable Long reviewId, @PathVariable Long id) {
+        log.debug("REST request to open peer Feedback : {} for Review : {}", id, reviewId);
+        return Optional.ofNullable(feedbackRepository.findOne(id))
+                .map(feedbackService::openPeerFeedback)
                 .map(feedback -> new ResponseEntity<>(feedback, HttpStatus.OK))
                 .orElseThrow(() -> {
                     return new ResourceNotFoundException("Feedback " + id + " for Review " + reviewId + " cannot be found.");

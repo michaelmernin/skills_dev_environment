@@ -88,7 +88,7 @@ public class PeerService {
             //Update the needed information
             feedback.setProcessId(processId);
             feedback.setFeedbackStatus(FeedbackStatus.OPEN);
-            feedbackRepository.save(feedback);
+            feedback = feedbackRepository.save(feedback);
             //sending email to peer requisting feedback
         }catch (Exception e){
             log.error("Error starting peer bpm process",e);
