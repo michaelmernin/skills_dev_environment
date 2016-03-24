@@ -21,7 +21,7 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
       if (user.login != null) {
         $scope.peers.push(user);
         Peer.save({reviewId: review.id}, {id: user.id});
-        window.location.reload();
+        //window.location.reload();
       }
     }  
   };
