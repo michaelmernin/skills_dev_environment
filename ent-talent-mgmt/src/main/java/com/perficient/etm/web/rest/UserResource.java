@@ -142,12 +142,13 @@ public class UserResource implements RestResource {
     @JsonView(View.Public.class)
     List<User> getUsersAutocomplete(@RequestParam String query, @RequestParam Long reviewId) {
         log.debug("REST request to get users for autocomplete");
-        String[] splitQuery = query.split(" ");
-        List<User> usersList = new ArrayList<User>();
+        String loweredQuery = query.toLowerCase();
+        String[] splitQuery = loweredQuery.split(" ");
+        List<User> usersList = new ArrayList<User>();        
         if (splitQuery.length > 1) {
           usersList.addAll(userRepository.findUsersForAutocompleteByFullName(splitQuery[0], splitQuery[1]));
         } else {
-          usersList.addAll(userRepository.findUsersForAutocomplete(query));
+          usersList.addAll(userRepository.findUsersForAutocomplete(loweredQuery));
         }
         Review review = reviewRepository.findOne(reviewId);
         User reviewee = review.getReviewee();
