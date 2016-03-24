@@ -255,11 +255,8 @@ public class Review implements Serializable {
         this.reviewer = user;
     }
 
-    public void sanitize(boolean isCreate) {
-        if (isCreate) {
-            id = null;
-        }
-        reviewStatus = null;
+    public void sanitize() {
+        id = null;
     }
 
     public String getProcessId() {
