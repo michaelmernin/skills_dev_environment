@@ -3,8 +3,11 @@
 angular.module('etmApp').controller('ReviewListController', function ($scope, $state, $stateParams, Review, Principal, ReviewStatus) {
   var NUM_STEPS = 5;
   $scope.reviews = [];
-
+  var user; 
   if (Principal.isAuthenticated()) {
+    Principal.identity().then(function (account) {
+      user = account;
+    });
     Review.query(function (result) {
       $scope.reviews = result;
     });
@@ -41,7 +44,24 @@ angular.module('etmApp').controller('ReviewListController', function ($scope, $s
 
   $scope.goToReview = function (reviewId) {
     if (reviewId) {
-      $state.go('review.edit', {id: reviewId});
+      if (this.review.reviewStatus.id == 1) {
+        // check if user is reviewee, reviewer, or peer - if yes, go to review edit. if no, go to review.detail
+        if (user.id == this.review.reviewee.id) {
+          $state.go('review.edit', {id: reviewId});
+        } else if (user.id == this.review.reviewer.id) {
+          $state.go('review.edit', {id: reviewId});
+        } else {
+          for (var i = 0; i < this.review.peers; ++i) {
+            if (user.id == this.review.peers[i].id) {
+              $state.go('review.edit', {id: reviewId});
+            }
+          }
+          $state.go('review.detail', {id: reviewId});
+        }
+        $state.go('review.edit', {id: reviewId});
+      } else {
+        $state.go('review.detail', {id: reviewId});
+      }
     } else {
       $state.go('login');
     }
