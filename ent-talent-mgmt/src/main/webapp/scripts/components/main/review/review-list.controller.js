@@ -46,6 +46,11 @@ angular.module('etmApp').controller('ReviewListController', function ($scope, $s
       $state.go('login');
     }
   };
+  
+  $scope.reverseOrderFunction = function() {
+    $scope.reverseOrder = !$scope.reverseOrder;
+    $('.reviewOrder').toggle();
+  };
 
   $scope.reviewSearch = function (review) {
     // if query is undefined or null, show all reviews
