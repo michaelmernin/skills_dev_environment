@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etmApp').controller('TodoListController', function ($scope, $state, $stateParams, $mdDialog, Todo, Review, ReviewStatus, Principal) {
-  $scope.todoList = Todo.queryTodoList();
+  $scope.todoList = [];
   
   if (Principal.isAuthenticated()) {
     Todo.queryTodoList(function(todos) {
