@@ -17,6 +17,7 @@ import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.UserRepository;
+import com.perficient.etm.security.SecurityUtils;
 import com.perficient.etm.service.activiti.ProcessService;
 
 /**
@@ -60,13 +61,13 @@ public class PeerService {
     public Review addPeerFeedback(Long reviewId, User peer) {
         log.debug("Adding peer feedback for review {} and peer {}", reviewId, peer.getId());
         Review review = reviewSvc.findById(reviewId);
-        //SecurityUtils.runAsSystem(userRepository, ()->{
+        SecurityUtils.runAsSystem(userRepository, ()->{
             Feedback feedback = null;
             feedback = feedbackService.addFeedback(review, peer, FeedbackType.PEER);
             review.getFeedback().add(feedback);
             review.getPeers().add(peer);
             reviewSvc.update(review);
-        //});
+        });
         return review;
     }
 
@@ -114,12 +115,13 @@ public class PeerService {
      */
     public void removePeerFeedback(Long reviewId, Long peerId) {
         removePeerFromReview(reviewId, peerId);
-
-        feedbackRepository.findOneByReviewIdAndAuthorId(reviewId, peerId)
-            .map(feedbackService::closeFeedback)
-            .map(Feedback::getProcessId)
-            .filter(Objects::nonNull)
-            .map(processSvc::cancel);
+        SecurityUtils.runAsSystem(userRepository, ()->{
+            feedbackRepository.findOneByReviewIdAndAuthorId(reviewId, peerId)
+                .map(feedbackService::closeFeedback)
+                .map(Feedback::getProcessId)
+                .filter(Objects::nonNull)
+                .map(processSvc::cancel);
+        });
     }
 
     private void removePeerFromReview(Long reviewId, Long peerId) {

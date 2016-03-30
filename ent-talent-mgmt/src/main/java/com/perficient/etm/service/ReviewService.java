@@ -160,7 +160,6 @@ public class ReviewService extends AbstractBaseService {
      * @param review The Review object to be updated
      */
     public void update(Review review) {
-        review.sanitize(false);
         review = reviewRepository.save(review);
     }
 

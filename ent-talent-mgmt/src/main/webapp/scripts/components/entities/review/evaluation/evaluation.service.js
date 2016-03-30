@@ -6,7 +6,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
   var questionsIndex = {};
 
   function eq(e1, e2) {
-    if (e1 === undefined || e2 === undefined) {
+    if ((e1 === undefined || e1 === null) || (e2 === undefined || e2 === null)) {
       return e1 === e2;
     }
     return e1.id === e2.id;

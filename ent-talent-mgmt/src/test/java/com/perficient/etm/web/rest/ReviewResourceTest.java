@@ -219,48 +219,6 @@ public class ReviewResourceTest extends SpringAppTest {
 
     @Test
     @WithUserDetails("dev.user2")
-    public void updateReview() throws Exception {
-        int count = (int) reviewRepository.count();
-
-        Review review = reviewRepository.findOne(1L);
-
-        // Update the review
-        review.setTitle(UPDATED_TITLE);
-        review.setStartDate(UPDATED_START_DATE);
-        review.setEndDate(UPDATED_END_DATE);
-        review.setClient(UPDATED_CLIENT);
-        review.setProject(UPDATED_PROJECT);
-        review.setRole(UPDATED_ROLE);
-        review.setResponsibilities(UPDATED_RESPONSIBILITIES);
-        review.setRating(UPDATED_RATING);
-        restReviewMockMvc
-                .perform(put("/api/reviews/" + review.getId())
-                        .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
-                        .content(ResourceTestUtils.convertObjectToJsonBytes(
-                                review, objectMapper)))
-                .andExpect(status().isOk());
-
-        // Validate the Review in the database
-        List<Review> reviews = reviewRepository.findAll();
-        assertThat(reviews).hasSize(count);
-        Optional<Review> optional = reviews.stream().filter(r -> {
-            return r.getId() == 1L;
-        }).findAny();
-        assertThat(optional.isPresent()).isTrue();
-        Review testReview = optional.get();
-        assertThat(testReview.getTitle()).isEqualTo(UPDATED_TITLE);
-        assertThat(testReview.getStartDate()).isEqualTo(UPDATED_START_DATE);
-        assertThat(testReview.getEndDate()).isEqualTo(UPDATED_END_DATE);
-        assertThat(testReview.getClient()).isEqualTo(UPDATED_CLIENT);
-        assertThat(testReview.getProject()).isEqualTo(UPDATED_PROJECT);
-        assertThat(testReview.getRole()).isEqualTo(UPDATED_ROLE);
-        assertThat(testReview.getResponsibilities())
-                .isEqualTo(UPDATED_RESPONSIBILITIES);
-        assertThat(testReview.getRating()).isEqualTo(UPDATED_RATING);
-    }
-
-    @Test
-    @WithUserDetails("dev.user2")
     @Ignore
     public void deleteReview() throws Exception {
         int count = (int) reviewRepository.count();

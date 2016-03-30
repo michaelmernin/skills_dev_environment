@@ -37,15 +37,6 @@ angular.module('etmApp').factory('Review', function ($resource, DateUtils) {
       method: 'POST',
       transformResponse: transformSingle
     },
-    'update': {
-      method:'PUT',
-      transformRequest: function (data) {
-        var newData = {};
-        newData.add("id", data.id);
-        newData.add("peers", data.peers);
-        return angular.toJson(newData);
-      }
-    },
     'engagements': {
       url: 'api/reviews/:id/engagements',
       method: 'GET',

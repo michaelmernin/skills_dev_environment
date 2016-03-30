@@ -64,7 +64,7 @@ public class ReviewResource implements RestResource {
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid new review", result);
         }
-        review.sanitize(true);
+        review.sanitize();
         review = getReviewSvc().startReviewProcess(review);
         return new ResponseEntity<>(review, HttpStatus.CREATED);
     }
@@ -97,22 +97,6 @@ public class ReviewResource implements RestResource {
             .orElseThrow(() -> {
                 return new ResourceNotFoundException("Review " + id + " cannot be found.");
             });
-    }
-
-    /**
-     * PUT  /reviews/:id -> Update a review.
-     */
-    @RequestMapping(value = "/reviews/{id}",
-            method = RequestMethod.PUT,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<Review> update(@Valid @RequestBody Review review, BindingResult result) {
-        log.debug("REST request to update Review : {}", review);
-        if (result.hasErrors()) {
-            throw new InvalidRequestException("Invalid review update", result);
-        }
-        getReviewSvc().update(review);
-        return new ResponseEntity<>(review, HttpStatus.OK);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.perficient.etm.service;
 
 import static org.junit.Assert.assertEquals;
+
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -11,6 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.FeedbackType;
@@ -18,6 +22,8 @@ import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.repository.FeedbackRepository;
+import com.perficient.etm.repository.UserRepository;
+import com.perficient.etm.security.UserDetailsService;
 import com.perficient.etm.service.activiti.ProcessService;
 import com.perficient.etm.utils.SpringMockTest;
 
@@ -38,8 +44,16 @@ public class PeerServiceTest extends SpringMockTest {
     @Mock
     private MailService mailService;
     
+    @Mock
+    private UserRepository userRepository;
+    
+    @Mock
+    private UserDetailsService userDetailsService;
+    
     @InjectMocks
     private PeerService peerSvc;
+    
+    public static final String SYSTEM_USERNAME = "system";
 
     @Before
     public void init(){
@@ -56,11 +70,14 @@ public class PeerServiceTest extends SpringMockTest {
         Feedback peerFeedback = mock(Feedback.class);
         Set<Feedback> feedbacks = new HashSet<Feedback>();
         User peer = mock(User.class);
+        User system = mock(User.class);
         when(peer.getId()).thenReturn(3L);
         when(reviewSvc.findById(reviewId)).thenReturn(review);
         when(feedbackService.addFeedback(review, peer, FeedbackType.PEER)).thenReturn(peerFeedback);
         when(review.getPeers()).thenReturn(peers);
         when(review.getFeedback()).thenReturn(feedbacks);
+        when(userRepository.findOneByLogin(SYSTEM_USERNAME)).thenReturn(Optional.ofNullable(system));
+        when(system.getLogin()).thenReturn("system");
 
         peerSvc.addPeerFeedback(reviewId, peer);
 
@@ -79,6 +96,7 @@ public class PeerServiceTest extends SpringMockTest {
         Long peerId = 2L;
         Review review = mock(Review.class);
         User peer = mock(User.class);
+        User system = mock(User.class);
 
         @SuppressWarnings("serial")
         Set<User> peers = new HashSet<User>() {{ add(peer);}};
@@ -87,6 +105,8 @@ public class PeerServiceTest extends SpringMockTest {
         when(review.getPeers()).thenReturn(peers);
         when(peer.getId()).thenReturn(peerId);
         when(feedbackRepository.findOneByReviewIdAndAuthorId(reviewId, peerId)).thenReturn(Optional.empty());
+        when(userRepository.findOneByLogin(SYSTEM_USERNAME)).thenReturn(Optional.ofNullable(system));
+        when(system.getLogin()).thenReturn("system");
 
         peerSvc.removePeerFeedback(reviewId, peerId);
         verify(reviewSvc).update(review);
@@ -98,6 +118,7 @@ public class PeerServiceTest extends SpringMockTest {
         Long peerId = 2L;
         Review review = mock(Review.class);
         User peer = mock(User.class);
+        User system = mock(User.class);
 
         @SuppressWarnings("serial")
         Set<User> peers = new HashSet<User>() {{ add(peer);}};
@@ -112,6 +133,8 @@ public class PeerServiceTest extends SpringMockTest {
         when(feedbackService.closeFeedback(peerFeedback)).thenReturn(peerFeedback);
         when(peerFeedback.getProcessId()).thenReturn(feedbackProcessId);
         when(processSvc.cancel(feedbackProcessId)).thenReturn(true);
+        when(userRepository.findOneByLogin(SYSTEM_USERNAME)).thenReturn(Optional.ofNullable(system));
+        when(system.getLogin()).thenReturn("system");
 
         peerSvc.removePeerFeedback(reviewId, peerId);
 
