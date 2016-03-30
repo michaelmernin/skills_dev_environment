@@ -9,6 +9,7 @@ angular.module('etmApp').factory('Peer', function ($resource) {
       transformResponse: function (data) {
         data = angular.fromJson(data);
         angular.forEach(data, function (feedback) {
+          feedback.feedbackId = feedback.id;
           angular.extend(feedback, feedback.author);
           delete feedback.author;
         });

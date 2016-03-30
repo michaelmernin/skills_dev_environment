@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('PeersController', function ($scope, $stateParams, $mdDialog, Review, User, Peer, FeedbackStatus) {
+angular.module('etmApp').controller('PeersController', function ($scope, $stateParams, $mdDialog, Review, User, Peer, FeedbackStatus, Feedback) {
   $scope.peers = [];
   var review = {};
   $scope.$parent.$watch('review', function (parentReview) {
@@ -96,7 +96,14 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   }
   
   function openPeers(peers, ev) {
-    console.dir("Open Peers", peers);
+    var confirmOpen = $mdDialog.confirm()
+      .title('Open Peer Feedback')
+      .ariaLabel('Open Peers')
+      .content('Open ' + peers.length + ' peers for this review?')
+      .ok('Open')
+      .cancel('Cancel')
+      .targetEvent(ev);
+    $mdDialog.show(confirmOpen).then(angular.bind(null, angular.forEach, peers, openPeer));
   }
 
   function reopenPeers(peers, ev) {
@@ -107,16 +114,23 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
     var confirmDelete = $mdDialog.confirm()
       .title('Remove Peers from Review')
       .ariaLabel('Remove Peers')
-      .content('Remove ' + peers.length + 'peers from this review?')
+      .content('Remove ' + peers.length + ' peers from this review?')
       .ok('Remove')
       .cancel('Cancel')
       .targetEvent(ev);
-    $mdDialog.show(confirmDelete).then(angular.bind(null, angular.each, peers, deletePeer));
+    $mdDialog.show(confirmDelete).then(angular.bind(null, angular.forEach, peers, deletePeer));
   }
   
   function deletePeer(peer) {
     $scope.peers.splice($scope.peers.indexOf(peer), 1);
     Peer.delete({reviewId: review.id, id: peer.id});
+  }
+  
+  function openPeer(peer) {
+    if (eq(peer.feedbackStatus, FeedbackStatus.NOT_SENT)) {
+      peer.feedbackStatus = FeedbackStatus.OPEN;
+      Feedback.open({reviewId: review.id, id: peer.feedbackId}, {reviewId: review.id, id: peer.feedbackId});
+    }
   }
   
   function has(array, element) {

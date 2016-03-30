@@ -10,6 +10,10 @@ angular.module('etmApp').factory('Feedback', function ($resource, DateUtils) {
         return data;
       }
     },
-    'update': { method:'PUT' }
+    'update': { method:'PUT' },
+    'open': {
+      url: 'api/reviews/:reviewId/feedback/:id/open',
+      method: 'PUT'
+    }
   });
 });
