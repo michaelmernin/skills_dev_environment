@@ -6,7 +6,7 @@
     <userTask id="giveFeedback" name="Give Peer Feedback" activiti:assignee="${Peer}"></userTask>
     <boundaryEvent id="boundarytimer1" name="Timer" attachedToRef="giveFeedback" cancelActivity="false">
       <timerEventDefinition>
-        <timeDuration>PT1M</timeDuration>
+        <timeDuration>P1M</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
     <serviceTask id="peerReviewFeedbackEmailTask" name="Give Feedback Reminder Email" activiti:expression="${mailService.sendPeerReviewReminderEmail()}"></serviceTask>
