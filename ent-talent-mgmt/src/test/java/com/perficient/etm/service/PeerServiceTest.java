@@ -139,7 +139,6 @@ public class PeerServiceTest extends SpringMockTest {
         peerSvc.removePeerFeedback(reviewId, peerId);
 
         verify(processSvc).cancel(feedbackProcessId);
-        verify(feedbackService).closeFeedback(peerFeedback);
         verify(reviewSvc).update(review);
     }
     
@@ -150,7 +149,8 @@ public class PeerServiceTest extends SpringMockTest {
         when(peer.getId()).thenReturn(1L);
         when(peer.getEmail()).thenReturn("peer@test.com");
         when(feedback.getAuthor()).thenReturn(peer);
-        peerSvc.startPeerProcess(feedback);
+        when(feedbackRepository.save(feedback)).thenReturn(feedback);
+        peerSvc.startPeerProcess(feedback);        
     }
     
     @Test(expected=ActivitiProcessInitiationException.class)
