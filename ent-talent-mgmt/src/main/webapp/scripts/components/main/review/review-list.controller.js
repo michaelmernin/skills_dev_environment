@@ -51,14 +51,17 @@ angular.module('etmApp').controller('ReviewListController', function ($scope, $s
         } else if (user.id == this.review.reviewer.id) {
           $state.go('review.edit', {id: reviewId});
         } else {
-          for (var i = 0; i < this.review.peers; ++i) {
+          var matchedPeer = false;
+          for (var i = 0; i < this.review.peers.length; i++) {
             if (user.id == this.review.peers[i].id) {
+              matchedPeer = true;
               $state.go('review.edit', {id: reviewId});
             }
           }
-          $state.go('review.detail', {id: reviewId});
+          if (!matchedPeer) {
+            $state.go('review.detail', {id: reviewId});
+          }
         }
-        $state.go('review.edit', {id: reviewId});
       } else {
         $state.go('review.detail', {id: reviewId});
       }
