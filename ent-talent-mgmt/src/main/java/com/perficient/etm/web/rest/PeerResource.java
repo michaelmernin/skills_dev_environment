@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.perficient.etm.domain.Feedback;
-import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.repository.FeedbackRepository;
@@ -70,7 +69,7 @@ public class PeerResource implements RestResource {
     @Timed
     @JsonView(View.Public.class)
     public List<Feedback> getAll(@PathVariable Long reviewId) {
-        return feedbackRepository.findAllByReviewIdAndFeedbackType(reviewId, FeedbackType.PEER);
+        return feedbackRepository.findAllByReviewIdAndFeedbackType(reviewId);
     }
 
     /**

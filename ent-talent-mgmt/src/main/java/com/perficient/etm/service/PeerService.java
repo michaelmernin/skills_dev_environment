@@ -117,7 +117,6 @@ public class PeerService {
         removePeerFromReview(reviewId, peerId);
         SecurityUtils.runAsSystem(userRepository, ()->{
             feedbackRepository.findOneByReviewIdAndAuthorId(reviewId, peerId)
-                .map(feedbackService::closeFeedback)
                 .map(Feedback::getProcessId)
                 .filter(Objects::nonNull)
                 .map(processSvc::cancel);
