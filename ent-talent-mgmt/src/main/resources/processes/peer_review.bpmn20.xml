@@ -8,31 +8,33 @@
     <userTask id="giveFeedback" name="Give Peer Feedback" activiti:assignee="${Peer}"></userTask>
     <boundaryEvent id="boundarytimer1" name="Timer" attachedToRef="giveFeedback" cancelActivity="false">
       <timerEventDefinition>
-        <timeDuration>PT1M</timeDuration>
+        <timeDuration>P1M</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
     <sequenceFlow id="flow3" sourceRef="boundarytimer1" targetRef="peerReviewFeedbackEmailTask"></sequenceFlow>
     <serviceTask id="peerReviewFeedbackEmailTask" name="Give Feedback Reminder Email" activiti:expression="${mailService.sendPeerReviewReminderEmail()}"></serviceTask>
     <sequenceFlow id="flow4" sourceRef="peerReviewFeedbackEmailTask" targetRef="giveFeedback"></sequenceFlow>
-    <sequenceFlow id="flow5" sourceRef="giveFeedback" targetRef="peerFeedbackSubmitted"></sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="giveFeedback" targetRef="setPeerFeedbackReady"></sequenceFlow>
+    <serviceTask id="setPeerFeedbackReady" name="Set Feedback to Ready" activiti:expression="${feedbackService.setStatusById(Feedback,'READY')}"></serviceTask>
+    <sequenceFlow id="flow6" sourceRef="setPeerFeedbackReady" targetRef="peerFeedbackSubmitted"></sequenceFlow>
     <serviceTask id="peerFeedbackSubmitted" name="Peer Feedback Submitted" activiti:expression="${mailService.sendPeerReviewSubmittedEmail()}"></serviceTask>
-    <sequenceFlow id="flow6" sourceRef="peerFeedbackSubmitted" targetRef="peerFeedbackReady"></sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="peerFeedbackSubmitted" targetRef="peerFeedbackReady"></sequenceFlow>
     <userTask id="peerFeedbackReady" name="Peer Feedback Ready" activiti:assignee="1"></userTask>
-    <sequenceFlow id="flow7" sourceRef="peerFeedbackReady" targetRef="peerFeedbackGood"></sequenceFlow>
+    <sequenceFlow id="flow8" sourceRef="peerFeedbackReady" targetRef="peerFeedbackGood"></sequenceFlow>
     <exclusiveGateway id="peerFeedbackGood" name="Is Peer Feedback Good?"></exclusiveGateway>
-    <sequenceFlow id="flow8" sourceRef="peerFeedbackGood" targetRef="end">
+    <sequenceFlow id="flow9" sourceRef="peerFeedbackGood" targetRef="end">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "TRUE"}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow9" sourceRef="peerFeedbackGood" targetRef="reviewRejected">
+    <sequenceFlow id="flow10" sourceRef="peerFeedbackGood" targetRef="reviewRejected">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "FALSE"}]]></conditionExpression>
     </sequenceFlow>
     <userTask id="reviewRejected" name="Review Rejected" activiti:assignee="1"></userTask>
-    <sequenceFlow id="flow10" sourceRef="reviewRejected" targetRef="peerFeebackReopen"></sequenceFlow>
+    <sequenceFlow id="flow11" sourceRef="reviewRejected" targetRef="peerFeebackReopen"></sequenceFlow>
     <exclusiveGateway id="peerFeebackReopen" name="Reopen peer feedback?"></exclusiveGateway>
-    <sequenceFlow id="flow11" sourceRef="peerFeebackReopen" targetRef="giveFeedback">
+    <sequenceFlow id="flow12" sourceRef="peerFeebackReopen" targetRef="giveFeedback">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "TRUE"}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow12" sourceRef="peerFeebackReopen" targetRef="peerFeedbackReady">
+    <sequenceFlow id="flow13" sourceRef="peerFeebackReopen" targetRef="peerFeedbackReady">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "FALSE"}]]></conditionExpression>
     </sequenceFlow>
     <endEvent id="end" name="End"></endEvent> 

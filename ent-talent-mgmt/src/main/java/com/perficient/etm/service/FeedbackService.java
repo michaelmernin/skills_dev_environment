@@ -2,6 +2,7 @@ package com.perficient.etm.service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -60,6 +61,14 @@ public class FeedbackService extends AbstractBaseService {
     public Feedback closeFeedback(Feedback feedback) {
         feedback.setFeedbackStatus(FeedbackStatus.CLOSED);
         return feedbackRepository.save(feedback);
+    }
+    
+    public Feedback setStatusById(Long id, FeedbackStatus status) {
+        return Optional.ofNullable(feedbackRepository.getOne(id))
+            .map(f -> {
+                f.setFeedbackStatus(status);
+                return feedbackRepository.save(f);
+            }).orElse(null);
     }
 
     private FeedbackStatus initialFeedbackStatus(FeedbackType type) {

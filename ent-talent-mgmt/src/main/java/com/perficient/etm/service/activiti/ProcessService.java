@@ -86,6 +86,8 @@ public class ProcessService {
      */
     public String initiatePeerReview(Feedback feedback)  {
         Map<String, Object> variables = new HashMap<>();
+        variables.put(ProcessConstants.REVIEW_VARIABLE, feedback.getReview().getId());
+        variables.put(ProcessConstants.FEEDBACK_VARIABLE, feedback.getId());
         variables.put(ProcessConstants.PEER_VARIABLE, feedback.getAuthor().getId());
         variables.put(ProcessConstants.PEER_EMAIL_VARIABLE, feedback.getAuthor().getEmail());
         try{
