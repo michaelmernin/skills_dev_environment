@@ -31,7 +31,7 @@ spring:
         baseUrl: http://localhost:8080
 
     thymeleaf:
-        mode: XHTML
+        mode: LEGACYHTML5
         cache: false
 
 metrics:
