@@ -1,0 +1,19 @@
+@import 'settings';
+@import 'foundation';
+
+.etm-email-header{
+  background-color: $primary-color;
+  .etm-email-header-column{
+    padding-top: 16px;
+  }
+  .etm-email-header-h1{
+    color: $white;
+    margin-bottom: 0px;
+  }
+}
+.etm-email-user{
+  color: $primary-color;
+}
+.etm-email-greeting{
+  padding-top: 16px;
+}
