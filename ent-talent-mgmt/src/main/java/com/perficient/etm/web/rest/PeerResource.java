@@ -21,10 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.repository.FeedbackRepository;
+import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.service.PeerService;
+import com.perficient.etm.service.ReviewService;
+import com.perficient.etm.service.UserService;
 import com.perficient.etm.web.view.View;
 
 /**
@@ -41,7 +45,10 @@ public class PeerResource implements RestResource {
     
     @Inject
     private FeedbackRepository feedbackRepository;
-
+    
+    @Inject
+    private UserService userService;
+    
     /**
      * POST  /reviews/:reviewId/peers -> Add peers to a review
      * @throws URISyntaxException
@@ -50,14 +57,23 @@ public class PeerResource implements RestResource {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    @Transactional
-    public ResponseEntity<Void> save(@PathVariable Long reviewId, @RequestBody User peer, BindingResult result) throws URISyntaxException {
+    @JsonView(View.Public.class)
+    public Feedback save(@PathVariable Long reviewId, @PathVariable Long peerId, BindingResult result) throws URISyntaxException {
         log.debug("REST request to update peers for Review Id : {}", reviewId);
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid review update", result);
         }
+        User peer = userService.getUser(peerId);
         peerSvc.addPeerFeedback(reviewId, peer);
-        return ResponseEntity.created(new URI("/api/reviews/" + reviewId + "/peers/" + peer.getId())).build();
+        List<Feedback> feedbacks = feedbackRepository.findAllByReviewIdAndFeedbackType(reviewId);
+        Feedback newFeedback = new Feedback();
+        for (int i = 0; i < feedbacks.size(); i++) {
+            Feedback compareFeedback = feedbacks.get(i);
+            if (compareFeedback.getAuthor().getId() == peerId) {
+                newFeedback = compareFeedback;
+            }
+        }
+        return newFeedback;
     }
     
     /**
