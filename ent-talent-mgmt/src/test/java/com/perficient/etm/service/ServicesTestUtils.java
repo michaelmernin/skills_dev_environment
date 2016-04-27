@@ -112,6 +112,8 @@ public class ServicesTestUtils {
         User[] users = createMockReviewUsers();
         Feedback feedback = Mockito.mock(Feedback.class);
         Mockito.when(feedback.getAuthor()).thenReturn(users[1]);
+        Mockito.when(feedback.getReview()).thenReturn(review);
+        Mockito.when(review.getId()).thenReturn(1L);
         return processSvc.initiatePeerReview(feedback);
     }
 

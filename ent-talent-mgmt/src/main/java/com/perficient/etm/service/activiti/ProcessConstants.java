@@ -6,6 +6,8 @@ public final class ProcessConstants {
     }
 
     public static final String DIRECTOR_VARIABLE = "Director";
+    
+    public static final String FEEDBACK_VARIABLE = "Feedback";
 
     public static final String PEER_EMAIL_VARIABLE = "PeerEmail";
 

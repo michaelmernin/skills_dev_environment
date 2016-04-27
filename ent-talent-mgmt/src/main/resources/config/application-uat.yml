@@ -38,9 +38,17 @@ spring:
 
     mail:
         baseUrl: http://localhost:8080
+        host: localhost
+        port: 1025
+        user:
+        password:
+        protocol: smtp
+        tls: false
+        auth: false
+        from: etm@localhost
 
     thymeleaf:
-        mode: XHTML
+        mode: LEGACYHTML5
         cache: true
 
 metrics:
