@@ -25,16 +25,7 @@
     <sequenceFlow id="flow9" sourceRef="peerFeedbackGood" targetRef="end">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "TRUE"}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow10" sourceRef="peerFeedbackGood" targetRef="reviewRejected">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "FALSE"}]]></conditionExpression>
-    </sequenceFlow>
-    <userTask id="reviewRejected" name="Review Rejected" activiti:assignee="1"></userTask>
-    <sequenceFlow id="flow11" sourceRef="reviewRejected" targetRef="peerFeebackReopen"></sequenceFlow>
-    <exclusiveGateway id="peerFeebackReopen" name="Reopen peer feedback?"></exclusiveGateway>
-    <sequenceFlow id="flow12" sourceRef="peerFeebackReopen" targetRef="giveFeedback">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "TRUE"}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow13" sourceRef="peerFeebackReopen" targetRef="peerFeedbackReady">
+    <sequenceFlow id="flow10" sourceRef="peerFeedbackGood" targetRef="giveFeedback">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "FALSE"}]]></conditionExpression>
     </sequenceFlow>
     <endEvent id="end" name="End"></endEvent> 
