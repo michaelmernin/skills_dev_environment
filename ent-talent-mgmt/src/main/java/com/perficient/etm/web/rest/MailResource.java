@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.dumbster.smtp.MailMessage;
 import com.dumbster.smtp.SmtpServer;
+import com.dumbster.smtp.mailstores.EMLMailStore;
+import com.perficient.etm.domain.User;
+import com.perficient.etm.repository.FeedbackRepository;
+import com.perficient.etm.repository.UserRepository;
+import com.perficient.etm.service.MailService;
 // TODO - remove this resource from production, only available in lower environments
 @RestController
 @RequestMapping("/api")
@@ -34,11 +40,17 @@ public class MailResource {
     private final Logger log = LoggerFactory.getLogger(ReviewTypeResource.class);
     private List<Integer> messageList = new ArrayList<Integer>();
 
-    @Inject
+    @Autowired(required=false)
     protected SmtpServer smtpServer;
 
     @Inject
     JavaMailSenderImpl mailsender;
+    
+    @Inject
+    MailService mailService;
+    
+    @Inject
+    private UserRepository userRepository;
 
     /**
      * GET /mail/messages -> get all the mail messages.
@@ -86,8 +98,8 @@ public class MailResource {
     public ResponseEntity<SimpleMailMessage> SendTestMail() {
         log.debug("REST request to send test mail");
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("test@sender.com");
-        message.setTo("test@receiver.com");
+        message.setFrom("donotreply@perficient.com");
+        message.setTo("ahmed.musallam@perficient.com");
         message.setSubject("test subject");
         message.setText(
                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s");
@@ -124,7 +136,26 @@ public class MailResource {
         mailsender.send(message);
         return new ResponseEntity<Message>(HttpStatus.OK);
     }
+    
+ // TESTING PEER SERVICE
+    /**
+     * POST /mail/test -> send a new test email.
+     */
+    @RequestMapping(value = "/mail/peer/{peerId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<String> SendTestMail(@PathVariable Long peerId) {
+        log.debug("REST request to send test email to peer");
+        User peer = userRepository.findOne(peerId);
+        String peerFirstName = peer.getFirstName();
+        peerFirstName = (peerFirstName == null)? "User": peerFirstName;
+        mailService.sendPeerReviewFeedbackRequestedEmail(peer.getEmail(), peerFirstName, "Annual Review", "Test User");
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    // END TESTING EMAIL SERVICE
+
 }
+
 
 class Message{
     String to=null;

@@ -96,7 +96,7 @@ public class PeerService {
         }
         String email = (feedback.getAuthor() == null)? null : feedback.getAuthor().getEmail();
         if(email != null){
-            mailService.sendPeerReviewFeedbackRequestedEmail(email);
+          //  mailService.sendPeerReviewFeedbackRequestedEmail(email);
         }
         return feedback;
     }

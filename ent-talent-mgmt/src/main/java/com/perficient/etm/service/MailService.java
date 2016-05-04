@@ -1,6 +1,9 @@
 package com.perficient.etm.service;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -10,7 +13,9 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
-import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.User;
 
 /**
@@ -59,6 +63,14 @@ public class MailService {
         this.from = env.getProperty("spring.mail.from");
     }
 
+    /**
+     * Uses 
+     * @param to
+     * @param subject
+     * @param content
+     * @param isMultipart
+     * @param isHtml
+     */
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         log.debug("Send e-mail[multipart '{}' and html '{}'] to '{}' with subject '{}'",
@@ -73,31 +85,81 @@ public class MailService {
             message.setSubject(subject);
             message.setText(content, isHtml);
             javaMailSender.send(mimeMessage);
-            log.debug("Sent e-mail to User '{}'", to);
+            log.debug("Sent e-mail to '{}'", to);
         } catch (Exception e) {
             log.warn("E-mail could not be sent to user '{}', exception is: {}", to, e.getMessage());
         }
     }
-
+    
+    /**
+     * Sends an email to ONLY to an existing user in the userRepository
+     * @param recipientEmail the 'to' email
+     * @param subject Subject of the Email or Spring Message in MessageSource
+     * @param EmailTemplate Email template name for thymleafe template engine to use
+     * @param locale 
+     * @throws MessagingException
+     */
+    public void sendEmail(final String recipientEmail,String subject, String EmailTemplate, Map<String, Object> contextMap){
+        User recipientUser = userService.getUserByEmail(recipientEmail);
+        // if the recipient user does not exist, return.
+       Optional<User> optUser = Optional.ofNullable(recipientUser);
+       if(!optUser.isPresent()){
+    	   log.error("Cannot send email to {}, no user has such email", recipientEmail);
+           return;
+       }
+       optUser.ifPresent(user -> {
+    	   // adds some user info (first name, last name, title ...etc) to the context
+           Locale locale = Locale.forLanguageTag(user.getLangKey());
+           Context context = new Context(locale);
+           // add contextVars to context
+           contextMap.forEach((key, value) -> context.setVariable(key, value));
+           addUserInfoToContext(context, user);
+           // Create the HTML body using Thymeleaf
+           final String htmlContent = this.templateEngine.process(EmailTemplate, context);
+           // try to resolve 
+           String subj="";
+           try{
+        	   subj = messageSource.getMessage(subject, null, locale);
+           }catch(NoSuchMessageException e){
+        	   subj = subject;
+           }finally{
+        	   sendEmail(recipientEmail, subj, htmlContent, false, true);
+           }
+       });
+    }
+    
+    /**
+     * Helper method to add info of user to context
+     * @param context
+     * @param user
+     * @return
+     */
+    private Context addUserInfoToContext(Context context, User user){
+        context.setVariable(EmailConstants.FIRST_NAME, user.getFirstName());
+        context.setVariable(EmailConstants.LAST_NAME, user.getLastName());
+        context.setVariable(EmailConstants.EMAIL, user.getEmail());
+        context.setVariable(EmailConstants.LOGIN, user.getLogin());
+        context.setVariable(EmailConstants.TITLE, user.getTitle());
+        context.setVariable(EmailConstants.TARGET_TITLE, user.getTargetTitle());
+        return context;
+    }
+   
     @Async
-    public void sendActivationEmail(User user, String baseUrl) {
-        log.debug("Sending activation e-mail to '{}'", user.getEmail());
-        Locale locale = Locale.forLanguageTag(user.getLangKey());
-        Context context = new Context(locale);
-        context.setVariable("user", user);
-        context.setVariable("baseUrl", baseUrl);
-        String content = templateEngine.process("activationEmail", context);
-        String subject = messageSource.getMessage("email.activation.title", null, locale);
-        sendEmail(user.getEmail(), subject, content, false, true);
+    public void sendActivationEmail(String email, String activationUrl) {
+    	log.debug("Sending activation e-mail to '{}'", email);
+        Map<String, Object> contextMap = new HashMap<String, Object>();
+        // adding vars to map -  those will be availabe to thymeleaf template
+        contextMap.put(EmailConstants.ACTIVATION_URL, activationUrl);
+        sendEmail(email, EmailConstants.SUBJECT_ACTIVATION, EmailConstants.TEMPALTE_ACTIVATION, contextMap);
     }
 
     @Async
-    public void sendAnnualProcessStartedEmail() {
+    public void sendAnnualProcessStartedEmail(String email) {
         log.debug("Sending annual review process started e-mail to '{}'");
-        Locale locale = Locale.forLanguageTag("en-us");
-        Context context = new Context(locale);
-        String content = templateEngine.process("reviewStartedEmail", context);
-        sendEmail("Test@test.org", "Test Subject", content, false, true);
+        Map<String, Object> contextMap = new HashMap<String, Object>();
+        // adding vars to map -  those will be availabe to thymeleaf template
+        // contextMap.put(EmailConstants.ACTIVATION_URL, activationUrl);
+        sendEmail(email, EmailConstants.SUBJECT_ANNULA_REVIEW_STARTED, EmailConstants.TEMPALTE_ANNUAL_REVIEW_STARTED, contextMap);
     }
 
     @Async
@@ -107,18 +169,23 @@ public class MailService {
         Context context = new Context(locale);
         String content = templateEngine.process("peerReviewReminderEmail", context);
 
-        sendEmail("Test@test.org", "Test Subject", content, false, true);
+        sendEmail("prft.etm@gmail.com", "Test Subject", content, false, true);
     }
     
     @Async
-    public void sendPeerReviewFeedbackRequestedEmail(String email) {
+    public void sendPeerReviewFeedbackRequestedEmail(String peerEmail,String peerFirstName, String reviewType, String reviewee) {
         log.debug("Sending peer review requested e-mail to '{}'");
+        if(peerEmail== null || peerEmail.equals("")){
+        	return;
+        }
         Locale locale = Locale.forLanguageTag("en-us");
-        
         Context context = new Context(locale);
+        context.setVariable("peerFirstName", peerFirstName);
+        context.setVariable("reviewType", reviewType);
+        context.setVariable("reviewee", reviewee);
         String content = templateEngine.process("peerReviewFeedbackRequested", context);
 
-        sendEmail(email, "ETM Feedback", content, false, true);
+        sendEmail(peerEmail, "ETM Feedback Requested", content, false, true);
     }
     
     @Async
@@ -128,47 +195,9 @@ public class MailService {
         Context context = new Context(locale);
         String content = templateEngine.process("peerReviewFeedbackSubmitted", context);
 
-        sendEmail("Test@test.org", "Test Subject", content, false, true);
+        sendEmail("prft.etm@gmail.com", "Test Subject", content, false, true);
     }
     
-    public void sendEMail(final String recipientEmail,String subject, String EmailTemplate, final Locale locale)
-                    throws MessagingException {
-        User recipientUser = userService.getUserByEmail(recipientEmail);
-        // default recipient name
-        String recipientFirst = "";
-        String recipientLast = "";
-        // if the recipient user does not exist, return.
-        if(recipientUser==null){
-            return;
-        }
-        else{
-            String first = recipientUser.getFirstName();
-            String last = recipientUser.getLastName();
-            recipientFirst = (first == null)? "":first;
-            recipientLast = (last == null)? "":last;
-        }
-        // Prepare the evaluation context
-        final Context ctx = new Context(locale);
-        ctx.setVariable("recipient_firstname", recipientFirst);
-        ctx.setVariable("recipient_lastname", recipientLast);
-
-        // Prepare message using a Spring helper
-        final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-        message.setSubject(subject);
-        message.setFrom("ETM@perficient.com");
-        message.setTo(recipientEmail);
-
-        // Create the HTML body using Thymeleaf
-        final String htmlContent = this.templateEngine.process(EmailTemplate, ctx);
-        message.setText(htmlContent, true); // true = isHtml
-
-        // Add the inline image, referenced from the HTML code as
-        // "cid:${imageResourceName}"
-       // final InputStreamSource imageSource = new ByteArrayResource(imageBytes);
-       // message.addInline(imageResourceName, imageSource, imageContentType);
-
-        // Send mail
-        javaMailSender.send(mimeMessage);
-    }
+    
+    
 }
