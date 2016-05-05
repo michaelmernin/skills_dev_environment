@@ -128,6 +128,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "start_date")
     private LocalDate startDate;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<SkillRanking> skillRanking;
+    
     public Long getId() {
         return id;
     }
@@ -292,6 +296,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setPersistentTokens(Set<PersistentToken> persistentTokens) {
         this.persistentTokens = persistentTokens;
     }
+    
+    public Set<SkillRanking> getSkillRanking() {
+        return skillRanking;
+    }
+
+    public void setSkillRanking(Set<SkillRanking> skillRanking) {
+        this.skillRanking = skillRanking;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -329,4 +341,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
                 ", lastName='" + lastName + '\'' +
                 "}";
     }
+
+  
 }
