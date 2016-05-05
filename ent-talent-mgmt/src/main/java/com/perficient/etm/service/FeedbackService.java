@@ -16,6 +16,7 @@ import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Rating;
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.TodoResult;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.RatingRepository;
@@ -52,7 +53,7 @@ public class FeedbackService extends AbstractBaseService {
             if (feedback.getProcessId() == null) {
                 peerService.startPeerProcess(feedback);
             } else {
-                peerService.completeTaskInFeedbackProcess(feedback, false);
+                peerService.completeTaskInFeedbackProcess(feedback, TodoResult.REJECT);
             }
         }
         return feedback;

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.TodoResult;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.MissingReviewInfoException;
@@ -100,7 +101,7 @@ public class ProcessService {
         }
     }
 
-    public Feedback completePeerReviewTask(Feedback feedback, boolean result) {
+    public Feedback completePeerReviewTask(Feedback feedback, TodoResult result) {
         String pId = feedback.getProcessId();
         ProcessInstance processInstance = runtimeSvc.createProcessInstanceQuery().variableValueEquals("processId", pId)
             .singleResult();
@@ -111,9 +112,9 @@ public class ProcessService {
         return feedback;
     }
     
-    private Map<String, Object> getResultVariableMap(boolean result){
+    private Map<String, Object> getResultVariableMap(TodoResult result) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put(ProcessConstants.RESULT_VARIABLE, result ? "TRUE" : "FALSE");
+        variables.put(ProcessConstants.RESULT_VARIABLE, result.getResult());
         return variables;
     }
 }

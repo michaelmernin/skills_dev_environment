@@ -142,7 +142,7 @@ public class AnnualReviewTest extends SpringAppTest {
         t = completeAndGetNextTask(t, processInstance.getId());
         assertNotNullAndAsignee(t,"Craig");
         //Fail the reviewers review
-        t = completeWithAndGetNextTask(t, TodoResult.REJECT.getName(), processInstance.getId());
+        t = completeWithAndGetNextTask(t, TodoResult.REJECT, processInstance.getId());
 
         //flow has to go back to initial reviewer
         assertNotNullAndAsignee(t,"Alex");
@@ -150,13 +150,13 @@ public class AnnualReviewTest extends SpringAppTest {
     }
 
     /**
-     * Completes the current task with RESULT variable as SUCCESS
+     * Completes the current task with RESULT variable as TRUE
      * by calling the TaskService.complete method
      * @param t The Task object to complete
      */
     @SuppressWarnings("unused")
     private void completeATaskWithSucess(Task t) {
-        completeATaskWith(t, TodoResult.SUBMIT.getName());
+        completeATaskWith(t, TodoResult.SUBMIT);
     }
 
     /**
@@ -165,23 +165,23 @@ public class AnnualReviewTest extends SpringAppTest {
      * @param t The Task object to complete
      * @param result The String result to set in the complete variables
      */
-    private void completeATaskWith(Task t, String result) {
+    private void completeATaskWith(Task t, TodoResult result) {
         Map<String, Object> properties = new HashMap<>();
-        properties.put(ProcessConstants.RESULT_VARIABLE, result);
+        properties.put(ProcessConstants.RESULT_VARIABLE, result.getResult());
         taskSvc.complete(t.getId(), properties);
     }
 
     /**
      * Completes the current Task t if the task is not null and retrieves the
      * task where the process with processInstanceId landed. The task will
-     * be completed with a RESULT = SUCCESS
+     * be completed with a RESULT = TRUE
      * @param t The Task to complete if necessary
      * @param processInstanceId The String process Instance id of the process
      * @return Task object if the process landed on a next task. Null if the process
      * ended
      */
     private Task completeAndGetNextTask(Task t, String processInstanceId) {
-        return completeWithAndGetNextTask(t,TodoResult.SUBMIT.getName(), processInstanceId);
+        return completeWithAndGetNextTask(t,TodoResult.SUBMIT, processInstanceId);
     }
 
     /**
@@ -194,9 +194,10 @@ public class AnnualReviewTest extends SpringAppTest {
      * @return Task object if the process landed on a next task. Null if the process
      * ended
      */
-    private Task completeWithAndGetNextTask(Task t, String result, String processInstanceId) {
-        if (t != null)
-            completeATaskWith(t,result);
+    private Task completeWithAndGetNextTask(Task t, TodoResult result, String processInstanceId) {
+        if (t != null) {
+            completeATaskWith(t, result);
+        }
 
         //Reviewers Review
         t = taskSvc.createTaskQuery().processInstanceId(processInstanceId).singleResult();

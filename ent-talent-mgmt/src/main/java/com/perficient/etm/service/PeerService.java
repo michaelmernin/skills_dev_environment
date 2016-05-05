@@ -13,6 +13,7 @@ import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.TodoResult;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.repository.FeedbackRepository;
@@ -101,7 +102,7 @@ public class PeerService {
         return feedback;
     }
     
-    public Feedback completeTaskInFeedbackProcess(Feedback feedback, boolean result) {
+    public Feedback completeTaskInFeedbackProcess(Feedback feedback, TodoResult result) {
         processSvc.completePeerReviewTask(feedback, result);
         return feedback;
     }

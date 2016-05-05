@@ -9,6 +9,8 @@ import org.activiti.engine.task.TaskQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.perficient.etm.domain.TodoResult;
+
 /**
  * Service to manage tasks in the Activiti engine.
  *
@@ -69,9 +71,9 @@ public class TasksService {
      *            The String result of the task that will be used to continue in
      *            the workflow process.
      */
-    public void complete(String taskId, String result) {
+    public void complete(String taskId, TodoResult result) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put(ProcessConstants.RESULT_VARIABLE, result);
+        variables.put(ProcessConstants.RESULT_VARIABLE, result.getResult());
         tasksService.complete(taskId, variables);
     }
 }

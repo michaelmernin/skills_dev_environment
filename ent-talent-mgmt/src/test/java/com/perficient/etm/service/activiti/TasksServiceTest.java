@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.Todo;
+import com.perficient.etm.domain.TodoResult;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.service.ServicesTestUtils;
@@ -63,8 +64,7 @@ public class TasksServiceTest extends SpringAppTest {
     public void testCompleteTask() {
         List<Task> tasks = taskSvc.getUserTasks(2L);
 
-        taskSvc.complete(tasks.get(0).getId(), "COMPLETE");
-
+        taskSvc.complete(tasks.get(0).getId(), TodoResult.SUBMIT);
     }
 
     @Test

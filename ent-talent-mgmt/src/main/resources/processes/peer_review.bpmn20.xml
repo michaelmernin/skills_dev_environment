@@ -23,10 +23,10 @@
     <sequenceFlow id="flow8" sourceRef="peerFeedbackReady" targetRef="peerFeedbackGood"></sequenceFlow>
     <exclusiveGateway id="peerFeedbackGood" name="Is Peer Feedback Good?"></exclusiveGateway>
     <sequenceFlow id="flow9" sourceRef="peerFeedbackGood" targetRef="end">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "TRUE"}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow10" sourceRef="peerFeedbackGood" targetRef="giveFeedback">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == "FALSE"}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == false}]]></conditionExpression>
     </sequenceFlow>
     <endEvent id="end" name="End"></endEvent> 
   </process>

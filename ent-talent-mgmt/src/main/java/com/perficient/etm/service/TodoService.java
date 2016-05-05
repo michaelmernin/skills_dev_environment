@@ -49,7 +49,7 @@ public class TodoService extends AbstractBaseService {
     }
     
     public void complete(TodoActionDTO action) {
-        tasksService.complete(action.getTodoId(), action.getResult().getName());
+        tasksService.complete(action.getTodoId(), action.getResult());
     }
     
     private Todo getReviewActiveTodo(Long reviewId, User user) {

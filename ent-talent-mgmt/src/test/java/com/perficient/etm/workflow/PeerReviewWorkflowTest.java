@@ -3,14 +3,12 @@ package com.perficient.etm.workflow;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -20,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dumbster.smtp.MailMessage;
 import com.dumbster.smtp.SmtpServer;
+import com.perficient.etm.domain.TodoResult;
 import com.perficient.etm.service.activiti.ProcessConstants;
 import com.perficient.etm.utils.SpringAppTest;
 
@@ -46,9 +45,9 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
         return variables;
     }
 
-    private Map<String, Object> getResultVariableMap(boolean result){
+    private Map<String, Object> getResultVariableMap(TodoResult result) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put(ProcessConstants.RESULT_VARIABLE, result ? "TRUE" : "FALSE");
+        variables.put(ProcessConstants.RESULT_VARIABLE, result.getResult());
         return variables;
     }
     
@@ -70,7 +69,7 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
         assertEquals("Asignee should be system user when feedback is ready", 
                 t.getAssignee(), "1");
         
-        taskService.complete(t.getId(),getResultVariableMap(true));
+        taskService.complete(t.getId(),getResultVariableMap(TodoResult.APPROVE));
         t = getCurrentTaskForProcess(processInstance);
         assertNull("Process should have ended",t);
     }
@@ -94,7 +93,7 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
         assertEquals("Asignee should be system user when feedback is ready", 
                 t.getAssignee(), "1");
         
-        taskService.complete(t.getId(), getResultVariableMap(false));
+        taskService.complete(t.getId(), getResultVariableMap(TodoResult.APPROVE));
         t = getCurrentTaskForProcess(processInstance);
         assertNotNull("Process should have come back to submit feedback",t);
         assertEquals("task should be assigned to Author",t.getAssignee(), "Alex");
