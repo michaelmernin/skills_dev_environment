@@ -37,6 +37,7 @@
     <sequenceFlow id="SequenceFlow_10" sourceRef="ReviewerJointApproval" targetRef="JointApprovalParallelJoin"></sequenceFlow>
     <sequenceFlow id="SequenceFlow_11" sourceRef="RevieweeJointApproval" targetRef="JointApprovalParallelJoin"></sequenceFlow>
     <parallelGateway id="JointApprovalParallelJoin"></parallelGateway>
+    <sequenceFlow id="SequenceFlow_12" sourceRef="JointApprovalParallelJoin" targetRef="JointApprovalExclusiveGateway"></sequenceFlow>
     <exclusiveGateway id="JointApprovalExclusiveGateway" name="Review Accepted?"></exclusiveGateway>
     <sequenceFlow id="JointAcceptFlow" name="yes" sourceRef="JointApprovalExclusiveGateway" targetRef="GeneralManagerApproval">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${REVIEWER_RESULT == true and REVIEWEE_RESULT == true}]]></conditionExpression>
@@ -45,7 +46,7 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${REVIEWER_RESULT == false or REVIEWEE_RESULT == false}]]></conditionExpression>
     </sequenceFlow>
     <userTask id="GeneralManagerApproval" name="General Manager Approval" activiti:assignee="${GeneralManager}"></userTask>
-    <sequenceFlow id="SequenceFlow_12" sourceRef="GeneralManagerApproval" targetRef="GeneralManagerApprovalExclusiveGateway"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow_13" sourceRef="GeneralManagerApproval" targetRef="GeneralManagerApprovalExclusiveGateway"></sequenceFlow>
     <exclusiveGateway id="GeneralManagerApprovalExclusiveGateway" name="Review Accepted?"></exclusiveGateway>
     <sequenceFlow id="GeneralManagerAcceptFlow" name="yes" sourceRef="GeneralManagerApprovalExclusiveGateway" targetRef="End">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == true}]]></conditionExpression>

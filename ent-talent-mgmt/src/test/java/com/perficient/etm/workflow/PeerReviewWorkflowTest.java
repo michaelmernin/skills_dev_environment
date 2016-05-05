@@ -93,7 +93,7 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
         assertEquals("Asignee should be system user when feedback is ready", 
                 t.getAssignee(), "1");
         
-        taskService.complete(t.getId(), getResultVariableMap(TodoResult.APPROVE));
+        taskService.complete(t.getId(), getResultVariableMap(TodoResult.REJECT));
         t = getCurrentTaskForProcess(processInstance);
         assertNotNull("Process should have come back to submit feedback",t);
         assertEquals("task should be assigned to Author",t.getAssignee(), "Alex");
