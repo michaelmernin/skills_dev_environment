@@ -153,6 +153,13 @@ public class MailService {
         sendEmail(email, EmailConstants.SUBJECT_ACTIVATION, EmailConstants.TEMPALTE_ACTIVATION, contextMap);
     }
 
+    // PLEASE REMOVE ME WHEN sendAnnualProcessStartedEmail(String email) is finished and hooked up in activiti process
+    @Async
+    public void sendAnnualProcessStartedEmail() {
+        log.debug("THIS METHOD ProcessService.sendAnnualProcessStartedEmail NEEDS TO BE REMOVED");
+        return;
+    }
+    
     @Async
     public void sendAnnualProcessStartedEmail(String email) {
         log.debug("Sending annual review process started e-mail to '{}'");
