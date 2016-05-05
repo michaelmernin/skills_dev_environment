@@ -123,7 +123,12 @@ public class SkillRankingHistory implements Serializable{
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        int i = 1;
+        i = i*7+(id==null ? 0 :id.intValue());
+        i = i*13+(rank==null ? 0 :rank);
+        i = i*19+(datetime==null ? 0 :datetime.hashCode());
+        i = i*23+(user==null ? 0 :user.hashCode());
+        return i;
     }
 
     @Override

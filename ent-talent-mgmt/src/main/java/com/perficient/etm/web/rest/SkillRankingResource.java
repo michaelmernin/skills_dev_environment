@@ -1,7 +1,5 @@
 package com.perficient.etm.web.rest;
 
-import java.util.Optional;
-
 import javax.inject.Inject;
 
 import org.joda.time.DateTimeZone;
@@ -23,7 +21,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.SkillRanking;
 import com.perficient.etm.domain.SkillRankingHistory;
 import com.perficient.etm.domain.User;
-import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.SkillRankingHistoryRepository;
 import com.perficient.etm.repository.SkillRankingRepository;
 import com.perficient.etm.service.UserService;

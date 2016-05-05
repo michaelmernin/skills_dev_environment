@@ -19,7 +19,9 @@ import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -44,6 +46,7 @@ public class SkillRanking implements Serializable {
     private Integer rank;
     
     @ManyToOne
+    @JsonBackReference
     private Skill skill;
     
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
@@ -100,7 +103,6 @@ public class SkillRanking implements Serializable {
         this.datetime = date;
     }
 
-    @JsonIgnore
     public Skill getSkill() {
         return skill;
     }
@@ -128,7 +130,12 @@ public class SkillRanking implements Serializable {
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        int i = 1;
+        i = i*11+(id==null ? 0 :id.intValue());
+        i = i*17+(rank==null ? 0 :rank);
+        i = i*13+(datetime==null ? 0 :datetime.hashCode());
+        i = i*31+(user==null ? 0 :user.hashCode());
+        return i;
     }
 
     @Override
@@ -138,6 +145,17 @@ public class SkillRanking implements Serializable {
                 ", Rank='" + rank + "'" +
                 ", Date='" + datetime + "'" +
                 ", User='" + user + "'" +
+                '}';
+    }
+    
+    public String toJsonDbWriteString() {
+        return "{\n" +
+                "\"id\" : " + id + ",\n" +
+                "\"rank\" : " + rank + ",\n" +
+                "\"date\" : \"" + datetime + "\",\n" +
+                "\"user\" : {\n\"id\" : " + "3" + ",\n}\n" +
+                "\"skill\" : {\n\"id\" : " + skill.getId() +
+                "\n}\n" +
                 '}';
     }
 }
