@@ -28,4 +28,8 @@ public final class ProcessConstants {
     public static final String REVIEWEE_VARIABLE = "Reviewee";
 
     public static final String REVIEWER_VARIABLE = "Reviewer";
+    
+    public static final String REVIEWEE_FEEDBACK_VARIABLE = "RevieweeFeedback";
+    
+    public static final String REVIEWER_FEEDBACK_VARIABLE = "ReviewerFeedback";
 }

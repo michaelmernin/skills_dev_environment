@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
+import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewStatus;
@@ -82,7 +85,8 @@ public class ReviewService extends AbstractBaseService {
             review.setProcessId(id);
             review = reviewRepository.save(review);
             processSvc.addReviewId(id, review.getId());
-            createFeedback(review);
+            Pair<Long, Long> ids = createFeedback(review);
+            processSvc.addFeedbackIds(id, ids.getLeft(), ids.getRight());
         } catch (Exception e) {
             getLog().warn("Exception while launching the review process in activiti",e);
             throw new ActivitiProcessInitiationException(e);
@@ -99,11 +103,15 @@ public class ReviewService extends AbstractBaseService {
             }).orElse(null);
     }
 
-    private void createFeedback(final Review review) {
+    private Pair<Long, Long> createFeedback(final Review review) {
+        final MutablePair<Long, Long> ids = new MutablePair<>();
         SecurityUtils.runAsSystem(userRepository, () -> {
-            feedbackService.addFeedback(review, review.getReviewee(), FeedbackType.SELF);
-            feedbackService.addFeedback(review, review.getReviewer(), FeedbackType.REVIEWER);
+            Feedback selfFeedback = feedbackService.addFeedback(review, review.getReviewee(), FeedbackType.SELF);
+            Feedback reviewerFeedback = feedbackService.addFeedback(review, review.getReviewer(), FeedbackType.REVIEWER);
+            ids.setLeft(selfFeedback.getId());
+            ids.setRight(reviewerFeedback.getId());
         });
+        return ids;
     }
 
     private ReviewTypeProcess getProcessType(Review review) {
