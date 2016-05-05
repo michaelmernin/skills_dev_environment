@@ -1,15 +1,29 @@
 'use strict';
 
-angular.module('etmApp').controller('TodoController', function ($scope, $stateParams, $mdDialog, Todo, Review, ReviewStatus) {
+angular.module('etmApp').controller('TodoController', function ($scope, $stateParams, $mdDialog, Principal, Todo, Review, ReviewStatus, FeedbackType, Feedback) {
   $scope.todo = Todo.query();
+  var reviewerFeedback = {};
   var review = {};
+  var user = {};
   
-  
-  $scope.$parent.$watch('review', function (parentReview) {
-    if (parentReview.id) {
-      review = parentReview;
-      loadTodo();
-    }
+  Principal.identity().then(function (account) {
+    user = account;
+    $scope.$parent.$watch('review', function (parentReview) {
+      if (parentReview.id) {
+        review = parentReview;
+        loadTodo();
+      }
+    });
+
+    $scope.$parent.$watch('review.feedback', function (parentFeedback) {
+      if (parentFeedback && parentFeedback.length) {
+        parentFeedback.forEach(function (feedbackItem) {
+          if (feedbackItem.feedbackType.id === FeedbackType.REVIEWER.id) {
+            reviewerFeedback = feedbackItem;
+          }
+        });
+      }
+    });
   });
 
   $scope.confirm = function (action, ev) {
@@ -26,9 +40,13 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
   };
 
   function loadTodo() {
-    Review.todo({id: review.id}, function (result) {
-      $scope.todo = result;
-      $scope.actions = Todo.getActions($scope.todo, review);
+    Feedback.query({reviewId: review.id}, function (feedback) {
+      review.feedback = feedback;
+
+      Review.todo({id: review.id}, function (result) {
+        $scope.todo = result;
+        $scope.actions = Todo.getActions($scope.todo, review, reviewerFeedback);
+      });
     });
   }
 });
