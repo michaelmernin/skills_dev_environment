@@ -179,6 +179,12 @@ public class MailService {
         sendEmail("prft.etm@gmail.com", "Test Subject", content, false, true);
     }
     
+    // PLEASE REMOVE ME WHEN sendPeerReviewFeedbackRequestedEmail(String peerEmail,String peerFirstName, String reviewType, String reviewee) is finished and hooked up in activiti process
+    @Async
+    public void sendPeerReviewFeedbackRequestedEmail(String s){
+    	return;
+    }
+    
     @Async
     public void sendPeerReviewFeedbackRequestedEmail(String peerEmail,String peerFirstName, String reviewType, String reviewee) {
         log.debug("Sending peer review requested e-mail to '{}'");
