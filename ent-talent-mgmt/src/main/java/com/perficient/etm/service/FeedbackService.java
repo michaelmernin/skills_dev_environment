@@ -52,7 +52,7 @@ public class FeedbackService extends AbstractBaseService {
             if (feedback.getProcessId() == null) {
                 peerService.startPeerProcess(feedback);
             } else {
-                // TODO reopen Peer process
+                peerService.completeTaskInFeedbackProcess(feedback, false);
             }
         }
         return feedback;

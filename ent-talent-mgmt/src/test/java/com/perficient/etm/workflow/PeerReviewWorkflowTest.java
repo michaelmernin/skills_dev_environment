@@ -101,7 +101,7 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
     }
     
     @Test
-    @Ignore //Test is taking too long due to Thread.sleep need a better way to test this
+    @Ignore //Test is taking too long due to Thread.sleep. TODO: a better way: https://forums.activiti.org/content/how-do-i-unit-test-timerboundaryevent
     public void testReminderEmail() {
         Map<String, Object> variables = getVariables();
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(

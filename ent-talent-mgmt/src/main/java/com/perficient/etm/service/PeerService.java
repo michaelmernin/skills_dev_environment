@@ -101,8 +101,8 @@ public class PeerService {
         return feedback;
     }
     
-    public Feedback completeTaskInFeedbackProcess(Feedback feedback){
-        processSvc.completePeerReviewTask(feedback, "TRUE");
+    public Feedback completeTaskInFeedbackProcess(Feedback feedback, boolean result) {
+        processSvc.completePeerReviewTask(feedback, result);
         return feedback;
     }
     

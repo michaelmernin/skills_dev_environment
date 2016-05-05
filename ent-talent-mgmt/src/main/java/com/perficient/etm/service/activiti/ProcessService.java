@@ -100,14 +100,20 @@ public class ProcessService {
         }
     }
 
-    public Feedback completePeerReviewTask(Feedback feedback, String result) {
+    public Feedback completePeerReviewTask(Feedback feedback, boolean result) {
         String pId = feedback.getProcessId();
         ProcessInstance processInstance = runtimeSvc.createProcessInstanceQuery().variableValueEquals("processId", pId)
             .singleResult();
         Task t = taskSvc.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
-        taskSvc.complete(t.getId());
+        taskSvc.complete(t.getId(), getResultVariableMap(result));
         
         feedback.setFeedbackStatus(FeedbackStatus.COMPLETE);
         return feedback;
+    }
+    
+    private Map<String, Object> getResultVariableMap(boolean result){
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(ProcessConstants.RESULT_VARIABLE, result ? "TRUE" : "FALSE");
+        return variables;
     }
 }
