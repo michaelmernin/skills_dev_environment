@@ -1,0 +1,28 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+apply plugin: 'com.moowork.node'
+apply plugin: 'com.moowork.gulp'
+
+ext {
+   npmCommand = Os.isFamily(Os.FAMILY_WINDOWS) ? 'npm.cmd' : 'npm'
+}
+
+task emails(type: Exec){
+  // change working directory to email project
+  workingDir '../tools/etm-email-templates'
+  
+  // do npm install
+  commandLine npmCommand, 'install'
+}
+
+task deployEmails(type: Exec){
+   // change working directory to email project
+   workingDir '../tools/etm-email-templates'
+   
+   // run 'deploy' script for emails
+   commandLine npmCommand, 'run','deploy'
+   
+}
+deployEmails.dependsOn 'emails'
+processResources.dependsOn 'deployEmails'
+
