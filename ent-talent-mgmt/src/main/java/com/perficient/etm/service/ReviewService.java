@@ -90,6 +90,14 @@ public class ReviewService extends AbstractBaseService {
 
         return review;
     }
+    
+    public Review setStatusById(Long id, ReviewStatus status) {
+        return Optional.ofNullable(reviewRepository.getOne(id))
+            .map(r -> {
+                r.setReviewStatus(status);
+                return reviewRepository.save(r);
+            }).orElse(null);
+    }
 
     private void createFeedback(final Review review) {
         SecurityUtils.runAsSystem(userRepository, () -> {
