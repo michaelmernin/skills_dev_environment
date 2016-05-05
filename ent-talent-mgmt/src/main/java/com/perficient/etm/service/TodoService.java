@@ -49,7 +49,21 @@ public class TodoService extends AbstractBaseService {
     }
     
     public void complete(TodoActionDTO action) {
-        tasksService.complete(action.getTodoId(), action.getResult());
+        Optional.ofNullable(tasksService.getTask(action.getTodoId())).ifPresent(task -> {
+            String processVariable;
+            switch (task.getTaskDefinitionKey()) {
+            case "ReviewerJointApproval":
+                processVariable = ProcessConstants.REVIEWER_RESULT_VARIABLE;
+                break;
+            case "RevieweeJointApproval":
+                processVariable = ProcessConstants.REVIEWEE_RESULT_VARIABLE;
+                break;
+            default:
+                processVariable = ProcessConstants.RESULT_VARIABLE;
+                break;
+            }
+            tasksService.complete(action.getTodoId(), action.getResult(), processVariable);
+        });        
     }
     
     private Todo getReviewActiveTodo(Long reviewId, User user) {

@@ -52,6 +52,10 @@ public class TasksService {
     public List<Task> getProcessTasks(String processId) {
         return getTaskQuery().processInstanceId(processId).list();
     }
+    
+    public Task getTask(String taskId) {
+        return getTaskQuery().taskId(taskId).singleResult();
+    }
 
     private TaskQuery getCurrentUserTaskQuery(Long userId) {
         return getTaskQuery().taskAssignee(String.valueOf(userId));
@@ -72,8 +76,23 @@ public class TasksService {
      *            the workflow process.
      */
     public void complete(String taskId, TodoResult result) {
+        complete(taskId, result, ProcessConstants.RESULT_VARIABLE);
+    }
+    
+    /**
+     * Completes one task in the Activiti engine in order to allow the process
+     * to continue.
+     *
+     * @param taskId
+     *            the String id of the Task in the activiti engine
+     * @param result
+     *            The String result of the task that will be used to continue in
+     *            the workflow process.
+     *@param processVariable The process variable to store the result in
+     */
+    public void complete(String taskId, TodoResult result, String processVariable) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put(ProcessConstants.RESULT_VARIABLE, result.getResult());
+        variables.put(processVariable, result.getResult());
         tasksService.complete(taskId, variables);
     }
 }
