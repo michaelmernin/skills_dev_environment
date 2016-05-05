@@ -37,6 +37,9 @@
             </md-grid-list>
           </md-card-content>
         </md-card>
+        
+        <div ui-view="todo"></div>
+        
         <md-tabs md-dynamic-height md-border-bottom>
           <md-tab label="peers" ng-if="allTabs()">
             <div ui-view="peers"></div>
