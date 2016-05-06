@@ -15,14 +15,13 @@ async:
 
 spring:
     mail:
-        host: mail2.perficient.com
-        port: 25
+        host: localhost
+        port: 2525
         user:
         password:
         protocol: smtp
         tls: false
         auth: false
-        from: donotreply@perficient.com
         
     ldap:
         root: dc=perficient,dc=com

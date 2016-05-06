@@ -33,7 +33,15 @@ spring:
             
 
     mail:
-        baseUrl: http://localhost:8080
+        baseUrl: https://stlerapp.perficient.com:8443
+        host: mail2.perficient.com
+        port: 25
+        user:
+        password:
+        protocol: smtp
+        tls: false
+        auth: false
+        from: donotreply@perficient.com
 
     thymeleaf:
         mode: LEGACYHTML5

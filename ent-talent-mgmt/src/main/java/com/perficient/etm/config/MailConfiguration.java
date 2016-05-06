@@ -87,7 +87,7 @@ public class MailConfiguration {
     }
     
     @Bean
-    @Profile({Constants.SPRING_PROFILE_DEVELOPMENT,Constants.SPRING_PROFILE_TEST,Constants.SPRING_PROFILE_UAT})
+    @Profile({Constants.SPRING_PROFILE_DEVELOPMENT,Constants.SPRING_PROFILE_TEST})
     public SmtpServer initDumpsterSmtpServer() {
         log.info("Starting SMTP server on port {}", port);
         server = new SmtpServer();
