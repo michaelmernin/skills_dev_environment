@@ -19,45 +19,55 @@
     <sequenceFlow id="ReviewersAcceptFlow" name="Yes" sourceRef="ReviewerApprovalExclusiveGateway" targetRef="setReviewDirectorApproval">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == true}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="ReviewersRejectFlow" name="No" sourceRef="ReviewerApprovalExclusiveGateway" targetRef="CompleteSelfFeedbackUserTask">
+    <sequenceFlow id="ReviewersRejectFlow" name="No" sourceRef="ReviewerApprovalExclusiveGateway" targetRef="rejectReviewToOpen">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == false}]]></conditionExpression>
     </sequenceFlow>
     <serviceTask id="setReviewDirectorApproval" name="Set Review to Director Approval" activiti:expression="${reviewService.setStatusById(Review,'DIRECTOR_APPROVAL')}"></serviceTask>
-    <sequenceFlow id="SequenceFlow_8" sourceRef="setReviewDirectorApproval" targetRef="DirectorApproval"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow_9" sourceRef="setReviewDirectorApproval" targetRef="DirectorApproval"></sequenceFlow>
     <userTask id="DirectorApproval" name="Director Approval" activiti:assignee="${Director}"></userTask>
-    <sequenceFlow id="SequenceFlow_9" sourceRef="DirectorApproval" targetRef="DirectorApprovalExclusiveGateway"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow_10" sourceRef="DirectorApproval" targetRef="DirectorApprovalExclusiveGateway"></sequenceFlow>
     <exclusiveGateway id="DirectorApprovalExclusiveGateway" name="Review Accepted?"></exclusiveGateway>
-    <sequenceFlow id="DirectorAcceptFlow" name="yes" sourceRef="DirectorApprovalExclusiveGateway" targetRef="JointApprovalParallelFork">
+    <sequenceFlow id="DirectorAcceptFlow" name="yes" sourceRef="DirectorApprovalExclusiveGateway" targetRef="setReviewJointApproval">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == true}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="DirectorRejectFlow" name="No" sourceRef="DirectorApprovalExclusiveGateway" targetRef="CompleteSelfFeedbackUserTask">
+    <sequenceFlow id="DirectorRejectFlow" name="No" sourceRef="DirectorApprovalExclusiveGateway" targetRef="rejectReviewToOpen">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == false}]]></conditionExpression>
     </sequenceFlow>
+    <serviceTask id="setReviewJointApproval" name="Set Review to Joint Approval" activiti:expression="${reviewService.setStatusById(Review,'JOINT_APPROVAL')}"></serviceTask>
+    <sequenceFlow id="SequenceFlow_11" sourceRef="setReviewJointApproval" targetRef="JointApprovalParallelFork"></sequenceFlow>
     <parallelGateway id="JointApprovalParallelFork"></parallelGateway>
-    <sequenceFlow id="SequenceFlow_10" sourceRef="JointApprovalParallelFork" targetRef="ReviewerJointApproval"></sequenceFlow>
-    <sequenceFlow id="SequenceFlow_11" sourceRef="JointApprovalParallelFork" targetRef="RevieweeJointApproval"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow_12" sourceRef="JointApprovalParallelFork" targetRef="ReviewerJointApproval"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow_13" sourceRef="JointApprovalParallelFork" targetRef="RevieweeJointApproval"></sequenceFlow>
     <userTask id="ReviewerJointApproval" name="Joint Review (Reviewer)" activiti:assignee="${Reviewer}"></userTask>
     <userTask id="RevieweeJointApproval" name="Joint Review (Reviewee)" activiti:assignee="${Reviewee}"></userTask>
-    <sequenceFlow id="SequenceFlow_12" sourceRef="ReviewerJointApproval" targetRef="JointApprovalParallelJoin"></sequenceFlow>
-    <sequenceFlow id="SequenceFlow_13" sourceRef="RevieweeJointApproval" targetRef="JointApprovalParallelJoin"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow_14" sourceRef="ReviewerJointApproval" targetRef="JointApprovalParallelJoin"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow_15" sourceRef="RevieweeJointApproval" targetRef="JointApprovalParallelJoin"></sequenceFlow>
     <parallelGateway id="JointApprovalParallelJoin"></parallelGateway>
-    <sequenceFlow id="SequenceFlow_14" sourceRef="JointApprovalParallelJoin" targetRef="JointApprovalExclusiveGateway"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow_16" sourceRef="JointApprovalParallelJoin" targetRef="JointApprovalExclusiveGateway"></sequenceFlow>
     <exclusiveGateway id="JointApprovalExclusiveGateway" name="Review Accepted?"></exclusiveGateway>
-    <sequenceFlow id="JointAcceptFlow" name="yes" sourceRef="JointApprovalExclusiveGateway" targetRef="GeneralManagerApproval">
+    <sequenceFlow id="JointAcceptFlow" name="yes" sourceRef="JointApprovalExclusiveGateway" targetRef="setReviewGeneralManagerApproval">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${REVIEWER_RESULT == true and REVIEWEE_RESULT == true}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="JointRejectFlow" name="No" sourceRef="JointApprovalExclusiveGateway" targetRef="CompleteSelfFeedbackUserTask">
+    <sequenceFlow id="JointRejectFlow" name="No" sourceRef="JointApprovalExclusiveGateway" targetRef="rejectReviewToOpen">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${REVIEWER_RESULT == false or REVIEWEE_RESULT == false}]]></conditionExpression>
     </sequenceFlow>
+    <serviceTask id="setReviewGeneralManagerApproval" name="Set Review to GM Approval" activiti:expression="${reviewService.setStatusById(Review,'GM_APPROVAL')}"></serviceTask>
+    <sequenceFlow id="SequenceFlow_17" sourceRef="setReviewGeneralManagerApproval" targetRef="GeneralManagerApproval"></sequenceFlow>
     <userTask id="GeneralManagerApproval" name="General Manager Approval" activiti:assignee="${GeneralManager}"></userTask>
-    <sequenceFlow id="SequenceFlow_15" sourceRef="GeneralManagerApproval" targetRef="GeneralManagerApprovalExclusiveGateway"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow_18" sourceRef="GeneralManagerApproval" targetRef="GeneralManagerApprovalExclusiveGateway"></sequenceFlow>
     <exclusiveGateway id="GeneralManagerApprovalExclusiveGateway" name="Review Accepted?"></exclusiveGateway>
-    <sequenceFlow id="GeneralManagerAcceptFlow" name="yes" sourceRef="GeneralManagerApprovalExclusiveGateway" targetRef="End">
+    <sequenceFlow id="GeneralManagerAcceptFlow" name="yes" sourceRef="GeneralManagerApprovalExclusiveGateway" targetRef="setReviewComplete">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == true}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="GeneralManagerRejectFlow" name="No" sourceRef="GeneralManagerApprovalExclusiveGateway" targetRef="CompleteSelfFeedbackUserTask">
+    <sequenceFlow id="GeneralManagerRejectFlow" name="No" sourceRef="GeneralManagerApprovalExclusiveGateway" targetRef="rejectReviewToOpen">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${RESULT == false}]]></conditionExpression>
     </sequenceFlow>
+    <serviceTask id="setReviewComplete" name="Set Review to Complete" activiti:expression="${reviewService.setStatusById(Review,'COMPLETE')}"></serviceTask>
+    <sequenceFlow id="SequenceFlow_19" sourceRef="setReviewComplete" targetRef="End"></sequenceFlow>
     <endEvent id="End" name="End"></endEvent>
+    
+    <!-- Rejected Flow -->
+    <serviceTask id="rejectReviewToOpen" name="Set Review Back to Open" activiti:expression="${reviewService.setStatusById(Review,'OPEN')}"></serviceTask>
+    <sequenceFlow id="SequenceFlow_8" sourceRef="rejectReviewToOpen" targetRef="CompleteSelfFeedbackUserTask"></sequenceFlow>
   </process>
 </definitions>

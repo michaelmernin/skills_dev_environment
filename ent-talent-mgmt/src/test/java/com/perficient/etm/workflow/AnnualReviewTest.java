@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
@@ -19,11 +21,16 @@ import org.activiti.engine.task.Task;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.ReviewStatus;
 import com.perficient.etm.domain.TodoResult;
+import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.service.activiti.ProcessConstants;
 import com.perficient.etm.utils.SpringAppTest;
 
 public class AnnualReviewTest extends SpringAppTest {
+
+    private static final long REVIEW_ID = 1L;
 
     @Autowired
     private RuntimeService runtimeSvc;
@@ -34,6 +41,9 @@ public class AnnualReviewTest extends SpringAppTest {
     @Autowired
     private HistoryService historySvc;
 
+    @Inject
+    private ReviewRepository reviewRepository;
+
     @Test
     public void shouldCompleteReview() {
         ProcessInstance processInstance = runtimeSvc.startProcessInstanceByKey("annualReviewTest");
@@ -43,7 +53,7 @@ public class AnnualReviewTest extends SpringAppTest {
 
     private Map<String, Object> getProcessVariables() {
         Map<String,Object> variables = new HashMap<>();
-        variables.put(ProcessConstants.REVIEW_VARIABLE, 1L);
+        variables.put(ProcessConstants.REVIEW_VARIABLE, REVIEW_ID);
         variables.put(ProcessConstants.REVIEWEE_VARIABLE, "Alex");
         variables.put(ProcessConstants.REVIEWER_VARIABLE, "Craig");
         variables.put(ProcessConstants.DIRECTOR_VARIABLE, "David");
@@ -102,6 +112,8 @@ public class AnnualReviewTest extends SpringAppTest {
         //Self Feedback
         Task t = getNextTask(processInstance.getId());
         assertNotNullAndAsignee(t,"Alex");
+        Review review = reviewRepository.getOne(REVIEW_ID);
+        assertEquals("Review should start Open", ReviewStatus.OPEN, review.getReviewStatus());
 
         //Reviewer Feedback
         t = completeAndGetNextTask(t,processInstance.getId());
@@ -114,20 +126,29 @@ public class AnnualReviewTest extends SpringAppTest {
         //Directors Approval
         t = completeAndGetNextTask(t,processInstance.getId());
         assertNotNullAndAsignee(t,"David");
+        review = reviewRepository.getOne(REVIEW_ID);
+        assertEquals("Review should move to Director Approval", ReviewStatus.DIRECTOR_APPROVAL, review.getReviewStatus());
 
         //Joint Approvals
         List<Task> tasks = completeAndGetParallelTasks(t,processInstance.getId());
         assertEquals("Expect two parallel joint review tasks", 2, tasks.size());
         assertNotNullAndAsignee(tasks.get(0), "Craig");
         assertNotNullAndAsignee(tasks.get(1), "Alex");
+        review = reviewRepository.getOne(REVIEW_ID);
+        assertEquals("Review should move to Joint Approval", ReviewStatus.JOINT_APPROVAL, review.getReviewStatus());
 
         //General Manager Approval
         t = completeAndGetNextTask(tasks, processInstance.getId());
         assertNotNullAndAsignee(t,"Art");
+        review = reviewRepository.getOne(REVIEW_ID);
+        assertEquals("Review should move to GM Approval", ReviewStatus.GM_APPROVAL, review.getReviewStatus());
 
         //Process should be done by now
         t = completeAndGetNextTask(t,processInstance.getId());
         assertNull(t);
+        review = reviewRepository.getOne(REVIEW_ID);
+        assertEquals("Review should move to Complete", ReviewStatus.COMPLETE, review.getReviewStatus());
+
         //Save the process Instance Id
         String processInstanceId = processInstance.getId();
         //check this if historical data is enabled and check for isEnded() method. might be different
