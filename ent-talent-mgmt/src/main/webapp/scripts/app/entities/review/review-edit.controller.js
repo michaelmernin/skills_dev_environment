@@ -15,6 +15,7 @@ angular.module('etmApp').controller('ReviewEditController', function ($scope, $s
         (  $scope.review.reviewee.id === account.id
         || $scope.review.reviewer.id === account.id
         || $scope.review.reviewee.counselor.id === account.id
+        || $scope.review.reviewee.director.id === account.id
         || $scope.review.reviewee.generalManager.id === account.id);
     };
   });
