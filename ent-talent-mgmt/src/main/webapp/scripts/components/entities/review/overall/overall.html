@@ -59,17 +59,16 @@
         Reviewer Summary by: {{reviewerFeedback.author.firstName}} {{reviewerFeedback.author.lastName}}
       </div>
       <div ng-show="reviewerFeedback.editable">
-        <md-input-container   class="md-block" flex>
+        <md-input-container class="md-block" flex>
           <label>Overall Comment</label>
-          <textarea ng-model="reviewerFeedback.overallComment" ng-blur="updateFeedback(reviewerFeedback)" md-maxlength="250" rows="1" >
-          </textarea>
+          <textarea ng-model="reviewerFeedback.overallComment" ng-blur="updateFeedback(reviewerFeedback)" md-maxlength="250" rows="1"></textarea>
         </md-input-container>
         <md-input-container layout="row" layout-wrap flex>
           <div layout layout-align="start center">
             <span class="md-body-1">Overall Score &nbsp; &nbsp; </span>
           </div>
           <div flex>
-            <md-slider md-discrete name="overallScore" ng-model="reviewerFeedback.overallScore"  step="0.5" min="1" max="5" class="md-primary" aria-label="Overall Score" ng-change="updateFeedback(reviewerFeedback)"></md-slider>
+            <md-slider md-discrete name="overallScore" ng-model="reviewerFeedback.overallScore" step="0.5" min="1" max="5" class="md-primary" aria-label="Overall Score" ng-change="updateFeedback(reviewerFeedback)"></md-slider>
           </div>
           <div layout layout-align="end center">
             <span class="md-headline">&nbsp;  {{reviewerFeedback.overallScore}}</span>
@@ -88,9 +87,8 @@
       <div ng-show="revieweeFeedback.editable">
         <md-input-container class="md-block" flex ng-show="revieweeFeedback.editable">
           <label>Overall Comment</label>
-          <textarea ng-model="revieweeFeedback.overallComment" md-maxlength="250" rows="1">
-          </textarea>
-        </md-input-container >
+          <textarea ng-model="revieweeFeedback.overallComment" md-maxlength="250" rows="1" ng-blur="updateFeedback(revieweeFeedback)"></textarea>
+        </md-input-container>
       </div>
       <div ng-show="!revieweeFeedback.editable">
         <p>{{revieweeFeedback.overallComment}}</p>
