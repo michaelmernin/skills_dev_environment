@@ -10,7 +10,7 @@
     <!--
         Add dev seed data.
     -->
-    <changeSet id="20150815130800" context="!prod" author="donovan">
+    <changeSet id="20150815130800" context="!prod AND !uat" author="donovan">
         <loadUpdateData encoding="UTF-8" separator=";"
                   file="config/liquibase/seed/dev/users.csv"
                   tableName="T_USER"
