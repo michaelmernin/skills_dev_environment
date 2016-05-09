@@ -1,15 +1,17 @@
 'use strict';
 
 angular.module('etmApp').controller('SkillsController', function ($scope, $mdDialog, $mdToast, $q, Principal, User, SkillCategory, SkillRanking) { 
-  $scope.user = {}; 
+  $scope.user = {};
+  $scope.toggle = null;
+  $scope.skillCategories = [];
 
   Principal.identity().then(function (account) {
     $scope.user = account;
   });
 
-  $scope.displaySkillCategories = function() {
+  var displaySkillCategories = function() {
     SkillCategory.query(function (result) {
-      $scope.skillCategories =result; 
+      $scope.skillCategories = result; 
       angular.forEach($scope.skillCategories, function (category) {
         angular.forEach(category.skills, function (skill) {
           skill.ranking = skill.rankings[0] || {};
@@ -19,10 +21,33 @@ angular.module('etmApp').controller('SkillsController', function ($scope, $mdDia
       });
     });
   }
-  $scope.displaySkillCategories();
+  displaySkillCategories();
+  
+  $scope.toggleCategory = function (category) {
+    $scope.toggle = ($scope.toggle === category ? null : category);
+  };
+  
+  $scope.showButtons = function () {
+    return isDirty($scope.skillCategories);
+  };
+  
+  var isDirty = function (skillCategories) {
+    var isdirty = false;
+    angular.forEach(skillCategories, function (category) {
+      if (!isdirty) {
+        angular.forEach(category.skills, function (skill) {
+          if (!isdirty) {
+            var ranking = skill.ranking;
+            isdirty = ranking && ranking.initialRank !== ranking.rank;
+          }
+        });
+      }
+    });
+    return isdirty;
+  };
 
   $scope.cancel = function() {
-    $scope.displaySkillCategories();
+    displaySkillCategories();
   };
 
   $scope.saveRankings = function (skillCategories) {
