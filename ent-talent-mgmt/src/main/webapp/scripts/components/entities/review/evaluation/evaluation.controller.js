@@ -8,6 +8,7 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
   $scope.getScore = Evaluation.score;
   $scope.getAvgScore = Evaluation.avgScore;
   $scope.getRatings = Evaluation.getRatings;
+  $scope.keys = Object.keys;
   $scope.toggle = null;
 
   Principal.identity().then(function (account) {

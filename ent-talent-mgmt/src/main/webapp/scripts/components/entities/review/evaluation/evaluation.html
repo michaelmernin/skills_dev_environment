@@ -1,6 +1,6 @@
 <div ng-cloak>
   <md-list>
-    <div ng-repeat="(category, questions) in categories | orderBy:'toString()'">
+    <div ng-repeat="category in keys(categories) | orderBy:'toString()'" ng-init="questions = categories[category]">
       <md-list-item ng-click="toggleCategory(category)">
         <div class="md-list-item-text" flex>
           <span class="md-title">{{ category }}</span>
