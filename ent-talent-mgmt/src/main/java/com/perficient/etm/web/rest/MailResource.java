@@ -137,23 +137,6 @@ public class MailResource {
         return new ResponseEntity<Message>(HttpStatus.OK);
     }
     
- // TESTING PEER SERVICE
-    /**
-     * POST /mail/test -> send a new test email.
-     */
-    @RequestMapping(value = "/mail/peer/{peerId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<String> SendTestMail(@PathVariable Long peerId) {
-        log.debug("REST request to send test email to peer");
-        User peer = userRepository.findOne(peerId);
-        String peerFirstName = peer.getFirstName();
-        peerFirstName = (peerFirstName == null)? "User": peerFirstName;
-        mailService.sendPeerReviewFeedbackRequestedEmail(peer.getEmail(), peerFirstName, "Annual Review", "Test User");
-        return new ResponseEntity<String>(HttpStatus.OK);
-    }
-
-    // END TESTING EMAIL SERVICE
-
 }
 
 
