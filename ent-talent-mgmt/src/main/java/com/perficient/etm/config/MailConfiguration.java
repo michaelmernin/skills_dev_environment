@@ -8,7 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import com.dumbster.smtp.ServerOptions;
 import com.dumbster.smtp.SmtpServer;
+import com.dumbster.smtp.SmtpServerFactory;
 import com.dumbster.smtp.mailstores.RollingMailStore;
 
 import java.util.Properties;
@@ -90,10 +92,12 @@ public class MailConfiguration {
     @Profile({Constants.SPRING_PROFILE_DEVELOPMENT,Constants.SPRING_PROFILE_TEST})
     public SmtpServer initDumpsterSmtpServer() {
         log.info("Starting SMTP server on port {}", port);
-        server = new SmtpServer();
-        server.setPort(port);
-        server.setMailStore(new RollingMailStore());
-        Executors.newSingleThreadExecutor().execute(server::run);
+        ServerOptions options = new ServerOptions();
+        options.port = port;
+        options.mailStore = new RollingMailStore();
+        options.threaded = false;
+        options.valid = true;
+        server = SmtpServerFactory.startServer(options);
         return server;
     }
     
