@@ -13,7 +13,6 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.core.env.Environment;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
-import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
 
 /**
@@ -68,12 +66,12 @@ public class MailService {
     }
 
     /**
-     * Uses 
-     * @param to
-     * @param subject
-     * @param content
-     * @param isMultipart
-     * @param isHtml
+     * Sends  an email using the given parameters
+     * @param to the email to send to
+     * @param subject email subject
+     * @param content Content of the email html/text
+     * @param isMultipart boolean for multipart emails with assets
+     * @param isHtml if content is html or not (text)
      */
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
@@ -96,14 +94,15 @@ public class MailService {
     }
     
     /**
-     * Sends an email to ONLY to an existing user in the userRepository, using thier id
-     * @param recipientId the id of the user in the repository
+     * Sends an email to ONLY to an existing user in the userRepository, using their id
+     * @param recipientId the id of the user in the repository to whom the email is sent
+     * @param reviewId the review id this email is about (can be null)
      * @param subject Subject of the Email or Spring Message in MessageSource
      * @param EmailTemplate Email template name for thymleafe template engine to use
-     * @param locale 
+     * @param locale the locale thymeleaf will use for translation and localization
      * @throws MessagingException
      */
-    public void sendEmail(final Long recipientId,String subject, String EmailTemplate, Map<String, Object> contextMap){
+    public void sendEmail(final Long recipientId, final Long reviewId, String subject, String EmailTemplate, Map<String, Object> contextMap){
         User recipientUser = userService.getUser(recipientId);
         String recipientEmail = recipientUser.getEmail();
         // if the recipient user does not exist, return.
@@ -117,8 +116,12 @@ public class MailService {
            Locale locale = Locale.forLanguageTag(user.getLangKey());
            Context context = new Context(locale);
            // add contextVars to context
-           contextMap.forEach((key, value) -> context.setVariable(key, value));
+           Optional.ofNullable(contextMap).ifPresent(ctxmap ->{
+        	   ctxmap.forEach((key, value) -> context.setVariable(key, value));
+           });
+           // add user and review vars to context
            addUserInfoToContext(context, user);
+           addReviewInfoToContext(context, reviewId);
            // Create the HTML body using Thymeleaf
            final String htmlContent = this.templateEngine.process(EmailTemplate, context);
            // try to resolve 
@@ -134,7 +137,7 @@ public class MailService {
     }
     
     /**
-     * Helper method to add info of user to context
+     * Adds user info variables to context (to be used in thymeleaf email templates)
      * @param context
      * @param user
      * @return
@@ -148,70 +151,81 @@ public class MailService {
         context.setVariable(EmailConstants.User.TARGET_TITLE, user.getTargetTitle());
         return context;
     }
+    
+    /**
+     * Adds review info variables to context (to be used in thymeleaf email templates)
+     * @param context
+     * @param reviewId
+     * @return
+     */
+    private Context addReviewInfoToContext(Context context, Long reviewId ){
+		Optional.ofNullable(reviewId).ifPresent(rId -> {
+			Optional.ofNullable(reviewService.findById(rId)).ifPresent(review -> {
+				context.setVariable(EmailConstants.Review.ID, rId);
+				Optional.ofNullable(review.getReviewType()).ifPresent(revieweType -> {
+					context.setVariable(EmailConstants.Review.TYPE, revieweType.getName());
+				});
+				Optional.ofNullable(review.getReviewStatus()).ifPresent(revieweStatus -> {
+					context.setVariable(EmailConstants.Review.TYPE, revieweStatus.getName());
+				});
+				Optional.ofNullable(review.getReviewee()).ifPresent(reviewee -> {
+					context.setVariable(EmailConstants.Review.REVIEWEE_FIRST_NAME, reviewee.getFirstName());
+					context.setVariable(EmailConstants.Review.REVIEWEE_LAST_NAME, reviewee.getLastName());
+				});
+				Optional.ofNullable(review.getReviewer()).ifPresent(reviewer -> {
+					context.setVariable(EmailConstants.Review.REVIEWER_FIRST_NAME, reviewer.getFirstName());
+					context.setVariable(EmailConstants.Review.REVIEWER_LAST_NAME, reviewer.getLastName());
+				});
+			});
+		});
+		return context;
+    }
    
     @Async
     public void sendActivationEmail(Long userId) {
     	log.debug("Sending activation e-mail to user with id: '{}'", userId);
         Map<String, Object> contextMap = new HashMap<String, Object>();
-        sendEmail(userId, EmailConstants.Subjects.ACTIVATION, EmailConstants.Templates.ACTIVATION, contextMap);
+        sendEmail(userId, null, EmailConstants.Subjects.ACTIVATION, EmailConstants.Templates.ACTIVATION, null);
     }
 
-    // PLEASE REMOVE ME WHEN sendAnnualProcessStartedEmail(String email) is finished and hooked up in activiti process
-    @Async
-    public void sendAnnualProcessStartedEmail() {
-        log.debug("THIS METHOD ProcessService.sendAnnualProcessStartedEmail NEEDS TO BE REMOVED");
-        return;
-    }
     
+    /** Sends an email to user with userId and includes reviewId for the review URL. Intended for use with activinti.
+     * @param userId
+     * @param reviewId
+     */
     @Async
-    public void sendAnnualProcessStartedEmail(Long userId, Long reviewId) {
+    public void sendAnnualReviewStartedEmail(Long userId, Long reviewId) {
         log.debug("Sending annual review process started e-mail to '{}'");
-        Optional<Review> optReview = Optional.ofNullable(reviewService.findById(reviewId));
-        optReview.ifPresent(review ->{
-        	Map<String, Object> contextMap = new HashMap<String, Object>();
-        	contextMap.put(EmailConstants.Review.ID, reviewId);
-        	contextMap.put(EmailConstants.Review.TYPE, review.getReviewType().getName());
-            sendEmail(userId, EmailConstants.Subjects.ANNULA_REVIEW_STARTED, EmailConstants.Templates.ANNUAL_REVIEW_STARTED, contextMap);
-        });  
+        sendEmail(userId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_STARTED, EmailConstants.Templates.REVIEW_STARTED, null);
     }
 
+    /**
+     * Sends a reminder email, to peer with userId, to remind them to give feedback on review with reviewId 
+     * @param userId the user id to send an email to
+     * @param reviewId the review id the email is about
+     */
     @Async
-    public void sendPeerReviewReminderEmail(Long userId) {
-        log.debug("Sending peer review process reminder e-mail to '{}'");
-        Map<String, Object> contextMap = new HashMap<String, Object>();
-        sendEmail(userId, EmailConstants.Subjects.PEER_REVIEW_REMINDER, EmailConstants.Templates.PEER_REVIEW_REMINDER, contextMap);
+    public void sendPeerFeedbackReminderEmail(Long userId, Long reviewId) {
+        log.debug("Sending peer feedback process reminder e-mail to '{}'");
+        sendEmail(userId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REMINDER, EmailConstants.Templates.PEER_FEEDBACK_REMINDER, null);
     }
     
-    // PLEASE REMOVE ME WHEN sendPeerReviewFeedbackRequestedEmail(String peerEmail,String peerFirstName, String reviewType, String reviewee) is finished and hooked up in activiti process
-    @Async
-    public void sendPeerReviewFeedbackRequestedEmail(String s){
-    	return;
-    }
     
+    /**
+     * Sends a request for feedback, on review with reviewId, to a peer with peerId
+     * @param peerId the peerId used to send the email
+     * @param reviewId the reviewId on which the peer needs to submit feedback
+     */
     @Async
-    public void sendPeerReviewFeedbackRequestedEmail(String peerEmail,String peerFirstName, String reviewType, String reviewee) {
-        log.debug("Sending peer review requested e-mail to '{}'");
-        if(peerEmail== null || peerEmail.equals("")){
-        	return;
-        }
-        Locale locale = Locale.forLanguageTag("en-us");
-        Context context = new Context(locale);
-        context.setVariable("peerFirstName", peerFirstName);
-        context.setVariable("reviewType", reviewType);
-        context.setVariable("reviewee", reviewee);
-        String content = templateEngine.process("peerReviewFeedbackRequested", context);
-
-        sendEmail(peerEmail, "ETM Feedback Requested", content, false, true);
+    public void sendPeerFeedbackRequestedEmail(Long peerId, Long reviewId) {
+        log.debug("Sending peer feedback requested e-mail to '{}'");
+        sendEmail(peerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REQUESTED, EmailConstants.Templates.PEER_FEEDBACK_REQUESTED, null);
     }
     
     @Async
-    public void sendPeerReviewSubmittedEmail() {
+    public void sendPeerFeedbackSubmittedEmail(Long peerId, Long reviewId) {
         log.debug("Sending peer review submitted e-mail to '{}'");
-        Locale locale = Locale.forLanguageTag("en-us");
-        Context context = new Context(locale);
-        String content = templateEngine.process("peerReviewFeedbackSubmitted", context);
-
-        sendEmail("prft.etm@gmail.com", "Test Subject", content, false, true);
+        sendEmail(peerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REQUESTED, EmailConstants.Templates.PEER_FEEDBACK_REQUESTED, null);
     }
     
     
