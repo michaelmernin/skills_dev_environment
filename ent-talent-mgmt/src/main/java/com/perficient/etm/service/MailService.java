@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
+import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
 
 /**
@@ -52,6 +53,9 @@ public class MailService {
     
     @Inject
     private UserService userService;
+    
+    @Inject
+    private ReviewService reviewService;
 
     /**
      * System default email address that sends the e-mails.
@@ -92,15 +96,16 @@ public class MailService {
     }
     
     /**
-     * Sends an email to ONLY to an existing user in the userRepository
-     * @param recipientEmail the 'to' email
+     * Sends an email to ONLY to an existing user in the userRepository, using thier id
+     * @param recipientId the id of the user in the repository
      * @param subject Subject of the Email or Spring Message in MessageSource
      * @param EmailTemplate Email template name for thymleafe template engine to use
      * @param locale 
      * @throws MessagingException
      */
-    public void sendEmail(final String recipientEmail,String subject, String EmailTemplate, Map<String, Object> contextMap){
-        User recipientUser = userService.getUserByEmail(recipientEmail);
+    public void sendEmail(final Long recipientId,String subject, String EmailTemplate, Map<String, Object> contextMap){
+        User recipientUser = userService.getUser(recipientId);
+        String recipientEmail = recipientUser.getEmail();
         // if the recipient user does not exist, return.
        Optional<User> optUser = Optional.ofNullable(recipientUser);
        if(!optUser.isPresent()){
@@ -135,22 +140,20 @@ public class MailService {
      * @return
      */
     private Context addUserInfoToContext(Context context, User user){
-        context.setVariable(EmailConstants.FIRST_NAME, user.getFirstName());
-        context.setVariable(EmailConstants.LAST_NAME, user.getLastName());
-        context.setVariable(EmailConstants.EMAIL, user.getEmail());
-        context.setVariable(EmailConstants.LOGIN, user.getLogin());
-        context.setVariable(EmailConstants.TITLE, user.getTitle());
-        context.setVariable(EmailConstants.TARGET_TITLE, user.getTargetTitle());
+        context.setVariable(EmailConstants.User.FIRST_NAME, user.getFirstName());
+        context.setVariable(EmailConstants.User.LAST_NAME, user.getLastName());
+        context.setVariable(EmailConstants.User.EMAIL, user.getEmail());
+        context.setVariable(EmailConstants.User.LOGIN, user.getLogin());
+        context.setVariable(EmailConstants.User.TITLE, user.getTitle());
+        context.setVariable(EmailConstants.User.TARGET_TITLE, user.getTargetTitle());
         return context;
     }
    
     @Async
-    public void sendActivationEmail(String email, String activationUrl) {
-    	log.debug("Sending activation e-mail to '{}'", email);
+    public void sendActivationEmail(Long userId) {
+    	log.debug("Sending activation e-mail to user with id: '{}'", userId);
         Map<String, Object> contextMap = new HashMap<String, Object>();
-        // adding vars to map -  those will be availabe to thymeleaf template
-        contextMap.put(EmailConstants.ACTIVATION_URL, activationUrl);
-        sendEmail(email, EmailConstants.SUBJECT_ACTIVATION, EmailConstants.TEMPALTE_ACTIVATION, contextMap);
+        sendEmail(userId, EmailConstants.Subjects.ACTIVATION, EmailConstants.Templates.ACTIVATION, contextMap);
     }
 
     // PLEASE REMOVE ME WHEN sendAnnualProcessStartedEmail(String email) is finished and hooked up in activiti process
@@ -161,22 +164,22 @@ public class MailService {
     }
     
     @Async
-    public void sendAnnualProcessStartedEmail(String email) {
+    public void sendAnnualProcessStartedEmail(Long userId, Long reviewId) {
         log.debug("Sending annual review process started e-mail to '{}'");
-        Map<String, Object> contextMap = new HashMap<String, Object>();
-        // adding vars to map -  those will be availabe to thymeleaf template
-        // contextMap.put(EmailConstants.ACTIVATION_URL, activationUrl);
-        sendEmail(email, EmailConstants.SUBJECT_ANNULA_REVIEW_STARTED, EmailConstants.TEMPALTE_ANNUAL_REVIEW_STARTED, contextMap);
+        Optional<Review> optReview = Optional.ofNullable(reviewService.findById(reviewId));
+        optReview.ifPresent(review ->{
+        	Map<String, Object> contextMap = new HashMap<String, Object>();
+        	contextMap.put(EmailConstants.Review.ID, reviewId);
+        	contextMap.put(EmailConstants.Review.TYPE, review.getReviewType().getName());
+            sendEmail(userId, EmailConstants.Subjects.ANNULA_REVIEW_STARTED, EmailConstants.Templates.ANNUAL_REVIEW_STARTED, contextMap);
+        });  
     }
 
     @Async
-    public void sendPeerReviewReminderEmail() {
+    public void sendPeerReviewReminderEmail(Long userId) {
         log.debug("Sending peer review process reminder e-mail to '{}'");
-        Locale locale = Locale.forLanguageTag("en-us");
-        Context context = new Context(locale);
-        String content = templateEngine.process("peerReviewReminderEmail", context);
-
-        sendEmail("prft.etm@gmail.com", "Test Subject", content, false, true);
+        Map<String, Object> contextMap = new HashMap<String, Object>();
+        sendEmail(userId, EmailConstants.Subjects.PEER_REVIEW_REMINDER, EmailConstants.Templates.PEER_REVIEW_REMINDER, contextMap);
     }
     
     // PLEASE REMOVE ME WHEN sendPeerReviewFeedbackRequestedEmail(String peerEmail,String peerFirstName, String reviewType, String reviewee) is finished and hooked up in activiti process
