@@ -1,7 +1,7 @@
 <div ng-cloak>
   <md-list>
     <div ng-repeat="(category, questions) in categories | orderBy:'toString()'">
-      <md-list-item ng-click="toggle = !toggle;">
+      <md-list-item ng-click="toggleCategory(category)">
         <div class="md-list-item-text" flex>
           <span class="md-title">{{ category }}</span>
           <span class="score" ng-if="getAvgScore(getRatings(questions, 'reviewee')) && showRevieweeRating()">
@@ -17,9 +17,9 @@
             Peers: {{ getAvgScore(getRatings(questions, 'peer')) }}
           </span>
         </div>
-        <i class="fa fa-lg {{toggle ? 'fa-chevron-down' : 'fa-chevron-left'}}"></i>
+        <i class="fa fa-lg {{$parent.toggle === category ? 'fa-chevron-down' : 'fa-chevron-left'}}"></i>
       </md-list-item>
-      <md-list-item ng-if="toggle" ng-repeat="question in questions | orderBy:'position'" ng-click="viewEvaluation(question, $event)" class="md-2-line">
+      <md-list-item ng-if="$parent.toggle === category" ng-repeat="question in questions | orderBy:'position'" ng-click="viewEvaluation(question, $event)" class="md-2-line">
         <div class="md-list-item-text">
           <h4>{{ question.title ? question.title : question.text | limitTo:titleLimit() }}</h4>
           <p>
