@@ -95,7 +95,7 @@ public class MailConfiguration {
         ServerOptions options = new ServerOptions();
         options.port = port;
         options.mailStore = new RollingMailStore();
-        options.threaded = false;
+        options.threaded = true;
         options.valid = true;
         server = SmtpServerFactory.startServer(options);
         return server;
