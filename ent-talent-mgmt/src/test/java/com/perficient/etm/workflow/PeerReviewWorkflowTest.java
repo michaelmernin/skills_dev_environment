@@ -37,10 +37,11 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
     
     private Map<String, Object> getVariables() {
         Map<String, Object> variables = new HashMap<>();
-        variables.put(ProcessConstants.PEER_VARIABLE, "Alex");
+        variables.put(ProcessConstants.PEER_VARIABLE, "6");
         variables.put(ProcessConstants.PEER_EMAIL_VARIABLE, "alex@perficient.com");
-        variables.put(ProcessConstants.REVIEWEE_VARIABLE, "David Brooks");
+        variables.put(ProcessConstants.REVIEWEE_VARIABLE, "9");
         variables.put(ProcessConstants.FEEDBACK_VARIABLE, 1L);
+        variables.put(ProcessConstants.REVIEW_VARIABLE, 1L);
 
         return variables;
     }
@@ -61,7 +62,7 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
         Task t = getCurrentTaskForProcess(processInstance);
         assertNotNull(t);
         assertEquals("The task to give feedback must be assigned to Author",
-                t.getAssignee(),"Alex"); 
+                t.getAssignee(),"6"); 
         
         taskService.complete(t.getId());
         t = getCurrentTaskForProcess(processInstance);
@@ -85,7 +86,7 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
         Task t = getCurrentTaskForProcess(processInstance);
         assertNotNull(t);
         assertEquals("The task to give feedback must be assigned to Author",
-                t.getAssignee(),"Alex");
+                t.getAssignee(),"6");
         
         taskService.complete(t.getId());
         t = getCurrentTaskForProcess(processInstance);
@@ -96,7 +97,7 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
         taskService.complete(t.getId(), getResultVariableMap(TodoResult.REJECT));
         t = getCurrentTaskForProcess(processInstance);
         assertNotNull("Process should have come back to submit feedback",t);
-        assertEquals("task should be assigned to Author",t.getAssignee(), "Alex");
+        assertEquals("task should be assigned to Author",t.getAssignee(), "6");
     }
     
     @Test

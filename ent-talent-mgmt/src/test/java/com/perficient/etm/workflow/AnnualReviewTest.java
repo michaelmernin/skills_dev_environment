@@ -54,10 +54,14 @@ public class AnnualReviewTest extends SpringAppTest {
     private Map<String, Object> getProcessVariables() {
         Map<String,Object> variables = new HashMap<>();
         variables.put(ProcessConstants.REVIEW_VARIABLE, REVIEW_ID);
-        variables.put(ProcessConstants.REVIEWEE_VARIABLE, "Alex");
-        variables.put(ProcessConstants.REVIEWER_VARIABLE, "Craig");
-        variables.put(ProcessConstants.DIRECTOR_VARIABLE, "David");
-        variables.put(ProcessConstants.GENERAL_MANAGER_VARIABLE, "Art");
+        // dev.user4, id=6 
+        variables.put(ProcessConstants.REVIEWEE_VARIABLE, 6L);
+        // dev.user3, id = 5, counselor ofdev.user4
+        variables.put(ProcessConstants.REVIEWER_VARIABLE, 5L);
+        // dev.user9, id=9, director
+        variables.put(ProcessConstants.DIRECTOR_VARIABLE, 9L);
+        // dev.user2, id=4, GM
+        variables.put(ProcessConstants.GENERAL_MANAGER_VARIABLE, 4L);
         variables.put(ProcessConstants.REVIEWEE_FEEDBACK_VARIABLE, 1L);
         variables.put(ProcessConstants.REVIEWER_FEEDBACK_VARIABLE, 2L);
         return variables;
@@ -65,28 +69,30 @@ public class AnnualReviewTest extends SpringAppTest {
 
     @Test
     public void testAnnualReview() {
-
+    	int tasksFor6 = taskSvc.createTaskQuery().taskAssignee("6").list().size();
+    	int tasksFor5 = taskSvc.createTaskQuery().taskAssignee("5").list().size();
+    	
         Map<String,Object> variables = getProcessVariables();
         ProcessInstance processInstance = runtimeSvc.startProcessInstanceByKey("annualReview",variables);
         assertNotNull(processInstance);
         System.out.println(processInstance.getActivityId());
 
-        List<Task> list = taskSvc.createTaskQuery().taskAssignee("Alex").list();
-        List<Task> list2 = taskSvc.createTaskQuery().taskAssignee("Craig").list();
+        List<Task> list6 = taskSvc.createTaskQuery().taskAssignee("6").list();
+        List<Task> list5 = taskSvc.createTaskQuery().taskAssignee("5").list();
 
-        out.println(list);
+        out.println(list6);
 
-        assert(list.size() == 1);
-        assert(list2.size() == 0);
+        assertEquals(tasksFor6+1, list6.size());
+        assertEquals(tasksFor5, list5.size());
 
         //Complete the first one and check for the task of the reviewer
-        taskSvc.complete(list.get(0).getId());
+        taskSvc.complete(list6.get(0).getId());
 
-        list = taskSvc.createTaskQuery().taskAssignee("Alex").list();
-        list2 = taskSvc.createTaskQuery().taskAssignee("Craig").list();
+        list6 = taskSvc.createTaskQuery().taskAssignee("6").list();
+        list5 = taskSvc.createTaskQuery().taskAssignee("5").list();
 
-        assert(list.size() == 0);
-        assert(list2.size() == 1);
+        assertEquals(tasksFor6, list6.size());
+        assertEquals(tasksFor5+1, list5.size());
 
     }
 
@@ -111,35 +117,35 @@ public class AnnualReviewTest extends SpringAppTest {
 
         //Self Feedback
         Task t = getNextTask(processInstance.getId());
-        assertNotNullAndAsignee(t,"Alex");
+        assertNotNullAndAsignee(t,"6");
         Review review = reviewRepository.getOne(REVIEW_ID);
         assertEquals("Review should start Open", ReviewStatus.OPEN, review.getReviewStatus());
 
         //Reviewer Feedback
         t = completeAndGetNextTask(t,processInstance.getId());
-        assertNotNullAndAsignee(t,"Craig");
+        assertNotNullAndAsignee(t,"5");
         
         //Reviewer Curation
         t = completeAndGetNextTask(t,processInstance.getId());
-        assertNotNullAndAsignee(t,"Craig");
+        assertNotNullAndAsignee(t,"5");
 
         //Directors Approval
         t = completeAndGetNextTask(t,processInstance.getId());
-        assertNotNullAndAsignee(t,"David");
+        assertNotNullAndAsignee(t,"9");
         review = reviewRepository.getOne(REVIEW_ID);
         assertEquals("Review should move to Director Approval", ReviewStatus.DIRECTOR_APPROVAL, review.getReviewStatus());
 
         //Joint Approvals
         List<Task> tasks = completeAndGetParallelTasks(t,processInstance.getId());
         assertEquals("Expect two parallel joint review tasks", 2, tasks.size());
-        assertNotNullAndAsignee(tasks.get(0), "Craig");
-        assertNotNullAndAsignee(tasks.get(1), "Alex");
+        assertNotNullAndAsignee(tasks.get(0), "5");
+        assertNotNullAndAsignee(tasks.get(1), "6");
         review = reviewRepository.getOne(REVIEW_ID);
         assertEquals("Review should move to Joint Approval", ReviewStatus.JOINT_APPROVAL, review.getReviewStatus());
 
         //General Manager Approval
         t = completeAndGetNextTask(tasks, processInstance.getId());
-        assertNotNullAndAsignee(t,"Art");
+        assertNotNullAndAsignee(t,"4");
         review = reviewRepository.getOne(REVIEW_ID);
         assertEquals("Review should move to GM Approval", ReviewStatus.GM_APPROVAL, review.getReviewStatus());
 
@@ -167,21 +173,21 @@ public class AnnualReviewTest extends SpringAppTest {
 
         //Self Feedback
         Task t = getNextTask(processInstance.getId());
-        assertNotNullAndAsignee(t,"Alex");
+        assertNotNullAndAsignee(t,"6");
 
         //Reviewer Feedback
         t = completeAndGetNextTask(t, processInstance.getId());
-        assertNotNullAndAsignee(t,"Craig");
+        assertNotNullAndAsignee(t,"5");
         
         //Reviewer Curation
         t = completeAndGetNextTask(t, processInstance.getId());
-        assertNotNullAndAsignee(t,"Craig");
+        assertNotNullAndAsignee(t,"5");
         
         //Fail the reviewer curation
         t = completeWithAndGetNextTask(t, TodoResult.REJECT, processInstance.getId());
 
         //flow has to go back to initial reviewer
-        assertNotNullAndAsignee(t,"Alex");
+        assertNotNullAndAsignee(t,"6");
     }
 
     /**
