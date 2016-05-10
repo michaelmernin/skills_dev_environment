@@ -24,6 +24,8 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import com.perficient.etm.domain.User;
+import com.perficient.etm.repository.UserRepository;
+import com.perficient.etm.security.SecurityUtils;
 
 /**
  * Service for sending e-mails.
@@ -54,6 +56,9 @@ public class MailService {
     
     @Inject
     private ReviewService reviewService;
+    
+    @Inject
+    private UserRepository userRepository;
 
     /**
      * System default email address that sends the e-mails.
@@ -158,26 +163,28 @@ public class MailService {
      * @param reviewId
      * @return
      */
-    private Context addReviewInfoToContext(Context context, Long reviewId ){
-		Optional.ofNullable(reviewId).ifPresent(rId -> {
-			Optional.ofNullable(reviewService.findById(rId)).ifPresent(review -> {
-				context.setVariable(EmailConstants.Review.ID, rId);
-				Optional.ofNullable(review.getReviewType()).ifPresent(revieweType -> {
-					context.setVariable(EmailConstants.Review.TYPE, revieweType.getName());
-				});
-				Optional.ofNullable(review.getReviewStatus()).ifPresent(revieweStatus -> {
-					context.setVariable(EmailConstants.Review.TYPE, revieweStatus.getName());
-				});
-				Optional.ofNullable(review.getReviewee()).ifPresent(reviewee -> {
-					context.setVariable(EmailConstants.Review.REVIEWEE_FIRST_NAME, reviewee.getFirstName());
-					context.setVariable(EmailConstants.Review.REVIEWEE_LAST_NAME, reviewee.getLastName());
-				});
-				Optional.ofNullable(review.getReviewer()).ifPresent(reviewer -> {
-					context.setVariable(EmailConstants.Review.REVIEWER_FIRST_NAME, reviewer.getFirstName());
-					context.setVariable(EmailConstants.Review.REVIEWER_LAST_NAME, reviewer.getLastName());
-				});
-			});
-		});
+    private Context addReviewInfoToContext(Context context, Long reviewId ) {
+        SecurityUtils.runAsSystem(userRepository, () -> {
+            Optional.ofNullable(reviewId).ifPresent(rId -> {
+                Optional.ofNullable(reviewService.findById(rId)).ifPresent(review -> {
+                    context.setVariable(EmailConstants.Review.ID, rId);
+                    Optional.ofNullable(review.getReviewType()).ifPresent(revieweType -> {
+                        context.setVariable(EmailConstants.Review.TYPE, revieweType.getName());
+                    });
+                    Optional.ofNullable(review.getReviewStatus()).ifPresent(revieweStatus -> {
+                        context.setVariable(EmailConstants.Review.TYPE, revieweStatus.getName());
+                    });
+                    Optional.ofNullable(review.getReviewee()).ifPresent(reviewee -> {
+                        context.setVariable(EmailConstants.Review.REVIEWEE_FIRST_NAME, reviewee.getFirstName());
+                        context.setVariable(EmailConstants.Review.REVIEWEE_LAST_NAME, reviewee.getLastName());
+                    });
+                    Optional.ofNullable(review.getReviewer()).ifPresent(reviewer -> {
+                        context.setVariable(EmailConstants.Review.REVIEWER_FIRST_NAME, reviewer.getFirstName());
+                        context.setVariable(EmailConstants.Review.REVIEWER_LAST_NAME, reviewer.getLastName());
+                    });
+                });
+            });
+        });
 		return context;
     }
    
