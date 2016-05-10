@@ -22,6 +22,7 @@ spring:
         protocol: smtp
         tls: false
         auth: false
+        from: noreply@perficient.com
         
     ldap:
         root: dc=perficient,dc=com
