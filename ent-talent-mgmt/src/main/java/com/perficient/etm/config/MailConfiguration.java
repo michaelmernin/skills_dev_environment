@@ -91,14 +91,12 @@ public class MailConfiguration {
     @Bean
     @Profile({Constants.SPRING_PROFILE_DEVELOPMENT,Constants.SPRING_PROFILE_TEST})
     public SmtpServer initDumpsterSmtpServer() {
-        log.info("Starting SMTP server on port {}", port);
-        ServerOptions options = new ServerOptions();
-        options.port = port;
-        options.mailStore = new RollingMailStore();
-        options.threaded = true;
-        options.valid = true;
-        server = SmtpServerFactory.startServer(options);
-        return server;
+    	 log.info("Starting SMTP server on port {}", port);
+         server = new SmtpServer();
+         server.setPort(port);
+         server.setMailStore(new RollingMailStore());
+         Executors.newSingleThreadExecutor().execute(server::run);
+         return server;
     }
     
     @PreDestroy
