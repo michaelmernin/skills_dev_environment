@@ -8,6 +8,8 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
   $scope.getScore = Evaluation.score;
   $scope.getAvgScore = Evaluation.avgScore;
   $scope.getRatings = Evaluation.getRatings;
+  $scope.keys = Object.keys;
+  $scope.toggle = null;
 
   Principal.identity().then(function (account) {
     user = account;
@@ -18,6 +20,10 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
       }
     });
   });
+
+  $scope.toggleCategory = function (category) {
+    $scope.toggle = ($scope.toggle === category ? null : category);
+  };
 
   $scope.viewEvaluation = function (question, ev) {
     $mdDialog.show({

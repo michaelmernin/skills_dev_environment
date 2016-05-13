@@ -8,3 +8,4 @@
     - go_cd_agent
     - ansible_agent
     - firefox_headless
+    - email_builder

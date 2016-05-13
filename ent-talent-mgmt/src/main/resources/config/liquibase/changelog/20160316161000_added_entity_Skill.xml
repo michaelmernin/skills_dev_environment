@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <property name="now" value="now()" dbms="mysql,h2" />
+  <property name="now" value="current_timestamp" dbms="postgresql" />
+
+  <!-- Added the entity Skill, SkillCategory, SkillRanking. -->
+  <changeSet id="20160316161000" author="jhipster">
+    <createTable tableName="T_SKILLCATEGORY">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="title" type="varchar(255)" />
+    </createTable>
+
+    <createTable tableName="T_SKILL">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="name" type="varchar(50)" />
+      <column name="skillcategory_id" type="bigint" />
+    </createTable>
+
+    <addForeignKeyConstraint baseColumnNames="skillcategory_id"
+      baseTableName="T_SKILL" constraintName="fk_skill_skillcategory_id"
+      referencedColumnNames="id" referencedTableName="T_SKILLCATEGORY" />
+
+    <createTable tableName="T_SKILLRANKING">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="rank" type="int" />
+      <column name="date" type="date" />
+      <column name="user_id" type="bigint" />
+      <column name="skill_id" type="bigint" />
+    </createTable>
+    
+    <addUniqueConstraint columnNames="skill_id, user_id"
+      constraintName="Constraint_skillRanking" tableName="T_SKILLRANKING" />
+      
+    <addForeignKeyConstraint baseColumnNames="skill_id"
+      baseTableName="T_SKILLRANKING" constraintName="fk_skillranking_skill_id"
+      referencedColumnNames="id" referencedTableName="T_SKILL" />
+
+    <addForeignKeyConstraint baseColumnNames="user_id"
+      baseTableName="T_SKILLRANKING" constraintName="fk_skillranking_user_id"
+      referencedColumnNames="id" referencedTableName="T_USER" />
+
+  </changeSet>
+</databaseChangeLog>

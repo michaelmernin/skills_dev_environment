@@ -1,0 +1,9 @@
+---
+# file: roles/email_builder/tasks/main.yml
+- name: Install gulp packages
+  tags: npm
+  sudo: yes
+  npm:
+    name: gulp-cli
+    global: yes
+    state: latest

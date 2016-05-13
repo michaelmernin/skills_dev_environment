@@ -1,0 +1,68 @@
+id;skillcategory_id;name
+1;1;AEM/CQ official Adobe training
+2;1;Certified AEM developer
+3;1;HTML
+4;1;CSS
+5;1;SASS / LESS
+6;1;Objective C
+7;1;C / C++
+8;1;C# / ASP.NET
+9;1;VB.NET
+10;1;jQuery
+11;1;JAVA 
+12;1;J2EE: Servlet Technology (JSP, Servlet)
+13;1;JSON
+14;1;JavaScript
+15;1;Struts
+16;1;AngularJS
+17;1;ReactJS
+18;1;Emberjs
+19;1;Responsive Design
+20;1;Responsive Framework: Bootstrap
+21;1;Responsive Framework: Foundation
+22;1;REST
+23;1;SOAP
+24;1;Ruby
+25;1;Perl
+26;1;Ajax
+27;1;OSGi Services
+28;1;Release Management 
+29;1;Maven
+30;1;PHP
+31;1;XSL
+32;1;Python
+33;1;XML
+34;1;Telerik
+35;1;Selenium
+36;1;JUnit
+37;1;QTP / QTC
+38;1;Segmentation / Personalization
+39;1;Configuring AEM Dispatcher
+40;1;Environment Sizing
+42;1;System Architecture
+43;1;Configuring AEM Replication
+44;1;Continuous Integration
+45;1;JVM Performance Tuning
+46;2;Presenting to Client Stakeholders
+47;2;Presenting to Development Teams
+48;2;Blogging and Blog Contribution
+49;2;Conducting Webinars
+50;2;Conflict Negotiation and Resolution
+51;2;Understanding of Sales Process
+52;2;People Management
+53;2;Training People or Clients
+54;3;Software Project Leadership
+55;3;PMP Certification
+56;3;Six Sigma
+57;3;Certified SCRUM Master
+58;3;Certified SCRUM Product Owner
+59;3;Lead Project for Multiple Clients
+60;3;Lead Projects in parallel for Multiple Clients
+61;3;Can play most non-technical project roles
+62;3;Project or Requirements Documentation
+63;3;Project or Requirements Discovery
+64;3;Jira / Confluence
+65;3;Pivotal Tracker
+66;3;MS Project
+67;3;Clarity
+68;3;Primavera

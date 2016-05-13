@@ -1,0 +1,19 @@
+.etm-skills-toolbar {
+  position: fixed;
+  height: 60px;
+  z-index: 1;
+  width: calc(100% - 17px);
+  background: white;
+  bottom: 0;
+  left: 0;
+}
+
+@media (min-width: 1280px) {
+  .etm-skills-toolbar {
+    width: calc(100vw - 320px - 17px); /* Viewport - sidebar - scrollbar */
+  }
+}
+
+.etm-skills-content {
+  margin-bottom: 60px;
+}

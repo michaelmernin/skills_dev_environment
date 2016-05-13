@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewStatus) {
+angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewStatus, FeedbackStatus) {
   function convertFromServer(data) {
     data.dueDate = DateUtils.convertLocaleDateFromServer(data.dueDate);
     return data;
@@ -11,6 +11,11 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
       data.dueDate = DateUtils.convertLocaleDateToServer(data.dueDate);
     }
     return data;
+  }
+  
+  function isOpenToSubmit(review, reviewerFeedback) {
+    return review.reviewStatus.id === ReviewStatus.OPEN.id
+      && (!reviewerFeedback.id || reviewerFeedback.feedbackStatus.id === FeedbackStatus.OPEN.id);
   }
 
   return angular.extend($resource('api/todos/:id', {}, {
@@ -43,13 +48,10 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
       }
     }
   }), {
-    getActions: function (todo, review) {
+    getActions: function (todo, review, reviewerFeedback) {
       var actions = [];
       if (todo.id && review.reviewStatus && review.reviewStatus.id) {
-        switch (review.reviewStatus.id) {
-        case ReviewStatus.OPEN.id:
-          // TODO if reviewer and reviewee feedback are both ready
-          // Then action is Reviewer Approve/Reject
+        if (isOpenToSubmit(review, reviewerFeedback)) {
           actions.push({
             name: 'Submit Feedback',
             confirm: 'Confirm Feedback Submission?',
@@ -58,8 +60,7 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
             theme: '',
             icon: 'fa-send'
           });
-          break;
-        default:
+        } else {
           actions.push({
             name: 'Approve',
             confirm: 'Confirm Review Approval?',
@@ -75,7 +76,6 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
             theme: 'md-warn',
             icon: 'fa-exclamation'
           });
-          break;
         }
       }
       return actions;

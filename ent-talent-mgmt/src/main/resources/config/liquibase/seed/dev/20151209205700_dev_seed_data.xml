@@ -10,7 +10,7 @@
     <!--
         update feedback seed data
     -->
-    <changeSet id="20151209205700" context="!prod" author="ahmed">
+    <changeSet id="20151209205700" context="!prod AND !uat" author="ahmed">
         <loadUpdateData encoding="UTF-8" separator=";"
                   file="config/liquibase/seed/dev/feedback2.csv"
                   tableName="T_FEEDBACK"

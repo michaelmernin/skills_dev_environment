@@ -13,9 +13,9 @@ import com.perficient.etm.web.deserializer.TodoResultDeserializer;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonDeserialize(using = TodoResultDeserializer.class)
 public enum TodoResult {
-    SUBMIT(1, "SUCCESS"),
-    APPROVE(2, "SUCCESS"),
-    REJECT(3, "FAILURE");
+    SUBMIT(1, true),
+    APPROVE(2, true),
+    REJECT(3, false);
 
     private static final Map<Integer, TodoResult> REGISTRY;
 
@@ -35,18 +35,18 @@ public enum TodoResult {
 
     private Integer id;
 
-    private String name;
+    private boolean result;
 
-    private TodoResult(int id, String name) {
+    private TodoResult(int id, boolean result) {
         this.id = id;
-        this.name = name;
+        this.result = result;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public boolean getResult() {
+        return result;
     }
 }

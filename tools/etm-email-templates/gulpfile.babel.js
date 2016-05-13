@@ -22,6 +22,22 @@ gulp.task('build',
 gulp.task('default',
   gulp.series('build', server, watch));
 
+// set production flag to true, build emails trough 'build' task
+// then copy produced templates in 'dist' to etm app's email resources folder 
+gulp.task('deploy',
+  gulp.series('build', cleanEtmMails, copyToEtmApp));
+
+// clean ETM mails folder
+function cleanEtmMails(done){
+  rimraf('../../ent-talent-mgmt/src/main/resources/mails', done);
+}
+
+// copies product files in 'dist' folder to /ent-talent-mgmt/ent-talent-mgmt/src/main/resources/mails
+function copyToEtmApp(){
+  return gulp.src('dist/**/*.html')
+    .pipe(gulp.dest('../../ent-talent-mgmt/src/main/resources/mails'));
+}
+
 // Delete the "dist" folder
 // This happens every time a build starts
 function clean(done) {

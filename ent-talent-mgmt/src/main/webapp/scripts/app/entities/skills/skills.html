@@ -1,0 +1,43 @@
+<div ng-cloak>
+  <md-content md-scroll-y class="md-whiteframe-z1">
+    <div ng-class="{'etm-skills-content': showButtons()}" layout="column" layout-padding>
+      <div>
+        <div layout-gt-xs="row">
+          <h2 flex-gt-xs>{{ user.firstName }} {{ user.lastName }}'s Skills Inventory</h2>
+          <md-button class="md-raised md-accent md-hue-4" ng-click="viewSkillGuideline($event)"> Skill Guidelines</md-button>
+        </div>
+        <div layout-gt-xs="row">
+          <div flex-gt-xs>
+            <md-list>
+              <div ng-repeat="sc in skillCategories">
+                <md-list-item ng-click="toggleCategory(sc)">
+                  <div class="md-list-item-text" flex>
+                    <span class="md-title">{{ sc.title }}</span>
+                  </div>
+                  <i class="fa fa-lg {{toggle === sc ? 'fa-chevron-down' : 'fa-chevron-left'}}"></i>
+                </md-list-item>
+                <md-list-item ng-repeat="skill in sc.skills" ng-show="$parent.toggle === sc">
+                  <div flex="30">
+                    <span class="md-body-1">{{ skill.name }}</span>
+                  </div>
+                  <md-slider name="ranking" min="0" max="5" flex="55" ng-model="skill.ranking.rank"
+                    aria-label="ranking" id="ranking" name="ranking" class="md-primary" md-discrete></md-slider>
+                  <div style="padding: 20px" ; flex="10" layout layout-align="end center">
+                    <input type="number" ng-model="skill.ranking.rank" aria-label="ranking" style="border: none"
+                      aria-controls="ranking"/>
+                  </div>
+                </md-list-item>
+                <md-divider ng-if="!$last"></md-divider>
+              </div>
+            </md-list>
+          </div>
+        </div>
+        <div class="etm-skills-toolbar md-actions md-whiteframe-z1" layout="row" ng-if="showButtons(skillCategories)">
+          <span flex></span>
+          <md-button ng-click="cancel()" class="md-primary">Cancel</md-button>
+          <md-button ng-click="saveRankings(skillCategories)" class="md-primary">Save</md-button>
+        </div>
+      </div>
+    </div>
+  </md-content>
+</div>

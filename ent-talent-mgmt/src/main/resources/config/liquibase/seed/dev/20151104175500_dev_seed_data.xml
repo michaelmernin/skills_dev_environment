@@ -10,7 +10,7 @@
     <!--
         Add dev seed data.
     -->
-    <changeSet id="20151104175500" context="!prod" author="ahmed">
+    <changeSet id="20151104175500" context="!prod AND !uat" author="ahmed">
         <loadUpdateData encoding="UTF-8" separator=";"
                   file="config/liquibase/seed/dev/reviews.csv"
                   tableName="T_REVIEW"

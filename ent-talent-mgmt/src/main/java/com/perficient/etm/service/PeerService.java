@@ -13,6 +13,7 @@ import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.TodoResult;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.repository.FeedbackRepository;
@@ -96,13 +97,13 @@ public class PeerService {
         }
         String email = (feedback.getAuthor() == null)? null : feedback.getAuthor().getEmail();
         if(email != null){
-            mailService.sendPeerReviewFeedbackRequestedEmail(email);
+          //  mailService.sendPeerReviewFeedbackRequestedEmail(email);
         }
         return feedback;
     }
     
-    public Feedback completeTaskInFeedbackProcess(Feedback feedback){
-        processSvc.completePeerReviewTask(feedback, "TRUE");
+    public Feedback completeTaskInFeedbackProcess(Feedback feedback, TodoResult result) {
+        processSvc.completePeerReviewTask(feedback, result);
         return feedback;
     }
     
