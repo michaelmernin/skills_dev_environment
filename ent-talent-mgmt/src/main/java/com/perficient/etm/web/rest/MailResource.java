@@ -1,10 +1,18 @@
 package com.perficient.etm.web.rest;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeUtility;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.geronimo.mail.util.QuotedPrintable;
+import org.apache.geronimo.mail.util.QuotedPrintableEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.dumbster.smtp.MailMessage;
 import com.dumbster.smtp.SmtpServer;
-import com.dumbster.smtp.mailstores.EMLMailStore;
-import com.perficient.etm.domain.User;
-import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.service.MailService;
 // TODO - remove this resource from production, only available in lower environments
@@ -62,7 +67,7 @@ public class MailResource {
         List<Message> returnMessages = new ArrayList<Message>();
         for (MailMessage message : messages) {
             Message msg = new Message();
-            msg.setBody(message.getBody());
+            msg.setBody(decodeQP(message.getBody()));
             msg.setFrom(message.getFirstHeaderValue(MESSAGE_HEADER_FROM));
             msg.setTo(message.getFirstHeaderValue(MESSAGE_HEADER_TO));
             msg.setSubject(message.getFirstHeaderValue(MESSAGE_HEADER_SUBJECT));
@@ -83,12 +88,12 @@ public class MailResource {
         for (MailMessage message : messages) {
             int hashcode = message.hashCode();
             if(message.hashCode() == hash){
-                return message.getBody();
+            	return decodeQP(message.getBody());
             }
         }
        return "<p>NOT FOUND</p>";
     }
-
+    
 
     /**
      * POST /mail/test -> send a new test email.
@@ -135,6 +140,31 @@ public class MailResource {
         messageList.add(message.hashCode());
         mailsender.send(message);
         return new ResponseEntity<Message>(HttpStatus.OK);
+    }
+    
+    private String decodeQP(String qpString){
+    	String out="";
+    	InputStream inputStream = null;
+    	try {
+    		inputStream  = IOUtils.toInputStream(qpString);
+    		inputStream = MimeUtility.decode(inputStream, "quoted-printable");
+			out = IOUtils.toString(inputStream);
+		} catch (MessagingException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			Optional.ofNullable(inputStream).ifPresent(is -> {
+					try {
+						is.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			);
+		}
+    	
+        return out;
     }
     
 }
