@@ -172,7 +172,7 @@ public class MailService {
                         context.setVariable(EmailConstants.Review.TYPE, revieweType.getName());
                     });
                     Optional.ofNullable(review.getReviewStatus()).ifPresent(revieweStatus -> {
-                        context.setVariable(EmailConstants.Review.TYPE, revieweStatus.getName());
+                        context.setVariable(EmailConstants.Review.STATUS, revieweStatus.getName());
                     });
                     Optional.ofNullable(review.getReviewee()).ifPresent(reviewee -> {
                         context.setVariable(EmailConstants.Review.REVIEWEE_FIRST_NAME, reviewee.getFirstName());
