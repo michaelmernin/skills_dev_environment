@@ -1,6 +1,5 @@
 package com.perficient.etm.web.rest;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -12,25 +11,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.perficient.etm.domain.Feedback;
-import com.perficient.etm.domain.Goal;
-import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
-import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.repository.FeedbackRepository;
-import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.service.PeerService;
-import com.perficient.etm.service.ReviewService;
 import com.perficient.etm.service.UserService;
 import com.perficient.etm.web.view.View;
 
