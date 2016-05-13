@@ -19,7 +19,7 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   $scope.peerSelected = function (user) {
     if (user != null) {
       if (user.login != null) {        
-       Peer.addPeer({reviewId: review.id}, {id: user.id}, function(peer) {
+       Peer.addPeer({reviewId: review.id, id: user.id}, {}, function(peer) {
          $scope.peers.push(peer);
        });      
       }

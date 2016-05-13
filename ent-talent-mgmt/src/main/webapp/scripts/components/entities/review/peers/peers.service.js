@@ -17,7 +17,7 @@ angular.module('etmApp').factory('Peer', function ($resource) {
       }
     },
     'addPeer': {
-      url: 'api/reviews/:reviewId/peers/:id',
+      url: 'api/reviews/:reviewId/peers/addPeer/:id',
       method: 'POST',
       isArray: true,
       transformResponse: function (data) {

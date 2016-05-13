@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.Goal;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.InvalidRequestException;
@@ -53,27 +56,24 @@ public class PeerResource implements RestResource {
      * POST  /reviews/:reviewId/peers -> Add peers to a review
      * @throws URISyntaxException
      */
-    @RequestMapping(value = "/reviews/{reviewId}/peers",
+    @RequestMapping(value = "reviews/{reviewId}/peers/addPeer/{id}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    @JsonView(View.Public.class)
-    public Feedback save(@PathVariable Long reviewId, @PathVariable Long peerId, BindingResult result) throws URISyntaxException {
+    @Transactional
+    public ResponseEntity<Feedback> save(@PathVariable Long reviewId, @PathVariable Long id) throws URISyntaxException {
         log.debug("REST request to update peers for Review Id : {}", reviewId);
-        if (result.hasErrors()) {
-            throw new InvalidRequestException("Invalid review update", result);
-        }
-        User peer = userService.getUser(peerId);
+        User peer = userService.getUser(id);
         peerSvc.addPeerFeedback(reviewId, peer);
         List<Feedback> feedbacks = feedbackRepository.findAllByReviewIdAndFeedbackType(reviewId);
         Feedback newFeedback = new Feedback();
         for (int i = 0; i < feedbacks.size(); i++) {
             Feedback compareFeedback = feedbacks.get(i);
-            if (compareFeedback.getAuthor().getId() == peerId) {
+            if (compareFeedback.getAuthor().getId() == id) {
                 newFeedback = compareFeedback;
             }
         }
-        return newFeedback;
+        return new ResponseEntity<>(newFeedback, HttpStatus.CREATED);
     }
     
     /**
