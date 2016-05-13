@@ -11,6 +11,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import com.dumbster.smtp.ServerOptions;
 import com.dumbster.smtp.SmtpServer;
 import com.dumbster.smtp.SmtpServerFactory;
+import com.dumbster.smtp.mailstores.EMLMailStore;
 import com.dumbster.smtp.mailstores.RollingMailStore;
 
 import java.util.Properties;
@@ -94,7 +95,7 @@ public class MailConfiguration {
     	 log.info("Starting SMTP server on port {}", port);
          server = new SmtpServer();
          server.setPort(port);
-         server.setMailStore(new RollingMailStore());
+         server.setMailStore(new EMLMailStore());
          Executors.newSingleThreadExecutor().execute(server::run);
          return server;
     }
