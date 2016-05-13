@@ -51,20 +51,12 @@ public class PeerResource implements RestResource {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    @Transactional
-    public ResponseEntity<Feedback> save(@PathVariable Long reviewId, @PathVariable Long id) throws URISyntaxException {
+    @JsonView(View.Public.class)
+    public List<Feedback> save(@PathVariable Long reviewId, @PathVariable Long id) throws URISyntaxException {
         log.debug("REST request to update peers for Review Id : {}", reviewId);
         User peer = userService.getUser(id);
         peerSvc.addPeerFeedback(reviewId, peer);
-        List<Feedback> feedbacks = feedbackRepository.findAllByReviewIdAndFeedbackType(reviewId);
-        Feedback newFeedback = new Feedback();
-        for (int i = 0; i < feedbacks.size(); i++) {
-            Feedback compareFeedback = feedbacks.get(i);
-            if (compareFeedback.getAuthor().getId() == id) {
-                newFeedback = compareFeedback;
-            }
-        }
-        return new ResponseEntity<>(newFeedback, HttpStatus.CREATED);
+        return feedbackRepository.findAllByReviewIdAndFeedbackType(reviewId);
     }
     
     /**
