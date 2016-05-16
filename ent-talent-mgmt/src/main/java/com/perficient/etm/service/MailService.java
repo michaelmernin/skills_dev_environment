@@ -1,6 +1,5 @@
 package com.perficient.etm.service;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -18,7 +17,6 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -64,10 +62,13 @@ public class MailService {
      * System default email address that sends the e-mails.
      */
     private String from;
+    
+    private String baseUrl;
 
     @PostConstruct
     public void init() {
         this.from = env.getProperty("spring.mail.from");
+        this.baseUrl = env.getProperty("spring.mail.baseUrl");
     }
 
     /**
@@ -78,7 +79,7 @@ public class MailService {
      * @param isMultipart boolean for multipart emails with assets
      * @param isHtml if content is html or not (text)
      */
-    @Async
+ //   @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         log.debug("Send e-mail[multipart '{}' and html '{}'] to '{}' with subject '{}'",
                 isMultipart, isHtml, to, subject);
@@ -107,23 +108,25 @@ public class MailService {
      * @param locale the locale thymeleaf will use for translation and localization
      * @throws MessagingException
      */
+   // @Async
     public void sendEmail(final Long recipientId, final Long reviewId, String subject, String EmailTemplate, Map<String, Object> contextMap){
         User recipientUser = userService.getUser(recipientId);
-        String recipientEmail = recipientUser.getEmail();
         // if the recipient user does not exist, return.
        Optional<User> optUser = Optional.ofNullable(recipientUser);
        if(!optUser.isPresent()){
-    	   log.error("Cannot send email to {}, no user has such email", recipientEmail);
+    	   log.error("Cannot send email to usee with Id: {}, user does not exist", recipientId);
            return;
        }
        optUser.ifPresent(user -> {
     	   // adds some user info (first name, last name, title ...etc) to the context
            Locale locale = Locale.forLanguageTag(user.getLangKey());
            Context context = new Context(locale);
+           String recipientEmail = user.getEmail();
            // add contextVars to context
            Optional.ofNullable(contextMap).ifPresent(ctxmap ->{
         	   ctxmap.forEach((key, value) -> context.setVariable(key, value));
            });
+           context.setVariable(EmailConstants.BASE_URL, baseUrl);
            // add user and review vars to context
            addUserInfoToContext(context, user);
            addReviewInfoToContext(context, reviewId);
@@ -188,10 +191,9 @@ public class MailService {
 		return context;
     }
    
-    @Async
+  //  @Async
     public void sendActivationEmail(Long userId) {
     	log.debug("Sending activation e-mail to user with id: '{}'", userId);
-        Map<String, Object> contextMap = new HashMap<String, Object>();
         sendEmail(userId, null, EmailConstants.Subjects.ACTIVATION, EmailConstants.Templates.ACTIVATION, null);
     }
 
@@ -200,7 +202,7 @@ public class MailService {
      * @param userId
      * @param reviewId
      */
-    @Async
+  //  @Async
     public void sendAnnualReviewStartedEmail(Long userId, Long reviewId) {
         log.debug("Sending annual review process started e-mail to '{}'");
         sendEmail(userId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_STARTED, EmailConstants.Templates.REVIEW_STARTED, null);
@@ -211,7 +213,7 @@ public class MailService {
      * @param userId the user id to send an email to
      * @param reviewId the review id the email is about
      */
-    @Async
+  //  @Async
     public void sendPeerFeedbackReminderEmail(Long userId, Long reviewId) {
         log.debug("Sending peer feedback process reminder e-mail to '{}'");
         sendEmail(userId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REMINDER, EmailConstants.Templates.PEER_FEEDBACK_REMINDER, null);
@@ -223,13 +225,13 @@ public class MailService {
      * @param peerId the peerId used to send the email
      * @param reviewId the reviewId on which the peer needs to submit feedback
      */
-    @Async
+  ///  @Async
     public void sendPeerFeedbackRequestedEmail(Long peerId, Long reviewId) {
         log.debug("Sending peer feedback requested e-mail to '{}'");
         sendEmail(peerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REQUESTED, EmailConstants.Templates.PEER_FEEDBACK_REQUESTED, null);
     }
     
-    @Async
+  //  @Async
     public void sendPeerFeedbackSubmittedEmail(Long peerId, Long reviewId) {
         log.debug("Sending peer review submitted e-mail to '{}'");
         sendEmail(peerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REQUESTED, EmailConstants.Templates.PEER_FEEDBACK_REQUESTED, null);

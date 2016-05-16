@@ -3,6 +3,7 @@ package com.perficient.etm.service;
 public final class EmailConstants {
 
 	private EmailConstants(){}
+	public static final String BASE_URL = "BASE_URL";
 	
 	public final class User{
 		public static final String FIRST_NAME = "FIRST_NAME";

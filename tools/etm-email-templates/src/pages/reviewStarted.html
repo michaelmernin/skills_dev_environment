@@ -1,3 +1,4 @@
 <h2 class="etm-email-greeting">Hello <span th:text="${FIRST_NAME}"></span></h2>
 <p> A new <span th:text="${REVIEW_TYPE}"></span> has been started for you!</p>
-<button class="medium" th:href="@{/review/{id}/edit}(id=${REVIEW_ID})">TAKE A LOOK!</button>
+<!--/* Explore converting this into a Thymeleaf dialect if we need to do more proccessing like this in the future */-->
+<a class="button medium" th:href="${BASE_URL + '/review/' + REVIEW_ID + '/edit'}">TAKE A LOOK!</a>
