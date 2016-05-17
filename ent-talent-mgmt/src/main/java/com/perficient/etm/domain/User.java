@@ -11,6 +11,7 @@ import com.perficient.etm.security.AuthoritiesConstants;
 import com.perficient.etm.security.SecurityUtils;
 import com.perficient.etm.web.view.View;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
@@ -341,6 +342,21 @@ public class User extends AbstractAuditingEntity implements Serializable {
                 ", lastName='" + lastName + '\'' +
                 "}";
     }
-
+    
+    public String getFullName(){
+    	String f = getFirstName();
+    	String l = getLastName();
+    	String fullName = "";
+		if(f==null && l==null)
+			fullName = "";
+		else if(f!=null && l==null)
+			fullName = f;
+		else if(f==null && l!=null)
+			fullName = l;
+		else if(f!=null && l!=null)
+			fullName = f + " " + l;
+		
+		return fullName;
+    }
   
 }
