@@ -93,10 +93,12 @@ public class MailConfiguration {
     @Profile({Constants.SPRING_PROFILE_DEVELOPMENT,Constants.SPRING_PROFILE_TEST})
     public SmtpServer initDumpsterSmtpServer() {
     	 log.info("Starting SMTP server on port {}", port);
-         server = new SmtpServer();
-         server.setPort(port);
-         server.setMailStore(new EMLMailStore());
-         Executors.newSingleThreadExecutor().execute(server::run);
+    	 ServerOptions options = new ServerOptions(); 
+         options.port = port; 
+         options.mailStore = new RollingMailStore(); 
+         options.threaded = false; 
+         options.valid = true;
+         server = SmtpServerFactory.startServer(options); 
          return server;
     }
     
