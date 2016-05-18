@@ -1,4 +1,6 @@
-<h2 class="etm-email-greeting">Hello <span th:text="${FIRST_NAME}"></span></h2>
-<p> A new <span th:text="${REVIEW_TYPE}"></span> has been started for you!</p>
-<!--/* Explore converting this into a Thymeleaf dialect if we need to do more proccessing like this in the future */-->
+<h2 class="etm-email-greeting">Hello <span th:text="${PROFILE == 'tst' or PROFILE == 'dev'}?  ${FULL_NAME} : ${FIRST_NAME}"></span></h2>
+<p th:if="${ID == REVIEWEE_ID}"><span th:text="${REVIEWER_FULL_NAME}"></span> has initiated a new <span th:text="${REVIEW_TYPE}"></span> for you. </p>
+<p th:if="${ID == REVIEWER_ID}"> You have initiated a new <span th:text="${REVIEW_TYPE}"></span> for <span th:text="${REVIEWEE_FULL_NAME}"></span> </p>
+<p>You can now find this review on your to-do list for further actions.</p>
+<!--/* Explore converting this into a Thymeleaf dialect if we need to do more proccessing/string manibulation like this in the future */-->
 <a class="button medium" th:href="${BASE_URL + '/review/' + REVIEW_ID + '/edit'}">TAKE A LOOK!</a>

@@ -17,6 +17,7 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -64,11 +65,14 @@ public class MailService {
     private String from;
     
     private String baseUrl;
+    
+    private String profile;
 
     @PostConstruct
     public void init() {
         this.from = env.getProperty("spring.mail.from");
         this.baseUrl = env.getProperty("spring.mail.baseUrl");
+        this.profile = env.getProperty("spring.profiles.active");
     }
 
     /**
@@ -79,7 +83,7 @@ public class MailService {
      * @param isMultipart boolean for multipart emails with assets
      * @param isHtml if content is html or not (text)
      */
- //   @Async
+    @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         log.debug("Send e-mail[multipart '{}' and html '{}'] to '{}' with subject '{}'",
                 isMultipart, isHtml, to, subject);
@@ -108,7 +112,6 @@ public class MailService {
      * @param locale the locale thymeleaf will use for translation and localization
      * @throws MessagingException
      */
-   // @Async
     public void sendEmail(final Long recipientId, final Long reviewId, String subject, String EmailTemplate, Map<String, Object> contextMap){
         User recipientUser = userService.getUser(recipientId);
         // if the recipient user does not exist, return.
@@ -119,7 +122,7 @@ public class MailService {
        }
        optUser.ifPresent(user -> {
     	   // adds some user info (first name, last name, title ...etc) to the context
-           Locale locale = Locale.forLanguageTag(user.getLangKey());
+           Locale locale = Locale.forLanguageTag(Locale.US.getLanguage());
            Context context = new Context(locale);
            String recipientEmail = user.getEmail();
            // add contextVars to context
@@ -127,6 +130,7 @@ public class MailService {
         	   ctxmap.forEach((key, value) -> context.setVariable(key, value));
            });
            context.setVariable(EmailConstants.BASE_URL, baseUrl);
+           context.setVariable(EmailConstants.PROFILE, profile);
            // add user and review vars to context
            addUserInfoToContext(context, user);
            addReviewInfoToContext(context, reviewId);
@@ -153,6 +157,8 @@ public class MailService {
     private Context addUserInfoToContext(Context context, User user){
         context.setVariable(EmailConstants.User.FIRST_NAME, user.getFirstName());
         context.setVariable(EmailConstants.User.LAST_NAME, user.getLastName());
+        context.setVariable(EmailConstants.User.FULL_NAME, user.getFullName());
+        context.setVariable(EmailConstants.User.ID, user.getId());
         context.setVariable(EmailConstants.User.EMAIL, user.getEmail());
         context.setVariable(EmailConstants.User.LOGIN, user.getLogin());
         context.setVariable(EmailConstants.User.TITLE, user.getTitle());
@@ -180,10 +186,14 @@ public class MailService {
                     Optional.ofNullable(review.getReviewee()).ifPresent(reviewee -> {
                         context.setVariable(EmailConstants.Review.REVIEWEE_FIRST_NAME, reviewee.getFirstName());
                         context.setVariable(EmailConstants.Review.REVIEWEE_LAST_NAME, reviewee.getLastName());
+                        context.setVariable(EmailConstants.Review.REVIEWEE_FULL_NAME, reviewee.getFullName());
+                        context.setVariable(EmailConstants.Review.REVIEWEE_ID, reviewee.getId());
                     });
                     Optional.ofNullable(review.getReviewer()).ifPresent(reviewer -> {
                         context.setVariable(EmailConstants.Review.REVIEWER_FIRST_NAME, reviewer.getFirstName());
-                        context.setVariable(EmailConstants.Review.REVIEWER_LAST_NAME, reviewer.getLastName());
+                        context.setVariable(EmailConstants.Review.REVIEWER_FULL_NAME, reviewer.getFullName());
+                        context.setVariable(EmailConstants.Review.REVIEWER_FULL_NAME, reviewer.getFullName());
+                        context.setVariable(EmailConstants.Review.REVIEWER_ID, reviewer.getId());
                     });
                 });
             });
@@ -191,7 +201,7 @@ public class MailService {
 		return context;
     }
    
-  //  @Async
+    @Async
     public void sendActivationEmail(Long userId) {
     	log.debug("Sending activation e-mail to user with id: '{}'", userId);
         sendEmail(userId, null, EmailConstants.Subjects.ACTIVATION, EmailConstants.Templates.ACTIVATION, null);
@@ -202,10 +212,10 @@ public class MailService {
      * @param userId
      * @param reviewId
      */
-  //  @Async
-    public void sendAnnualReviewStartedEmail(Long userId, Long reviewId) {
+    public void sendAnnualReviewStartedEmail(Long userId, Long reviewerId, Long reviewId) {
         log.debug("Sending annual review process started e-mail to '{}'");
         sendEmail(userId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_STARTED, EmailConstants.Templates.REVIEW_STARTED, null);
+        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_STARTED, EmailConstants.Templates.REVIEW_STARTED, null);
     }
 
     /**
@@ -213,7 +223,6 @@ public class MailService {
      * @param userId the user id to send an email to
      * @param reviewId the review id the email is about
      */
-  //  @Async
     public void sendPeerFeedbackReminderEmail(Long userId, Long reviewId) {
         log.debug("Sending peer feedback process reminder e-mail to '{}'");
         sendEmail(userId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REMINDER, EmailConstants.Templates.PEER_FEEDBACK_REMINDER, null);
@@ -225,13 +234,11 @@ public class MailService {
      * @param peerId the peerId used to send the email
      * @param reviewId the reviewId on which the peer needs to submit feedback
      */
-  ///  @Async
     public void sendPeerFeedbackRequestedEmail(Long peerId, Long reviewId) {
         log.debug("Sending peer feedback requested e-mail to '{}'");
         sendEmail(peerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REQUESTED, EmailConstants.Templates.PEER_FEEDBACK_REQUESTED, null);
     }
     
-  //  @Async
     public void sendPeerFeedbackSubmittedEmail(Long peerId, Long reviewId) {
         log.debug("Sending peer review submitted e-mail to '{}'");
         sendEmail(peerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REQUESTED, EmailConstants.Templates.PEER_FEEDBACK_REQUESTED, null);

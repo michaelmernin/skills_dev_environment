@@ -4,10 +4,13 @@ public final class EmailConstants {
 
 	private EmailConstants(){}
 	public static final String BASE_URL = "BASE_URL";
+	public static final String PROFILE = "PROFILE";
 	
 	public final class User{
 		public static final String FIRST_NAME = "FIRST_NAME";
 		public static final String LAST_NAME = "LAST_NAME";
+		public static final String FULL_NAME = "FULL_NAME";
+		public static final String ID = "ID";
 		public static final String EMAIL = "EMAIL";
 		public static final String LOGIN = "LOGIN";
 		public static final String TITLE = "TITLE";
@@ -21,9 +24,13 @@ public final class EmailConstants {
 		
 		public static final String REVIEWEE_FIRST_NAME = "REVIEWEE_FIRST_NAME";
 		public static final String REVIEWEE_LAST_NAME = "REVIEWEE_LAST_NAME";
+		public static final String REVIEWEE_FULL_NAME = "REVIEWEE_FULL_NAME";
+		public static final String REVIEWEE_ID = "REVIEWEE_ID";
 		
 		public static final String REVIEWER_FIRST_NAME = "REVIEWER_FIRST_NAME";
-		public static final String REVIEWER_LAST_NAME = "REVIEWER_LAST_NAME"; 
+		public static final String REVIEWER_LAST_NAME = "REVIEWER_LAST_NAME";
+		public static final String REVIEWER_FULL_NAME = "REVIEWER_FULL_NAME";
+		public static final String REVIEWER_ID = "REVIEWER_ID";
 		
 	}
 	
