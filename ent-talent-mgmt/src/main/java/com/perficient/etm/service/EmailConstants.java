@@ -5,6 +5,7 @@ public final class EmailConstants {
 	private EmailConstants(){}
 	public static final String BASE_URL = "BASE_URL";
 	public static final String PROFILE = "PROFILE";
+	public static final String PEER_FULL_NAME = "PEER_FULL_NAME";
 	
 	public final class User{
 		public static final String FIRST_NAME = "FIRST_NAME";
