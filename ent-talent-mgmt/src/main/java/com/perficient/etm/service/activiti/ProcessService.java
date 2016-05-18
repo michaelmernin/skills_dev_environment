@@ -98,6 +98,7 @@ public class ProcessService {
         variables.put(ProcessConstants.FEEDBACK_VARIABLE, feedback.getId());
         variables.put(ProcessConstants.PEER_VARIABLE, feedback.getAuthor().getId());
         variables.put(ProcessConstants.PEER_EMAIL_VARIABLE, feedback.getAuthor().getEmail());
+        variables.put(ProcessConstants.REVIEWER_VARIABLE, feedback.getReview().getReviewee().getId());
         try{
             ProcessInstance pId =
                     runtimeSvc.startProcessInstanceByKey(ReviewTypeProcess.PEER.getProcessId(),variables );
