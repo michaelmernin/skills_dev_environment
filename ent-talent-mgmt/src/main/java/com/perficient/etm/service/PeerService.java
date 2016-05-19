@@ -46,10 +46,7 @@ public class PeerService {
 
     @Inject
     private UserRepository userRepository;
-    
-    @Inject
-    private MailService mailService;
-    
+   
     /**
      * Creates an empty feedback form, associates it with the review, assigns to the peer and
      * sets the status to initiated/not sent (?). The process isn't started for the feedback
@@ -84,20 +81,18 @@ public class PeerService {
             throw new ActivitiProcessInitiationException(
                     new IllegalStateException("Unable to start Peer Porcess on a no Not_Sent status object"));
         }
-        try{    
+        try{
+        	// Saving here because we need the feedback id
+        	feedback = feedbackRepository.save(feedback);
             String processId = processSvc.initiatePeerReview(feedback);
             //Update the needed information
             feedback.setProcessId(processId);
             feedback.setFeedbackStatus(FeedbackStatus.OPEN);
             feedback = feedbackRepository.save(feedback);
-            //sending email to peer requisting feedback
+            //sending email to peer requesting feedback
         }catch (Exception e){
             log.error("Error starting peer bpm process",e);
             throw new ActivitiProcessInitiationException(e);
-        }
-        String email = (feedback.getAuthor() == null)? null : feedback.getAuthor().getEmail();
-        if(email != null){
-          //  mailService.sendPeerReviewFeedbackRequestedEmail(email);
         }
         return feedback;
     }

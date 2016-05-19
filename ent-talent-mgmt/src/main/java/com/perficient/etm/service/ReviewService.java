@@ -81,6 +81,8 @@ public class ReviewService extends AbstractBaseService {
         review.setReviewStatus(Optional.ofNullable(review.getReviewStatus()).orElse(ReviewStatus.OPEN));
 
         try {
+        	// Saving here because we need the review id
+        	review = reviewRepository.save(review);
             String id = processSvc.initiateProcess(processType, review);
             review.setProcessId(id);
             review = reviewRepository.save(review);

@@ -3,4 +3,4 @@
 <p th:if="${ID == REVIEWER_ID}"> You have initiated a new <span th:text="${REVIEW_TYPE}"></span> for <span th:text="${REVIEWEE_FULL_NAME}"></span> </p>
 <p>You can now find this review on your to-do list for further actions.</p>
 <!--/* Explore converting this into a Thymeleaf dialect if we need to do more proccessing/string manibulation like this in the future */-->
-<a class="button medium" th:href="${BASE_URL + '/review/' + REVIEW_ID + '/edit'}">TAKE A LOOK!</a>
+<a class="button medium" th:href="${BASE_URL + '/#/review/' + REVIEW_ID + '/edit'}">TAKE A LOOK!</a>

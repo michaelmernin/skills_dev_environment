@@ -17,7 +17,7 @@
     <sequenceFlow id="flow5" sourceRef="giveFeedback" targetRef="setPeerFeedbackReady"></sequenceFlow>
     <serviceTask id="setPeerFeedbackReady" name="Set Feedback to Ready" activiti:expression="${feedbackService.setStatusById(Feedback,'READY')}"></serviceTask>
     <sequenceFlow id="flow6" sourceRef="setPeerFeedbackReady" targetRef="peerFeedbackSubmitted"></sequenceFlow>
-    <serviceTask id="peerFeedbackSubmitted" name="Peer Feedback Submitted" activiti:expression="${mailService.sendPeerFeedbackSubmittedEmail(Peer, Review)}"></serviceTask>
+    <serviceTask id="peerFeedbackSubmitted" name="Peer Feedback Submitted" activiti:expression="${mailService.sendPeerFeedbackSubmittedEmail(Peer, Reviewer, Review)}"></serviceTask>
     <sequenceFlow id="flow7" sourceRef="peerFeedbackSubmitted" targetRef="peerFeedbackReady"></sequenceFlow>
     <userTask id="peerFeedbackReady" name="Peer Feedback Ready" activiti:assignee="1"></userTask>
     <sequenceFlow id="flow8" sourceRef="peerFeedbackReady" targetRef="peerFeedbackGood"></sequenceFlow>

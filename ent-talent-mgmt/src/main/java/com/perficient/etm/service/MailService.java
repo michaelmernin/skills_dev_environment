@@ -1,5 +1,6 @@
 package com.perficient.etm.service;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -125,10 +126,11 @@ public class MailService {
            Locale locale = Locale.forLanguageTag(Locale.US.getLanguage());
            Context context = new Context(locale);
            String recipientEmail = user.getEmail();
-           // add contextVars to context
-           Optional.ofNullable(contextMap).ifPresent(ctxmap ->{
-        	   ctxmap.forEach((key, value) -> context.setVariable(key, value));
-           });
+           // add contextMap vars to context
+           Optional.ofNullable(contextMap).ifPresent(ctxMap -> {
+        	   ctxMap.forEach((key, value) -> context.setVariable(key, value));
+           }); 
+           
            context.setVariable(EmailConstants.BASE_URL, baseUrl);
            context.setVariable(EmailConstants.PROFILE, profile);
            // add user and review vars to context
@@ -213,8 +215,9 @@ public class MailService {
      * @param reviewId
      */
     public void sendAnnualReviewStartedEmail(Long userId, Long reviewerId, Long reviewId) {
-        log.debug("Sending annual review process started e-mail to '{}'");
+        log.debug("Sending annual review started e-mail to reviewee. review id:'{}', reviewee id:'{}'", reviewId, userId);
         sendEmail(userId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_STARTED, EmailConstants.Templates.REVIEW_STARTED, null);
+        log.debug("Sending annual review started e-mail to reviewer. review id:'{}', reviewer id:'{}'", reviewId, reviewerId);
         sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_STARTED, EmailConstants.Templates.REVIEW_STARTED, null);
     }
 
@@ -239,9 +242,13 @@ public class MailService {
         sendEmail(peerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REQUESTED, EmailConstants.Templates.PEER_FEEDBACK_REQUESTED, null);
     }
     
-    public void sendPeerFeedbackSubmittedEmail(Long peerId, Long reviewId) {
-        log.debug("Sending peer review submitted e-mail to '{}'");
-        sendEmail(peerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REQUESTED, EmailConstants.Templates.PEER_FEEDBACK_REQUESTED, null);
+    public void sendPeerFeedbackSubmittedEmail(Long peerId, Long reviewerId, Long reviewId) {
+        log.debug("Sending peer review submitted e-mail to peer. peer id:'{}', reviewId:'{}'", peerId, reviewId);
+        sendEmail(peerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_SUBMITTED, EmailConstants.Templates.PEER_FEEDBACK_SUBMITTED, null);
+        Map<String, Object> contextMap = new HashMap<String, Object>();
+        contextMap.put(EmailConstants.PEER_FULL_NAME, Optional.ofNullable(userService.getUser(peerId)).map(User::getFullName).get());
+        log.debug("Sending peer review submitted e-mail to reviewer. reviewer id:'{}', reviewId:'{}'", peerId, reviewId);
+        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_SUBMITTED, EmailConstants.Templates.PEER_FEEDBACK_SUBMITTED, contextMap);
     }
     
     
