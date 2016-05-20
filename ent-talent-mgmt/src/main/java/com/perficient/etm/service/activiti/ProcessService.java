@@ -18,10 +18,12 @@ import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.TodoResult;
+import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.MissingReviewInfoException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
+import com.perficient.etm.service.UserService;
 
 /**
  * Service for looking at process information from the process engine. A process is a workflow
@@ -38,6 +40,9 @@ public class ProcessService {
     @Inject
     private TaskService taskSvc;
     
+    @Inject
+    private UserService userSvc;
+    
     public String initiateProcess(ReviewTypeProcess reviewType, Review review) throws ETMException {
         if (reviewType == null)
             throw new ReviewProcessNotFound("null");
@@ -50,6 +55,8 @@ public class ProcessService {
         variables.put(ProcessConstants.REVIEW_VARIABLE, review.getId());
         variables.put(ProcessConstants.DIRECTOR_VARIABLE, review.getReviewee().getDirector().getId());
         variables.put(ProcessConstants.GENERAL_MANAGER_VARIABLE, review.getReviewee().getGeneralManager().getId());
+        variables.put(ProcessConstants.INITIATOR, userSvc.getUserFromLogin().map(User::getId).get());
+        
         try {
             ProcessInstance processInstance = runtimeSvc.startProcessInstanceByKey(reviewType.getProcessId(), variables );
             return processInstance.getId();

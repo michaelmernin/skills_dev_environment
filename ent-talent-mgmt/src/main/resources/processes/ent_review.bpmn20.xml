@@ -3,7 +3,7 @@
   <process id="annualReview" name="Enterprise Review Process" isExecutable="true">
     <startEvent id="anualReviewStart" name="Start"></startEvent>
     <sequenceFlow id="SequenceFlow_1" sourceRef="anualReviewStart" targetRef="startProcessEmailServiceTask"></sequenceFlow>
-    <serviceTask id="startProcessEmailServiceTask" name="Start Process Mail" activiti:expression="${mailService.sendAnnualReviewStartedEmail(Reviewee,Reviewer, Review)}"></serviceTask>
+    <serviceTask id="startProcessEmailServiceTask" name="Start Process Mail" activiti:expression="${mailService.sendAnnualReviewStartedEmail(Reviewee, Reviewer, Initiator, Review)}"></serviceTask>
     <sequenceFlow id="SequenceFlow_2" sourceRef="startProcessEmailServiceTask" targetRef="CompleteSelfFeedbackUserTask"></sequenceFlow>
     <userTask id="CompleteSelfFeedbackUserTask" name="Complete Self Review" activiti:assignee="${Reviewee}"></userTask>
     <sequenceFlow id="SequenceFlow_3" sourceRef="CompleteSelfFeedbackUserTask" targetRef="setSelfFeedbackReady"></sequenceFlow>
