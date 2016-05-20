@@ -47,7 +47,8 @@ public class FeedbackAuthorizer extends Authorizer {
                 return Optional.ofNullable(review.getReviewee()).map(reviewee -> {
                     return isGeneralManager(reviewee, username)
                         || isCounselor(reviewee, username)
-                        || isReviewee(review,username);
+                        || isReviewee(review,username)
+                        || isDirector(reviewee, username);
                 }).orElse(false);
             }).orElse(false);
         }).orElse(false);
@@ -80,6 +81,17 @@ public class FeedbackAuthorizer extends Authorizer {
             }).orElse(false);
         }).orElse(false);
     }
+    /**
+     * Checks if username.equals(user.director.login)
+     * @param user
+     * @param username
+     * @return
+     */
+	private static boolean isDirector(User user, String username) {
+		return Optional.ofNullable(user.getGeneralManager()).map(User::getDirector).map(User::getLogin).map(login -> {
+			return login.equals(username);
+		}).orElse(false);
+	}
 
     /**
      * Checks if username.equals(user.councelor.username)
