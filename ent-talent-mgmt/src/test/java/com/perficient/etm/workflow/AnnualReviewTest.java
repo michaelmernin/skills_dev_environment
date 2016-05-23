@@ -64,6 +64,7 @@ public class AnnualReviewTest extends SpringAppTest {
         variables.put(ProcessConstants.GENERAL_MANAGER_VARIABLE, 4L);
         variables.put(ProcessConstants.REVIEWEE_FEEDBACK_VARIABLE, 1L);
         variables.put(ProcessConstants.REVIEWER_FEEDBACK_VARIABLE, 2L);
+        variables.put(ProcessConstants.INITIATOR, 5L);
         return variables;
     }
 

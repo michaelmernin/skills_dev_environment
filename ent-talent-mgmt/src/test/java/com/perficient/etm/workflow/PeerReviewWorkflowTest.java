@@ -37,9 +37,10 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
     
     private Map<String, Object> getVariables() {
         Map<String, Object> variables = new HashMap<>();
-        variables.put(ProcessConstants.PEER_VARIABLE, "6");
+        variables.put(ProcessConstants.PEER_VARIABLE, 6L);
         variables.put(ProcessConstants.PEER_EMAIL_VARIABLE, "alex@perficient.com");
-        variables.put(ProcessConstants.REVIEWEE_VARIABLE, "9");
+        variables.put(ProcessConstants.REVIEWEE_VARIABLE, 9L);
+        variables.put(ProcessConstants.REVIEWER_VARIABLE, 5L);
         variables.put(ProcessConstants.FEEDBACK_VARIABLE, 1L);
         variables.put(ProcessConstants.REVIEW_VARIABLE, 1L);
 

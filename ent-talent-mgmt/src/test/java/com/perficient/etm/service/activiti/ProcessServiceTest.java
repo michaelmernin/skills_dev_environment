@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.security.test.context.support.WithUserDetails;
 
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
@@ -21,6 +22,7 @@ public class ProcessServiceTest extends SpringAppTest {
     ProcessService processSvc;
 
     @Test
+    @WithUserDetails("dev.user3")
     public void testStartReviewProcess() throws ETMException {
         String instanceId = ServicesTestUtils.startAnnualReviewProcess(processSvc);
         assertNotNull("Instance of the processId should not be null", instanceId);
@@ -34,6 +36,7 @@ public class ProcessServiceTest extends SpringAppTest {
     }
 
     @Test
+    @WithUserDetails("dev.user3")
     public void testCancel() throws ETMException {
         String instanceId = ServicesTestUtils.startAnnualReviewProcess(processSvc);
         boolean result = processSvc.cancel(instanceId);
