@@ -1,4 +1,4 @@
-<h2 class="etm-email-greeting">Hello there <span th:text="${PROFILE == 'tst' or PROFILE == 'dev'}?  ${FULL_NAME} : ${FIRST_NAME}"></span></h2>
+<h2 class="etm-email-greeting">Hello <span th:text="${PROFILE == 'tst' or PROFILE == 'dev'}?  ${FULL_NAME} : ${FIRST_NAME}"></span></h2>
 <div th:switch="${INITIATOR_ID}">
   <div th:case="${REVIEWEE_ID}">
     <div th:switch="${ID}">
