@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -34,6 +35,9 @@ public class Skill implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    @Column(name="skillcategory_id", insertable = false, updatable = false)
+    private Long skillCategoryId;
+    
     @Column(name = "name")
     private String name;
 
@@ -42,10 +46,13 @@ public class Skill implements Serializable {
     private SkillCategory skillcategory;
     
     @OneToMany(mappedBy = "skill", fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonManagedReference
     private List<SkillRanking> rankings;
-    
+
+    @Column(name = "enabled_flag")
+    @Type(type="org.hibernate.type.NumericBooleanType")
+    private Boolean enabled;
+
     public Skill(){
      
     }
@@ -101,7 +108,10 @@ public class Skill implements Serializable {
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        int i = 1;
+        i = i*11+(id==null ? 0 :id.intValue());
+        i = i*17+(name==null ? 0 :name.hashCode());
+        return i;
     }
 
     @Override
@@ -110,5 +120,21 @@ public class Skill implements Serializable {
                 "id=" + id +
                 ", Name='" + name + "'" +
                 '}';
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Long getSkillCategoryId() {
+        return skillCategoryId;
+    }
+
+    public void setSkillCategoryId(Long skillCategoryId) {
+        this.skillCategoryId = skillCategoryId;
     }
 }

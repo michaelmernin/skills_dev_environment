@@ -1,5 +1,7 @@
 package com.perficient.etm.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.perficient.etm.domain.SkillRankingHistory;
@@ -9,5 +11,6 @@ import com.perficient.etm.domain.SkillRankingHistory;
  */
 public interface SkillRankingHistoryRepository extends JpaRepository<SkillRankingHistory,Long>{
     
+    public List<SkillRankingHistory> findBySkillId(Long id);
 }
 

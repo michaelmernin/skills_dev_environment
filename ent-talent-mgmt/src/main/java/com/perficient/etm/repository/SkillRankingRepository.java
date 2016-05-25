@@ -12,5 +12,7 @@ import com.perficient.etm.domain.SkillRanking;
 public interface SkillRankingRepository extends JpaRepository<SkillRanking,Long>{
     
     List<SkillRanking> findByUserId(Long id);
+    
+    List<SkillRanking> findBySkillId(Long id);
 }
 

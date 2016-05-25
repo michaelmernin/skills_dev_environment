@@ -43,14 +43,14 @@
     <include file="classpath:config/liquibase/seed/dev/20160118100400_dev_director_seed_data.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20160118140200_update_entity_User.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20160118185600_update_entities_Review_Feedback.xml" relativeToChangelogFile="false"/>
-    
+
     <include file="classpath:config/liquibase/changelog/20160316161000_added_entity_Skill.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20160504115900_added_entity_SkillHistory.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20160504122900_update_entity_Skill.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20160523134900_update_entity_Skill.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/seed/20160318145900_skills_seed_data.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/seed/dev/20160330185400_dev_seed_data.xml" relativeToChangelogFile="false"/>    
      
-   
     
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

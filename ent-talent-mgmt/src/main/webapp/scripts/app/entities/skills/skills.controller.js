@@ -11,7 +11,8 @@ angular.module('etmApp').controller('SkillsController', function ($scope, $mdDia
 
   var displaySkillCategories = function() {
     SkillCategory.query(function (result) {
-      $scope.skillCategories = result; 
+      $scope.skillCategories = result;
+      console.log(result)
       angular.forEach($scope.skillCategories, function (category) {
         angular.forEach(category.skills, function (skill) {
           skill.ranking = skill.rankings[0] || {};
@@ -22,15 +23,15 @@ angular.module('etmApp').controller('SkillsController', function ($scope, $mdDia
     });
   }
   displaySkillCategories();
-  
+
   $scope.toggleCategory = function (category) {
     $scope.toggle = ($scope.toggle === category ? null : category);
   };
-  
+
   $scope.showButtons = function () {
     return isDirty($scope.skillCategories);
   };
-  
+
   var isDirty = function (skillCategories) {
     var isdirty = false;
     angular.forEach(skillCategories, function (category) {
@@ -65,7 +66,7 @@ angular.module('etmApp').controller('SkillsController', function ($scope, $mdDia
               ranking.id = saved.id;
               ranking.initialRank = saved.rank;
             }, function() {
-                  return $q.reject('Error Occured while saving Skill Rankings.');
+              return $q.reject('Error Occured while saving Skill Rankings.');
             });
           } else {
             promise = SkillRanking.update({
@@ -85,15 +86,15 @@ angular.module('etmApp').controller('SkillsController', function ($scope, $mdDia
     $q.all(promises).then(function () {
       $mdToast.show(
           $mdToast.simple()
-            .textContent('Save Successful')
-            .hideDelay(3000)
-        );
+          .textContent('Save Successful')
+          .hideDelay(3000)
+      );
     }, function (msg) {
       //oops one of them failed
       $mdToast.show(
           $mdToast.simple()
-            .textContent(msg)
-            .hideDelay(5000)
+          .textContent(msg)
+          .hideDelay(5000)
       )
     });
   };

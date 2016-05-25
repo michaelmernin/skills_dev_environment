@@ -1,20 +1,20 @@
 'use strict';
 
 angular.module('etmApp')
-.factory('SkillCategory', function ($resource) {
-  return $resource('api/skillCategories/:id', {}, {
+.factory('Skill', function ($resource) {
+  return $resource('api/skills/:id', {}, {
     'query': { method: 'GET', isArray: true},
     'save': {
       method: 'POST'
+    },
+    'delete': {
+      method: 'DELETE',
+      params: {id: '@id'}
     },
     'update': {
       method: 'PUT',
       params: {id: '@id'}
     },
-    'findAll': {
-      url:'api/skillCategories/all',
-      method: 'GET',
-      isArray: true},
     'get': {
       method: 'GET',
       transformResponse: function (data) {

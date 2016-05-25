@@ -1,0 +1,49 @@
+<div ng-cloak>
+  <md-content md-scroll-y class="md-whiteframe-z1">
+    <div layout="column" layout-padding>
+      <h2 translate="">Manage Skills</h2>
+      <div class="lock-size" layout="row" layout-align="end center">
+        <md-fab-speed-dial md-open="demo.isOpen" class="md-fling" md-direction="left" ng-mouseenter="demo.isOpen=true" ng-mouseleave="demo.isOpen=false">
+          <md-fab-trigger>
+            <md-button aria-label="menu" class="md-fab md-warn md-raised md-hue-2">
+              <md-tooltip md-direction="top" md-visible="tooltipVisible">Menu</md-tooltip>
+              <md-icon md-font-icon="fa fa-bars fa-2x fa-fw" class="md-avatar md-primary"></md-icon>
+            </md-button>
+          </md-fab-trigger>
+          <md-fab-actions>
+            <md-button aria-label="Add Skill Category" class="md-fab md-raised md-mini" ng-click="addSkillCategory($event)">
+              <md-tooltip md-direction="bottom" md-visible="tooltipVisible">Add Skill Category</md-tooltip>
+              <md-icon md-font-icon="fa fa-plus-square fa-2x fa-fw" class="md-avatar md-primary"></md-icon>
+            </md-button>
+            <md-button aria-label="Add Skill" class="md-fab md-raised md-mini" ng-click="addSkill(skillCategories,$event)">
+              <md-tooltip md-direction="top" md-visible="tooltipVisible">Add Skill</md-tooltip>
+              <md-icon md-font-icon="fa fa-plus fa-2x fa-fw" class="md-avatar md-primary"></md-icon>
+            </md-button>
+            <md-button aria-label="Manage Skill Category" class="md-fab md-raised md-mini" ui-sref="skillCategory">
+              <md-tooltip md-direction="left" md-visible="tooltipVisible">View By SkillCategory</md-tooltip>
+              <md-icon md-font-icon="fa fa-dot-circle-o fa-2x fa-fw" class="md-avatar md-primary"></md-icon>
+            </md-button>
+         </md-fab-actions>
+       </md-fab-speed-dial>
+      </div>   
+      <md-input-container>
+        <label for="filter" translate="">Filter</label>
+        <input type="text" id="filter" ng-model="filter">
+      </md-input-container>
+      <md-list>
+        <md-list-item ng-repeat="skill in skills | filter:filter | orderBy: 'name' " class="md-3-line" ng-click="viewSkillCategoryDetails(sc, $event)">
+          <div layout ="row" layout-align="space-between center" style="width:100%">   
+            <div class="md-list-item-text" flex layout-align="start center" >
+              <md-icon md-font-icon="fa fa-graduation-cap fa-2x fa-fw" class="md-avatar md-primary"></md-icon>
+              <span class="md-title">{{ skill.name }}</span>
+            </div>
+            <div layout-align="end center">
+              <i class="fa fa-lg {{skill.enabled ? 'fa fa-toggle-on' : 'fa fa-toggle-off'}}" ng-click="enableDisableSkill(skill, $event)" style="padding-right:5px" rel ="popover" title="Enable/Disable"></i>
+              <i class="fa fa-lg fa-trash" ng-click="deleteSkill(skill, $event)" rel ="popover" title="Delete Skill"></i>
+            </div>
+          </div>
+        </md-list-item>
+      </md-list>
+    </div>
+  </md-content>
+</div>
