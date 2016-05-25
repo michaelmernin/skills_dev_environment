@@ -27,17 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.icegreen.greenmail.util.GreenMail;
-import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.service.MailService;
 import com.perficient.etm.service.UserService;
 // TODO - remove this resource from production, only available in lower environments
 @RestController
 @RequestMapping("/api")
 public class MailResource {
-
-    private final String MESSAGE_HEADER_FROM = "From";
-    private final String MESSAGE_HEADER_TO = "To";
-    private final String MESSAGE_HEADER_SUBJECT = "Subject";
 
     private final Logger log = LoggerFactory.getLogger(ReviewTypeResource.class);
     List<Message> messages = new ArrayList<Message>();

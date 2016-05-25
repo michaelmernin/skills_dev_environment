@@ -15,8 +15,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dumbster.smtp.SmtpServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.icegreen.greenmail.util.GreenMail;
 import com.perficient.etm.Application;
 import com.perficient.etm.service.ReviewService;
 
@@ -40,7 +40,7 @@ public class SpringAppTest {
     protected ObjectMapper objectMapper;
     
     @Inject
-    protected SmtpServer smtpServer;
+    protected GreenMail smtpServer;
     
     @Test
     public void testContext() {

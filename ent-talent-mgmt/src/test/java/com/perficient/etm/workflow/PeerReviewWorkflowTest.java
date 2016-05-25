@@ -7,6 +7,8 @@ import static org.junit.Assert.assertNull;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.mail.internet.MimeMessage;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.Execution;
@@ -15,9 +17,6 @@ import org.activiti.engine.task.Task;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.dumbster.smtp.MailMessage;
-import com.dumbster.smtp.SmtpServer;
 import com.perficient.etm.domain.TodoResult;
 import com.perficient.etm.service.activiti.ProcessConstants;
 import com.perficient.etm.utils.SpringAppTest;
@@ -32,8 +31,6 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
     @Autowired
     private TaskService taskService;
 
-    @Autowired
-    private SmtpServer mailServer;
     
     private Map<String, Object> getVariables() {
         Map<String, Object> variables = new HashMap<>();
@@ -119,7 +116,7 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
             //An email should be triggered and the task should be back to give feedback
             //TODO check how to review the email
             assertNotNull("Task should not be null",t);
-            MailMessage[] messages = smtpServer.getMessages();
+            MimeMessage[] messages = smtpServer.getReceivedMessages();
             System.out.println(messages.length);
             //assertTrue("There must be messages sent",messages.length > 1);
         } catch (InterruptedException e) {
