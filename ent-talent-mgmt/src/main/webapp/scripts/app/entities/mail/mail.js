@@ -2,15 +2,15 @@
 
 angular.module('etmApp').config(function ($stateProvider) {
   $stateProvider.state('mail', {
-    parent: 'admin',
+    parent: 'entity',
     url: '/mail',
     data: {
-      roles: ['ROLE_ADMIN'],
+      roles: ['ROLE_USER'],
       pageTitle: 'mail.title'
     },
     views: {
       'content@': {
-        templateUrl: 'scripts/app/admin/mail/mail.html',
+        templateUrl: 'scripts/app/entities/mail/mail.html',
         controller: 'MailController'
       }
     },

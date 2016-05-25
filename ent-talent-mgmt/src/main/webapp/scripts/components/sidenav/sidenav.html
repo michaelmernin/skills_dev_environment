@@ -9,7 +9,7 @@
     </h1>
   </md-toolbar>
   <md-content ng-switch="isAuthenticated()">
-    <section>
+    <section ng-show="isInRole('ROLE_USER')">
       <md-list>
         <md-list-item>
           <md-button class="md-primary" ui-sref="home">
@@ -28,6 +28,12 @@
             <i class="fa fa-graduation-cap"></i>&#xA0;
             <span translate="global.menu.skills">Skills</span>
           </md-button>        
+        </md-list-item>
+        <md-list-item>
+          <md-button class="md-primary" ui-sref="mail">
+            <i class="fa fa-envelope"></i>&#xA0;
+            <span translate="global.menu.admin.mail">Mail</span>
+          </md-button>
         </md-list-item>
       </md-list>
       <md-divider></md-divider>
@@ -84,12 +90,6 @@
           <md-button class="md-primary" href="/console" target="_tab">
             <i class="fa fa-database"></i>&#xA0;
             <span translate="global.menu.admin.database">Database</span>
-          </md-button>
-        </md-list-item>
-        <md-list-item>
-          <md-button class="md-primary" ui-sref="mail">
-            <i class="fa fa-envelope"></i>&#xA0;
-            <span translate="global.menu.admin.mail">Mail</span>
           </md-button>
         </md-list-item>
       </md-list>
