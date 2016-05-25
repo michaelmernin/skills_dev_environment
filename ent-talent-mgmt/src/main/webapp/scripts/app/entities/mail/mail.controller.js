@@ -1,37 +1,37 @@
 'use strict';
 
 angular.module('etmApp').controller('MailController', function ($scope, $mdDialog, Mail) {
-  $scope.messages = Mail.findAll();
-
-  $scope.sendTest = function () {
-    Mail.testMessage({}, function () {
-      $scope.messages = Mail.findAll();
+  $scope.messages=[];
+  Mail.findAll().$promise.then(function(val){
+    console.log(val);
+    val.forEach(function(m){
+      // text preview of email
+      m.text = getText(m.body);
     });
-  };
+    $scope.messages = val;
+  });
+  
+  function getText(s) {
+    var el = document.createElement('html');
+    el.innerHTML = s;
+    var styles = el.getElementsByTagName('style');
+    var i = styles.length;
+    while (i--) {
+      styles[i].parentNode.removeChild(styles[i]);
+    }
+    return el.textContent;
+  }
+
+  
   $scope.clear = function () {
     Mail.clear({}, function () {
       $scope.messages = Mail.findAll();
     });
   };
-  $scope.newMail = function (ev) {
-    $mdDialog.show({
-      controller: 'MailDetailController',
-      templateUrl: 'scripts/app/admin/mail/mail.detail.html',
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      locals: {
-        mail: new Mail()
-      }
-    }).then(function (mail) {
-      mail.$send({}, function (savedmail) {
-        $scope.messages = Mail.findAll();
-      });
-    });
-  };
   $scope.previewMessage = function (message,ev) {
     $mdDialog.show({
       controller: 'MessageDetailController',
-      templateUrl: 'scripts/app/admin/mail/message.detail.html',
+      templateUrl: 'scripts/app/entities/mail/message.detail.html',
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {

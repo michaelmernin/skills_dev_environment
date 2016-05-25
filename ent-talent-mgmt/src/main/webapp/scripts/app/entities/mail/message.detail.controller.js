@@ -3,7 +3,6 @@
 angular.module('etmApp').controller('MessageDetailController', function ($scope, $mdDialog, message, $sce) {
   $scope.message = message;
   $scope.htmlSrc = '/api/mail/messageHtml/'+message.hashcode;
-  console.log(message.hashcode);
 
   $scope.cancel = function () {
     $mdDialog.cancel();
