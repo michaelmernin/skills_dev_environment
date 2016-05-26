@@ -1,0 +1,43 @@
+<div ng-cloak>
+  <md-content md-scroll-y class="md-whiteframe-z1">
+    <div layout="column" layout-padding>
+      <h2>Activiti Information</h2>
+      <p>
+        <md-button class="md-raised md-primary" ng-click="refresh()">
+          <i class="fa fa-refresh"></i>&nbsp; REFRESH
+        </md-button>
+        {{activitiInfo.processDefinitionCount}} Deployed process definitions (of which {{activitiInfo.cachedProcessDefinitionCount}} are cached)
+      </p>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Process</th>
+            <th>Instance count</th>
+            <th>Completed instance count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="pd in activitiInfo.deployedProcessDefinitions">
+            <td>{{pd}}</td>
+            <td>{{activitiInfo.runningProcessInstanceCount[pd]}}</td>
+            <td>{{activitiInfo.completedProcessInstanceCount[pd]}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="admin-table">
+        <head>
+          <th>Completed tasks</th>
+          <th>Completed activities</th>
+          <th>Open tasks</th>
+        </head>
+        <tbody>
+         <tr>
+          <td>{{activitiInfo.completedTaskCount}}</td>
+           <td>{{activitiInfo.completedActivities}}</td>
+           <td>{{activitiInfo.openTaskCount}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </md-content>
+</div>
