@@ -12,7 +12,7 @@ angular.module('etmApp').controller('SkillCategoryController', function ($scope,
     SkillCategory.findAll(function (result) {
       $scope.skillCategories = result;
     });
-  }
+  };
 
   displaySkillCategories();
 
@@ -36,7 +36,7 @@ angular.module('etmApp').controller('SkillCategoryController', function ($scope,
       templateUrl: 'scripts/app/admin/skills/addSkillCategory.detail.html',
       parent: angular.element(document.body),
       targetEvent: ev
-    })
+    });
   };
 
   $scope.addSkill = function (skillCategories, ev) {
@@ -48,7 +48,7 @@ angular.module('etmApp').controller('SkillCategoryController', function ($scope,
       locals: {
         skillCategories:skillCategories
       }
-    })
+    });
   };
 
   $scope.$watch('demo.isOpen', function(isOpen) {
@@ -61,7 +61,10 @@ angular.module('etmApp').controller('SkillCategoryController', function ($scope,
     }
   });
 
-  $scope.enableDisableSkillCategory = function (sc,ev) {
+  $scope.enableDisableSkillCategory = function (sc) {
+    sc.enabled= !sc.enabled;
+    var i = $scope.skillCategories.indexOf(sc);
+    $scope.skillCategories[i].enabled = sc.enabled;
     sc.enabled= !sc.enabled;
     var promise = null;
     promise = SkillCategory.update({
