@@ -2,8 +2,12 @@ package com.perficient.etm.web.rest;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
@@ -36,6 +40,7 @@ public class MailResource {
 
     private final Logger log = LoggerFactory.getLogger(ReviewTypeResource.class);
     List<Message> messages = new ArrayList<Message>();
+    Set<Integer> hashset = new HashSet<Integer>();
 
     @Autowired(required = false)
     protected GreenMail smtpServer;
@@ -55,20 +60,25 @@ public class MailResource {
     @RequestMapping(value = "/mail/messages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Message> getAllMessages() {
         log.debug("REST request to get all mail messages");
-        List<Message> filteredMessages = new ArrayList<Message>();
+        updateEmails();
+        updateHashes();
+        return userSvc.getUserFromLogin().map(usr ->{
+            return messages
+                    .stream()
+                    .filter(msg -> msg.getTo().equals(usr.getEmail()))
+                    .collect(Collectors.toList());
+        }).orElse(null);
+    }
+
+    private void updateHashes() {
+        messages.forEach(msg -> hashset.add(msg.getHashcode()));
+    }
+    private void updateEmails(){
         Optional.ofNullable(smtpServer).map(GreenMail::getReceivedMessages).ifPresent(msgs -> {
-            messages.clear();
-            userSvc.getUserFromLogin().ifPresent(user -> {
-                for (MimeMessage message : msgs) {
-                    Message m = new Message(message);
-                    messages.add(m);
-                    if (m.getTo().equals(user.getEmail())) {
-                        filteredMessages.add(m);
-                    }
-                }
-            });
+            Arrays.stream(msgs)
+            .filter(msg -> !hashset.contains(msg.hashCode()))
+            .forEach(newMsg -> messages.add(new Message(newMsg)));
         });
-        return filteredMessages;
     }
 
     /**
@@ -78,12 +88,16 @@ public class MailResource {
     @ResponseBody
     public String getMessageByhashCode(@PathVariable int hash) {
         log.debug("REST request to get message with hashcode {}", hash);
-        for (Message message : messages) {
-            if (message.getHashcode() == hash) {
-                return message.getBody();
-            }
-        }
-        return "<p>NOT FOUND</p>";
+        return messages
+                .stream()
+                .filter(msg -> msg.getHashcode() == hash)
+                .findFirst()
+                .map(msg ->{ 
+                    msg.setOpen(true);
+                    return msg.getBody();
+                 })
+                .map(body -> {return body;})
+                .orElse("<p>NOT FOUND</p>");
     }
 
     /**
@@ -107,6 +121,7 @@ class Message {
     String body = null;
     String id = null;
     int hashcode;
+    boolean open = false;
 
     public Message() {
     }
@@ -117,6 +132,7 @@ class Message {
         this.subject = message.getSubject();
         this.body = message.getText();
         this.hashcode = message.hashCode();
+        this.open = false;
     }
 
     public Message(MimeMessage mimeMessage) {
@@ -135,6 +151,7 @@ class Message {
                     this.body = content.toString();
                 });
                 this.hashcode = mimeMessage.hashCode();
+                this.open = false;
             } catch (MessagingException | IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -188,6 +205,14 @@ class Message {
 
     public void setHashcode(int hashcode) {
         this.hashcode = hashcode;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
     }
 
 }
