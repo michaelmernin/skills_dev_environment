@@ -6,11 +6,11 @@
     <md-not-found>No peers matching "{{ searchText }}" were found.</md-not-found>
   </md-autocomplete>
   <br/>
-  <div id="peer-actions">
+  <div ng-show="isReviewer" id="peer-actions">
     <md-button ng-repeat="action in availableActions()" class="md-raised peer-action" ng-click="performAction(action, $event)" translate="{{ action.translateKey }}"></md-button>
   </div>
   <md-list-item ng-repeat="user in peers | orderBy:'lastName'">
-    <md-checkbox ng-model="user.selected" class="md-primary"></md-checkbox>
+    <md-checkbox ng-show="isReviewer" ng-model="user.selected" class="md-primary"></md-checkbox>
     <h4 class="peer-name">{{user.firstName}} {{user.lastName}}</h4>
     <p>{{ user.feedbackStatus.name }}</p>
     <md-icon md-font-icon="fa fa-trash-o fa-lg" class="md-secondary" ng-click="deletePeer(user, $event)" aria-label="Remove Peer"></md-icon>
