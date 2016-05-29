@@ -2,22 +2,23 @@
   <h2>Reviews</h2>
   <md-divider></md-divider>
   <div>
-    <div layout-gt-sm="row" layout="column">
-      <md-input-container class="md-block" flex-gt-sm="60">
+    <div layout-gt-xs="row" layout="column">
+      <md-input-container class="md-block" flex-gt-xs="60">
         <label for="query">Filter</label>
         <input type="text" id="query" ng-model="query">
       </md-input-container>
-      <md-input-container class="md-block" flex-gt-sm="30">
-        <label>Order By</label>
-        <md-select ng-model="orderByExpression">
-          <md-option ng-repeat="orderByItem in orderByItems" value="{{ orderByItem.value }}">
-            {{ orderByItem.key }}
-          </md-option>
-        </md-select>
-      </md-input-container>
-      <div flex-gt-sm layout="column" layout-align="start start">
-        <md-button class="md-primary" ng-click="reverseOrderFunction()"><span class="reviewOrder">ASC</span><span class="reviewOrder" hidden>DESC</span></md-button>
+      <div  layout="row">
+        <md-input-container flex-xs="80" class="md-block">
+          <label>Order By</label>
+          <md-select ng-model="orderByExpression">
+            <md-option ng-repeat="orderByItem in orderByItems" value="{{ orderByItem.value }}">
+              {{ orderByItem.key }}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-button flex-xs="20" class="md-primary md-mini" ng-click="reverseOrderFunction()"><span class="reviewOrder">ASC</span><span class="reviewOrder" hidden>DESC</span></md-button>
       </div>
+      
     </div>
     <md-list flex-gt-sm>
       <md-list-item class="md-3-line" ng-repeat="review in reviews | orderBy:orderByExpression:reverseOrder | filter:reviewSearch" ng-click="goToReview(review.id)">
