@@ -4,6 +4,7 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   $scope.peers = [];
   var review = {};
   $scope.isReviewer = false;
+  $scope.isReviewee = false;
   $scope.$parent.$watch('review', function (parentReview) {
     if (parentReview.id) {
       review = parentReview;
@@ -15,6 +16,7 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   
   Principal.identity().then(function (account) {
     $scope.isReviewer = account.id === review.reviewer.id;
+    $scope.isReviewer = account.id === review.reviewee.id;
   });
 
   $scope.getMatches = function (query) {
