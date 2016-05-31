@@ -1,21 +1,26 @@
 package com.perficient.etm.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.perficient.etm.domain.Rating;
-import com.perficient.etm.exception.ResourceNotFoundException;
-import com.perficient.etm.repository.RatingRepository;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Optional;
+import java.util.Set;
+import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import com.codahale.metrics.annotation.Timed;
+import com.perficient.etm.domain.Rating;
+import com.perficient.etm.exception.ResourceNotFoundException;
+import com.perficient.etm.repository.FeedbackRepository;
+import com.perficient.etm.repository.RatingRepository;
 
 /**
  * REST controller for managing Rating.
@@ -28,6 +33,9 @@ public class RatingResource implements RestResource {
 
     @Inject
     private RatingRepository ratingRepository;
+    
+    @Inject
+    private FeedbackRepository feedbackRepository;
 
     /**
      * POST  /reviews/:reviewId/feedback/:feedbackId/ratings -> Create a new rating.
@@ -46,19 +54,26 @@ public class RatingResource implements RestResource {
     }
 
     /**
-     * PUT  /reviews/:reviewId/feedback/:feedbackId/ratings -> Updates an existing rating.
+     * PUT  /reviews/:reviewId/feedback/:feedbackId/ratings/:ratingId -> Updates an existing rating.
      */
-    @RequestMapping(value = "/reviews/{reviewId}/feedback/{feedbackId}/ratings",
+    @RequestMapping(value = "/reviews/{reviewId}/feedback/{feedbackId}/ratings/{ratingId}",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Void> update(@RequestBody Rating rating) throws URISyntaxException {
+    public ResponseEntity<Void> update(@RequestBody Rating rating, @PathVariable Long reviewId, @PathVariable Long feedbackId, @PathVariable Long ratingId) throws URISyntaxException {
         log.debug("REST request to update Rating : {}", rating);
-        if (rating.getId() == null) {
-            return create(rating);
-        }
-        ratingRepository.save(rating);
-        return ResponseEntity.ok().build();
+        // if user does not have access to feedback, user does not have access to rating either
+        return Optional.ofNullable(feedbackRepository.findOne(feedbackId)).map(feedback -> {
+            return Optional.ofNullable(ratingRepository.findOne(ratingId)).map(oldRating -> {
+                oldRating.setComment(rating.getComment());
+                oldRating.setQuestion(rating.getQuestion());
+                oldRating.setScore(rating.getScore());
+                oldRating.setVisible(rating.isVisible());
+                ratingRepository.save(oldRating);
+                return ResponseEntity.ok().build();
+            }).orElse(ResponseEntity.badRequest().build());
+        }).orElse(ResponseEntity.badRequest().build());
+        
     }
 
     /**
@@ -68,9 +83,13 @@ public class RatingResource implements RestResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Rating> getAll() {
+    public ResponseEntity<Set<Rating>> getAll(@PathVariable Long reviewId, @PathVariable Long feedbackId) {
         log.debug("REST request to get all Ratings");
-        return ratingRepository.findAll();
+        return Optional.ofNullable(feedbackRepository.findOne(feedbackId))
+                .map(feedback -> new ResponseEntity<>(feedback.getRatings(), HttpStatus.OK))
+                .orElseThrow(() -> {
+                    return new ResourceNotFoundException("feedback " + feedbackId +" cannot be found or you don't have access");
+                });
     }
 
     /**
