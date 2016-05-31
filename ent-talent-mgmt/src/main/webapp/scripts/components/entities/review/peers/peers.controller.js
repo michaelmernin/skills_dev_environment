@@ -24,13 +24,11 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   };
 
   $scope.peerSelected = function (user) {
-    if (user !== null) {
-      if (user.login !== null) {        
-       Peer.addPeer({reviewId: review.id, id: user.id}, {}, function(peers) {
-         $scope.peers = peers;
-       });      
-      }
-    }  
+    if (user && user.login) {        
+      Peer.addPeer({reviewId: review.id, id: user.id}, {}, function(peers) {
+        $scope.peers = peers;
+      });      
+    }
   };
 
   $scope.deletePeer = function (user, ev) {
