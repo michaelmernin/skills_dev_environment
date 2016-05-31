@@ -88,7 +88,7 @@ public class FeedbackAuthorizer extends Authorizer {
      * @return
      */
 	private static boolean isDirector(User user, String username) {
-		return Optional.ofNullable(user.getGeneralManager()).map(User::getDirector).map(User::getLogin).map(login -> {
+		return Optional.ofNullable(user).map(User::getDirector).map(User::getLogin).map(login -> {
 			return login.equals(username);
 		}).orElse(false);
 	}
