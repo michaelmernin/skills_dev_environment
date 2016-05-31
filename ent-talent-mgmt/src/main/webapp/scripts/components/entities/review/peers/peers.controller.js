@@ -16,7 +16,7 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   
   Principal.identity().then(function (account) {
     $scope.isReviewer = account.id === review.reviewer.id;
-    $scope.isReviewer = account.id === review.reviewee.id;
+    $scope.isReviewee = account.id === review.reviewee.id;
   });
 
   $scope.getMatches = function (query) {
