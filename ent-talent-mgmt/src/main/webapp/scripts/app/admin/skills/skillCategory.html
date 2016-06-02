@@ -34,7 +34,7 @@
         <md-list-item ng-click="viewSkillCategoryDetails(sc, $event)" ng-repeat="sc in skillCategories | filter:filter | orderBy: 'title'">
           <md-icon md-font-icon="fa fa-graduation-cap fa-2x fa-fw" class="md-primary"></md-icon>
           <p> {{ sc.title  }} </p>
-          <md-switch class="md-secondary md-hue-1" ng-model="sc.enabled" ng-change="enableDisableSkillCategory(sc)"></md-switch>
+          <md-switch class="md-secondary" ng-model="sc.enabled" ng-change="enableDisableSkillCategory(sc)"></md-switch>
         </md-list-item>
       </md-list>
     </div>

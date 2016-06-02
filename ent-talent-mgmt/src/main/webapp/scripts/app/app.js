@@ -66,9 +66,7 @@ angular.module('etmApp', [
     });
     $mdThemingProvider.theme('default')
       .primaryPalette('prft-red')
-      .accentPalette('prft-red',{
-        'hue-1':'500'
-      });
+      .accentPalette('red');
 }]).config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, httpRequestInterceptorCacheBusterProvider) {
 
   //enable CSRF
