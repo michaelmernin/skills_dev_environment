@@ -16,9 +16,10 @@
             </md-option>
           </md-select>
         </md-input-container>
-        <md-button flex-xs="20" class="md-primary md-mini" ng-click="reverseOrderFunction()"><span class="reviewOrder">ASC</span><span class="reviewOrder" hidden>DESC</span></md-button>
+        <div flex-xs="20">
+            <md-button class="md-primary md-mini" ng-click="reverseOrderFunction()"><span class="reviewOrder">ASC</span><span class="reviewOrder" hidden>DESC</span></md-button>
+        </div>
       </div>
-      
     </div>
     <md-list flex-gt-sm>
       <md-list-item class="md-3-line" ng-repeat="review in reviews | orderBy:orderByExpression:reverseOrder | filter:reviewSearch" ng-click="goToReview(review.id)">
