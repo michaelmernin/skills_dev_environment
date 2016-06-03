@@ -23,11 +23,43 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
     return result;
   }
 
+  
+  // TODO - move these to a utility class
   function showAlways(review, user) {
-    return review && review.reviewee
-      && (eq(user, review.reviewee.counselor) || eq(user, review.reviewee.generalManager));
+    return review && review.reviewee && (isCounselor(review, user) || isGM(review, user) || isDirector(review, user));
   }
-
+  
+  function isCounselor(review, user){
+    return eq(user, review.reviewee.counselor);
+  }
+  
+  function isReviewee(review, user){
+    return eq(user, review.reviewee);
+  }
+  
+  function isReviewer(review, user){
+    return eq(user, review.reviewer);
+  }
+  
+  function isGM(review, user){
+    return eq(user, review.reviewee.generalManager);
+    
+  }
+  
+  function isDirector(review, user){
+    return eq(user, review.reviewee.director) && !has([ReviewStatus.OPEN], review.reviewStatus);
+  }
+  
+  function isPeer(review, user){
+    var result = false;
+    review.peers.forEach(function(peer){
+      if(peer.id === user.id){
+        result = true;
+      }
+    });
+    return result;
+  }
+  
   function showByReviewStatus(review) {
     return has([ReviewStatus.JOINT_APPROVAL, ReviewStatus.GM_APPROVAL, ReviewStatus.COMPLETE], review.reviewStatus);
   }
@@ -51,11 +83,15 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       review.feedback = [];
     }
 
-    if (!userHasFeedback(review.feedback, user)) {
+    if (!userHasFeedback(review.feedback, user) && userCanGiveFeedback(review, user)) {
       review.feedback.push(createNewFeedback(review, user));
     }
 
     return review.feedback;
+  }
+  
+  function userCanGiveFeedback(review, user){
+    return isPeer(review, user) || isReviewer(review, user) || isReviewee(review, user);
   }
 
   function userHasFeedback(feedback, user) {

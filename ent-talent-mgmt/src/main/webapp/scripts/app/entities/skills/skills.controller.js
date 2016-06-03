@@ -12,7 +12,6 @@ angular.module('etmApp').controller('SkillsController', function ($scope, $mdDia
   var displaySkillCategories = function() {
     SkillCategory.query(function (result) {
       $scope.skillCategories = result;
-      console.log(result)
       angular.forEach($scope.skillCategories, function (category) {
         angular.forEach(category.skills, function (skill) {
           skill.ranking = skill.rankings[0] || {};

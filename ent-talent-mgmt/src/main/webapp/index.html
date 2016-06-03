@@ -42,7 +42,7 @@
   <div layout="row">
     <div layout="column" flex>
       <div ui-view="toolbar" ng-cloak></div>
-      <div layout="row" style="height: calc(100vh - 64px); overflow-y: auto; overflow-x: hidden;">
+      <div layout="row" class="etm-content">
         <div ui-view="content" flex flex-lg="90" flex-offset-lg="5" flex-gt-lg="80" flex-offset-gt-lg="10"></div>
       </div>
     </div>
@@ -178,6 +178,10 @@
   <script src="scripts/app/admin/skills/addSkill.detail.controller.js"></script>
   <script src="scripts/app/admin/skills/manageSkill.controller.js"></script>
   <script src="scripts/app/admin/skills/manageSkills.js"></script>
+  <script src="scripts/app/admin/activiti/activiti.js"></script>
+  <script src="scripts/app/admin/activiti/activiti.controller.js"></script>
+  <script src="scripts/components/admin/activiti.service.js"></script>
+  
 
   <!-- endbuild -->
 </body>

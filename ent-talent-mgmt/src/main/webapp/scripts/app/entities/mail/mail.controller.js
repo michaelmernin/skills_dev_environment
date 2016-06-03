@@ -2,14 +2,17 @@
 
 angular.module('etmApp').controller('MailController', function ($scope, $mdDialog, Mail) {
   $scope.messages=[];
-  Mail.findAll().$promise.then(function(val){
-    console.log(val);
+  
+  function updateMessages(){
+    Mail.findAll().$promise.then(function(val){
     val.forEach(function(m){
       // text preview of email
       m.text = getText(m.body);
     });
     $scope.messages = val;
   });
+  }
+  updateMessages();
   
   function getText(s) {
     var el = document.createElement('html');
@@ -37,6 +40,8 @@ angular.module('etmApp').controller('MailController', function ($scope, $mdDialo
       locals: {
         message: message
       }
+    }).finally(function(){
+      updateMessages();
     });
   };
 });

@@ -86,7 +86,6 @@ public class ReviewService extends AbstractBaseService {
             String id = processSvc.initiateProcess(processType, review);
             review.setProcessId(id);
             review = reviewRepository.save(review);
-            processSvc.addReviewId(id, review.getId());
             Pair<Long, Long> ids = createFeedback(review);
             processSvc.addFeedbackIds(id, ids.getLeft(), ids.getRight());
         } catch (Exception e) {

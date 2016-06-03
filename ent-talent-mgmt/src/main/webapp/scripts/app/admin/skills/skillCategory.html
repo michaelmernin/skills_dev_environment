@@ -31,18 +31,11 @@
         <input type="text" id="filter" ng-model="filter">
       </md-input-container>
       <md-list>
-        <md-list-item ng-repeat="sc in skillCategories | filter:filter | orderBy: 'title' " class="md-3-line" >
-          <div layout ="row" layout-align="space-between center" style="width:100%"> 
-            <div class="md-list-item-text" flex layout-align="start center" >
-              <md-icon md-font-icon="fa fa-graduation-cap fa-2x fa-fw" class="md-avatar md-primary"></md-icon>
-              <span class="md-title">{{ sc.title }}</span>
-            </div>
-          <div layout-align="end center">
-            <i class="fa fa-pencil" ng-click="viewSkillCategoryDetails(sc, $event)" rel ="popover" style="padding-right:10px" title="View Skills"></i>
-            <i class="fa fa-lg {{sc.enabled ? 'fa fa-toggle-on' : 'fa fa-toggle-off'}}" ng-click="enableDisableSkillCategory(sc, $event)" rel ="popover" title="Enable/Disable"></i>
-          </div>
-         </div>
-        </md-list-item>   
+        <md-list-item ng-click="viewSkillCategoryDetails(sc, $event)" ng-repeat="sc in skillCategories | filter:filter | orderBy: 'title'">
+          <md-icon md-font-icon="fa fa-graduation-cap fa-2x fa-fw" class="md-primary"></md-icon>
+          <p> {{ sc.title  }} </p>
+          <md-switch class="md-secondary" ng-model="sc.enabled" ng-change="enableDisableSkillCategory(sc)"></md-switch>
+        </md-list-item>
       </md-list>
     </div>
   </md-content>

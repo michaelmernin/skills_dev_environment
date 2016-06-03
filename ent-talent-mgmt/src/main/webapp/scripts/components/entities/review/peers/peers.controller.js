@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('etmApp').controller('PeersController', function ($scope, $stateParams, $mdDialog, Review, User, Peer, FeedbackStatus, Feedback) {
+angular.module('etmApp').controller('PeersController', function ($scope, $stateParams, $mdDialog, Review, User, Peer, FeedbackStatus, Feedback, Principal) {
   $scope.peers = [];
   var review = {};
+  $scope.isReviewer = false;
+  $scope.isReviewee = false;
   $scope.$parent.$watch('review', function (parentReview) {
     if (parentReview.id) {
       review = parentReview;
@@ -11,19 +13,22 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
       });
     }
   });
+  
+  Principal.identity().then(function (account) {
+    $scope.isReviewer = account.id === review.reviewer.id;
+    $scope.isReviewee = account.id === review.reviewee.id;
+  });
 
   $scope.getMatches = function (query) {
      return User.autocomplete({query: query, reviewId: review.id}).$promise;
   };
 
   $scope.peerSelected = function (user) {
-    if (user != null) {
-      if (user.login != null) {        
-       Peer.addPeer({reviewId: review.id, id: user.id}, {}, function(peers) {
-         $scope.peers = peers;
-       });      
-      }
-    }  
+    if (user && user.login) {        
+      Peer.addPeer({reviewId: review.id, id: user.id}, {}, function(peers) {
+        $scope.peers = peers;
+      });      
+    }
   };
 
   $scope.deletePeer = function (user, ev) {
