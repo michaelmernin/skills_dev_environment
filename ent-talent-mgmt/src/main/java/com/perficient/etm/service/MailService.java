@@ -290,5 +290,12 @@ public class MailService {
 		sendEmail(reviewerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_SUBMITTED,
 				EmailConstants.Templates.PEER_FEEDBACK_SUBMITTED, contextMap);
 	}
+	
+	public void sendAnnualReviewRejected(long revieweeId, Long reviewerId, long reviewId) {
+	    log.debug("Sending review: '{}' rejected e-mail to reviewer: '{}'",reviewId, reviewerId);
+	    sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, null);
+	    log.debug("Sending review: '{}' rejected e-mail to reviewee: '{}'",reviewId, revieweeId);
+	    sendEmail(revieweeId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, null);
+    }
 
 }

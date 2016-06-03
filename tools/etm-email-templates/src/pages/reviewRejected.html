@@ -1,0 +1,5 @@
+<h2 class="etm-email-greeting">Hello <span th:text="${FIRST_NAME}"></span></h2>
+<p> The following review was rejected by [rejector]:</p>
+<h5><span th:text="${REVIEW_TYPE}">Review</span> for <span th:text="${REVIEWEE_FULL_NAME}">Some User</span></h5>
+<p>The review is now in <span th:text="${REVIEW_STATUS}">Open</span> status. <span th:text="${REVIEWEE_FULL_NAME}">Some User</span> will need to resubmit their self feedback.</p>
+<a class="button medium" th:href="${BASE_URL + '/#/review/' + REVIEW_ID + '/edit'}">TAKE A LOOK!</a>

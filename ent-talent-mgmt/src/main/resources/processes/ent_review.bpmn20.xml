@@ -65,10 +65,11 @@
     <serviceTask id="setReviewComplete" name="Set Review to Complete" activiti:expression="${reviewService.setStatusById(Review,'COMPLETE')}"></serviceTask>
     <sequenceFlow id="SequenceFlow_19" sourceRef="setReviewComplete" targetRef="End"></sequenceFlow>
     <endEvent id="End" name="End"></endEvent>
-    
-    <!-- Rejected Flow -->
+    <!-- Rejected Flow --> 
     <serviceTask id="rejectReviewToOpen" name="Set Review Back to Open" activiti:expression="${reviewService.setStatusById(Review,'OPEN')}"></serviceTask>
-    <sequenceFlow id="SequenceFlow_8" sourceRef="rejectReviewToOpen" targetRef="CompleteSelfFeedbackUserTask"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow_20" sourceRef="rejectReviewToOpen" targetRef="rejectionEmailServiceTask"></sequenceFlow>
+    <serviceTask id="rejectionEmailServiceTask" name="Reject Process Mail" activiti:expression="${mailService.sendAnnualReviewRejected(Reviewee, Reviewer, Review)}"></serviceTask>
+    <sequenceFlow id="SequenceFlow_8" sourceRef="rejectionEmailServiceTask" targetRef="CompleteSelfFeedbackUserTask"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_annualReview">
     <bpmndi:BPMNPlane bpmnElement="annualReview" id="BPMNPlane_annualReview">
@@ -79,7 +80,7 @@
         <omgdc:Bounds height="60.0" width="100.0" x="81.0" y="240.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="CompleteSelfFeedbackUserTask" id="BPMNShape_CompleteSelfFeedbackUserTask">
-        <omgdc:Bounds height="60.0" width="100.0" x="230.0" y="240.0"></omgdc:Bounds>
+        <omgdc:Bounds height="60.0" width="100.0" x="220.0" y="241.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="setSelfFeedbackReady" id="BPMNShape_setSelfFeedbackReady">
         <omgdc:Bounds height="60.0" width="100.0" x="380.0" y="180.0"></omgdc:Bounds>
@@ -106,25 +107,25 @@
         <omgdc:Bounds height="40.0" width="40.0" x="1371.0" y="140.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="setReviewJointApproval" id="BPMNShape_setReviewJointApproval">
-        <omgdc:Bounds height="60.0" width="100.0" x="1470.0" y="180.0"></omgdc:Bounds>
+        <omgdc:Bounds height="60.0" width="100.0" x="1472.0" y="130.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="JointApprovalParallelFork" id="BPMNShape_JointApprovalParallelFork">
-        <omgdc:Bounds height="40.0" width="40.0" x="1610.0" y="190.0"></omgdc:Bounds>
+        <omgdc:Bounds height="40.0" width="40.0" x="1610.0" y="140.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="ReviewerJointApproval" id="BPMNShape_ReviewerJointApproval">
-        <omgdc:Bounds height="60.0" width="100.0" x="1700.0" y="100.0"></omgdc:Bounds>
+        <omgdc:Bounds height="60.0" width="100.0" x="1700.0" y="50.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="RevieweeJointApproval" id="BPMNShape_RevieweeJointApproval">
-        <omgdc:Bounds height="60.0" width="100.0" x="1700.0" y="260.0"></omgdc:Bounds>
+        <omgdc:Bounds height="60.0" width="100.0" x="1700.0" y="210.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="JointApprovalParallelJoin" id="BPMNShape_JointApprovalParallelJoin">
-        <omgdc:Bounds height="40.0" width="40.0" x="1850.0" y="190.0"></omgdc:Bounds>
+        <omgdc:Bounds height="40.0" width="40.0" x="1820.0" y="140.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="JointApprovalExclusiveGateway" id="BPMNShape_JointApprovalExclusiveGateway">
-        <omgdc:Bounds height="40.0" width="40.0" x="1940.0" y="190.0"></omgdc:Bounds>
+        <omgdc:Bounds height="40.0" width="40.0" x="1900.0" y="139.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="setReviewGeneralManagerApproval" id="BPMNShape_setReviewGeneralManagerApproval">
-        <omgdc:Bounds height="60.0" width="100.0" x="2030.0" y="130.0"></omgdc:Bounds>
+        <omgdc:Bounds height="60.0" width="100.0" x="2010.0" y="130.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="GeneralManagerApproval" id="BPMNShape_GeneralManagerApproval">
         <omgdc:Bounds height="60.0" width="100.0" x="2180.0" y="130.0"></omgdc:Bounds>
@@ -141,16 +142,19 @@
       <bpmndi:BPMNShape bpmnElement="rejectReviewToOpen" id="BPMNShape_rejectReviewToOpen">
         <omgdc:Bounds height="60.0" width="100.0" x="1700.0" y="430.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="rejectionEmailServiceTask" id="BPMNShape_rejectionEmailServiceTask">
+        <omgdc:Bounds height="60.0" width="100.0" x="1552.0" y="430.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_1" id="BPMNEdge_SequenceFlow_1">
         <omgdi:waypoint x="36.0" y="269.0"></omgdi:waypoint>
         <omgdi:waypoint x="81.0" y="270.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_2" id="BPMNEdge_SequenceFlow_2">
         <omgdi:waypoint x="181.0" y="270.0"></omgdi:waypoint>
-        <omgdi:waypoint x="230.0" y="270.0"></omgdi:waypoint>
+        <omgdi:waypoint x="220.0" y="271.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_3" id="BPMNEdge_SequenceFlow_3">
-        <omgdi:waypoint x="330.0" y="270.0"></omgdi:waypoint>
+        <omgdi:waypoint x="320.0" y="271.0"></omgdi:waypoint>
         <omgdi:waypoint x="342.0" y="259.0"></omgdi:waypoint>
         <omgdi:waypoint x="342.0" y="210.0"></omgdi:waypoint>
         <omgdi:waypoint x="380.0" y="210.0"></omgdi:waypoint>
@@ -177,7 +181,7 @@
         <omgdi:waypoint x="1032.0" y="160.0"></omgdi:waypoint>
         <omgdi:waypoint x="1070.0" y="160.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="13.0" width="100.0" x="1020.0" y="210.0"></omgdc:Bounds>
+          <omgdc:Bounds height="13.0" width="19.0" x="1020.0" y="210.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="ReviewersRejectFlow" id="BPMNEdge_ReviewersRejectFlow">
@@ -186,7 +190,7 @@
         <omgdi:waypoint x="1749.0" y="391.0"></omgdi:waypoint>
         <omgdi:waypoint x="1750.0" y="430.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="13.0" width="100.0" x="1000.0" y="230.0"></omgdc:Bounds>
+          <omgdc:Bounds height="13.0" width="14.0" x="1000.0" y="230.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_9" id="BPMNEdge_SequenceFlow_9">
@@ -199,11 +203,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="DirectorAcceptFlow" id="BPMNEdge_DirectorAcceptFlow">
         <omgdi:waypoint x="1411.0" y="160.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1429.0" y="159.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1429.0" y="210.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1470.0" y="210.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1472.0" y="160.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="13.0" width="100.0" x="1411.0" y="160.0"></omgdc:Bounds>
+          <omgdc:Bounds height="13.0" width="18.0" x="1411.0" y="160.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="DirectorRejectFlow" id="BPMNEdge_DirectorRejectFlow">
@@ -212,60 +214,56 @@
         <omgdi:waypoint x="1749.0" y="355.0"></omgdi:waypoint>
         <omgdi:waypoint x="1750.0" y="430.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="13.0" width="100.0" x="1391.0" y="180.0"></omgdc:Bounds>
+          <omgdc:Bounds height="13.0" width="14.0" x="1391.0" y="180.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_11" id="BPMNEdge_SequenceFlow_11">
-        <omgdi:waypoint x="1570.0" y="210.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1610.0" y="210.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1572.0" y="160.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1610.0" y="160.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_12" id="BPMNEdge_SequenceFlow_12">
-        <omgdi:waypoint x="1650.0" y="210.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1662.0" y="210.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1662.0" y="130.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1700.0" y="130.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1650.0" y="160.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1662.0" y="160.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1662.0" y="80.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1700.0" y="80.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_13" id="BPMNEdge_SequenceFlow_13">
-        <omgdi:waypoint x="1650.0" y="210.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1662.0" y="210.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1662.0" y="290.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1700.0" y="290.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1650.0" y="160.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1662.0" y="160.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1662.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1700.0" y="240.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_14" id="BPMNEdge_SequenceFlow_14">
-        <omgdi:waypoint x="1800.0" y="130.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1812.0" y="130.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1812.0" y="210.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1850.0" y="210.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1800.0" y="80.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1840.0" y="80.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1840.0" y="140.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_15" id="BPMNEdge_SequenceFlow_15">
-        <omgdi:waypoint x="1800.0" y="290.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1812.0" y="290.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1812.0" y="210.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1850.0" y="210.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1800.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1840.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1840.0" y="180.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_16" id="BPMNEdge_SequenceFlow_16">
-        <omgdi:waypoint x="1890.0" y="210.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1940.0" y="210.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1860.0" y="160.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1900.0" y="159.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="JointAcceptFlow" id="BPMNEdge_JointAcceptFlow">
-        <omgdi:waypoint x="1980.0" y="210.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1992.0" y="210.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1992.0" y="160.0"></omgdi:waypoint>
-        <omgdi:waypoint x="2030.0" y="160.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1940.0" y="159.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2010.0" y="160.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="13.0" width="100.0" x="1980.0" y="210.0"></omgdc:Bounds>
+          <omgdc:Bounds height="13.0" width="18.0" x="1940.0" y="159.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="JointRejectFlow" id="BPMNEdge_JointRejectFlow">
-        <omgdi:waypoint x="1960.0" y="230.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1960.0" y="459.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1920.0" y="179.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1920.0" y="459.0"></omgdi:waypoint>
         <omgdi:waypoint x="1800.0" y="460.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="13.0" width="100.0" x="1960.0" y="230.0"></omgdc:Bounds>
+          <omgdc:Bounds height="13.0" width="14.0" x="1920.0" y="179.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_17" id="BPMNEdge_SequenceFlow_17">
-        <omgdi:waypoint x="2130.0" y="160.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2110.0" y="160.0"></omgdi:waypoint>
         <omgdi:waypoint x="2180.0" y="160.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_18" id="BPMNEdge_SequenceFlow_18">
@@ -276,7 +274,7 @@
         <omgdi:waypoint x="2370.0" y="160.0"></omgdi:waypoint>
         <omgdi:waypoint x="2431.0" y="160.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="13.0" width="100.0" x="2370.0" y="160.0"></omgdc:Bounds>
+          <omgdc:Bounds height="13.0" width="18.0" x="2370.0" y="160.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="GeneralManagerRejectFlow" id="BPMNEdge_GeneralManagerRejectFlow">
@@ -284,17 +282,21 @@
         <omgdi:waypoint x="2350.0" y="459.0"></omgdi:waypoint>
         <omgdi:waypoint x="1800.0" y="460.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="13.0" width="100.0" x="2350.0" y="180.0"></omgdc:Bounds>
+          <omgdc:Bounds height="13.0" width="14.0" x="2350.0" y="180.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="SequenceFlow_19" id="BPMNEdge_SequenceFlow_19">
         <omgdi:waypoint x="2531.0" y="160.0"></omgdi:waypoint>
         <omgdi:waypoint x="2570.0" y="159.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_8" id="BPMNEdge_SequenceFlow_8">
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_20" id="BPMNEdge_SequenceFlow_20">
         <omgdi:waypoint x="1700.0" y="460.0"></omgdi:waypoint>
-        <omgdi:waypoint x="279.0" y="453.0"></omgdi:waypoint>
-        <omgdi:waypoint x="280.0" y="300.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1652.0" y="460.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_8" id="BPMNEdge_SequenceFlow_8">
+        <omgdi:waypoint x="1552.0" y="460.0"></omgdi:waypoint>
+        <omgdi:waypoint x="270.0" y="459.0"></omgdi:waypoint>
+        <omgdi:waypoint x="270.0" y="301.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
