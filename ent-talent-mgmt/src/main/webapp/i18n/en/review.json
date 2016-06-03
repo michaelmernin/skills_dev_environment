@@ -71,6 +71,9 @@
         "save": "Save",
         "completionDate": "Completion Date",
         "description": "Description"
+      },
+      "evaluation": {
+      	"comment": "A comment is required for any rating other than 3"
       }
     },
     "a": {

@@ -12,7 +12,7 @@ angular.module('etmApp').directive('etmRating', function () {
     controller: function ($scope) {
       var score = null;
       $scope.form = {};
-
+      
       $scope.setNA = function () {
         if ($scope.na) {
           score = $scope.rating.score;
