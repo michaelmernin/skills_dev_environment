@@ -1,9 +1,11 @@
 package com.perficient.etm.web.rest;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -26,8 +28,10 @@ import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Skill;
 import com.perficient.etm.domain.SkillCategory;
 import com.perficient.etm.domain.SkillRanking;
+import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.SkillCategoryRepository;
 import com.perficient.etm.repository.SkillRankingRepository;
+import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.service.UserService;
 
 
@@ -47,6 +51,9 @@ public class SkillCategoryResource implements RestResource{
     private SkillRankingRepository skillRankingRepository;
     
     @Inject
+    private UserRepository userRepository;
+    
+    @Inject
     private UserService userService;
     
     
@@ -58,11 +65,9 @@ public class SkillCategoryResource implements RestResource{
     public List<SkillCategory> getAllSkillsForUser() {
         log.debug("REST request to get a list of skill Categories");
         return userService.getUserFromLogin().map(user -> {
-            List<SkillCategory> categories = skillCategoryRepository.findAll();
+            List<SkillCategory> categories = skillCategoryRepository.findByEnabled(true);
             List<SkillRanking> rankings = skillRankingRepository.findByUserId(user.getId());
             final Map<Long,Skill> skills = new HashMap<Long,Skill>();
-            
-            categories = categories.stream().filter(category -> category.getEnabled()).collect(Collectors.toList());
             
             categories.forEach(sc ->{
                 List<Skill> tempSkills = new ArrayList<Skill>();
@@ -90,7 +95,7 @@ public class SkillCategoryResource implements RestResource{
     }
     
     /**
-     * GET /skillCategories/all -> get list of all skill Categories
+     * GET /skillCategories/all -> get list of all skill Categories including enabled/disabled
      * @return
      */
     @RequestMapping(value = "/skillCategories/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -99,6 +104,49 @@ public class SkillCategoryResource implements RestResource{
         List<SkillCategory> categories = skillCategoryRepository.findAll();
         return categories;
     }
+    
+    /**
+     * GET /skillCategories/skillsReview -> get list of all skill Categories for all users
+     * @return
+     */
+    @RequestMapping(value = "/skillCategories/skillsReview", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<SkillCategory> getAllSkillCategoriesForAllUsers() {
+        log.debug("REST request to get a list of skill Categories for all users");
+        List<User> users = new ArrayList<User>();
+        User loggedUser = userService.getUserFromLogin().get();
+            if(loggedUser.isDirector() || loggedUser.isGeneralManager()){
+                users = userRepository.findAll();
+            }else if(loggedUser.isConselor()){
+                users = userRepository.findByCounselor(loggedUser);
+            }
+        List<User> finalUsers = users;
+        List<SkillCategory> categories = skillCategoryRepository.findByEnabled(true);
+       
+        
+        categories.forEach(sc ->{
+            List<Skill> tempSkills = sc.getSkills().stream().filter(sk -> sk.getEnabled()).collect(Collectors.toList());
+            sc.setSkills(tempSkills);
+
+            sc.getSkills().forEach(skill -> {
+                List<SkillRanking> tempSkillRanking = skill.getRankings();
+                skill.setRankings(new ArrayList<>());
+                finalUsers.stream().forEach(user -> {
+                    List<SkillRanking> ranks = tempSkillRanking.stream()
+                            .filter(r -> r.getUser().getId() == user.getId()).collect(Collectors.toList());
+                    if (ranks.isEmpty()) {
+                        skill.getRankings().add(new SkillRanking(user, skill));
+                    } else {
+                        skill.getRankings().add(ranks.get(0));
+                    }
+                    ;
+                });
+                skill.getRankings().sort(SkillRanking.getUserComparator());
+            });
+        });
+        
+        return categories;
+    }
+    
     
     /**
      * POST /skillCategories -> create a skill Category

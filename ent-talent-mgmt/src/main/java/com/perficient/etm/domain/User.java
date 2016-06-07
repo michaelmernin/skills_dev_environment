@@ -189,6 +189,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
         return SecurityUtils.hasRole(this, AuthoritiesConstants.DIRECTOR);
     }
 
+    public boolean isConselor() {
+        return SecurityUtils.hasRole(this, AuthoritiesConstants.COUNSELOR);
+    }
+
     @JsonSerialize(using = PublicSerializer.class)
     @JsonView(View.Peer.class)
     public User getGeneralManager() {
