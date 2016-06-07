@@ -15,6 +15,10 @@ angular.module('etmApp')
       url:'api/skillCategories/all',
       method: 'GET',
       isArray: true},
+    'skillsReview': {
+        url:'api/skillCategories/skillsReview',
+        method: 'GET',
+        isArray: true},
     'get': {
       method: 'GET',
       transformResponse: function (data) {

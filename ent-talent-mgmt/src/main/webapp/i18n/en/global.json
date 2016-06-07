@@ -7,6 +7,7 @@
       "dashboard": "Dashboard",
       "createReview": "Create a Review",
       "skills": "Skills",
+      "skillsReview": "Skills Review",
       "entities": {
         "main": "Entities",
         "reviewType": "ReviewType",
