@@ -2,6 +2,7 @@
 package com.perficient.etm.domain;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,7 +58,6 @@ public class SkillRanking implements Serializable {
     private LocalDateTime datetime;
 
     @ManyToOne
-    @JsonIgnore
     private User user;
 
     public SkillRanking(){
@@ -68,7 +68,7 @@ public class SkillRanking implements Serializable {
         this();
         this.user = user;
         this.skill = skill;
-        this.rank = 0;
+        this.rank = 1;
     }
     
     public Long getId() {
@@ -157,5 +157,18 @@ public class SkillRanking implements Serializable {
                 "\"skill\" : {\n\"id\" : " + skill.getId() +
                 "\n}\n" +
                 '}';
+    }
+    
+    public static Comparator<SkillRanking> getUserComparator(){
+        Comparator<SkillRanking> comparator = new Comparator<SkillRanking>() {
+            @Override
+            public int compare(SkillRanking o1, SkillRanking o2) {
+                Long temp1,temp2;
+                temp1 = o1 == null? -1 : o1.getUser().getId();
+                temp2 = o2 == null? -1 : o2.getUser().getId();
+                return temp1.compareTo(temp2);
+            }
+        };
+        return comparator;
     }
 }
