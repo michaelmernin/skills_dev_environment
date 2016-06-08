@@ -144,6 +144,7 @@ angular.module('etmApp').controller('SkillsReviewController', function ($scope, 
       series: [{
         name: 'Ranking per employee',
         borderWidth: 1,
+        borderColor: '#505050',
         data: data,
         dataLabels: {
           enabled: true,
