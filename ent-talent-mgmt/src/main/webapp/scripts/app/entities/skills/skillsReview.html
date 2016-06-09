@@ -1,0 +1,29 @@
+<div ng-cloak>
+  <md-content md-scroll-y class="md-whiteframe-z1">
+    <div ng-class="{'etm-skills-content': showButtons()}" layout="column" layout-padding>
+      <div>
+        <div layout-gt-xs="row">
+          <h2 flex-gt-xs>Skills Review</h2>
+        </div>
+        <div layout-gt-xs="row">
+          <div flex-gt-xs>
+            <md-list>
+              <div ng-repeat="sc in skillCategories">
+                <md-list-item ng-click="toggleCategory(sc)">
+                  <div class="md-list-item-text" flex>
+                    <span class="md-title">{{ sc.title }}</span>
+                  </div>
+                  <i class="fa fa-lg {{toggle === sc ? 'fa-chevron-down' : 'fa-chevron-left'}}"></i>
+                </md-list-item>
+                <div ng-show="$parent.toggle === sc">
+                 <div id="{{sc.id}}" style="width:65%"  flex></div>
+                </div>
+                <md-divider ng-if="!$last"></md-divider>
+              </div>
+            </md-list>
+          </div>
+        </div>
+      </div>
+    </div>
+  </md-content>
+</div>

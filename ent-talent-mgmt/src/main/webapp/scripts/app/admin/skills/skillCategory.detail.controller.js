@@ -25,8 +25,8 @@ angular.module('etmApp').controller('SkillCategoryDetailController', function ($
     });
   };
   
-  $scope.enableDisableSkill = function (skill,ev) {
-    skill.enabled= !skill.enabled;
+  $scope.enableDisableSkill = function (skill) {
+   /* skill.enabled= !skill.enabled;*/
     var promise = null;
     promise = Skill.update({
       id: skill.id

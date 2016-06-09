@@ -5,7 +5,7 @@ angular.module('etmApp').config(function ($stateProvider) {
     parent: 'entity',
     url: '/skillCategory',
     data: {
-      roles: ['ROLE_USER'],
+      roles: ['ROLE_ADMIN'],
       pageTitle: 'global.menu.skills'
     },
     views: {

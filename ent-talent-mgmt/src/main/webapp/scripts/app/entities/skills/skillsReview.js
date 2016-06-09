@@ -1,17 +1,17 @@
 'use strict';
 
 angular.module('etmApp').config(function ($stateProvider) {
-  $stateProvider.state('manageSkills', {
+  $stateProvider.state('skillsReview', {
     parent: 'entity',
-    url: '/manageSkill',
+    url: '/skillsReview',
     data: {
-      roles: ['ROLE_ADMIN'],
-      pageTitle: 'global.menu.skills'
+      roles: ['ROLE_COUNSELOR','ROLE_GENERAL_MANAGER'],
+      pageTitle: 'global.menu.skillsReview'
     },
     views: {
       'content@': {
-        templateUrl: 'scripts/app/admin/skills/manageSkills.html',
-        controller: 'ManageSkillController'
+        templateUrl: 'scripts/app/entities/skills/skillsReview.html',
+        controller: 'SkillsReviewController'
       }
     },
     resolve: {

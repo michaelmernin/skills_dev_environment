@@ -11,7 +11,7 @@
   </md-toolbar>
   <md-dialog-content class="md-dialog-content">
     <md-list>
-      <md-list-item ng-repeat="skill in skillCategory.skills | filter:filter" class="md-3-line">
+      <!-- <md-list-item ng-repeat="skill in skillCategory.skills | filter:filter" class="md-3-line">
         <div layout ="row" layout-align="space-between center" style="width:100%"> 
           <div class="md-list-item-text" flex layout-align="start center" >
             <span class="md-title">{{ skill.name }}</span>
@@ -21,7 +21,12 @@
             <i class="fa fa-lg fa-trash" ng-click="deleteSkill(skillCategory, skill, $event)" rel ="popover" title="Delete Skill"></i>
           </div>
        </div>
-     </md-list-item>
+     </md-list-item> -->
+       <md-list-item ng-repeat="skill in skillCategory.skills | filter:filter">
+          <p> {{ skill.name  }} </p>
+          <md-switch class="md-secondary md-hue-1" ng-model="skill.enabled" ng-change="enableDisableSkill(skill)"></md-switch>
+          <!-- <i class="fa fa-lg fa-trash" ng-click="deleteSkill(skill, $event)" rel ="popover" title="Delete Skill"></i> -->
+        </md-list-item>
     </md-list>
   </md-dialog-content>
   </form>

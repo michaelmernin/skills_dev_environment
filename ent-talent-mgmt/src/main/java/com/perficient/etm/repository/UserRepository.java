@@ -32,4 +32,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where lower(u.firstName) like ?1% or lower(u.lastName) like ?1% and u.id > 2")
     List<User> findUsersForAutocomplete(String query);
+    
+    List<User> findByCounselor(User counselor);
 }
