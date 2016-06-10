@@ -1,5 +1,5 @@
 server:
-    port: 8080
+    port: 443
     ssl:
       key-store: /etc/ssl/keystore-prod.p12
       key-store-password: keystore-prod

@@ -21,6 +21,7 @@
             <user>paul.bjorkstrand</user>
             <user>avinab.rajbhandary</user>
             <user>nirajan.shrestha</user>
+            <user>gaurangi.bhangale</user>
           </users>
         </role>
         <role name="Operator">
@@ -158,7 +159,7 @@
     <pipeline name="etm-deploy-prod" labeltemplate="${etm-build}" isLocked="true" template="etm-deploy-manual">
       <params>
         <param name="inventory">prod</param>
-        <param name="url">https://stlerapp.perficient.com:8443</param>
+        <param name="url">https://stlerapp.perficient.com</param>
       </params>
       <materials>
         <pipeline pipelineName="etm-build" stageName="build" />
@@ -218,7 +219,7 @@
               </fetchartifact>
               <exec command="/bin/bash" workingdir="tools/ansible">
                 <arg>-c</arg>
-                <arg>ansible-playbook appservers.yml -i #{inventory} -t ci_deploy -e "artifact_dir=../../etm-wars" --vault-password-file ~/.ansible/vault_key.txt</arg>
+                <arg>ansible-playbook -v appservers.yml -i #{inventory} -t ci_deploy -e "artifact_dir=../../etm-wars" --vault-password-file ~/.ansible/vault_key.txt</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
@@ -280,3 +281,4 @@
     <agent hostname="STLERAppDEV.perficient.com" ipaddress="10.128.6.95" uuid="910bf32a-b774-482e-9f5f-3d74463c81be" />
   </agents>
 </cruise>
+
