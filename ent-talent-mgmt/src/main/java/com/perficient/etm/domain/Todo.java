@@ -1,7 +1,6 @@
 package com.perficient.etm.domain;
 
 import java.io.Serializable;
-import java.util.Optional;
 
 import org.activiti.engine.task.Task;
 import org.joda.time.LocalDate;
@@ -10,7 +9,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.perficient.etm.domain.util.CustomLocalDateSerializer;
 import com.perficient.etm.domain.util.ISO8601LocalDateDeserializer;
-import com.perficient.etm.service.activiti.ProcessConstants;
 
 /**
  * The view representation for a Task in activiti engine.
@@ -102,7 +100,7 @@ public class Todo implements Serializable {
         todo.setName(task.getName());
         todo.setId(task.getId());
         todo.setUserId(user.getId());
-        todo.setReview(review);
+        todo.setReview(review.toPublicReview());
         todo.setCreateDate(LocalDate.fromDateFields(task.getCreateTime()));
         /*Optional.ofNullable(task.getProcessVariables()).ifPresent(vars -> {
             todo.setReviewId((Long) vars.get(ProcessConstants.REVIEW_VARIABLE));
