@@ -67,6 +67,7 @@
   tags:
     - ci_deploy
     - server
+  sudo: yes
   command: "{{ script_dir }}/etmRunWar"
   environment:
     SPRING_LDAP_PASSWORD: "{{ ldap_password }}"
