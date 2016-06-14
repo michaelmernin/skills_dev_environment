@@ -221,6 +221,25 @@ public class MailService {
 		});
 		return context;
 	}
+	
+	/**
+	 * return Map<String, Object> of current user details
+	 * @return
+	 */
+	private Map<String, Object> getMapWithCurrentUser(){
+	    return userService.getUserFromLogin().map(user ->{
+	        Map<String, Object> contextMap = new HashMap<String, Object>();
+	        contextMap.put(EmailConstants.CurrentUser.FIRST_NAME, user.getFirstName());
+	        contextMap.put(EmailConstants.CurrentUser.LAST_NAME, user.getLastName());
+	        contextMap.put(EmailConstants.CurrentUser.FULL_NAME, user.getFullName());
+	        contextMap.put(EmailConstants.CurrentUser.ID, user.getId());
+	        contextMap.put(EmailConstants.CurrentUser.EMAIL, user.getEmail());
+	        contextMap.put(EmailConstants.CurrentUser.LOGIN, user.getLogin());
+	        contextMap.put(EmailConstants.CurrentUser.TITLE, user.getTitle());
+	        contextMap.put(EmailConstants.CurrentUser.TARGET_TITLE, user.getTargetTitle());
+	        return contextMap;
+	    }).orElse(null);
+	}
 
 	@Async
 	public void sendActivationEmail(Long userId) {
@@ -293,9 +312,9 @@ public class MailService {
 	
 	public void sendAnnualReviewRejected(long revieweeId, Long reviewerId, long reviewId) {
 	    log.debug("Sending review: '{}' rejected e-mail to reviewer: '{}'",reviewId, reviewerId);
-	    sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, null);
+	    sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, getMapWithCurrentUser());
 	    log.debug("Sending review: '{}' rejected e-mail to reviewee: '{}'",reviewId, revieweeId);
-	    sendEmail(revieweeId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, null);
+	    sendEmail(revieweeId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, getMapWithCurrentUser());
     }
 	
 	public void sendSelfFeedbackSubmittedEmail(long reviewerId, long reviewId) {
@@ -308,6 +327,23 @@ public class MailService {
         sendEmail(revieweeId, reviewId, EmailConstants.Subjects.REVIEWER_FEEDBACK_SUBMITTED, EmailConstants.Templates.REVIEWER_FEEDBACK_SUBMITTED, null);
     }
 	
-	
-
+	public void sendReviewStatusChangedEmail(long reviewId, long reviewerId, long revieweeId, long directorId, long GMId, String status) {
+        log.debug("Sending review '{}' status change (to '{}') email to reviewer '{}'",reviewId, status, reviewerId);
+        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.REVIEWE_STATUS_CHANGED, EmailConstants.Templates.REVIEWE_STATUS_CHANGED, getMapWithCurrentUser());
+        log.debug("Sending review '{}' status change (to '{}') email to reviewee '{}'",reviewId, status, revieweeId);
+        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.REVIEWE_STATUS_CHANGED, EmailConstants.Templates.REVIEWE_STATUS_CHANGED, getMapWithCurrentUser());
+        switch (status){
+            case "DIRECTOR_APPROVAL":
+                log.debug("Sending request for approval email for review '{}' to director '{}' ", reviewId, directorId);
+                sendEmail(directorId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_APPROVAL, EmailConstants.Templates.REVIEW_APPROVAL, getMapWithCurrentUser());
+                break;
+            case "GM_APPROVAL":
+                log.debug("Sending request for approval email for review '{}' to GM '{}' ", reviewId, GMId);
+                sendEmail(GMId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_APPROVAL, EmailConstants.Templates.REVIEW_APPROVAL, getMapWithCurrentUser());
+                break;
+        }
+        
+        
+        
+    }	
 }

@@ -9,6 +9,17 @@ public final class EmailConstants {
     public static final String PROFILE = "PROFILE";
     public static final String PEER_FULL_NAME = "PEER_FULL_NAME";
     public static final String INITIATOR_ID = "INITIATOR_ID";
+    
+    public final class CurrentUser {
+        public static final String FIRST_NAME = "CURRENT_USER_FIRST_NAME";
+        public static final String LAST_NAME = "CURRENT_USER_LAST_NAME";
+        public static final String FULL_NAME = "CURRENT_USER_FULL_NAME";
+        public static final String ID = "CURRENT_USER_ID";
+        public static final String EMAIL = "CURRENT_USER_EMAIL";
+        public static final String LOGIN = "CURRENT_USER_LOGIN";
+        public static final String TITLE = "CURRENT_USER_TITLE";
+        public static final String TARGET_TITLE = "CURRENT_USER_TARGET_TITLE";
+    }
 
     public final class User {
         public static final String FIRST_NAME = "FIRST_NAME";
@@ -43,13 +54,13 @@ public final class EmailConstants {
         public static final String ACTIVATION = "activationEmail";
         public static final String REVIEW_STARTED = "reviewStarted";
         public static final String REVIEW_REJECTED = "reviewRejected";
-        public static final String REVIEW_APPROVED = "reviewApproved";
+        public static final String REVIEW_APPROVAL = "reviewApproval";
         public static final String PEER_FEEDBACK_REMINDER = "peerFeedbackReminder";
         public static final String PEER_FEEDBACK_REQUESTED = "peerFeedbackRequested";
         public static final String PEER_FEEDBACK_SUBMITTED = "peerFeedbackSubmitted";
         public static final String SELF_FEEDBACK_SUBMITTED = "selfFeedbackSubmitted";
         public static final String REVIEWER_FEEDBACK_SUBMITTED = "reviewerFeedbackSubmitted";
-
+        public static final String REVIEWE_STATUS_CHANGED = "reviewStatusChanged";
     }
 
     public final class Subjects {
@@ -57,12 +68,13 @@ public final class EmailConstants {
         public static final String ACTIVATION = "mail.activation.subject";
         public static final String ANNULA_REVIEW_STARTED = "mail.annualReview.started.subject";
         public static final String ANNULA_REVIEW_REJECTED = "mail.annualReview.rejected.subject";
-        public static final String ANNULA_REVIEW_APPROVED = "mail.annualReview.approved.subject";
+        public static final String ANNULA_REVIEW_APPROVAL = "mail.annualReview.approval.subject";
         public static final String PEER_FEEDBACK_REMINDER = "mail.peerFeedback.reminder.subject";
         public static final String PEER_FEEDBACK_REQUESTED = "mail.peerFeedback.requested.subject";
         public static final String PEER_FEEDBACK_SUBMITTED = "mail.peerFeedback.submitted.subject";
         public static final String SELF_FEEDBACK_SUBMITTED = "mail.selfFeedback.submitted.subject";
         public static final String REVIEWER_FEEDBACK_SUBMITTED = "mail.reviewerFeedback.submitted.subject";
+        public static final String REVIEWE_STATUS_CHANGED = "mail.annualReview.statusChanged.subject";
 
     }
 
