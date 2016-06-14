@@ -297,5 +297,17 @@ public class MailService {
 	    log.debug("Sending review: '{}' rejected e-mail to reviewee: '{}'",reviewId, revieweeId);
 	    sendEmail(revieweeId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, null);
     }
+	
+	public void sendSelfFeedbackSubmittedEmail(long reviewerId, long reviewId) {
+        log.debug("Sending self feedback completed email for review: '{}' to reviewer: '{}'",reviewId, reviewerId);
+        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.SELF_FEEDBACK_SUBMITTED, EmailConstants.Templates.SELF_FEEDBACK_SUBMITTED, null);
+    }
+	
+	public void sendReviewerFeedbackSubmittedEmail(long revieweeId, long reviewId) {
+        log.debug("Sending reviewer feedback completed email for review: '{}' to reviewee: '{}'",reviewId, revieweeId);
+        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.REVIEWER_FEEDBACK_SUBMITTED, EmailConstants.Templates.REVIEWER_FEEDBACK_SUBMITTED, null);
+    }
+	
+	
 
 }

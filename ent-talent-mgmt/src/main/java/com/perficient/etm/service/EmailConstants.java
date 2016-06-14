@@ -47,6 +47,8 @@ public final class EmailConstants {
         public static final String PEER_FEEDBACK_REMINDER = "peerFeedbackReminder";
         public static final String PEER_FEEDBACK_REQUESTED = "peerFeedbackRequested";
         public static final String PEER_FEEDBACK_SUBMITTED = "peerFeedbackSubmitted";
+        public static final String SELF_FEEDBACK_SUBMITTED = "selfFeedbackSubmitted";
+        public static final String REVIEWER_FEEDBACK_SUBMITTED = "reviewerFeedbackSubmitted";
 
     }
 
@@ -59,6 +61,9 @@ public final class EmailConstants {
         public static final String PEER_FEEDBACK_REMINDER = "mail.peerFeedback.reminder.subject";
         public static final String PEER_FEEDBACK_REQUESTED = "mail.peerFeedback.requested.subject";
         public static final String PEER_FEEDBACK_SUBMITTED = "mail.peerFeedback.submitted.subject";
+        public static final String SELF_FEEDBACK_SUBMITTED = "mail.selfFeedback.submitted.subject";
+        public static final String REVIEWER_FEEDBACK_SUBMITTED = "mail.reviewerFeedback.submitted.subject";
+
     }
 
 }
