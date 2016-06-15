@@ -2,6 +2,7 @@ package com.perficient.etm.domain;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -316,4 +317,19 @@ public class Review implements Serializable {
         pubReview.setTitle(title);
         return pubReview;
     }
+    
+    
+    /**
+     * checks if user is a reviewer on the review
+     * @param userId
+     * @return
+     */
+    public boolean isReviewer(long userId){
+        return Optional.ofNullable(reviewer)
+            .map(User::getId)
+            .map(reviewerId -> {
+                return reviewerId == userId;
+            }).orElse(false);
+    }
+    
 }
