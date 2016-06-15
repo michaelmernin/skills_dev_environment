@@ -128,7 +128,7 @@ public class MailService {
 	 */
 	public void sendEmail(final Long recipientId, final Long reviewId, String subject, String EmailTemplate,
 			Map<String, Object> contextMap) {
-		User recipientUser = userService.getUser(recipientId);
+		User recipientUser = userRepository.findOne(recipientId);
 		// if the recipient user does not exist, return.
 		Optional<User> optUser = Optional.ofNullable(recipientUser);
 		if (!optUser.isPresent()) {
