@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,8 +20,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.FeedbackRepository;
+import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.service.PeerService;
-import com.perficient.etm.service.UserService;
 import com.perficient.etm.web.view.View;
 
 /**
@@ -41,7 +40,7 @@ public class PeerResource implements RestResource {
     private FeedbackRepository feedbackRepository;
     
     @Inject
-    private UserService userService;
+    private UserRepository userRepository;
     
     /**
      * POST  /reviews/:reviewId/peers -> Add peers to a review
@@ -54,7 +53,7 @@ public class PeerResource implements RestResource {
     @JsonView(View.Public.class)
     public List<Feedback> save(@PathVariable Long reviewId, @PathVariable Long id) throws URISyntaxException {
         log.debug("REST request to update peers for Review Id : {}", reviewId);
-        User peer = userService.getUser(id);
+        User peer = userRepository.findOne(id);
         peerSvc.addPeerFeedback(reviewId, peer);
         return feedbackRepository.findAllByReviewIdAndFeedbackType(reviewId);
     }
