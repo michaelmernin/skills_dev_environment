@@ -9,7 +9,8 @@
       "status": "Status:",
       "open": "Open",
       "reopen": "Reopen",
-      "removePeer": "Delete"
+      "removePeer": "Delete",
+      "remind": "remind"
     },
     "delete": {
       "question": "Are you sure you want to delete Review {{ id }}?"

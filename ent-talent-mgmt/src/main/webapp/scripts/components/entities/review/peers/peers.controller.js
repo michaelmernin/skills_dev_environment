@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('PeersController', function ($scope, $stateParams, $mdDialog, Review, User, Peer, FeedbackStatus, Feedback, Principal) {
+angular.module('etmApp').controller('PeersController', function ($scope, $stateParams, $mdDialog, $mdToast, Review, User, Peer, FeedbackStatus, Feedback, Principal) {
   $scope.peers = [];
   var review = {};
   $scope.isReviewer = false;
@@ -54,8 +54,14 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
     fn: reopenPeers
   }, {
     action: 'delete',
+    validStatuses: [FeedbackStatus.NOT_SENT, FeedbackStatus.OPEN, FeedbackStatus.READY],
     translateKey: 'review.peers.removePeer',
     fn: deletePeers
+  }, {
+    action: 'remind',
+    validStatuses: [FeedbackStatus.OPEN],
+    translateKey: 'review.peers.remind',
+    fn: remindPeers
   }];
   
   $scope.availableActions = function () {
@@ -78,7 +84,7 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   };
   
   function isActionValid(action, peers) {
-    var valid = true;
+    var valid = false;
     if (action.validStatuses && action.validStatuses.length) {
       valid = false;
       angular.forEach(peers, function (peer) {
@@ -126,6 +132,17 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
     $mdDialog.show(confirmDelete).then(angular.bind(null, angular.forEach, peers, deletePeer));
   }
   
+  function remindPeers(peers, ev) {
+    var confirmRemind = $mdDialog.confirm()
+      .title('Remind Peers')
+      .ariaLabel('Remind Peers')
+      .content('Remind ' + peers.length + ' peers from this review?')
+      .ok('Remind')
+      .cancel('Cancel')
+      .targetEvent(ev);
+    $mdDialog.show(confirmRemind).then(angular.bind(null, angular.forEach, peers, remindPeer));
+  }
+  
   function deletePeer(peer) {
     $scope.peers.splice($scope.peers.indexOf(peer), 1);
     Peer.delete({reviewId: review.id, id: peer.id});
@@ -136,7 +153,20 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
       peer.feedbackStatus = FeedbackStatus.OPEN;
       Feedback.open({reviewId: review.id, id: peer.feedbackId}, {reviewId: review.id, id: peer.feedbackId});
     }
+  } 
+  
+  function remindPeer(peer) {
+    if (eq(peer.feedbackStatus, FeedbackStatus.OPEN)) {
+      Peer.remindPeer({reviewId: review.id, id: peer.id}, {}, function() {
+        $mdToast.show(
+          $mdToast.simple()
+          .textContent('Reminder email sent to '+peer.firstName+' '+peer.lastName)
+          .hideDelay(3000)
+      );
+      });
+    }
   }
+     
   
   function has(array, element) {
     var result = false;

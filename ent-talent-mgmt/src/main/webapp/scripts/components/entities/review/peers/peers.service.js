@@ -29,6 +29,11 @@ angular.module('etmApp').factory('Peer', function ($resource) {
         });
         return data;
       }
+    },
+    'remindPeer':{
+      url: 'api/reviews/:reviewId/peers/remindPeer/:id',
+      method: 'POST',
+      isArray: false
     }
   });
 });
