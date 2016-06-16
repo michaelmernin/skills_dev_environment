@@ -15,7 +15,9 @@ This is the official starter project for [Foundation for Emails](http://foundati
 
 ## Installation
 
-To use this template, your computer needs [Node.js](https://nodejs.org/en/) 0.12 or greater. The template can be installed with the Foundation CLI, or downloaded and set up manually.
+If you followed [ETM developer setup](https://github.com/Perficient/ent-talent-mgmt/wiki/Developer-Setup) , you should have node installed.
+
+If you only want to work on email templates, [install Node version 4.2.4](https://nodejs.org/download/release/v4.2.4/) (tested).
 
 ### Using the CLI
 
@@ -25,31 +27,21 @@ Install the Foundation CLI with this command:
 npm install foundation-cli --global
 ```
 
-Use this command to set up a blank Foundation for Emails project:
-
-```bash
-foundation new --framework emails
-```
-
-The CLI will prompt you to give your project a name. The template will be downloaded into a folder with this name.
-
-### Manual Setup
-
-To manually set up the template, first download it with Git:
-
-```bash
-git clone https://github.com/zurb/foundation-emails-template projectname
-```
-
-Then open the folder in your command line, and install the needed dependencies:
-
-```bash
-cd projectname
-npm install
-```
-
 ## Build Commands
 
 Run `npm start` to kick off the build process. A new browser tab will open with a server pointing to your project files.
 
 Run `npm run build` to inline your CSS into your HTML along with the rest of the build process.
+
+## Project structure
+
+etm-email-templates
+├── dist (this is where distribution files will be after building with build commands above)
+├── etc (empty)
+└── src (source pages, partials and assets)
+    ├── assets (SCSS and images)
+    ├── layouts
+        └── default.html (the main layout for html emails) 
+    ├── pages (email's main content)
+    └── partials (email html fragments like header, footer ..etc)
+
