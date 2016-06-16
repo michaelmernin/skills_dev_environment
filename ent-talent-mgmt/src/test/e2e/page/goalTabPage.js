@@ -16,15 +16,21 @@ var GoalTabPage = function () {
     
     // goal input elements
     goalLabel: element(by.translateKey('review.annual.goals.goal')),
+    
     goalTextArea: element(by.model('goal.name')),
+    
     goalRequiredMessage: element(by.tagName('md-dialog-content')).element(by.css('md-input-container')).element(by.translateKey('global.messages.validate.field.enter.required')),
-    goalCharCounter: element(by.tagName('md-dialog-content')).element(by.css('md-input-container:nth-child(2)')).element(by.css('md-char-counter')),
+    
+    goalCharCounter: element(by.tagName('md-dialog-content')).element(by.css('md-input-container:nth-child(1)')).element(by.xpath('.//div[@class="md-char-counter"]')),
+    
     goalMaxLengthError: element(by.css('md-input-container:nth-child(1)')).element(by.translateKey('global.messages.validate.field.maxlength')),
     
     // description input elements
     descriptionLable: element(by.translateKey('review.annual.goals.description')),
     descriptionTextArea: element(by.model('goal.description')),
-    descriptionCharCounter: element(by.css('md-input-container:nth-child(2)')).element(by.css('md-char-counter')),
+    
+    descriptionCharCounter: element(by.tagName('md-dialog-content')).element(by.css('md-input-container:nth-child(2)')).element(by.xpath('.//div[@class="md-char-counter"]')),
+    
     descriptionMaxLengthError: element(by.css('md-input-container:nth-child(2)')).element(by.translateKey('global.messages.validate.field.maxlength')),
     
     
@@ -35,16 +41,18 @@ var GoalTabPage = function () {
     
     
     // competion date input elements
-    statusInputButton: element(by.model('switchCompletion')),
+    completeInputButton: element(by.model('switchCompletion')),
     completionDateLabel: element(by.translateKey('review.annual.goals.completionDate')),
-    completionDateInput: element(by.name('completionDate')),
+    completionDateInput: element(by.model('goal.completionDate')),
     completionDateError: element(by.xpath('/html/body/div[3]/md-dialog/form/md-dialog-content/div/div[2]/md-input-container/div[2]/div/span')),
     
     
     // status notes input elements
     statusLabel: element(by.translateKey('review.annual.goals.note')),
     statusTextArea: element(by.name('note')),
-    statusCharCounter: element(by.css('md-input-container:nth-child(4)')).element(by.css('md-char-counter')),
+   
+    statusCharCounter: element(by.tagName('md-dialog-content')).element(by.css('md-input-container:nth-child(4)')).element(by.xpath('.//div[@class="md-char-counter"]')),
+    
     statusMaxLengthError: element(by.css('md-input-container:nth-child(4)')).element(by.translateKey('global.messages.validate.field.maxlength')),
     
     
@@ -75,7 +83,7 @@ var GoalTabPage = function () {
     get: function(){
       return this.ui.goalTextArea.getAttribute('value');
     },
-    set: function(textValue){
+    set: function (textValue){
       this.ui.goalTextArea.clear();
       this.ui.goalTextArea.sendKeys(textValue);
     }
@@ -141,11 +149,8 @@ var GoalTabPage = function () {
       this.ui.statusTextArea.clear();
       this.ui.statusTextArea.sendKeys(textValue);
     }
-    
-  }  
-    
-    
-    
+ }  
+       
 });
 
     this.get = function (id) {
@@ -168,6 +173,7 @@ var GoalTabPage = function () {
     this.ui.targetDateInput.clear();
     this.ui.targetDateInput.sendKeys(targetDate);
    
+   
     // enter statusNotes
     this.ui.statusTextArea.clear();
     this.ui.statusTextArea.sendKeys(statusNotes);
@@ -177,38 +183,37 @@ var GoalTabPage = function () {
     
   };
   
- 
-  this.updateGoal = function(itemNum, goalText, descriptionText){
-    
-     var goalCreated = element(by.css('md-tab-content:nth-child(3)')).element(by.tagName('md-list')).element(by.css('md-list-item:nth-child('+itemNum+')')).element(by.css('button:nth-child(1)'))
-     
-     goalCreated.click();
-      
-      this.goalTextArea = goalText;
-      
-      this.statusTextArea = descriptionText;
-    
-      this.ui.saveBtn.click();
-          
-  };
-  
   this.deleteGoal = function(itemNum){
-     
-   var deleteButton =  element(by.css('md-tab-content:nth-child(3)')).element(by.tagName('md-list')).element(by.css('md-list-item:nth-child('+itemNum+')')).element(by.css('button:nth-child(2)'));
-   
+    
+    var deleteButton =  element(by.css('md-tab-content:nth-child(3)')).element(by.tagName('md-list')).element(by.css('md-list-item:nth-child('+itemNum+')')).element(by.css('button:nth-child(2)'));
+    
+     browser.wait(function() {
+      return browser.isElementPresent(deleteButton);
+    }, 10000);
+        
    deleteButton.click();
    this.ui.confirmDeleteBtn.click();
    
   };
   
+ this.markGoalComplete = function(itemNum, completionDate){
+   
+   var selectedGoal =  element(by.css('md-tab-content:nth-child(3)')).element(by.tagName('md-list')).element(by.css('md-list-item:nth-child('+itemNum+')')).element(by.css('button:nth-child(1)'));
+   
+   selectedGoal.click();
+   this.ui.completeInputButton.click();
+   this.ui.completionDateInput.clear();
+   this.ui.completionDateInput.sendKeys(completionDate);
+   
+ };
+  
+ this.saveForm = function(){
+  this.ui.saveBtn.click();
     
-  this.saveForm = function(){
-    this.ui.saveBtn.click();
-    
-  };
+ };
 
-  this.cancelForm = function(){
-    this.ui.cancelBtn.click();
-  };
+ this.cancelForm = function(){
+  this.ui.cancelBtn.click();
+ };
 };
 module.exports = GoalTabPage;

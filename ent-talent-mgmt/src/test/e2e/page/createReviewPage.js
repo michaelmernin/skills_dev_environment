@@ -27,14 +27,17 @@ var CreateReviewPage = function () {
         return this.ui.startDateInput.getAttribute('value');
       },
       set: function (startDate) {
+         this.ui.startDateInput.clear();
         this.ui.startDateInput.sendKeys(startDate);
       }
     },
     endDate: {
       get: function () {
+       
         return this.ui.endDateInput.getAttribute('value');
       },
       set: function (endDate) {
+        this.ui.endDateInput.clear();
         this.ui.endDateInput.sendKeys(endDate);
       }
     },

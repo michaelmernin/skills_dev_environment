@@ -80,8 +80,8 @@ describe('Enterprise Talent Management', function () {
       createReviewPage.selectDropdownOption('review.reviewType', 'Annual Review');
       createReviewPage.getDropdownOptions('review.reviewee');
       createReviewPage.selectDropdownOption('review.reviewee', 'Dev UserOne');
-      createReviewPage.startDate = '01/01/2014';
-      createReviewPage.endDate = '02/01/2015';
+      createReviewPage.startDate = '2015-11-12';
+      createReviewPage.endDate = '2016-11-13';
       createReviewPage.save();
       expect(createReviewPage.ui.modalWindowContainer.isPresent()).toBe(true);
     });

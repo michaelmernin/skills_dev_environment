@@ -7,9 +7,10 @@ var GoalTabPage = require('../page/goalTabPage.js');
 describe('Enterprise Talent Management', function () {
   describe('Goal Tab', function () {
     var goalTabPage;
-
+    var loginPage;
+    
     beforeAll(function () {
-      var loginPage = new LoginPage();
+      loginPage = new LoginPage();
       loginPage.get();
       loginPage.login(userData.users.counselor);
       goalTabPage = new GoalTabPage();
@@ -22,28 +23,7 @@ describe('Enterprise Talent Management', function () {
       expect(goalTabPage.ui.goalTabContent.getAttribute('class')).toContain('md-no-scroll md-active');
     });
     
-    it('should allow users to submit goal details', function () {
-      
-      goalTabPage.addGoal('Learn Protractor', 'I want to learn protractor framework to learn automation testing.', '2014-11-12', 'Learning it while writing test cases for ETM project');
-      
-    });
-    
-     it('should allow users to update goal details', function () {
-      
-      goalTabPage.updateGoal('2', 'Updated Goal - Learn Protractor', 'Updated - I want to learn protractor framework to learn automation testing.');
-      
-       
-    });
-    
-    it('should allow users to delete goal', function () {
-      
-      goalTabPage.deleteGoal('2');
-  
-      
-       
-    });
-    
-    it('should require Goal name to be entered', function(){
+    it(' - Goal Form should require Goal name to be entered', function(){
       
       goalTabPage.ui.addGoalBtn.click();
       goalTabPage.saveForm();
@@ -51,11 +31,78 @@ describe('Enterprise Talent Management', function () {
       expect(goalTabPage.ui.goalRequiredMessage.getText()).toBe('Please enter a Goal.');
       goalTabPage.cancelForm();
     
-      
     });
     
     
+    it(' - Goal Form  should provide character count for Goal name, Goal Description, and Status Note fields', function(){
     
+      goalTabPage.ui.addGoalBtn.click();
+    
+      goalTabPage.goalTextArea = '12345678901234567890';
+      expect(goalTabPage.ui.goalCharCounter.getText()).toBe('20/250');
+    
+     goalTabPage.descriptionTextArea = '12345678901234567890';
+      expect(goalTabPage.ui.descriptionCharCounter.getText()).toBe('20/250');
+    
+      goalTabPage.statusTextArea = '12345678901234567890';
+      expect(goalTabPage.ui.statusCharCounter.getText()).toBe('20/250');
+    
+    });
+    
+    it(' - Goal Form should require Target date to be a valid date', function(){
+      
+      goalTabPage.ui.addGoalBtn.click();
+      goalTabPage.targetDateInput = 'abcdefgasdfasdf';
+      
+      goalTabPage.saveForm();
+      expect(goalTabPage.ui.targetDateError.getText()).toBe('Please select a valid Target Date.');
+      
+      });
+    
+    it(' - Goal Form should allow user to mark a goal complete', function(){
+        
+        goalTabPage.ui.addGoalBtn.click();
+        expect(goalTabPage.ui.completionDateInput.getAttribute('disabled')).toContain('true');
+        
+        goalTabPage.ui.completeInputButton.click()
+        
+        expect(goalTabPage.ui.completeInputButton.getAttribute('class')).toContain('md-checked');
+        goalTabPage.completionDateInput = '2016-05-12';
+        goalTabPage.cancelForm();
+      
+      });
+    
+    it('should allow users to submit goal details', function () {
+      
+      goalTabPage.addGoal('Learn Protractor', 'I want to learn protractor framework to learn automation testing.', '2014-11-12', 'Learning it while writing test cases for ETM Project');
+      goalTabPage.deleteGoal('2');
+      
+      goalTabPage.addGoal('Automation testing Goal', 'This is for description of the goal', '2015-10-15', 'Status is not a required field');
+      
+    });
+    
+  
+    it('should mark a completed goal differently', function(){
+      
+      goalTabPage.markGoalComplete('2', '2016-05-12');
+      
+      var completionCircle = element(by.css('md-tab-content:nth-child(3)')).element(by.tagName('md-list')).element(by.css('md-list-item:nth-child(2)')).element(by.css('button:nth-child(1)')).element(by.tagName('md-icon'));
+      
+      expect(completionCircle.getAttribute('class')).toContain('fa-check-circle-o');
+      
+    });
+    
+    it('should allow users to delete goal', function () {
+      
+      goalTabPage.deleteGoal('2');
+    });
+    
+    it('- completing the test suite', function(){
+      
+      loginPage.logout();
+    });
+    
+ 
 
   });
 });

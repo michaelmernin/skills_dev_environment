@@ -62,28 +62,28 @@ describe('Enterprise Talent Management', function () {
       expect(annualReviewPage.ui.engagementTabContainer.getText()).toBe('ENGAGEMENTS');
       expect(annualReviewPage.ui.engagementTabContainer.getAttribute('class')).toBe('md-tab ng-scope ng-isolate-scope md-ink-ripple');
       annualReviewPage.ui.engagementTabContainer.click();
-      expect(annualReviewPage.ui.engagementTabContainer.getAttribute('class')).toBe('md-tab ng-scope ng-isolate-scope md-ink-ripple md-active');
+      expect(annualReviewPage.ui.engagementTabContainer.getAttribute('class')).toContain('md-active');
     });
 
     it('should have Goals tab that is active when clicked', function (){
       expect(annualReviewPage.ui.goalsTabContainer.getText()).toBe('GOALS');
       expect(annualReviewPage.ui.goalsTabContainer.getAttribute('class')).toBe('md-tab ng-scope ng-isolate-scope md-ink-ripple');
       annualReviewPage.ui.goalsTabContainer.click();
-      expect(annualReviewPage.ui.goalsTabContainer.getAttribute('class')).toBe('md-tab ng-scope ng-isolate-scope md-ink-ripple md-active');
+      expect(annualReviewPage.ui.goalsTabContainer.getAttribute('class')).toContain('md-active');
     });
 
     it('should have Evaluation tab that is active when clicked', function (){
       expect(annualReviewPage.ui.evaluationTabContainer.getText()).toBe('EVALUATION');
       expect(annualReviewPage.ui.evaluationTabContainer.getAttribute('class')).toBe('md-tab ng-scope ng-isolate-scope md-ink-ripple');
       annualReviewPage.ui.evaluationTabContainer.click();
-      expect(annualReviewPage.ui.evaluationTabContainer.getAttribute('class')).toBe('md-tab ng-scope ng-isolate-scope md-ink-ripple md-active');
+      expect(annualReviewPage.ui.evaluationTabContainer.getAttribute('class')).toContain('md-active');
     });
 
     it('should have Overall tab that is active when clicked', function (){
       expect(annualReviewPage.ui.overallTabContainer.getText()).toBe('OVERALL');
       expect(annualReviewPage.ui.overallTabContainer.getAttribute('class')).toBe('md-tab ng-scope ng-isolate-scope md-ink-ripple');
       annualReviewPage.ui.overallTabContainer.click();
-      expect(annualReviewPage.ui.overallTabContainer.getAttribute('class')).toBe('md-tab ng-scope ng-isolate-scope md-ink-ripple md-active');
+      expect(annualReviewPage.ui.overallTabContainer.getAttribute('class')).toContain('md-active');
     });
 
   });
