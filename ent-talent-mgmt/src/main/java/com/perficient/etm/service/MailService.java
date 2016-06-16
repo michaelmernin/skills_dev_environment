@@ -1,6 +1,9 @@
 package com.perficient.etm.service;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -11,6 +14,7 @@ import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,8 +23,9 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
-import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.User;
+import com.perficient.etm.repository.UserRepository;
+import com.perficient.etm.security.SecurityUtils;
 
 /**
  * Service for sending e-mails.
@@ -32,143 +37,313 @@ import com.perficient.etm.domain.User;
 @Service
 public class MailService {
 
-    private final Logger log = LoggerFactory.getLogger(MailService.class);
+	private final Logger log = LoggerFactory.getLogger(MailService.class);
 
-    @Inject
-    private Environment env;
+	@Inject
+	private Environment env;
 
-    @Inject
-    private JavaMailSenderImpl javaMailSender;
+	@Inject
+	private JavaMailSenderImpl javaMailSender;
 
-    @Inject
-    private MessageSource messageSource;
+	@Inject
+	private MessageSource messageSource;
 
-    @Inject
-    private SpringTemplateEngine templateEngine;
-    
-    @Inject
-    private UserService userService;
+	@Inject
+	private SpringTemplateEngine templateEngine;
 
-    /**
-     * System default email address that sends the e-mails.
-     */
-    private String from;
+	@Inject
+	private UserService userService;
 
-    @PostConstruct
-    public void init() {
-        this.from = env.getProperty("spring.mail.from");
+	@Inject
+	private ReviewService reviewService;
+
+	@Inject
+	private UserRepository userRepository;
+
+	/**
+	 * System default email address that sends the e-mails.
+	 */
+	private String from;
+
+	private String baseUrl;
+
+	private String profile;
+
+	@PostConstruct
+	public void init() {
+		this.from = env.getProperty("spring.mail.from");
+		this.baseUrl = env.getProperty("spring.mail.baseUrl");
+		this.profile = env.getProperty("spring.profiles.active");
+	}
+
+	/**
+	 * Sends an email using the given parameters
+	 * 
+	 * @param to
+	 *            the email to send to
+	 * @param subject
+	 *            email subject
+	 * @param content
+	 *            Content of the email html/text
+	 * @param isMultipart
+	 *            boolean for multipart emails with assets
+	 * @param isHtml
+	 *            if content is html or not (text)
+	 */
+	@Async
+	public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
+		log.debug("Send e-mail[multipart '{}' and html '{}'] to '{}' with subject '{}'", isMultipart, isHtml, to,
+				subject);
+
+		// Prepare message using a Spring helper
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		try {
+			MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, CharEncoding.UTF_8);
+			message.setTo(to);
+			message.setFrom(from);
+			message.setSubject(subject);
+			message.setText(content, isHtml);
+			javaMailSender.send(mimeMessage);
+			log.debug("Sent e-mail to '{}'", to);
+		} catch (Exception e) {
+			log.warn("E-mail could not be sent to user '{}', exception is: {}", to, e.getMessage());
+		}
+	}
+
+	/**
+	 * Sends an email to ONLY to an existing user in the userRepository, using
+	 * their id
+	 * 
+	 * @param recipientId
+	 *            the id of the user in the repository to whom the email is sent
+	 * @param reviewId
+	 *            the review id this email is about (can be null)
+	 * @param subject
+	 *            Subject of the Email or Spring Message in MessageSource
+	 * @param EmailTemplate
+	 *            Email template name for thymleafe template engine to use
+	 * @param locale
+	 *            the locale thymeleaf will use for translation and localization
+	 * @throws MessagingException
+	 */
+	public void sendEmail(final Long recipientId, final Long reviewId, String subject, String EmailTemplate,
+			Map<String, Object> contextMap) {
+		User recipientUser = userRepository.findOne(recipientId);
+		// if the recipient user does not exist, return.
+		Optional<User> optUser = Optional.ofNullable(recipientUser);
+		if (!optUser.isPresent()) {
+			log.error("Cannot send email to usee with Id: {}, user does not exist", recipientId);
+			return;
+		}
+		optUser.ifPresent(user -> {
+			// adds some user info (first name, last name, title ...etc) to the
+			// context
+			Locale locale = Locale.forLanguageTag(Locale.US.getLanguage());
+			Context context = new Context(locale);
+			String recipientEmail = user.getEmail();
+			// add contextMap vars to context
+			Optional.ofNullable(contextMap).ifPresent(ctxMap -> {
+				ctxMap.forEach((key, value) -> context.setVariable(key, value));
+			});
+
+			context.setVariable(EmailConstants.BASE_URL, baseUrl);
+			context.setVariable(EmailConstants.PROFILE, profile);
+			// add user and review vars to context
+			addUserInfoToContext(context, user);
+			addReviewInfoToContext(context, reviewId);
+			// Create the HTML body using Thymeleaf
+			final String htmlContent = this.templateEngine.process(EmailTemplate, context);
+			// try to resolve
+			String subj = "";
+			try {
+				subj = messageSource.getMessage(subject, null, locale);
+			} catch (NoSuchMessageException e) {
+				subj = subject;
+			} finally {
+				sendEmail(recipientEmail, subj, htmlContent, false, true);
+			}
+		});
+	}
+
+	/**
+	 * Adds user info variables to context (to be used in thymeleaf email
+	 * templates)
+	 * 
+	 * @param context
+	 * @param user
+	 * @return
+	 */
+	private Context addUserInfoToContext(Context context, User user) {
+		context.setVariable(EmailConstants.User.FIRST_NAME, user.getFirstName());
+		context.setVariable(EmailConstants.User.LAST_NAME, user.getLastName());
+		context.setVariable(EmailConstants.User.FULL_NAME, user.getFullName());
+		context.setVariable(EmailConstants.User.ID, user.getId());
+		context.setVariable(EmailConstants.User.EMAIL, user.getEmail());
+		context.setVariable(EmailConstants.User.LOGIN, user.getLogin());
+		context.setVariable(EmailConstants.User.TITLE, user.getTitle());
+		context.setVariable(EmailConstants.User.TARGET_TITLE, user.getTargetTitle());
+		return context;
+	}
+
+	/**
+	 * Adds review info variables to context (to be used in thymeleaf email
+	 * templates)
+	 * 
+	 * @param context
+	 * @param reviewId
+	 * @return
+	 */
+	private Context addReviewInfoToContext(Context context, Long reviewId) {
+		SecurityUtils.runAsSystem(userRepository, () -> {
+			Optional.ofNullable(reviewId).ifPresent(rId -> {
+				Optional.ofNullable(reviewService.findById(rId)).ifPresent(review -> {
+					context.setVariable(EmailConstants.Review.ID, rId);
+					Optional.ofNullable(review.getReviewType()).ifPresent(revieweType -> {
+						context.setVariable(EmailConstants.Review.TYPE, revieweType.getName());
+					});
+					Optional.ofNullable(review.getReviewStatus()).ifPresent(revieweStatus -> {
+						context.setVariable(EmailConstants.Review.STATUS, revieweStatus.getName());
+					});
+					Optional.ofNullable(review.getReviewee()).ifPresent(reviewee -> {
+						context.setVariable(EmailConstants.Review.REVIEWEE_FIRST_NAME, reviewee.getFirstName());
+						context.setVariable(EmailConstants.Review.REVIEWEE_LAST_NAME, reviewee.getLastName());
+						context.setVariable(EmailConstants.Review.REVIEWEE_FULL_NAME, reviewee.getFullName());
+						context.setVariable(EmailConstants.Review.REVIEWEE_ID, reviewee.getId());
+					});
+					Optional.ofNullable(review.getReviewer()).ifPresent(reviewer -> {
+						context.setVariable(EmailConstants.Review.REVIEWER_FIRST_NAME, reviewer.getFirstName());
+						context.setVariable(EmailConstants.Review.REVIEWER_FULL_NAME, reviewer.getFullName());
+						context.setVariable(EmailConstants.Review.REVIEWER_FULL_NAME, reviewer.getFullName());
+						context.setVariable(EmailConstants.Review.REVIEWER_ID, reviewer.getId());
+					});
+				});
+			});
+		});
+		return context;
+	}
+	
+	/**
+	 * return Map<String, Object> of current user details
+	 * @return
+	 */
+	private Map<String, Object> getMapWithCurrentUser(){
+	    return userService.getUserFromLogin().map(user ->{
+	        Map<String, Object> contextMap = new HashMap<String, Object>();
+	        contextMap.put(EmailConstants.CurrentUser.FIRST_NAME, user.getFirstName());
+	        contextMap.put(EmailConstants.CurrentUser.LAST_NAME, user.getLastName());
+	        contextMap.put(EmailConstants.CurrentUser.FULL_NAME, user.getFullName());
+	        contextMap.put(EmailConstants.CurrentUser.ID, user.getId());
+	        contextMap.put(EmailConstants.CurrentUser.EMAIL, user.getEmail());
+	        contextMap.put(EmailConstants.CurrentUser.LOGIN, user.getLogin());
+	        contextMap.put(EmailConstants.CurrentUser.TITLE, user.getTitle());
+	        contextMap.put(EmailConstants.CurrentUser.TARGET_TITLE, user.getTargetTitle());
+	        return contextMap;
+	    }).orElse(null);
+	}
+
+	@Async
+	public void sendActivationEmail(Long userId) {
+		log.debug("Sending activation e-mail to user with id: '{}'", userId);
+		sendEmail(userId, null, EmailConstants.Subjects.ACTIVATION, EmailConstants.Templates.ACTIVATION, null);
+	}
+
+	/**
+	 * Sends an email to user with userId and includes reviewId for the review
+	 * URL. Intended for use with activinti.
+	 * 
+	 * @param userId
+	 * @param reviewId
+	 */
+	public void sendAnnualReviewStartedEmail(Long userId, Long reviewerId, Long InitiatorId, Long reviewId) {
+		Map<String, Object> contextMap = new HashMap<String, Object>();
+		contextMap.put(EmailConstants.INITIATOR_ID, InitiatorId);
+		log.debug("Sending annual review started e-mail to reviewee. review id:'{}', reviewee id:'{}'", reviewId,
+				userId);
+		sendEmail(userId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_STARTED,
+				EmailConstants.Templates.REVIEW_STARTED, contextMap);
+		log.debug("Sending annual review started e-mail to reviewer. review id:'{}', reviewer id:'{}'", reviewId,
+				reviewerId);
+		sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_STARTED,
+				EmailConstants.Templates.REVIEW_STARTED, contextMap);
+	}
+
+	/**
+	 * Sends a reminder email, to peer with userId, to remind them to give
+	 * feedback on review with reviewId
+	 * 
+	 * @param userId
+	 *            the user id to send an email to
+	 * @param reviewId
+	 *            the review id the email is about
+	 */
+	public void sendPeerFeedbackReminderEmail(Long userId, Long reviewId) {
+		log.debug("Sending peer feedback process reminder e-mail to '{}'");
+		sendEmail(userId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REMINDER,
+				EmailConstants.Templates.PEER_FEEDBACK_REMINDER, null);
+	}
+
+	/**
+	 * Sends a request for feedback, on review with reviewId, to a peer with
+	 * peerId
+	 * 
+	 * @param peerId
+	 *            the peerId used to send the email
+	 * @param reviewId
+	 *            the reviewId on which the peer needs to submit feedback
+	 */
+	public void sendPeerFeedbackRequestedEmail(Long peerId, Long reviewId) {
+		log.debug("Sending peer feedback requested e-mail to '{}'");
+		sendEmail(peerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_REQUESTED,
+				EmailConstants.Templates.PEER_FEEDBACK_REQUESTED, null);
+	}
+
+	public void sendPeerFeedbackSubmittedEmail(Long peerId, Long reviewerId, Long reviewId) {
+		log.debug("Sending peer review submitted e-mail to peer. peer id:'{}', reviewId:'{}'", peerId, reviewId);
+		sendEmail(peerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_SUBMITTED,
+				EmailConstants.Templates.PEER_FEEDBACK_SUBMITTED, null);
+		Map<String, Object> contextMap = new HashMap<String, Object>();
+		contextMap.put(EmailConstants.PEER_FULL_NAME,
+				Optional.ofNullable(userService.getUser(peerId)).map(User::getFullName).get());
+		log.debug("Sending peer review submitted e-mail to reviewer. reviewer id:'{}', reviewId:'{}'", peerId,
+				reviewId);
+		sendEmail(reviewerId, reviewId, EmailConstants.Subjects.PEER_FEEDBACK_SUBMITTED,
+				EmailConstants.Templates.PEER_FEEDBACK_SUBMITTED, contextMap);
+	}
+	
+	public void sendAnnualReviewRejected(long revieweeId, Long reviewerId, long reviewId) {
+	    log.debug("Sending review: '{}' rejected e-mail to reviewer: '{}'",reviewId, reviewerId);
+	    sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, getMapWithCurrentUser());
+	    log.debug("Sending review: '{}' rejected e-mail to reviewee: '{}'",reviewId, revieweeId);
+	    sendEmail(revieweeId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, getMapWithCurrentUser());
     }
-
-    @Async
-    public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
-        log.debug("Send e-mail[multipart '{}' and html '{}'] to '{}' with subject '{}'",
-                isMultipart, isHtml, to, subject);
-
-        // Prepare message using a Spring helper
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        try {
-            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, CharEncoding.UTF_8);
-            message.setTo(to);
-            message.setFrom(from);
-            message.setSubject(subject);
-            message.setText(content, isHtml);
-            javaMailSender.send(mimeMessage);
-            log.debug("Sent e-mail to User '{}'", to);
-        } catch (Exception e) {
-            log.warn("E-mail could not be sent to user '{}', exception is: {}", to, e.getMessage());
+	
+	public void sendSelfFeedbackSubmittedEmail(long reviewerId, long reviewId) {
+        log.debug("Sending self feedback completed email for review: '{}' to reviewer: '{}'",reviewId, reviewerId);
+        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.SELF_FEEDBACK_SUBMITTED, EmailConstants.Templates.SELF_FEEDBACK_SUBMITTED, null);
+    }
+	
+	public void sendReviewerFeedbackSubmittedEmail(long revieweeId, long reviewId) {
+        log.debug("Sending reviewer feedback completed email for review: '{}' to reviewee: '{}'",reviewId, revieweeId);
+        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.REVIEWER_FEEDBACK_SUBMITTED, EmailConstants.Templates.REVIEWER_FEEDBACK_SUBMITTED, null);
+    }
+	
+	public void sendReviewStatusChangedEmail(long reviewId, long reviewerId, long revieweeId, long directorId, long GMId, String status) {
+        log.debug("Sending review '{}' status change (to '{}') email to reviewer '{}'",reviewId, status, reviewerId);
+        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.REVIEWE_STATUS_CHANGED, EmailConstants.Templates.REVIEWE_STATUS_CHANGED, getMapWithCurrentUser());
+        log.debug("Sending review '{}' status change (to '{}') email to reviewee '{}'",reviewId, status, revieweeId);
+        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.REVIEWE_STATUS_CHANGED, EmailConstants.Templates.REVIEWE_STATUS_CHANGED, getMapWithCurrentUser());
+        switch (status){
+            case "DIRECTOR_APPROVAL":
+                log.debug("Sending request for approval email for review '{}' to director '{}' ", reviewId, directorId);
+                sendEmail(directorId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_APPROVAL, EmailConstants.Templates.REVIEW_APPROVAL, getMapWithCurrentUser());
+                break;
+            case "GM_APPROVAL":
+                log.debug("Sending request for approval email for review '{}' to GM '{}' ", reviewId, GMId);
+                sendEmail(GMId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_APPROVAL, EmailConstants.Templates.REVIEW_APPROVAL, getMapWithCurrentUser());
+                break;
         }
-    }
-
-    @Async
-    public void sendActivationEmail(User user, String baseUrl) {
-        log.debug("Sending activation e-mail to '{}'", user.getEmail());
-        Locale locale = Locale.forLanguageTag(user.getLangKey());
-        Context context = new Context(locale);
-        context.setVariable("user", user);
-        context.setVariable("baseUrl", baseUrl);
-        String content = templateEngine.process("activationEmail", context);
-        String subject = messageSource.getMessage("email.activation.title", null, locale);
-        sendEmail(user.getEmail(), subject, content, false, true);
-    }
-
-    @Async
-    public void sendAnnualProcessStartedEmail() {
-        log.debug("Sending annual review process started e-mail to '{}'");
-        Locale locale = Locale.forLanguageTag("en-us");
-        Context context = new Context(locale);
-        String content = templateEngine.process("reviewStartedEmail", context);
-        sendEmail("Test@test.org", "Test Subject", content, false, true);
-    }
-
-    @Async
-    public void sendPeerReviewReminderEmail() {
-        log.debug("Sending peer review process reminder e-mail to '{}'");
-        Locale locale = Locale.forLanguageTag("en-us");
-        Context context = new Context(locale);
-        String content = templateEngine.process("peerReviewReminderEmail", context);
-
-        sendEmail("Test@test.org", "Test Subject", content, false, true);
-    }
-    
-    @Async
-    public void sendPeerReviewFeedbackRequestedEmail(String email) {
-        log.debug("Sending peer review requested e-mail to '{}'");
-        Locale locale = Locale.forLanguageTag("en-us");
         
-        Context context = new Context(locale);
-        String content = templateEngine.process("peerReviewFeedbackRequested", context);
-
-        sendEmail(email, "ETM Feedback", content, false, true);
-    }
-    
-    @Async
-    public void sendPeerReviewSubmittedEmail() {
-        log.debug("Sending peer review submitted e-mail to '{}'");
-        Locale locale = Locale.forLanguageTag("en-us");
-        Context context = new Context(locale);
-        String content = templateEngine.process("peerReviewFeedbackSubmitted", context);
-
-        sendEmail("Test@test.org", "Test Subject", content, false, true);
-    }
-    
-    public void sendEMail(final String recipientEmail,String subject, String EmailTemplate, final Locale locale)
-                    throws MessagingException {
-        User recipientUser = userService.getUserByEmail(recipientEmail);
-        // default recipient name
-        String recipientFirst = "";
-        String recipientLast = "";
-        // if the recipient user does not exist, return.
-        if(recipientUser==null){
-            return;
-        }
-        else{
-            String first = recipientUser.getFirstName();
-            String last = recipientUser.getLastName();
-            recipientFirst = (first == null)? "":first;
-            recipientLast = (last == null)? "":last;
-        }
-        // Prepare the evaluation context
-        final Context ctx = new Context(locale);
-        ctx.setVariable("recipient_firstname", recipientFirst);
-        ctx.setVariable("recipient_lastname", recipientLast);
-
-        // Prepare message using a Spring helper
-        final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-        message.setSubject(subject);
-        message.setFrom("ETM@perficient.com");
-        message.setTo(recipientEmail);
-
-        // Create the HTML body using Thymeleaf
-        final String htmlContent = this.templateEngine.process(EmailTemplate, ctx);
-        message.setText(htmlContent, true); // true = isHtml
-
-        // Add the inline image, referenced from the HTML code as
-        // "cid:${imageResourceName}"
-       // final InputStreamSource imageSource = new ByteArrayResource(imageBytes);
-       // message.addInline(imageResourceName, imageSource, imageContentType);
-
-        // Send mail
-        javaMailSender.send(mimeMessage);
-    }
+        
+        
+    }	
 }

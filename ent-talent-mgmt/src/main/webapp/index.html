@@ -17,6 +17,7 @@
   <!-- endbuild -->
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
   <!-- build:css assets/styles/app.css -->
   <link rel="stylesheet" href="assets/styles/main.css">
   <link rel="stylesheet" href="assets/styles/admin/main.css">
@@ -31,6 +32,7 @@
   <link rel="stylesheet" href="assets/styles/overall.css">
   <link rel="stylesheet" href="assets/styles/goal.css">
   <link rel="stylesheet" href="assets/styles/peers.css">
+  <link rel="stylesheet" href="assets/styles/skills.css">
   <!-- endbuild -->
 </head>
 <body ng-app="etmApp" class="etm">
@@ -40,7 +42,7 @@
   <div layout="row">
     <div layout="column" flex>
       <div ui-view="toolbar" ng-cloak></div>
-      <div layout="row" style="height: calc(100vh - 64px); overflow-y: auto; overflow-x: hidden;">
+      <div layout="row" class="etm-content">
         <div ui-view="content" flex flex-lg="90" flex-offset-lg="5" flex-gt-lg="80" flex-offset-gt-lg="10"></div>
       </div>
     </div>
@@ -71,6 +73,12 @@
   <!-- build:js({.tmp,src/main/webapp}) scripts/app.js -->
   <script src="scripts/app/app.js"></script>
   <script src="scripts/app/app.constants.js"></script>
+  
+  <!-- Data Visualization HighChart.js -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
   <!-- Core Services -->
   <script src="scripts/components/util/httpError.interceptor.js"></script>
   <script src="scripts/components/util/dateutil.service.js"></script>
@@ -134,6 +142,16 @@
   <script src="scripts/app/entities/review/review-new.controller.js"></script>
   <script src="scripts/app/entities/review/review-edit.controller.js"></script>
   <script src="scripts/app/entities/review/review-detail.controller.js"></script>
+  <!-- Skill Pages -->
+  <script src="scripts/app/entities/skills/skills.js"></script>
+  <script src="scripts/components/entities/skill/skillCategory/skillCategory.service.js"></script>
+  <script src="scripts/components/entities/skill/skillRanking/skillRanking.service.js"></script>
+  <script src="scripts/components/entities/skill/skillCategory/skill.service.js"></script>
+  <script src="scripts/components/entities/skill/skills.guidelines.controller.js"></script>
+  <script src="scripts/app/entities/skills/skills.controller.js"></script>
+  <script src="scripts/app/entities/skills/skillsReview.controller.js"></script>  
+  <script src="scripts/app/entities/skills/skillsReview.js"></script>
+  
   <!-- Admin Pages -->
   <script src="scripts/app/admin/admin.js"></script>
   <script src="scripts/components/admin/audits.service.js"></script>
@@ -143,8 +161,8 @@
   <script src="scripts/components/admin/monitoring.service.js"></script>
   <script src="scripts/components/admin/user.service.js"></script>
   <script src="scripts/components/admin/mail.service.js"></script>
-  <script src="scripts/app/admin/mail/mail.detail.controller.js"></script>
-  <script src="scripts/app/admin/mail/message.detail.controller.js"></script>
+  <script src="scripts/app/entities/mail/mail.detail.controller.js"></script>
+  <script src="scripts/app/entities/mail/message.detail.controller.js"></script>
   <script src="scripts/app/admin/audits/audits.js"></script>
   <script src="scripts/app/admin/audits/audits.controller.js"></script>
   <script src="scripts/app/admin/configuration/configuration.js"></script>
@@ -159,8 +177,20 @@
   <script src="scripts/app/admin/users/users.js"></script>
   <script src="scripts/app/admin/users/users.controller.js"></script>
   <script src="scripts/app/admin/users/user.detail.controller.js"></script>
-  <script src="scripts/app/admin/mail/mail.js"></script>
-  <script src="scripts/app/admin/mail/mail.controller.js"></script>
+  <script src="scripts/app/entities/mail/mail.js"></script>
+  <script src="scripts/app/entities/mail/mail.controller.js"></script>
+  <script src="scripts/app/admin/skills/skillCategory.controller.js"></script>
+  <script src="scripts/app/admin/skills/skillCategory.js"></script>
+  <script src="scripts/app/admin/skills/skillCategory.detail.controller.js"></script>
+  <script src="scripts/app/admin/skills/addSkillCategory.detail.controller.js"></script>
+  <script src="scripts/app/admin/skills/addSkill.detail.controller.js"></script>
+  <script src="scripts/app/admin/skills/manageSkill.controller.js"></script>
+  <script src="scripts/app/admin/skills/manageSkills.js"></script>
+  <script src="scripts/app/admin/activiti/activiti.js"></script>
+  <script src="scripts/app/admin/activiti/activiti.controller.js"></script>
+  <script src="scripts/components/admin/activiti.service.js"></script>
+  
+
   <!-- endbuild -->
 </body>
 </html>

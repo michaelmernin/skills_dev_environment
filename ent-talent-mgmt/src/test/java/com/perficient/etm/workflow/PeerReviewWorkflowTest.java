@@ -3,23 +3,21 @@ package com.perficient.etm.workflow;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.mail.internet.MimeMessage;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.dumbster.smtp.MailMessage;
-import com.dumbster.smtp.SmtpServer;
+import com.perficient.etm.domain.TodoResult;
 import com.perficient.etm.service.activiti.ProcessConstants;
 import com.perficient.etm.utils.SpringAppTest;
 
@@ -33,21 +31,22 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
     @Autowired
     private TaskService taskService;
 
-    @Autowired
-    private SmtpServer mailServer;
     
     private Map<String, Object> getVariables() {
         Map<String, Object> variables = new HashMap<>();
-        variables.put(ProcessConstants.PEER_VARIABLE, "Alex");
+        variables.put(ProcessConstants.PEER_VARIABLE, 6L);
         variables.put(ProcessConstants.PEER_EMAIL_VARIABLE, "alex@perficient.com");
-        variables.put(ProcessConstants.REVIEWEE_VARIABLE, "David Brooks");
+        variables.put(ProcessConstants.REVIEWEE_VARIABLE, 9L);
+        variables.put(ProcessConstants.REVIEWER_VARIABLE, 5L);
+        variables.put(ProcessConstants.FEEDBACK_VARIABLE, 1L);
+        variables.put(ProcessConstants.REVIEW_VARIABLE, 1L);
 
         return variables;
     }
 
-    private Map<String, Object> getResultVariableMap(boolean result){
+    private Map<String, Object> getResultVariableMap(TodoResult result) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put(ProcessConstants.RESULT_VARIABLE, (result)? "TRUE": "FALSE");
+        variables.put(ProcessConstants.RESULT_VARIABLE, result.getResult());
         return variables;
     }
     
@@ -60,27 +59,18 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
 
         Task t = getCurrentTaskForProcess(processInstance);
         assertNotNull(t);
-        taskService.complete(t.getId());
-
-        t = getCurrentTaskForProcess(processInstance);
-        assertNotNull(t);
         assertEquals("The task to give feedback must be assigned to Author",
-                t.getAssignee(),"Alex"); 
-        //assertTrue("Email should have been sent to notify about start",
-        //        mailServer.getEmailCount() > 0);
+                t.getAssignee(),"6"); 
         
         taskService.complete(t.getId());
         t = getCurrentTaskForProcess(processInstance);
         assertNotNull(t);
-        //assertTrue("Email should have been sent about feedback submission",
-        //        mailServer.getEmailCount() > 1);
-        assertNull("Asignee should be null when feedback is ready", 
-                t.getAssignee());
+        assertEquals("Asignee should be system user when feedback is ready", 
+                t.getAssignee(), "1");
         
-        taskService.complete(t.getId(),getResultVariableMap(true));
+        taskService.complete(t.getId(),getResultVariableMap(TodoResult.APPROVE));
         t = getCurrentTaskForProcess(processInstance);
         assertNull("Process should have ended",t);
-        
     }
 
     
@@ -93,53 +83,29 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
 
         Task t = getCurrentTaskForProcess(processInstance);
         assertNotNull(t);
-        taskService.complete(t.getId());
-
-        t = getCurrentTaskForProcess(processInstance);
-        assertNotNull(t);
         assertEquals("The task to give feedback must be assigned to Author",
-                t.getAssignee(),"Alex"); 
-        //assertTrue("Email should have been sent to notify about start",
-        //        mailServer.getEmailCount() > 0);
+                t.getAssignee(),"6");
         
         taskService.complete(t.getId());
         t = getCurrentTaskForProcess(processInstance);
         assertNotNull(t);
-        //assertTrue("Email should have been sent about feedback submission",
-        //        mailServer.getEmailCount() > 1);
-        assertNull("Asignee should be null when feedback is ready", 
-                t.getAssignee());
+        assertEquals("Asignee should be system user when feedback is ready", 
+                t.getAssignee(), "1");
         
-        taskService.complete(t.getId(),getResultVariableMap(false));
+        taskService.complete(t.getId(), getResultVariableMap(TodoResult.REJECT));
         t = getCurrentTaskForProcess(processInstance);
-        assertNotNull("Process should have come back to submit feedbacl",t);
-        assertEquals("task should be assigned to Author",t.getAssignee(), "Alex");
-        
+        assertNotNull("Process should have come back to submit feedback",t);
+        assertEquals("task should be assigned to Author",t.getAssignee(), "6");
     }
     
     @Test
-    public void testStartOfProcess(){
-        Map<String, Object> variables = getVariables();
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PEER_REVIEW_BPM_PROCESS_NAME, variables);
-        assertNotNull(processInstance.getId());
-        
-        Task t = getCurrentTaskForProcess(processInstance);
-        boolean tType = (t instanceof TaskEntity);
-        String asignee = t.getAssignee();
-        assertTrue("Process should start with an user task assigned to nobody",
-                tType && (asignee == null));
-    }
-    
-    @Test
-    @Ignore //Test is taking too long due to Thread.sleep need a better way to test this
-    public void testEmailTrigger() {
+    @Ignore //Test is taking too long due to Thread.sleep. TODO: a better way: https://forums.activiti.org/content/how-do-i-unit-test-timerboundaryevent
+    public void testReminderEmail() {
         Map<String, Object> variables = getVariables();
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(
                 PEER_REVIEW_BPM_PROCESS_NAME, variables);
 
-        Task t =
-                taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
-
+        Task t = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
         assertNotNull(t);
 
         try {
@@ -150,7 +116,7 @@ public class PeerReviewWorkflowTest extends SpringAppTest {
             //An email should be triggered and the task should be back to give feedback
             //TODO check how to review the email
             assertNotNull("Task should not be null",t);
-            MailMessage[] messages = smtpServer.getMessages();
+            MimeMessage[] messages = smtpServer.getReceivedMessages();
             System.out.println(messages.length);
             //assertTrue("There must be messages sent",messages.length > 1);
         } catch (InterruptedException e) {

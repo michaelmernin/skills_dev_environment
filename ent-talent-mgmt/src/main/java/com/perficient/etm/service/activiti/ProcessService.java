@@ -17,10 +17,13 @@ import org.springframework.stereotype.Service;
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.TodoResult;
+import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.MissingReviewInfoException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
+import com.perficient.etm.service.UserService;
 
 /**
  * Service for looking at process information from the process engine. A process is a workflow
@@ -37,6 +40,9 @@ public class ProcessService {
     @Inject
     private TaskService taskSvc;
     
+    @Inject
+    private UserService userSvc;
+    
     public String initiateProcess(ReviewTypeProcess reviewType, Review review) throws ETMException {
         if (reviewType == null)
             throw new ReviewProcessNotFound("null");
@@ -46,7 +52,11 @@ public class ProcessService {
         Map<String, Object> variables = new HashMap<>();
         variables.put(ProcessConstants.REVIEWER_VARIABLE, review.getReviewer().getId());
         variables.put(ProcessConstants.REVIEWEE_VARIABLE, review.getReviewee().getId());
-        //variables.put(ProcessConstants.REVIEW_VARIABLE, review.getId());
+        variables.put(ProcessConstants.REVIEW_VARIABLE, review.getId());
+        variables.put(ProcessConstants.DIRECTOR_VARIABLE, review.getReviewee().getDirector().getId());
+        variables.put(ProcessConstants.GENERAL_MANAGER_VARIABLE, review.getReviewee().getGeneralManager().getId());
+        variables.put(ProcessConstants.INITIATOR, userSvc.getUserFromLogin().map(User::getId).get());
+        
         try {
             ProcessInstance processInstance = runtimeSvc.startProcessInstanceByKey(reviewType.getProcessId(), variables );
             return processInstance.getId();
@@ -57,6 +67,11 @@ public class ProcessService {
     
     public void addReviewId(String processId, Long reviewId) {
         runtimeSvc.setVariable(processId, ProcessConstants.REVIEW_VARIABLE, reviewId);
+    }
+    
+    public void addFeedbackIds(String processId, Long revieweeFeedbackId, Long reviewerFeedbackId) {
+        runtimeSvc.setVariable(processId, ProcessConstants.REVIEWEE_FEEDBACK_VARIABLE, revieweeFeedbackId);
+        runtimeSvc.setVariable(processId, ProcessConstants.REVIEWER_FEEDBACK_VARIABLE, reviewerFeedbackId);
     }
 
     /**
@@ -86,8 +101,11 @@ public class ProcessService {
      */
     public String initiatePeerReview(Feedback feedback)  {
         Map<String, Object> variables = new HashMap<>();
+        variables.put(ProcessConstants.REVIEW_VARIABLE, feedback.getReview().getId());
+        variables.put(ProcessConstants.FEEDBACK_VARIABLE, feedback.getId());
         variables.put(ProcessConstants.PEER_VARIABLE, feedback.getAuthor().getId());
         variables.put(ProcessConstants.PEER_EMAIL_VARIABLE, feedback.getAuthor().getEmail());
+        variables.put(ProcessConstants.REVIEWER_VARIABLE, feedback.getReview().getReviewee().getId());
         try{
             ProcessInstance pId =
                     runtimeSvc.startProcessInstanceByKey(ReviewTypeProcess.PEER.getProcessId(),variables );
@@ -98,14 +116,22 @@ public class ProcessService {
         }
     }
 
-    public Feedback completePeerReviewTask(Feedback feedback, String result) {
+    public Feedback completePeerReviewTask(Feedback feedback, TodoResult result) {
         String pId = feedback.getProcessId();
         ProcessInstance processInstance = runtimeSvc.createProcessInstanceQuery().variableValueEquals("processId", pId)
             .singleResult();
         Task t = taskSvc.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
-        taskSvc.complete(t.getId());
+        taskSvc.complete(t.getId(), getResultVariableMap(result));
         
         feedback.setFeedbackStatus(FeedbackStatus.COMPLETE);
         return feedback;
     }
+    
+    private Map<String, Object> getResultVariableMap(TodoResult result) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(ProcessConstants.RESULT_VARIABLE, result.getResult());
+        return variables;
+    }
+
+    
 }

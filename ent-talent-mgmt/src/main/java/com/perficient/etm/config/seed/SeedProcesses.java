@@ -62,7 +62,7 @@ public class SeedProcesses implements ApplicationListener<ContextRefreshedEvent>
         review.getPeers().stream()
             .map(peer -> feedbackService.addFeedback(review, peer, FeedbackType.PEER))
             .filter(feedback -> feedback.getFeedbackStatus() == FeedbackStatus.OPEN)
-            .forEach(feedbackService::openFeedback);
+            .forEach(feedbackService::openPeerFeedback);
     }
 
     private void completeTasksByStatus(Stream<Review> reviewStream) {

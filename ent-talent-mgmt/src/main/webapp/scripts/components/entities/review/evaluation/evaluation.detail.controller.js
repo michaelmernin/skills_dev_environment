@@ -5,7 +5,9 @@ angular.module('etmApp').controller('EvaluationDetailController', function ($sco
   $scope.review = review;
 
   $scope.close = function () {
-    $mdDialog.hide($scope.question);
+    if ($scope.evalForm.$valid) {
+      $mdDialog.hide($scope.question);
+    }
   };
 
   $scope.showRevieweeRating = function () {

@@ -1,0 +1,3 @@
+<h2 class="etm-email-greeting">Hello <span th:text="${FIRST_NAME}"></span></h2>
+<p>A friendly reminder to submit your feedback for <span th:text="${REVIEW_TYPE}"></span> for <span th:text="${REVIEWEE_FULL_NAME}"></span></p>
+<a class="button medium" th:href="${BASE_URL + '/#/review/' + REVIEW_ID + '/edit'}">SUBMIT FEEDBACK!</a>

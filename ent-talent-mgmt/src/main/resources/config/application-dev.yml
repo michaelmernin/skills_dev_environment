@@ -29,9 +29,10 @@ spring:
 
     mail:
         baseUrl: http://localhost:8080
+        port: 2526
 
     thymeleaf:
-        mode: XHTML
+        mode: LEGACYHTML5
         cache: false
 
 metrics:

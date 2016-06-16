@@ -1,9 +1,12 @@
 'use strict';
 
 angular.module('etmApp').controller('TodoListController', function ($scope, $state, $stateParams, $mdDialog, Todo, Review, ReviewStatus, Principal) {
-  $scope.todoList = Todo.queryTodoList();
-  
+  $scope.todoList = [];
+  var user; 
   if (Principal.isAuthenticated()) {
+    Principal.identity().then(function (account) {
+      user = account;
+    });
     Todo.queryTodoList(function(todos) {
       $scope.todoList = todos;
     });
@@ -38,7 +41,27 @@ angular.module('etmApp').controller('TodoListController', function ($scope, $sta
   
   $scope.goToTodo = function (reviewId) {
     if (reviewId) {
-      $state.go('review.edit', {id: reviewId});
+      if (this.todo.review.reviewStatus.id == 1) {
+        // check if user is reviewee, reviewer, or peer - if yes, go to review edit. if no, go to review.detail
+        if (user.id == this.todo.review.reviewee.id) {
+          $state.go('review.edit', {id: reviewId});
+        } else if (user.id == this.todo.review.reviewer.id) {
+          $state.go('review.edit', {id: reviewId});
+        } else {
+          var matchedPeer = false;
+          for (var i = 0; i < this.todo.review.peers.length; i++) {
+            if (user.id == this.todo.review.peers[i].id) {
+              matchedPeer = true;
+              $state.go('review.edit', {id: reviewId});
+            }
+          }
+          if (!matchedPeer) {
+            $state.go('review.detail', {id: reviewId});
+          }
+        }
+      } else {
+        $state.go('review.detail', {id: reviewId});
+      }
     } else {
       $state.go('login');
     }

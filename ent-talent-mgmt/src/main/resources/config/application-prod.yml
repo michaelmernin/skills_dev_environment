@@ -1,16 +1,20 @@
 server:
-    port: 8080
+    port: 8443
+    ssl:
+      key-store: /etc/ssl/keystore-prod.p12
+      key-store-password: keystore-prod
+      keyStoreType: PKCS12
 
 spring:
     profiles:
         active: prod
     datasource:
         dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
-        url: jdbc:mysql://localhost:3306/etm
-        databaseName: 
-        serverName: 
-        username: root
-        password: 
+        url: jdbc:mysql://stlerdb.perficient.com:3306/etm
+        databaseName: etm
+        serverName: stlerdb
+        username: etmadmin
+        password: K|WH5vum*)3.(fgj7
         cachePrepStmts: true
         prepStmtCacheSize: 250
         prepStmtCacheSqlLimit: 2048
@@ -33,10 +37,18 @@ spring:
             
 
     mail:
-        baseUrl: http://localhost:8080
+        baseUrl: https://stlerapp.perficient.com:8443
+        host: mail2.perficient.com
+        port: 25
+        user:
+        password:
+        protocol: smtp
+        tls: false
+        auth: false
+        from: donotreply@perficient.com
 
     thymeleaf:
-        mode: XHTML
+        mode: LEGACYHTML5
         cache: true
         
     ldap:

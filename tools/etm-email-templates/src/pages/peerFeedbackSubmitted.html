@@ -1,0 +1,5 @@
+<h2 class="etm-email-greeting">Hello <span th:text="${FIRST_NAME}"></span></h2>
+<p th:if="${ID} != ${REVIEWER_ID}">Thank you for submitting feedback on the <span th:text="${REVIEW_TYPE}"></span> for <span th:text="${REVIEWEE_FULL_NAME}"></span>. You're feedback has been received. We appreciate your time and effort!</p>
+<p th:if="${ID} == ${REVIEWER_ID}">
+  <span th:text="${PEER_FULL_NAME}"></span> has submitted feedback on <span th:text="${REVIEW_TYPE}"></span> for <span th:text="${REVIEWEE_FULL_NAME}"></span>
+</p>

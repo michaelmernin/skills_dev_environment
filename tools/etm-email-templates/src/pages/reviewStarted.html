@@ -1,0 +1,24 @@
+<h2 class="etm-email-greeting">Hello <span th:text="${PROFILE == 'tst' or PROFILE == 'dev'}?  ${FULL_NAME} : ${FIRST_NAME}"></span></h2>
+<div th:switch="${INITIATOR_ID}">
+  <div th:case="${REVIEWEE_ID}">
+    <div th:switch="${ID}">
+      <!--/* case: email to reviewee - reviewee = initiator */-->
+      <p th:case="${REVIEWEE_ID} ">You have initiated a new <span th:text="${REVIEW_TYPE}"></span> for yourself.</p>
+      <!--/* case: email to reviewee - reviewer =  initiator */-->
+      <p th:case="${REVIEWER_ID}"><span th:text="${REVIEWEE_FULL_NAME}"></span> has initiated thier own new <span th:text="${REVIEW_TYPE}"></span></p>
+      <p>You can now find this review on your to-do list for further actions.</p>
+    </div>
+  </div>
+  <div th:case="${REVIEWER_ID}">
+    <div th:switch="${ID}">
+      <!--/* case: email to reviewer - reviewee =  initiator */-->
+      <p th:case="${REVIEWEE_ID}"><span th:text="${REVIEWER_FULL_NAME}"></span> has initiated a new <span th:text="${REVIEW_TYPE}"></span> for you.</p>
+      <!--/* case: email to reviewer - reviewer =  initiator */-->
+      <p th:case="${REVIEWER_ID}">You have initiated a new <span th:text="${REVIEW_TYPE}"></span> for <span th:text="${REVIEWEE_FULL_NAME}"></span></p>
+      <p>You can now find this review on your to-do list for further actions.</p>
+    </div>
+  </div>
+  <p th:if="${INITIATOR_ID != REVIEWEE_ID && INITIATOR_ID != REVIEWER_ID }">The system initiated a new <span th:text="${REVIEW_TYPE}"></span> for <span th:text="${REVIEWEE_FULL_NAME}"></span>. The reviewer is <span th:text="${REVIEWER_FULL_NAME}"></span>. The review is in both the reviewer and reviewee's to-do list.</p>
+</div>
+<!--/* Explore converting this into a Thymeleaf dialect if we need to do more proccessing/string manibulation like this in the future */-->
+<a class="button medium" th:href="${BASE_URL + '/#/review/' + REVIEW_ID + '/edit'}">TAKE A LOOK!</a>

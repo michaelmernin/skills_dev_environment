@@ -2,6 +2,7 @@ package com.perficient.etm.domain;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -17,12 +18,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -297,4 +298,38 @@ public class Review implements Serializable {
                 ", reviewer='" + (reviewer != null ? reviewer.getLogin() : null) + "'" +
                 '}';
     }
+    
+    /**
+     * @param review
+     * @return review with only public fields (id, client endDate, processID, reviewee, reviewer, reviewStats, reviewType, startDate, title)
+     */
+    public Review toPublicReview() {
+        Review pubReview = new Review();
+        pubReview.setId(id);
+        pubReview.setClient(client);
+        pubReview.setEndDate(endDate);
+        pubReview.setProcessId(processId);
+        pubReview.setReviewee(reviewee);
+        pubReview.setReviewer(reviewer);
+        pubReview.setReviewStatus(reviewStatus);
+        pubReview.setReviewType(reviewType);
+        pubReview.setStartDate(startDate);
+        pubReview.setTitle(title);
+        return pubReview;
+    }
+    
+    
+    /**
+     * checks if user is a reviewer on the review
+     * @param userId
+     * @return
+     */
+    public boolean isReviewer(long userId){
+        return Optional.ofNullable(reviewer)
+            .map(User::getId)
+            .map(reviewerId -> {
+                return reviewerId == userId;
+            }).orElse(false);
+    }
+    
 }

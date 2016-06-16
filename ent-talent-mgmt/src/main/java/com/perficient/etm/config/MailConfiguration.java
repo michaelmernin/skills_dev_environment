@@ -1,5 +1,9 @@
 package com.perficient.etm.config;
 
+import java.util.Properties;
+
+import javax.annotation.PreDestroy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,13 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import com.dumbster.smtp.SmtpServer;
-import com.dumbster.smtp.mailstores.RollingMailStore;
-
-import java.util.Properties;
-import java.util.concurrent.Executors;
-
-import javax.annotation.PreDestroy;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetup;
 
 @Configuration
 public class MailConfiguration {
@@ -60,13 +59,14 @@ public class MailConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(MailConfiguration.class);
     
-    private SmtpServer server;
+    private GreenMail server;
 
     @Bean
     public JavaMailSenderImpl javaMailSender() {
         log.debug("Configuring mail sender");
         
         JavaMailSenderImpl sender = new JavaMailSenderImpl();
+
         if (host != null && !host.isEmpty()) {
             sender.setHost(host);
         } else {
@@ -87,21 +87,18 @@ public class MailConfiguration {
     }
     
     @Bean
-    @Profile({Constants.SPRING_PROFILE_DEVELOPMENT,Constants.SPRING_PROFILE_TEST,Constants.SPRING_PROFILE_UAT})
-    public SmtpServer initDumpsterSmtpServer() {
-        log.info("Starting SMTP server on port {}", port);
-        server = new SmtpServer();
-        server.setPort(port);
-        server.setMailStore(new RollingMailStore());
-        Executors.newSingleThreadExecutor().execute(server::run);
-        return server;
+    @Profile({Constants.SPRING_PROFILE_DEVELOPMENT,Constants.SPRING_PROFILE_TEST})
+    public GreenMail initGreenMailSmtpServer() {
+    	 log.info("Starting SMTP server on port {}", port);
+    	 ServerSetup setup = new ServerSetup(port, host, protocol);
+    	 server = new GreenMail(setup);
+    	 server.start(); 
+         return server;
     }
     
     @PreDestroy
     public void destroy() {
-        if (server != null && server.isReady()) {
-            log.info("Stopping SMTP server");
-            server.stop();
-        }
+        log.info("Stopping SMTP server");
+        server.stop();
     }
 }

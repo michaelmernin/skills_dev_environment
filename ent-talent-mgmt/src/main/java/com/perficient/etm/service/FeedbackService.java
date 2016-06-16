@@ -2,6 +2,7 @@ package com.perficient.etm.service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Rating;
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.TodoResult;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.RatingRepository;
@@ -46,22 +48,28 @@ public class FeedbackService extends AbstractBaseService {
             });
     }
 
-    public Feedback openFeedback(Feedback feedback) {
-        feedback.setFeedbackStatus(FeedbackStatus.OPEN);
+    public Feedback openPeerFeedback(Feedback feedback) {
         if (feedback.getFeedbackType() == FeedbackType.PEER) {
             if (feedback.getProcessId() == null) {
-                // TODO start Peer process
                 peerService.startPeerProcess(feedback);
             } else {
-                // TODO reopen Peer process
+                peerService.completeTaskInFeedbackProcess(feedback, TodoResult.REJECT);
             }
         }
-        return feedbackRepository.save(feedback);
+        return feedback;
     }
 
     public Feedback closeFeedback(Feedback feedback) {
         feedback.setFeedbackStatus(FeedbackStatus.CLOSED);
         return feedbackRepository.save(feedback);
+    }
+    
+    public Feedback setStatusById(Long id, FeedbackStatus status) {
+        return Optional.ofNullable(feedbackRepository.getOne(id))
+            .map(f -> {
+                f.setFeedbackStatus(status);
+                return feedbackRepository.save(f);
+            }).orElse(null);
     }
 
     private FeedbackStatus initialFeedbackStatus(FeedbackType type) {

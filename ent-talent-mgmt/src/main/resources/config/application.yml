@@ -16,13 +16,13 @@ async:
 spring:
     mail:
         host: localhost
-        port: 1025
+        port: 2525
         user:
         password:
         protocol: smtp
         tls: false
         auth: false
-        from: etm@localhost
+        from: noreply@perficient.com
         
     ldap:
         root: dc=perficient,dc=com

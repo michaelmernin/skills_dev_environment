@@ -11,7 +11,8 @@ angular.module('etmApp').directive('etmRating', function () {
     },
     controller: function ($scope) {
       var score = null;
-
+      $scope.form = {};
+      
       $scope.setNA = function () {
         if ($scope.na) {
           score = $scope.rating.score;
@@ -35,8 +36,10 @@ angular.module('etmApp').directive('etmRating', function () {
         $scope.na = $scope.rating.score === -1;
       }
 
-      $scope.$watch('ratingForm.$dirty', function (dirty) {
-        $scope.rating.$dirty = dirty;
+      $scope.$watch('form.ratingForm.$dirty', function (dirty) {
+        if (dirty !== undefined) {
+          $scope.rating.$dirty = dirty;
+        }
       });
     }
   };

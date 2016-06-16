@@ -1,0 +1,32 @@
+@import 'settings';
+@import 'foundation';
+
+.etm-email-header{
+  background-color: $primary-color;
+  .etm-email-header-column{
+    padding-top: 16px;
+  }
+  .etm-email-header-h1{
+    color: $white;
+    margin-bottom: 0px;
+  }
+}
+.etm-email-user{
+  color: $primary-color;
+}
+.etm-email-greeting{
+  padding-top: 16px;
+}
+a.button{
+  width: auto !important;
+  text-align: left;
+  background: #CC1F20;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fefefe;
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px 8px 16px;
+  border: 0px solid #CC1F20;
+}

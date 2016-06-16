@@ -16,3 +16,5 @@ build
 /bin/
 !gradle-wrapper.jar
 log
+src/main/resources/mails
+/eml_store

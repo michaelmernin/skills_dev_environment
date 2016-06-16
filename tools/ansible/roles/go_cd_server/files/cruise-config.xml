@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="75">
-  <server artifactsdir="artifacts" siteUrl="https://stlerappdev.perficient.com:8154" purgeStart="5.0" purgeUpto="10.0" jobTimeout="60" commandRepositoryLocation="default">
+<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="76">
+  <server artifactsdir="artifacts" siteUrl="https://stlerappdev.perficient.com:8154" purgeStart="5.0" purgeUpto="10.0" jobTimeout="60" commandRepositoryLocation="default" serverId="bb48a0cf-a379-4b3d-809a-8d90f75d52d9">
     <security>
       <ldap uri="ldaps://STLCOLODC01.perficient.com:636/" managerDn="cn=LDAP Enterprise Review,ou=System Accounts,ou=IT,dc=perficient,dc=com" encryptedManagerPassword="zDw716p/Hld7WEyIJF6Dw6N5YJkynW5t" searchFilter="(cn={0})">
         <bases>
@@ -8,20 +8,44 @@
         </bases>
       </ldap>
       <passwordFile path="/etc/go/passwd" />
+      <roles>
+        <role name="Viewer">
+          <users>
+            <user>Simon.Montague</user>
+            <user>ahmed.musallam</user>
+            <user>alex.blanco</user>
+            <user>craig.smith</user>
+            <user>david.brooks</user>
+            <user>elizabeth.henrich</user>
+            <user>michael.kaplan</user>
+            <user>paul.bjorkstrand</user>
+            <user>avinab.rajbhandary</user>
+            <user>nirajan.shrestha</user>
+            <user>gaurangi.bhangale</user>
+          </users>
+        </role>
+        <role name="Operator">
+          <users>
+            <user>ahmed.musallam</user>
+          </users>
+        </role>
+      </roles>
       <admins>
-        <user>donovan.mikrot</user>
         <user>david.brooks</user>
+        <user>ahmed.musallam</user>
       </admins>
     </security>
-    <mailhost hostname="mail2.perficient.com" port="25" tls="false" from="etm-go@perficient.com" admin="donovan.mikrot@perficient.com" />
+    <mailhost hostname="mail2.perficient.com" port="25" tls="false" from="etm-go@perficient.com" admin="ahmed.musallam@perficient.com" />
   </server>
   <pipelines group="etm">
     <authorization>
       <view>
-        <user>david.brooks</user>
+        <user>ahmed.musallam</user>
+        <role>Operator</role>
+        <role>Viewer</role>
       </view>
       <operate>
-        <user>david.brooks</user>
+        <role>Operator</role>
       </operate>
     </authorization>
     <pipeline name="etm-build" labeltemplate="${COUNT}-${git[:7]}" isLocked="false">
@@ -132,13 +156,20 @@
         </git>
       </materials>
     </pipeline>
-    <pipeline name="etm-acceptance-uat" labeltemplate="${etm-deploy-uat}" isLocked="false" template="etm-acceptance">
+    <pipeline name="etm-deploy-prod" labeltemplate="${etm-build}" isLocked="true" template="etm-deploy-manual">
       <params>
-        <param name="environment">uat</param>
+        <param name="inventory">prod</param>
+        <param name="url">https://stlerapp.perficient.com</param>
       </params>
       <materials>
-        <pipeline pipelineName="etm-deploy-uat" stageName="verify" />
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git" />
+        <pipeline pipelineName="etm-build" stageName="build" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git">
+          <filter>
+            <ignore pattern="ent-talent-mgmt/**/*" />
+            <ignore pattern="docs/**/*" />
+            <ignore pattern="tools/ssl/**/*" />
+          </filter>
+        </git>
       </materials>
     </pipeline>
   </pipelines>
@@ -188,7 +219,7 @@
               </fetchartifact>
               <exec command="/bin/bash" workingdir="tools/ansible">
                 <arg>-c</arg>
-                <arg>ansible-playbook appservers.yml -i #{inventory} -t ci_deploy -e "artifact_dir=../../etm-wars" --vault-password-file ~/.ansible/vault_key.txt</arg>
+                <arg>ansible-playbook -v appservers.yml -i #{inventory} -t ci_deploy -e "artifact_dir=../../etm-wars" --vault-password-file ~/.ansible/vault_key.txt</arg>
                 <runif status="passed" />
               </exec>
             </tasks>
@@ -238,6 +269,8 @@
             </tasks>
             <artifacts>
               <test src="ent-talent-mgmt/build/e2e-test-reports/*.xml" dest="etm-test-results" />
+              <test src="ent-talent-mgmt/build/protractor-screenshots/*.png" dest="etm-test-results/screenshots" />
+              <test src="ent-talent-mgmt/build/protractor-screenshots/*.html" dest="etm-test-results/screenshots" />
             </artifacts>
           </job>
         </jobs>
@@ -245,5 +278,7 @@
     </pipeline>
   </templates>
   <agents>
+    <agent hostname="STLERAppDEV.perficient.com" ipaddress="10.128.6.95" uuid="910bf32a-b774-482e-9f5f-3d74463c81be" />
   </agents>
 </cruise>
+

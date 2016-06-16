@@ -1,15 +1,15 @@
 package com.perficient.etm.repository;
 
-import com.perficient.etm.authorize.FeedbackAuthorizer;
-import com.perficient.etm.domain.Feedback;
-import com.perficient.etm.domain.FeedbackType;
+import java.util.List;
+import java.util.Optional;
 
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 
-import java.util.List;
-import java.util.Optional;
+import com.perficient.etm.authorize.FeedbackAuthorizer;
+import com.perficient.etm.domain.Feedback;
 
 /**
  * Spring Data JPA repository for the Feedback entity.
@@ -28,6 +28,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long> {
 
     @PostAuthorize(FeedbackAuthorizer.AUTHORIZE)
     Feedback findOne(Long id);
-
-    List<Feedback> findAllByReviewIdAndFeedbackType(Long reviewId, FeedbackType feedbackType);
+    
+    @Query("select f from Feedback f where f.review.id = ?1 and f.author member of f.review.peers")
+    List<Feedback> findAllByReviewIdAndFeedbackType(Long reviewId);
 }

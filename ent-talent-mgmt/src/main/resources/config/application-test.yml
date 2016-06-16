@@ -37,10 +37,10 @@ spring:
             
 
     mail:
-        baseUrl: http://localhost:8080
+        baseUrl: https://stlerappdev.perficient.com:8443
 
     thymeleaf:
-        mode: XHTML
+        mode: LEGACYHTML5
         cache: true
 
 metrics:

@@ -6,8 +6,8 @@ buildscript {
     dependencies {
         classpath('org.springframework.boot:spring-boot-gradle-plugin:1.2.1.RELEASE')
         classpath('com.moowork.gradle:gradle-node-plugin:0.8')
-        
         classpath('com.moowork.gradle:gradle-grunt-plugin:0.6')
+        classpath('com.moowork.gradle:gradle-gulp-plugin:0.9')
         
     }
 }
@@ -28,6 +28,7 @@ springBoot {
 }
 
 apply from: 'yeoman.gradle'
+apply from: 'emails.gradle'
 apply from: 'liquibase.gradle'
 
 if (project.hasProperty('prod')) {
@@ -91,7 +92,7 @@ dependencies {
       exclude module: 'com.h2database:h2'
     }
 //  compile group: 'org.activiti', name: 'spring-boot-starter-rest-api', version: '5.17.0'
-//  compile group: 'org.activiti', name: 'spring-boot-starter-actuator', version: '5.17.0'
+    compile group: 'org.activiti', name: 'spring-boot-starter-actuator', version: '5.17.0'
 //  compile group: 'org.activiti', name: 'spring-boot-starter-jpa', version: '5.17.0'
     compile group: 'com.codahale.metrics', name: 'metrics-core', version: codahale_metrics_version
     compile group: 'com.codahale.metrics', name: 'metrics-ehcache', version: codahale_metrics_version
@@ -167,7 +168,9 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-core', version:'1.9.5'
     testCompile group: 'com.mattbertolini', name: 'liquibase-slf4j', version: liquibase_slf4j_version
     testCompile group: 'org.hamcrest', name: 'hamcrest-library', version:'1.3'
-    compile group: 'com.bitmechanic', name:'dumbster', version:'1.9.0.2'
+    compile group: 'net.sourceforge.nekohtml', name:'nekohtml',version:'1.9.22'
+    compile group: 'com.icegreen', name: 'greenmail', version: '1.5.0'
+    
     
 }
 

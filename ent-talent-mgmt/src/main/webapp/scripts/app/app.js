@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etmApp', [
-  'LocalStorageModule', 'tmh.dynamicLocale', 'ngResource', 'ui.router', 'ngCookies', 'pascalprecht.translate', 'ngCacheBuster', 'ngMaterial', 'ngMessages'
+  'LocalStorageModule', 'tmh.dynamicLocale', 'ngResource', 'ui.router', 'ngCookies', 'pascalprecht.translate', 'ngCacheBuster', 'ngMaterial', 'ngMessages', 'ngSanitize'
 ]).run(function ($rootScope, $location, $window, $http, $state, $translate, Auth, Principal, Language, ENV, VERSION) {
   $rootScope.ENV = ENV;
   $rootScope.VERSION = VERSION;
@@ -66,7 +66,7 @@ angular.module('etmApp', [
     });
     $mdThemingProvider.theme('default')
       .primaryPalette('prft-red')
-      .accentPalette('grey');
+      .accentPalette('red');
 }]).config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, httpRequestInterceptorCacheBusterProvider) {
 
   //enable CSRF
@@ -115,6 +115,7 @@ angular.module('etmApp', [
   $translateProvider.preferredLanguage('en');
   $translateProvider.useCookieStorage();
   $translateProvider.directivePriority(222); // https://github.com/angular-translate/angular-translate/issues/949
+  $translateProvider.useSanitizeValueStrategy('sanitize'); // http://angular-translate.github.io/docs/#/guide/19_security
 
   tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-i18n/angular-locale_{{locale}}.js');
   tmhDynamicLocaleProvider.useCookieStorage('NG_TRANSLATE_LANG_KEY');

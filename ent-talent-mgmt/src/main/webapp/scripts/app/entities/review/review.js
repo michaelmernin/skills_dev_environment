@@ -66,6 +66,10 @@ angular.module('etmApp').config(function ($stateProvider) {
       'overall@review.detail': {
         templateUrl: 'scripts/components/entities/review/overall/overall.summary.html',
         controller: 'OverallController'
+      },
+      'todo@review.detail': {
+        templateUrl: 'scripts/components/entities/review/todo/todo.html',
+        controller: 'TodoController'
       }
     }
   }).state('review.edit', {

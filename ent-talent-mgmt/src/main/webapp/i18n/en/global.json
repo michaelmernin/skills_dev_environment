@@ -6,6 +6,8 @@
     "menu": {
       "dashboard": "Dashboard",
       "createReview": "Create a Review",
+      "skills": "Skills",
+      "skillsReview": "Skills Review",
       "entities": {
         "main": "Entities",
         "reviewType": "ReviewType",
@@ -36,6 +38,8 @@
         "apidocs": "API Docs",
         "database": "Database",
         "users": "Manage Users",
+        "skills": "Manage Skills",
+        "skillsCategories": "Manage SkillsCategories",
         "mail": "Mail"
       },
       "language": "Language"

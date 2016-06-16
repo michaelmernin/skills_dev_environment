@@ -1,4 +1,4 @@
-<ng-form name="ratingForm" class="etm-rating-form" ng-if="!readonly">
+<ng-form name="form.ratingForm" class="etm-rating-form" ng-if="!readonly">
   <md-input-container layout="row" layout-wrap layout-padding>
     <div flex-xs="50" flex-order-xs="1" flex-sm="50" flex-order-sm="1" layout layout-align="start center">
       <md-switch ng-model="na" ng-disabled="disabled" ng-change="setNA()" class="md-primary" aria-label="Score Not Applicable">{{ 'review.na' | translate }}</md-switch>
@@ -11,11 +11,14 @@
     </div>
   </md-input-container>
   <md-input-container class="md-block">
-    <label>Comments</label>
-    <textarea name="comment" ng-model="rating.comment" ng-disabled="disabled" md-maxlength="250" ng-required="rating.score !== 3"></textarea>
-    <div ng-messages="ratingForm.comment.$error" ng-if="ratingForm.comment.$touched">
+  <label>Comments</label>
+  <textarea name="comment" ng-disabled="na" ng-model="rating.comment" ng-required="rating.score !== 3" md-maxlength="250"></textarea>
+  <div ng-messages="form.ratingForm.comment.$error" ng-if="(rating.score !== 3 && rating.score !== undefined && rating.score !== null) && !na">
       <div ng-message="required">
-        <span translate="global.messages.validate.field.enter.required" translate-values="{name: '{{ 'review.comments' | translate }}'}">Please enter a value.</span>
+        <span translate="review.annual.evaluation.comment" translate-values="{name: '{{ 'review.comments' | translate }}'}">A comment is required for any rating other than 3</span>
+      </div>
+      <div ng-message="md-maxlength">
+        <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Comment' | translate }}', number: '{{ '250' | translate}}'}">Comment cannot be longer than 250 characters.</span>
       </div>
     </div>
   </md-input-container>

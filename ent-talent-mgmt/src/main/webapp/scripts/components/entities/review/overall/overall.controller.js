@@ -54,18 +54,14 @@ angular.module('etmApp').controller('OverallController', function ($scope, Princ
       });
     }
   });
-  
-   $scope.change = function () {
-        console.log("changed");
-      };
-
 
   $scope.updateFeedback = function (feedback) {
-    if(delete feedback.ratings){
-      Feedback.update({
-        reviewId: review.id,
-        feedbackId: feedback.id
-      }, feedback);
-    }
+    var feedbackCopy = {};
+    angular.copy(feedback, feedbackCopy);
+    delete feedbackCopy.ratings;
+    Feedback.update({
+      reviewId: review.id,
+      feedbackId: feedback.id
+    }, feedbackCopy);
   };
 });

@@ -1,39 +1,39 @@
 <div ng-cloak>
   <md-content md-scroll-y class="md-whiteframe-z1">
-    <div layout="column" layout-padding>
-      <div>
-        <h2>{{ profile.firstName }} {{ profile.lastName }}'s Profile</h2>
-        <div layout-gt-xs="row">
-          <div flex-gt-xs>
-            <h4>Current Title</h4>
-            <h5 flex-gt-xs>{{ profile.title }}</h5>
-          </div>
-          <div flex-gt-xs>
-            <h4>Target Title</h4>
-            <h5 flex-gt-xs>{{ profile.targetTitle }}</h5>
-          </div>
+  <div layout="column" layout-padding>
+    <div>
+      <h2>{{ profile.firstName }} {{ profile.lastName }}'s Profile</h2>
+      <div layout-gt-xs="row">
+        <div flex-gt-xs>
+          <h4>Current Title</h4>
+          <h5 flex-gt-xs>{{ profile.title }}</h5>
         </div>
-        <div layout-gt-xs="row">
-          <div flex-gt-xs>
-            <h4>Career Counselor</h4>
-            <h5 flex-gt-xs>{{ profile.counselor.firstName }} {{ profile.counselor.lastName }}</h5>
-          </div>
-          <div flex-gt-xs>
-            <h4>Start Date</h4>
-            <h5 flex-gt-xs>{{ profile.startDate | date:'MM/dd/yyyy' }}</h5>
-          </div>
+        <div flex-gt-xs>
+          <h4>Target Title</h4>
+          <h5 flex-gt-xs>{{ profile.targetTitle }}</h5>
         </div>
-        <div layout-gt-xs="row">
-          <div flex-gt-xs>
-            <h4>Director</h4>
-            <h5 flex-gt-xs>{{ profile.director.firstName }} {{ profile.director.lastName }}</h5>
-          </div>
-          <div flex-gt-xs>
-            <h4>General Manager</h4>
-            <h5 flex-gt-xs>{{ profile.generalManager.firstName }} {{ profile.generalManager.lastName }}</h5>
-          </div>
+      </div>
+      <div layout-gt-xs="row">
+        <div flex-gt-xs>
+          <h4>Career Counselor</h4>
+          <h5 flex-gt-xs>{{ profile.counselor.firstName }} {{ profile.counselor.lastName }}</h5>
+        </div>
+        <div flex-gt-xs>
+          <h4>Start Date</h4>
+          <h5 flex-gt-xs>{{ profile.startDate | date:'MM/dd/yyyy' }}</h5>
+        </div>
+      </div>
+      <div layout-gt-xs="row">
+        <div flex-gt-xs>
+          <h4>Director</h4>
+          <h5 flex-gt-xs>{{ profile.director.firstName }} {{ profile.director.lastName }}</h5>
+        </div>
+        <div flex-gt-xs>
+          <h4>General Manager</h4>
+          <h5 flex-gt-xs>{{ profile.generalManager.firstName }} {{ profile.generalManager.lastName }}</h5>
         </div>
       </div>
     </div>
+  </div>
   </md-content>
 </div>

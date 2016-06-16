@@ -34,14 +34,27 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: false
             hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
-            
 
     mail:
-        baseUrl: http://localhost:8080
+        baseUrl: https://stlerappuat.perficient.com:8443
+        host: mail2.perficient.com
+        port: 25
+        user:
+        password:
+        protocol: smtp
+        tls: false
+        auth: false
+        from: donotreply@perficient.com
 
     thymeleaf:
-        mode: XHTML
+        mode: LEGACYHTML5
         cache: true
+
+    ldap:
+        root: dc=perficient,dc=com
+        domain: STLCOLODC01.perficient.com
+        port: 636
+        accountdn: cn=LDAP Enterprise Review,ou=System Accounts,ou=IT
 
 metrics:
     jmx.enabled: true

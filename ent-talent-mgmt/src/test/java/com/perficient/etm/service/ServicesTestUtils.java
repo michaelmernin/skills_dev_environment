@@ -2,6 +2,7 @@ package com.perficient.etm.service;
 
 import org.joda.time.LocalDate;
 import org.mockito.Mockito;
+import org.springframework.security.test.context.support.WithUserDetails;
 
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.Review;
@@ -55,6 +56,8 @@ public class ServicesTestUtils {
         Review review = createMockReviewObject();
 
         String instanceId = processSvc.initiateProcess(type , review );
+        processSvc.addReviewId(instanceId, review.getId());
+        processSvc.addFeedbackIds(instanceId, 1L, 2L);
         return instanceId;
     }
 
@@ -67,14 +70,22 @@ public class ServicesTestUtils {
     public static User[] createMockReviewUsers() {
         Review review = Mockito.mock(Review.class);
         User reviewer = Mockito.mock(User.class);
-        Mockito.when(reviewer.getId()).thenReturn(1L);
+        Mockito.when(reviewer.getId()).thenReturn(5L);
         Mockito.when(reviewer.getEmail()).thenReturn("reviewer@perficient.com");
         Mockito.when(review.getReviewer()).thenReturn(reviewer);
+        
+        User director = Mockito.mock(User.class);
+        Mockito.when(director.getId()).thenReturn(9L);
+        
+        User generalManager = Mockito.mock(User.class);
+        Mockito.when(generalManager.getId()).thenReturn(4L);
 
         User reviewee = Mockito.mock(User.class);
-        Mockito.when(reviewee.getId()).thenReturn(2L);
+        Mockito.when(reviewee.getId()).thenReturn(6L);
         Mockito.when(reviewee.getEmail()).thenReturn("reviewee@perficient.com");
         Mockito.when(review.getReviewee()).thenReturn(reviewee);
+        Mockito.when(reviewee.getDirector()).thenReturn(director);
+        Mockito.when(reviewee.getGeneralManager()).thenReturn(generalManager);
 
         return new User[]{reviewer, reviewee};
     }
@@ -85,6 +96,7 @@ public class ServicesTestUtils {
      */
     public static Review createMockReviewObject() {
         Review review = Mockito.mock(Review.class);
+        Mockito.when(review.getId()).thenReturn(1L);
 
         User[] users = createMockReviewUsers();
         Mockito.when(review.getReviewer()).thenReturn(users[0]);
@@ -112,6 +124,8 @@ public class ServicesTestUtils {
         User[] users = createMockReviewUsers();
         Feedback feedback = Mockito.mock(Feedback.class);
         Mockito.when(feedback.getAuthor()).thenReturn(users[1]);
+        Mockito.when(feedback.getReview()).thenReturn(review);
+        Mockito.when(review.getId()).thenReturn(1L);
         return processSvc.initiatePeerReview(feedback);
     }
 

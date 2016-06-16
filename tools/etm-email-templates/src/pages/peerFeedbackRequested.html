@@ -1,0 +1,4 @@
+<h2 class="etm-email-greeting">Hello <span th:text="${FIRST_NAME}"></span></h2>
+<p><span th:text="${REVIEWER_FULL_NAME}"></span> requested your feedback on <span th:text="${REVIEW_TYPE}"></span> for <span th:text="${REVIEWEE_FULL_NAME}"></span>.</p>
+<p> You are receiving this email because <span th:text="${REVIEWEE_FULL_NAME}"></span> is interested in your feedback. You can now find this review on your to-do list for further actions.</p>
+<a class="button medium" th:href="${BASE_URL + '/#/review/' + REVIEW_ID + '/edit'}">SUBMIT FEEDBACK!</a>

@@ -48,11 +48,6 @@ angular.module('etmApp').factory('Review', function ($resource, DateUtils) {
       method: 'GET',
       isArray: true
     },
-    'addPeer': {
-      url: 'api/reviews/:id/peers',
-      method: 'POST',
-      isArray: true
-    },
     'todo': {
       url: 'api/reviews/:id/todo',
       method: 'GET',

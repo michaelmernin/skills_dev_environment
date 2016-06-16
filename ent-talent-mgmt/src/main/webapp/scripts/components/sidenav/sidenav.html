@@ -3,13 +3,13 @@
     <h1 class="md-toolbar-tools">
       Navigation
       <span flex></span>
-      <md-button class="md-fab md-primary" ng-show="$mdMedia('md') || $mdMedia('sm')" ng-click="toggleSideNav()" aria-label="Close Right Nav">
+      <md-button class="md-icon-button md-primary" ng-show="$mdMedia('md') || $mdMedia('sm')" ng-click="toggleSideNav()" aria-label="Close Right Nav">
         <i class="fa fa-lg fa-close"></i>
       </md-button>
     </h1>
   </md-toolbar>
   <md-content ng-switch="isAuthenticated()">
-    <section>
+    <section ng-show="isInRole('ROLE_USER')">
       <md-list>
         <md-list-item>
           <md-button class="md-primary" ui-sref="home">
@@ -21,8 +21,26 @@
           <md-button class="md-primary" ui-sref="review.new">
             <i class="fa fa-comments"></i>&#xA0;
             <span translate="global.menu.createReview">Create a Review</span>
+          </md-button>
+        </md-list-item>
+        <md-list-item>
+          <md-button class="md-primary" ui-sref="skills">
+            <i class="fa fa-graduation-cap"></i>&#xA0;
+            <span translate="global.menu.skills">Skills</span>
           </md-button>        
-         </md-list-item>
+        </md-list-item>
+        <md-list-item ng-show="isInRole('ROLE_COUNSELOR') || isInRole('ROLE_GENERAL_MANAGER')">
+          <md-button class="md-primary" ui-sref="skillsReview">
+            <i class="fa fa-pie-chart"></i>&#xA0;
+            <span translate="global.menu.skillsReview">Skills Review</span>
+          </md-button>        
+        </md-list-item>     
+        <md-list-item ng-show="{{ENV === 'dev' || ENV === 'test'}}">
+          <md-button class="md-primary" ui-sref="mail">
+            <i class="fa fa-envelope"></i>&#xA0;
+            <span translate="global.menu.admin.mail">Mail</span>
+          </md-button>
+        </md-list-item>
       </md-list>
       <md-divider></md-divider>
     </section>
@@ -38,6 +56,12 @@
             <span translate="global.menu.admin.users">Manage Users</span>
           </md-button>
         </md-list-item>
+         <md-list-item>
+          <md-button class="md-primary" ui-sref="skillCategory">
+            <i class="fa fa-cogs"></i>&#xA0;
+            <span translate="global.menu.admin.skills">Manage Skills</span>
+          </md-button>
+        </md-list-item>
         <md-list-item>
           <md-button class="md-primary" ui-sref="status">
             <i class="fa fa-dashboard"></i>&#xA0;
@@ -48,6 +72,12 @@
           <md-button class="md-primary" ui-sref="health">
             <i class="fa fa-heartbeat"></i>&#xA0;
             <span translate="global.menu.admin.health">Health</span>
+          </md-button>
+        </md-list-item>
+        <md-list-item>
+          <md-button class="md-primary" ui-sref="activiti">
+            <i class="fa fa-tasks"></i>&#xA0;
+            <span>Activiti</span>
           </md-button>
         </md-list-item>
         <md-list-item>
@@ -78,12 +108,6 @@
           <md-button class="md-primary" href="/console" target="_tab">
             <i class="fa fa-database"></i>&#xA0;
             <span translate="global.menu.admin.database">Database</span>
-          </md-button>
-        </md-list-item>
-        <md-list-item>
-          <md-button class="md-primary" ui-sref="mail">
-            <i class="fa fa-envelope"></i>&#xA0;
-            <span translate="global.menu.admin.mail">Mail</span>
           </md-button>
         </md-list-item>
       </md-list>

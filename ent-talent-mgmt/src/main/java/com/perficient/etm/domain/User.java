@@ -11,6 +11,7 @@ import com.perficient.etm.security.AuthoritiesConstants;
 import com.perficient.etm.security.SecurityUtils;
 import com.perficient.etm.web.view.View;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
@@ -128,6 +129,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "start_date")
     private LocalDate startDate;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<SkillRanking> skillRanking;
+    
     public Long getId() {
         return id;
     }
@@ -182,6 +187,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public boolean isDirector() {
         return SecurityUtils.hasRole(this, AuthoritiesConstants.DIRECTOR);
+    }
+
+    public boolean isConselor() {
+        return SecurityUtils.hasRole(this, AuthoritiesConstants.COUNSELOR);
     }
 
     @JsonSerialize(using = PublicSerializer.class)
@@ -292,6 +301,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setPersistentTokens(Set<PersistentToken> persistentTokens) {
         this.persistentTokens = persistentTokens;
     }
+    
+    public Set<SkillRanking> getSkillRanking() {
+        return skillRanking;
+    }
+
+    public void setSkillRanking(Set<SkillRanking> skillRanking) {
+        this.skillRanking = skillRanking;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -329,4 +346,21 @@ public class User extends AbstractAuditingEntity implements Serializable {
                 ", lastName='" + lastName + '\'' +
                 "}";
     }
+    
+    public String getFullName(){
+    	String f = getFirstName();
+    	String l = getLastName();
+    	String fullName = "";
+		if(f==null && l==null)
+			fullName = "";
+		else if(f!=null && l==null)
+			fullName = f;
+		else if(f==null && l!=null)
+			fullName = l;
+		else if(f!=null && l!=null)
+			fullName = f + " " + l;
+		
+		return fullName;
+    }
+  
 }

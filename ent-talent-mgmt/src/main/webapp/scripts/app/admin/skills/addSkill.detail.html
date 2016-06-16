@@ -1,0 +1,37 @@
+<md-dialog aria-label="Create Skill Category" flex="65">
+  <form name="addSkillForm">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Create Skill</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+      <div layout-gt-sm="row">
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Title</label>
+          <input type="text" name="title" ng-model="title" minlength="2"/>
+          <div ng-messages="addSkillForm.title.$error" ng-show="addSkillForm.title.$dirty">
+            <div ng-message="minlength">This is too short!</div>
+          </div>
+        </md-input-container>
+        <div layout-gt-sm="row">
+          <md-input-container class="md-block" flex-gt-sm>
+            <label>Skill Category</label>
+            <md-select name="skillCategory" ng-model="skillCategory" placeholder="select a skill Category" required>
+              <md-option ng-value="skillCategory.id" ng-repeat="skillCategory in skillCategories">{{skillCategory.title}}</md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+      </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+      <span flex></span>
+      <md-button ng-click="cancel()" class="md-primary">Cancel</md-button>
+      <md-button ng-click="saveSkill()" class="md-primary">Save</md-button>
+    </div>
+  </form>
+</md-dialog>
