@@ -102,10 +102,14 @@ exports.config = {
       filePrefix: 'TEST-protractor-results',
       consolidateAll: true
     });
-  
-    
+
     jasmine.getEnv().addReporter(jUnitReporter);
     jasmine.getEnv().addReporter(htmlReporter);
+        
+    var SpecReporter = require('jasmine-spec-reporter');
+    // add jasmine spec reporter
+    jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
+    
     setTimeout(function() {
       browser.driver.executeScript(function() {
           return {
@@ -131,6 +135,8 @@ exports.config = {
     // If true, include stack traces in failures.
     includeStackTrace: true,
     // Default time to wait in ms before a test fails.
-    defaultTimeoutInterval: 30000
+    defaultTimeoutInterval: 30000,
+    // remove default print function
+    print: function(){}
   }
 };
