@@ -1,10 +1,12 @@
-'use strict';
+/* DO NOT REMOVE: Protractor globals to be ignored by JsLint */
+/* globals require: false, describe: false, beforeAll: false, it: false, expect: false */
 
 var LoginPage = require('../page/loginPage.js');
 var userData = require('../data/userData.js');
 var EvaluationTabPage = require('../page/evaluationTabPage.js');
 
 describe('Enterprise Talent Management', function () {
+  'use strict';
   describe('Evaluation Tab Page', function () {
     var evaluationTab;
 
@@ -63,8 +65,7 @@ describe('Enterprise Talent Management', function () {
 
             //click Close button to close the modal window form
             evaluationTab.ui.closeBtn.click();
-            expect(i).toBe(1);
-        };
+        }
         
       });
             
