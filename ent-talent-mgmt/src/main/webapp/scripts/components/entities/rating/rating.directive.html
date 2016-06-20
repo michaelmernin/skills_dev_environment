@@ -7,12 +7,12 @@
       <md-slider md-discrete name="score" ng-model="rating.score" ng-disabled="disabled || na" step="1" min="1" max="5" class="md-primary" aria-label="Score"></md-slider>
     </div>
     <div flex-xs="50" flex-order-xs="2" flex-sm="50" flex-order-sm="2" layout layout-align="end center">
-      <span class="md-headline">{{getScore()}}</span>
+      <span class="md-headline" role="score">{{getScore()}}</span>
     </div>
   </md-input-container>
   <md-input-container class="md-block">
   <label>Comments</label>
-  <textarea name="comment" ng-disabled="na" ng-model="rating.comment" ng-required="rating.score !== 3" md-maxlength="250"></textarea>
+  <textarea name="comment" ng-disabled="disabled || na" ng-model="rating.comment" ng-required="rating.score !== 3" md-maxlength="250"></textarea>
   <div ng-messages="form.ratingForm.comment.$error" ng-if="(rating.score !== 3 && rating.score !== undefined && rating.score !== null) && !na">
       <div ng-message="required">
         <span translate="review.annual.evaluation.comment" translate-values="{name: '{{ 'review.comments' | translate }}'}">A comment is required for any rating other than 3</span>

@@ -14,23 +14,29 @@ var EvaluationTabPage = function() {
 
     //evaluation form elements - reviewee
     evaluationForm: element(by.name('evalForm')),
-    revieweeRatingSwitch: element(by.model('question.ratings.reviewee')).element(by.name('form.ratingForm')).element(by.css('md-input-container:nth-child(1)')).element(by.tagName('md-switch')),
-    revieweeRatingSlider: element(by.model('question.ratings.reviewee')).element(by.name('form.ratingForm')).element(by.css('md-input-container:nth-child(1)')).element(by.model('rating.score')),
-    revieweeRatingValue: element(by.model('question.ratings.reviewee')).element(by.name('form.ratingForm')).element(by.css('md-input-container:nth-child(1)')).element(by.css('md-headline')),
+    revieweeRatingSwitch: elementByModelAndChildModel('question.ratings.reviewee','na'),
+    revieweeRatingSlider: elementByModelAndChildModel('question.ratings.reviewee', 'rating.score'),
+    revieweeRatingValue: elementByModelAndCSS('question.ratings.reviewee','[role="score"]'),
 
     //evaluation form elements - reviewer
-    reviewerRatingSwitch: element(by.model('question.ratings.reviewer')).element(by.name('form.ratingForm')).element(by.css('md-input-container:nth-child(1)')).element(by.tagName('md-switch')),
+    reviewerRatingSwitch: elementByModelAndChildModel('question.ratings.reviewer','na'),
+    reviewerRatingSlider: elementByModelAndChildModel('question.ratings.reviewer','rating.score'),
+    reviewerRatingValue: elementByModelAndCSS('question.ratings.reviewer','[role="score"]'),
 
-    reviewerRatingSlider: element(by.model('question.ratings.reviewer')).element(by.name('form.ratingForm')).element(by.css('md-input-container:nth-child(1)')).element(by.model('rating.score')),
-
-    reviewerRatingValue: element(by.xpath('/html/body/div[3]/md-dialog/form/md-dialog-content/div[1]/etm-rating/ng-form/md-input-container[1]/div[3]/span')),
-
-    reviewerComment: element(by.model('question.ratings.reviewer')).element(by.name('form.ratingForm')).element(by.css('md-input-container:nth-child(2)')).element(by.model('rating.comment')),
-
+    reviewerComment: elementByModelAndChildModel('question.ratings.reviewer','rating.comment'),
     //evaluation form elements - close button
-    closeBtn: element.all(by.css('[ng-click="close()"]')),
+    closeBtn: element.all(by.css('[ng-click="close()"]')).first(),
 
   };
+  
+  function elementByModelAndChildModel(parentModel, childModel){
+    return element(by.model(parentModel)).element(by.model(childModel));
+  }
+  
+  function elementByModelAndCSS(parentModel, childcss){
+    return element(by.model(parentModel)).element(by.css(childcss));
+
+  }
 
   Object.defineProperties(this, {
     evaluationTabBtn: {
@@ -81,7 +87,7 @@ var EvaluationTabPage = function() {
 
   this.clickQuestion = function(questionContainer) {
     var questionBtn = questionContainer.element(by.tagName('button'));
-    questionBtn.click();
+    return questionBtn.click();
   };
   this.slideRating = function(slider, ratingNum) {
 
