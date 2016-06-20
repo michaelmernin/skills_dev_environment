@@ -1,10 +1,12 @@
-'use strict';
+/* DO NOT REMOVE: Protractor globals to be ignored by JsLint */
+/* globals require: false, describe: false, beforeAll: false, it: false, expect: false, browser: false, Modernizr:false*/
 
 var LoginPage = require('../page/loginPage.js');
 var userData = require('../data/userData.js');
 var CreateReviewPage = require('../page/createReviewPage.js');
 
 describe('Enterprise Talent Management', function () {
+  'use strict';
   describe('Create a Review Page ', function () {
     var createReviewPage;
     createReviewPage = new CreateReviewPage();
@@ -85,31 +87,26 @@ describe('Enterprise Talent Management', function () {
       createReviewPage.save();
       expect(createReviewPage.ui.modalWindowContainer.isPresent()).toBe(true);
     });
-//
-//    it('should contain desired text in modal window.', function () {
-//      var titleText = createReviewPage.verifyDisplayText('.md-title', 'Confirm Review Save');
-//      expect(titleText.isDisplayed()).toBe(true);
-//      var descriptionText = createReviewPage.verifyDisplayText('.md-dialog-content-body', 'Once you have initiated a review, it cannot be deleted. Are you sure you want to continue?');
-//      expect(descriptionText.isDisplayed()).toBe(true);
-//    });
-//
-//
-//    it('should close the modal window when Cancle button is clicked.', function () {
-//      expect(createReviewPage.ui.modalCancelButton.getText()).toBe('CANCEL');
-//      createReviewPage.cancel();
-//      expect(createReviewPage.ui.modalWindowContainer.isPresent()).toBe(false);
-//    });
-//
-//    it('should create the Review and close the modal window when Accept button is clicked', function () {
-//      createReviewPage.save();
-//      createReviewPage.accept();
-//      expect(browser.getTitle()).toEqual('Edit Review');
-//      createReviewPage.logout();
-//    });
-//    
-// 	 browser.executeScript(Modernizr.inputtypes.date).then(function (attrs) {
-//     console.log(attrs);
-//   });
+
+    it('should contain desired text in modal window.', function () {
+      var titleText = createReviewPage.verifyDisplayText('.md-title', 'Confirm Review Save');
+      expect(titleText.isDisplayed()).toBe(true);
+      var descriptionText = createReviewPage.verifyDisplayText('.md-dialog-content-body', 'Once you have initiated a review, it cannot be deleted. Are you sure you want to continue?');
+      expect(descriptionText.isDisplayed()).toBe(true);
+    });
+
+    it('should close the modal window when Cancle button is clicked.', function () {
+      expect(createReviewPage.ui.modalCancelButton.getText()).toBe('CANCEL');
+      createReviewPage.cancel();
+      expect(createReviewPage.ui.modalWindowContainer.isPresent()).toBe(false);
+    });
+
+    it('should create the Review and close the modal window when Accept button is clicked', function () {
+      createReviewPage.save();
+      createReviewPage.accept();
+      expect(browser.getTitle()).toEqual('Edit Review');
+      createReviewPage.logout();
+    });
 
   });
 });

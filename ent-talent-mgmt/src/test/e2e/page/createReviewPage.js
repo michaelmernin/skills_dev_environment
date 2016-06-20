@@ -1,26 +1,30 @@
-'use strict';
+/* DO NOT REMOVE: Protractor globals to be ignored by JsLint */
+/* globals require: false, element: false, by: false, browser: false, module: false*/
+
 
 require('../locators.js');
 
 var CreateReviewPage = function () {
+  'use strict';
+  
+  this.reviewForm = element(by.tagName('form'));
+
   this.ui = {
-    startDateInput: element(by.model('review.startDate')),
-    endDateInput: element(by.model('review.endDate')),
-    saveButton: element(by.translateKey('entity.action.save')),
-    reviewTypeError: element(by.xpath('/html/body/div/div[1]/div[2]/div/div/md-content/form/div/div[1]/md-input-container[1]/div/div/span')),
-    revieweeError:   element(by.xpath('/html/body/div/div[1]/div[2]/div/div/md-content/form/div/div[1]/md-input-container[2]/div/div/span')),
-    startDateError: element(by.xpath('/html/body/div/div[1]/div[2]/div/div/md-content/form/div/div[2]/md-input-container[1]/div/div/span')),
-    endDateError: element(by.xpath('/html/body/div/div[1]/div[2]/div/div/md-content/form/div/div[2]/md-input-container[2]/div/div/span')),
+    startDateInput: this.reviewForm.element(by.model('review.startDate')),
+    endDateInput: this.reviewForm.element(by.model('review.endDate')),
+    saveButton: this.reviewForm.element(by.translateKey('entity.action.save')),
+    reviewTypeError:  this.reviewForm.element(by.css('[ng-messages="reviewForm.reviewType.$error"]')),
+    revieweeError:   this.reviewForm.element(by.css('[ng-messages="reviewForm.reviewee.$error"]')),
+    startDateError:  this.reviewForm.element(by.css('[ng-messages="reviewForm.startDate.$error"]')),
+    endDateError:  this.reviewForm.element(by.css('[ng-messages="reviewForm.endDate.$error"]')),
     modalWindowContainer: element(by.tagName('md-dialog')),
-    modalCancelButton: element(by.xpath('html/body/div[5]/md-dialog/md-dialog-actions/button[1]')),
-    modalAcceptButton: element(by.xpath('html/body/div[5]/md-dialog/md-dialog-actions/button[2]')),
+    modalCancelButton:  element(by.css('[ng-click="dialog.abort()"]')),
+    modalAcceptButton:  element(by.css('[ng-click="dialog.hide()"]')),
     linkToCreateReviewPage: element(by.translateKey('global.menu.createReview')),
     logoutButton: element(by.translateKey('global.menu.account.logout'))
-
-
-
   };
-
+  
+  
   Object.defineProperties(this, {
     startDate: {
       get: function () {
@@ -50,6 +54,7 @@ var CreateReviewPage = function () {
 
   this.save = function () {
     this.ui.saveButton.click();
+    //this.ui.modalAcceptButton.click();
   };
 
   this.cancel = function (){
@@ -66,9 +71,17 @@ var CreateReviewPage = function () {
     this.ui.logoutButton.click();
 
   };
+  
+  function getElementByModelAndTagName(model, tagname){
+    return element.all(by.model(model)).filter(function(el){
+      return el.getTagName().then(function(tagName){
+        return tagName === tagname;
+      });
+    }).first();
+  }
 
   this.getDropdownOptions = function (dropdownSelect){
-    element(by.model(dropdownSelect)).click();
+    getElementByModelAndTagName(dropdownSelect, 'md-select').click();
     var optionsContainer = element(by.css('.md-select-menu-container.md-active.md-clickable')).element(by.tagName('md-select-menu')).element(by.tagName('md-content'));
     browser.wait(function() {
       return browser.isElementPresent(optionsContainer);
@@ -83,7 +96,7 @@ var CreateReviewPage = function () {
     var optionsContainer = element(by.css('.md-select-menu-container.md-active.md-clickable'));
     var desiredOption = optionsContainer.element(by.cssContainingText('.md-text', value));
     desiredOption.click();
-    var selectedValue = element(by.model(dropdownSelect)).element(by.cssContainingText('.md-select-value', value));
+    var selectedValue = getElementByModelAndTagName(dropdownSelect, 'md-select').element(by.cssContainingText('.md-select-value', value));
     return selectedValue;
   };
 
