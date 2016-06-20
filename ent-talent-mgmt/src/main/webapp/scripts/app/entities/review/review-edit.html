@@ -2,7 +2,7 @@
   <md-content md-scroll-y class="md-whiteframe-z1">
     <form name="reviewForm" novalidate>
       <div layout="column">
-        <h2 layout-padding class="md-display-1">
+        <h2 layout-padding class="md-display-1" role="header">
           {{ review.startDate.getFullYear() }}-{{ review.endDate.getFullYear() }} {{ review.reviewType.name }} for {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}
         </h2>
         <md-card>
@@ -64,4 +64,4 @@
       </div>
     </form>
   </md-content>
-</div>  
+</div>

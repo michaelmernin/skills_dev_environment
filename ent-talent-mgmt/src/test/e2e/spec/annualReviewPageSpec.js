@@ -1,10 +1,14 @@
-'use strict';
+/* DO NOT REMOVE: Protractor globals to be ignored by JsLint */
+/* globals require: false, describe: false, beforeAll: false, it: false, expect: false, browser: false */
 
 var LoginPage = require('../page/loginPage.js');
 var userData = require('../data/userData.js');
 var AnnualReviewPage = require('../page/annualReviewPage.js');
 
+
 describe('Enterprise Talent Management', function () {
+  'use strict';
+  
   describe('Annual Review Page', function () {
     var annualReviewPage;
 

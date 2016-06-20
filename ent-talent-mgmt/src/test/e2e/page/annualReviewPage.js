@@ -1,30 +1,33 @@
-'use strict';
+/* DO NOT REMOVE: Protractor globals to be ignored by JsLint */
+/* globals element: false, by: false, require:false, browser:false, module: false*/
 
 require('../locators.js');
 
 var AnnualReviewPage = function () {
+  'use strict';
+  
+  
+  this.getCard = function(){
+    return element(by.tagName('md-card-content'));
+  };
   this.ui = {
-    
-    reviewName: element(by.css('.md-display-1')),
+    reviewName: element(by.css('[role="header"]')),
     reviewInformation: element(by.translateKey('review.annual.reviewInformation')),
     reviewTypeLabel: element(by.translateKey('review.annual.reviewType')),
-    reviewTypeValue: element(by.css('.layout-gt-xs-row:nth-child(1)')).element(by.css('.layout-row.flex-gt-xs:nth-child(1)')).element(by.tagName('span')),
-    startDateLabel: element(by.translateKey('review.annual.startDate')),
-    startDateValue: element(by.css('.layout-gt-xs-row:nth-child(1)')).element(by.css('.layout-row.flex-gt-xs:nth-child(2)')).element(by.tagName('span')),
-    endDateLabel: element(by.translateKey('review.annual.endDate')),
-    endDateValue: element(by.css('.layout-gt-xs-row:nth-child(2)')).element(by.css('.layout-row.flex-order-gt-xs-2.flex-gt-xs')).element(by.tagName('span')),
-    statusLabel: element(by.translateKey('review.annual.status')),
-    statusValue: element(by.css('.layout-gt-xs-row:nth-child(3)')).element(by.css('.layout-row.flex-gt-xs:nth-child(1)')).element(by.tagName('span')),
-    counselorLabel: element(by.translateKey('review.annual.counselor')),
-    counselorValue: element(by.css('.layout-gt-xs-row:nth-child(2)')).element(by.css('.layout-row.flex-order-gt-xs-1.flex-gt-xs')).element(by.tagName('span')),
-    
+    reviewTypeValue: this.getCard().element(by.binding('review.reviewType.name')),
+    startDateLabel: this.getCard().element(by.translateKey('review.annual.startDate')),
+    startDateValue: this.getCard().element(by.binding('review.startDate')),
+    endDateLabel: this.getCard().element(by.translateKey('review.annual.endDate')),
+    endDateValue: this.getCard().element(by.binding('review.endDate')),
+    statusLabel: this.getCard().element(by.translateKey('review.annual.status')),
+    statusValue: this.getCard().element(by.binding('review.reviewStatus.name')),
+    counselorLabel: this.getCard().element(by.translateKey('review.annual.counselor')),
+    counselorValue: this.getCard().element(by.binding('review.reviewee.counselor.firstName')),
     peerTabContainer: element(by.css('md-tab-item:nth-child(1)')),
     engagementTabContainer: element(by.css('md-tab-item:nth-child(2)')),
     goalsTabContainer: element(by.css('md-tab-item:nth-child(3)')),
     evaluationTabContainer: element(by.css('md-tab-item:nth-child(4)')),
     overallTabContainer: element(by.css('md-tab-item:nth-child(5)')),
-    
-    
   };
 
   Object.defineProperties(this, {
