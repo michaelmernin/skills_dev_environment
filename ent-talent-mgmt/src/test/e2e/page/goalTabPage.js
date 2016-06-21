@@ -1,7 +1,5 @@
 /* DO NOT REMOVE: Protractor globals to be ignored by JsLint */
-/* globals require:false, element:false, by:false, browser, module*/
-
-require('../locators.js');
+/* globals element:false, by:false, browser, module*/
 
 var GoalTabPage = function() {
   'use strict';

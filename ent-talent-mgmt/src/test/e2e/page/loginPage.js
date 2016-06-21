@@ -1,7 +1,5 @@
 'use strict';
 
-require('../locators.js');
-
 var LoginPage = function () {
   this.ui = {
     userNameInput: element(by.model('username')),

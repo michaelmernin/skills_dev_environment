@@ -1,6 +1,5 @@
 'use strict';
 
-require('../locators.js');
 
 var PeerReviewPage = function () {
   this.ui = {

@@ -1,3 +1,5 @@
+/* DO NOT REMOVE: Protractor globals to be ignored by JsLint */
+/* globals exports: false, require: false, jasmine:false, window:false, Promise:false, setTimeout: false, browser:false, protractor: false*/
 
 var HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
 
@@ -105,9 +107,9 @@ exports.config = {
 
     jasmine.getEnv().addReporter(jUnitReporter);
     jasmine.getEnv().addReporter(htmlReporter);
-        
-    var SpecReporter = require('jasmine-spec-reporter');
+    
     // add jasmine spec reporter
+    var SpecReporter = require('jasmine-spec-reporter');
     jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
     
     setTimeout(function() {
@@ -119,7 +121,12 @@ exports.config = {
       }).then(function(result) {
           browser.driver.manage().window().setSize(result.width, result.height);
       });
-  });
+    });
+    
+    // Add custom locators
+    var Locators = require('./locators.js'),
+    locators = new Locators();
+    locators.addLocators(protractor);
   },
   
 

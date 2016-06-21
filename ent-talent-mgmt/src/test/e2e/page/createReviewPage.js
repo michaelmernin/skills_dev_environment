@@ -1,8 +1,7 @@
 /* DO NOT REMOVE: Protractor globals to be ignored by JsLint */
-/* globals require: false, element: false, by: false, browser: false, module: false*/
+/* globals element: false, by: false, browser: false, module: false*/
 
 
-require('../locators.js');
 
 var CreateReviewPage = function () {
   'use strict';
