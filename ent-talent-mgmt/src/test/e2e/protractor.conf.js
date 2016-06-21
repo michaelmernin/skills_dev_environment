@@ -110,7 +110,12 @@ exports.config = {
     
     // add jasmine spec reporter
     var SpecReporter = require('jasmine-spec-reporter');
-    jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
+    jasmine.getEnv().addReporter(new SpecReporter({
+      displayStacktrace: 'all',
+      displayPendingSpec: true,    // display each pending spec
+      displaySpecDuration: true,   // display each spec duration
+      displaySuiteNumber: true,    // display each suite number (hierarchical)
+    }));
     
     setTimeout(function() {
       browser.driver.executeScript(function() {
@@ -127,6 +132,7 @@ exports.config = {
     var Locators = require('./locators.js'),
     locators = new Locators();
     locators.addLocators(protractor);
+    console.log('jasmine-version:' + jasmine.version);
   },
   
 
