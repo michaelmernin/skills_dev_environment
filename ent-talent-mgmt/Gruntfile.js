@@ -55,7 +55,9 @@ module.exports = function (grunt) {
         src: ['src/main/webapp/index.html'],
         exclude: [
           /angular-i18n/,  // localizations are loaded dynamically
-          /swagger-ui/
+          /swagger-ui/,
+          'bower_components/highcharts/highcharts-more.js', // (not needed) wiredep includes this with highcharts bower dependency
+          'bower_components/highcharts/modules/exporting.js' // (not needed) wiredep includes this with highcharts bower dependency
         ]
       },
       test: {
