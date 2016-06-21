@@ -13,12 +13,12 @@ var EvaluationTabPage = function() {
     //evaluation form elements - reviewee
     evaluationForm: element(by.name('evalForm')),
     revieweeRatingSwitch: elementByModelAndChildModel('question.ratings.reviewee','na'),
-    revieweeRatingSlider: elementByModelAndChildModel('question.ratings.reviewee', 'rating.score'),
+    revieweeRatingSlider: elementByModelAndChildModel('question.ratings.reviewee', 'rating.score'),//.element(by.css('div.md-thumb')),
     revieweeRatingValue: elementByModelAndCSS('question.ratings.reviewee','[role="score"]'),
 
     //evaluation form elements - reviewer
     reviewerRatingSwitch: elementByModelAndChildModel('question.ratings.reviewer','na'),
-    reviewerRatingSlider: elementByModelAndChildModel('question.ratings.reviewer','rating.score'),
+    reviewerRatingSlider: elementByModelAndChildModel('question.ratings.reviewer','rating.score'),//.element(by.css('div.md-thumb')),
     reviewerRatingValue: elementByModelAndCSS('question.ratings.reviewer','[role="score"]'),
 
     reviewerComment: elementByModelAndChildModel('question.ratings.reviewer','rating.comment'),
@@ -94,7 +94,7 @@ var EvaluationTabPage = function() {
 
       case 1:
         {
-          browser.actions().dragAndDrop(
+          return browser.actions().dragAndDrop(
             slider, {
               x: i,
               y: 0
@@ -105,7 +105,7 @@ var EvaluationTabPage = function() {
 
       case 2:
         {
-          browser.actions().dragAndDrop(
+          return browser.actions().dragAndDrop(
             slider, {
               x: i + (200),
               y: 0
@@ -116,7 +116,7 @@ var EvaluationTabPage = function() {
 
       case 3:
         {
-          browser.actions().dragAndDrop(
+          return browser.actions().dragAndDrop(
             slider, {
               x: i + (200 * 2),
               y: 0
@@ -126,7 +126,7 @@ var EvaluationTabPage = function() {
         break;
       case 4:
         {
-          browser.actions().dragAndDrop(
+          return browser.actions().dragAndDrop(
             slider, {
               x: i + (200 * 3),
               y: 0
@@ -136,7 +136,7 @@ var EvaluationTabPage = function() {
         break;
       case 5:
         {
-          browser.actions().dragAndDrop(
+          return browser.actions().dragAndDrop(
             slider, {
               x: i + (200 * 5),
               y: 0

@@ -1,5 +1,5 @@
 /* DO NOT REMOVE: Protractor globals to be ignored by JsLint */
-/* globals require: false, describe: false, beforeAll: false, it: false, expect: false */
+/* globals require: false, describe: false, beforeAll: false, it: false, expect: false, Promise:false, browser: true */
 
 var LoginPage = require('../page/loginPage.js');
 var userData = require('../data/userData.js');
@@ -18,46 +18,51 @@ describe('Enterprise Talent Management', function() {
       evaluationTab.get(1);
     });
 
-    it('should be displayed when Evaluation tab is clicked', function() {
+    it('should be displayed when Evaluation tab is clicked', function(done) {
       expect(evaluationTab.ui.evaluationTabBtn.getText()).toBe('EVALUATION');
       expect(evaluationTab.ui.evaluationTabBtn.getAttribute('class')).toContain('md-ink-ripple md-active');
       expect(evaluationTab.ui.evaluationTabContent.getAttribute('class')).toContain('md-no-scroll md-active');
+      done();
     });
 
-    it('- should allow to rate on Technical Abilities category', function() {
-
-      var categoryName = "Consulting Skills";
-      var techAbilitiesquestions = evaluationTab.getToggleQuestionnaire(categoryName);
-      techAbilitiesquestions.then(function(questions) {
-        questions.forEach(function(question) {
-          // need closure for proper execution
-          (function(q) {
-            evaluationTab.clickQuestion(q).then(function() {
-
+    it('should allow to rate on Technical Abilities category', function(done) {
+      evaluationTab.getToggleQuestionnaire('Consulting Skills')
+        .then(function(questions) {
+          // a dummy promise to start the chain
+          var chain = Promise.resolve();
+          questions.forEach(function(question) {
+            var randVal = Math.floor(Math.random() * 5) + 1;
+            var testComment = 'Test Comment' + randVal;
+            chain = chain.then(function() {
+              return question.click();
+            }).then(function() {
               // verify the default values for switch, slider, score
               expect(evaluationTab.ui.evaluationForm.isPresent()).toBe(true);
-
-              // testing default values of the form
-              var randVal = Math.floor(Math.random() * 5) + 1;
               // provide rating for the category
-              evaluationTab.slideRating(evaluationTab.ui.reviewerRatingSlider, randVal);
+              return evaluationTab.slideRating(evaluationTab.ui.reviewerRatingSlider, randVal);
+            }).then(function(){
+              //browser.pause();
               expect(evaluationTab.ui.reviewerRatingValue.getText()).toBe(randVal.toString());
-
               //testing entering reviewer comments
-              evaluationTab.ui.reviewerComment.click();
-              evaluationTab.ui.reviewerComment.clear();
-              evaluationTab.ui.reviewerComment.sendKeys('Test Comment' + randVal);
-              expect(evaluationTab.ui.reviewerComment.getAttribute('value')).toBe('Test Comment' + randVal);
-
+              return evaluationTab.ui.reviewerComment.click();
+            }).then(function(){
+              return evaluationTab.ui.reviewerComment.clear();
+            }).then(function(){
+              return evaluationTab.ui.reviewerComment.sendKeys(testComment);
+            }).then(function(){
+              evaluationTab.ui.reviewerComment.getAttribute('value').then(function(val){
+                expect(val).toBe(testComment);
+              });
               //click Close button to close the modal window form
-              evaluationTab.ui.closeBtn.click();
+              return evaluationTab.ui.closeBtn.click();
+              
+            }).then(function(){
+              // should pass after CDEV-456
+              return browser.wait(expect(evaluationTab.ui.evaluationForm.isPresent()).toBe(false), 5000);
             });
-          })(question);
-
-        });
-
-      });
-
+          });
+          return chain;
+        }).then(done);
       /*evaluationTab.clickToggle('Technical Abilities');
       expect(techAbilitiesquestions.count()).toBe(0);*/
 
