@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackType, FeedbackStatus, Feedback) {
+angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackType, FeedbackStatus, Feedback, EvaluationUtil) {
   var categories = undefined;
   var questions = [];
   var questionsIndex = {};
@@ -23,43 +23,6 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
     return result;
   }
 
-  
-  // TODO - move these to a utility class
-  function showAlways(review, user) {
-    return review && review.reviewee && (isCounselor(review, user) || isGM(review, user) || isDirector(review, user));
-  }
-  
-  function isCounselor(review, user){
-    return eq(user, review.reviewee.counselor);
-  }
-  
-  function isReviewee(review, user){
-    return eq(user, review.reviewee);
-  }
-  
-  function isReviewer(review, user){
-    return eq(user, review.reviewer);
-  }
-  
-  function isGM(review, user){
-    return eq(user, review.reviewee.generalManager);
-    
-  }
-  
-  function isDirector(review, user){
-    return eq(user, review.reviewee.director) && !has([ReviewStatus.OPEN], review.reviewStatus);
-  }
-  
-  function isPeer(review, user){
-    var result = false;
-    review.peers.forEach(function(peer){
-      if(peer.id === user.id){
-        result = true;
-      }
-    });
-    return result;
-  }
-  
   function showByReviewStatus(review) {
     return has([ReviewStatus.JOINT_APPROVAL, ReviewStatus.GM_APPROVAL, ReviewStatus.COMPLETE], review.reviewStatus);
   }
@@ -91,7 +54,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
   }
   
   function userCanGiveFeedback(review, user){
-    return isPeer(review, user) || isReviewer(review, user) || isReviewee(review, user);
+    return EvaluationUtil.isPeer(review, user) || EvaluationUtil.isReviewer(review, user) || EvaluationUtil.isReviewee(review, user);
   }
 
   function userHasFeedback(feedback, user) {
@@ -232,7 +195,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return categories;
     },
     score: function (rating) {
-      if (rating.score === -1) {
+      if (rating.score === 0) {
         return 'N/A';
       }
       return rating.score;
@@ -245,7 +208,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       angular.forEach(ratings, function (rating) {
         if (rating.score) {
           allNull = false;
-          if (rating.score !== -1) {
+          if (rating.score !== 0) {
             ++count;
             sum += rating.score;
           }
@@ -261,7 +224,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return Math.round(10 * sum / count) / 10;
     },
     showRevieweeRating: function (review, user) {
-      if (showAlways(review, user)) {
+      if (EvaluationUtil.showAlways(review, user)) {
         return true;
       }
       if (eq(user, review.reviewee)) {
@@ -270,7 +233,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return false;
     },
     showReviewerRating: function (review, user) {
-      if (showAlways(review, user)) {
+      if (EvaluationUtil.showAlways(review, user)) {
         return true;
       }
       if (eq(user, review.reviewer)) {
@@ -282,7 +245,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return false;
     },
     showPeerRatings: function (review, user) {
-      if (showAlways(review, user)) {
+      if (EvaluationUtil.showAlways(review, user)) {
         return true;
       }
       if (eq(user, review.reviewer)) {
@@ -297,7 +260,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return false;
     },
     showPeerRating: function (review, user, peerRating) {
-      if (showAlways(review, user)) {
+      if (EvaluationUtil.showAlways(review, user)) {
         return true;
       }
       if (eq(user, review.reviewer)) {

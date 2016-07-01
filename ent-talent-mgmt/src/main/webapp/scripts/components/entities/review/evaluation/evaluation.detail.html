@@ -4,7 +4,7 @@
       <div class="md-toolbar-tools">
         <h2>Give Feedback about {{ question.category.title }}</h2>
         <span flex></span>
-        <md-button class="md-icon-button" ng-click="close()">
+        <md-button class="md-icon-button" ng-click="close(question)">
           <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
         </md-button>
       </div>
@@ -37,7 +37,8 @@
     </md-dialog-content>
     <div class="md-actions" layout="row">
       <span flex></span>
-      <md-button ng-click="close()" class="md-primary">Close</md-button>
+      <md-button ng-click="close(question)" class="md-secondary">Close</md-button>
+      <md-button ng-click="save()" class="md-primary">Save</md-button>
     </div>
   </form>
 </md-dialog>

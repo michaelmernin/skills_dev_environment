@@ -12,11 +12,11 @@
     <md-dialog-content class="md-dialog-content">
       <h3 class="md-headline" ng-if="!!question.title">{{ question.title }}</h3>
       <p class="md-title">{{ question.text }}</p>
-      <div ng-if="question.ratings.reviewee && showRevieweeRating()">
+      <div ng-if="question.ratings.reviewee && showRevieweeRating(1)">
         <h3>Self Feedback by {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}</h3>
         <etm-rating ng-model="question.ratings.reviewee" ng-disabled="true" ng-readonly="true"></etm-rating>
       </div>
-      <div ng-if="question.ratings.reviewer && showReviewerRating()">
+      <div ng-if="question.ratings.reviewer && showReviewerRating(1)">
         <h3>Reviewer Feedback by {{ review.reviewer.firstName }} {{ review.reviewer.lastName }}</h3>
         <etm-rating ng-model="question.ratings.reviewer" ng-disabled="true" ng-readonly="true"></etm-rating>
       </div>

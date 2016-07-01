@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('TodoController', function ($scope, $stateParams, $mdDialog, Principal, Todo, Review, ReviewStatus, FeedbackType, Feedback) {
+angular.module('etmApp').controller('TodoController', function ($scope, $stateParams, $mdDialog, Principal, Todo, Review, ReviewStatus, FeedbackType, Feedback, Evaluation) {
   $scope.todo = Todo.query();
   var reviewerFeedback = {};
   var review = {};
@@ -11,6 +11,7 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
     $scope.$parent.$watch('review', function (parentReview) {
       if (parentReview.id) {
         review = parentReview;
+        $scope.categories = Evaluation.getCategories(review, user);
         loadTodo();
       }
     });
@@ -26,7 +27,7 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
     });
   });
 
-  $scope.confirm = function (action, ev) {
+  $scope.confirm = function (action, categories, questions, ev) {
     var confirmAction = $mdDialog.confirm()
       .title(action.name)
       .ariaLabel('Confirm Action Dialog')
@@ -34,10 +35,47 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
       .ok(action.result)
       .cancel('Cancel')
       .targetEvent(ev);
-    $mdDialog.show(confirmAction).then(function () {
-      Todo.update({id: action.todoId}, action, loadTodo);
-    });
+    var missingQuestionDialog = $mdDialog.confirm()
+      .title("Feedback questions missing rating")
+      .ariaLabel('Missing Feedbacks Dialog')
+      .content("One or more feedback questions are missing a rating.")
+      .ok("Okay")
+      .targetEvent(ev);
+    var categories = Evaluation.getCategories(review, user);
+    var hasEmptyQuestion = checkForEmptyQuestions(categories);
+    if (!hasEmptyQuestion) {
+      $mdDialog.show(confirmAction).then(function () {
+          Todo.update({id: action.todoId}, action, loadTodo);
+      });
+    } else {
+      $mdDialog.show(missingQuestionDialog);
+    }
   };
+  
+  function checkForEmptyQuestions(categories) {
+    var hasEmpty;
+    var stopSubmit;
+    var mdTitleSelector;
+    $.each(categories, function(key, category) {
+      hasEmpty = false;
+      $.each(category, function(key, question) {
+        if (question.editableRating.score === null || question.editableRating.score === undefined) {
+          hasEmpty = true;
+          stopSubmit = true;
+          $.each($("div[ui-view='evaluation'] md-list-item[role='listitem'][ng-repeat]"), function(key, value) { 
+            if (question.text.indexOf($(value).find("h4.ng-binding").text()) > -1){ 
+              $(this).find("h4.ng-binding").addClass("evaluation-error");
+            } 
+          });
+        }
+      });
+      if (hasEmpty) {
+        mdTitleSelector = ".md-title:contains('" + key + "')";
+        $("div[ui-view='evaluation'] md-list-item[role='listitem']:not([ng-repeat])").find(mdTitleSelector).addClass("evaluation-error");
+      }
+    });
+    return stopSubmit;
+  }
 
   function loadTodo() {
     Feedback.query({reviewId: review.id}, function (feedback) {

@@ -23,11 +23,11 @@
         <div class="md-list-item-text">
           <h4>{{ question.title ? question.title : question.text | limitTo:titleLimit() }}</h4>
           <p>
-            <span class="score" ng-if="question.ratings.reviewee.score && showRevieweeRating()">
+            <span class="score" ng-if="(question.ratings.reviewee.score !== null && question.ratings.reviewee.score !== undefined) && showRevieweeRating()">
               <i class="fa fa-comment-o"></i>
               Self Rating: {{ getScore(question.ratings.reviewee) }}
             </span>
-            <span class="score" ng-if="question.ratings.reviewer.score && showReviewerRating()">
+            <span class="score" ng-if="(question.ratings.reviewer.score !== null && question.ratings.reviewer.score !== undefined) && showReviewerRating()">
               <i class="fa fa-comment"></i>
               Reviewer Rating: {{ getScore(question.ratings.reviewer) }}
             </span>
@@ -35,7 +35,7 @@
               <i class="fa fa-comments-o"></i>
               Average Peer Rating: {{ getAvgScore(question.ratings.peer) }}
             </span>
-            <span class="score" ng-if="question.editableRating.score && showPeerRating(question.editableRating)">
+            <span class="score" ng-if="(question.editableRating.score !== null && question.editableRating.score !== undefined) && showPeerRating(question.editableRating)">
               <i class="fa fa-comments-o"></i>
               Peer Rating: {{ getScore(question.editableRating) }}
             </span>

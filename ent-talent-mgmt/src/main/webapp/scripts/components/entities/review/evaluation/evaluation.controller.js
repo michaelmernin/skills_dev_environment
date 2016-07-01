@@ -23,6 +23,10 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
 
   $scope.toggleCategory = function (category) {
     $scope.toggle = ($scope.toggle === category ? null : category);
+    setTimeout(function() {
+      var categories = Evaluation.getCategories(review, user);
+      addErrorClassToQuestions(categories);
+    }, 50);
   };
 
   $scope.viewEvaluation = function (question, ev) {
@@ -37,9 +41,13 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
         user: user
       }
     }).then(function (question) {
-      updateDirtyRating(question.ratings.reviewee);
-      updateDirtyRating(question.ratings.reviewer);
-      angular.forEach(question.ratings.peer, updateDirtyRating);
+      if (question) {
+        updateDirtyRating(question.ratings.reviewee);
+        updateDirtyRating(question.ratings.reviewer);
+        angular.forEach(question.ratings.peer, updateDirtyRating);
+      }
+      var categories = Evaluation.getCategories(review, user);
+      addErrorClassToQuestions(categories);
     });
   };
 
@@ -89,6 +97,36 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
         question: {id: rating.question.id}
       });
     }
+  }
+  
+  function addErrorClassToQuestions(categories) {
+    var hasEmpty;
+    var mdTitleSelector;
+    $.each(categories, function(key, category) {
+      mdTitleSelector = ".md-title:contains('" + key + "')";
+      if ($("div[ui-view='evaluation'] md-list-item[role='listitem']:not([ng-repeat])").find(mdTitleSelector).hasClass("evaluation-error")) {
+        $.each(category, function(key, question) {
+          if (question.editableRating.score === null || question.editableRating.score === undefined) {
+            hasEmpty = true;
+            $.each($("div[ui-view='evaluation'] md-list-item[role='listitem'][ng-repeat]"), function(key, value) { 
+              if (question.text.indexOf($(value).find("h4.ng-binding").text()) > -1){
+                $(this).find("h4.ng-binding").addClass("evaluation-error");
+              }
+            });
+          } else {
+            hasEmpty = false;
+            $.each($("div[ui-view='evaluation'] md-list-item[role='listitem'][ng-repeat]"), function(key, value) { 
+              if (question.text.indexOf($(value).find("h4.ng-binding").text()) > -1){
+                $(this).find("h4.ng-binding").removeClass("evaluation-error");
+              }
+            });
+          }
+        });
+      }
+      if (!hasEmpty) {
+        $("div[ui-view='evaluation'] md-list-item[role='listitem']:not([ng-repeat])").find(mdTitleSelector).removeClass("evaluation-error")
+      }
+    });
   }
 
 });

@@ -1,6 +1,6 @@
 <div ng-cloak ng-if="todo">
   <div layout="row" layout-align="end center">
-    <md-button ng-repeat="action in actions" class="md-raised {{ action.theme }}" ng-click="confirm(action, $event)">
+    <md-button ng-repeat="action in actions" class="md-raised {{ action.theme }}" ng-click="confirm(action, categories, questions, $event)">
       {{ action.name }}
       <i ng-if="action.icon" class="fa {{ action.icon }}"/>
     </md-button>

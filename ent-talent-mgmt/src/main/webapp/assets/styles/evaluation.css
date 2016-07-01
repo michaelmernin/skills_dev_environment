@@ -1,3 +1,7 @@
 .md-list-item-text .score {
   margin: 0 5px;
 }
+
+.evaluation-error {
+  color: red !important;
+}

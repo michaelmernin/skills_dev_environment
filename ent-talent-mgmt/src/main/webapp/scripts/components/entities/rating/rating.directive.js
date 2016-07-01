@@ -10,20 +10,20 @@ angular.module('etmApp').directive('etmRating', function () {
       readonly: '=ngReadonly'
     },
     controller: function ($scope) {
-      var score = null;
+      var score = 0;
       $scope.form = {};
       
       $scope.setNA = function () {
         if ($scope.na) {
           score = $scope.rating.score;
-          $scope.rating.score = -1;
+          $scope.rating.score = 0;
         } else {
           $scope.rating.score = score;
         }
       }
 
       $scope.getScore = function () {
-        if ($scope.na) {
+        if ($scope.rating.score === 0) {
           return 'N/A';
         }
         return $scope.rating.score;
@@ -33,7 +33,7 @@ angular.module('etmApp').directive('etmRating', function () {
         if ($scope.rating.score === null) {
           $scope.rating.score = undefined;
         }
-        $scope.na = $scope.rating.score === -1;
+        $scope.na = $scope.rating.score === 0;
       }
 
       $scope.$watch('form.ratingForm.$dirty', function (dirty) {
