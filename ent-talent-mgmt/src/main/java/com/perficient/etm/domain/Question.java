@@ -1,15 +1,23 @@
 package com.perficient.etm.domain;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.perficient.etm.domain.util.FeedbackTypeConverter;
 import com.perficient.etm.web.view.View;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
 
 /**
  * A Question.
@@ -45,6 +53,11 @@ public class Question implements Serializable {
     @JsonView(View.Public.class)
     @ManyToOne
     private Category category;
+    
+    @Column(name = "feedbacktype_id")
+    @Convert(converter = FeedbackTypeConverter.class)
+    @JsonView(View.Public.class)
+    private FeedbackType feedbackType;
 
     public Long getId() {
         return id;
@@ -92,6 +105,14 @@ public class Question implements Serializable {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public FeedbackType getFeedbackType() {
+        return feedbackType;
+    }
+
+    public void setFeedbackType(FeedbackType feedbackType) {
+        this.feedbackType = feedbackType;
     }
 
     @Override
