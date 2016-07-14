@@ -34,6 +34,12 @@
             <i class="fa fa-pie-chart"></i>&#xA0;
             <span translate="global.menu.skillsReview">Skills Review</span>
           </md-button>        
+        </md-list-item>
+        <md-list-item ng-show="isInRole('ROLE_GENERAL_MANAGER')">
+          <md-button class="md-primary" ui-sref="skillsSearch">
+            <i class="fa fa-search"></i>&#xA0;
+            <span translate="global.menu.skillsSearch">Skills Search</span>
+          </md-button>        
         </md-list-item>     
         <md-list-item ng-show="{{ENV === 'dev' || ENV === 'test'}}">
           <md-button class="md-primary" ui-sref="mail">

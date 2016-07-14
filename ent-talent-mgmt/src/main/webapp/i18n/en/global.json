@@ -8,6 +8,7 @@
       "createReview": "Create a Review",
       "skills": "Skills",
       "skillsReview": "Skills Review",
+      "skillsSearch":"Skills Search",
       "entities": {
         "main": "Entities",
         "reviewType": "ReviewType",

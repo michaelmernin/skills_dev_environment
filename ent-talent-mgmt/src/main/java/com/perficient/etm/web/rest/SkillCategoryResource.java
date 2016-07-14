@@ -149,6 +149,32 @@ public class SkillCategoryResource implements RestResource{
     
     
     /**
+     * GET /skillCategories/search -> get list of all skill Categories for all users
+     * @return
+     */
+    @RequestMapping(value = "/skillCategories/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<SkillCategory> getAllSkillCategoriesForSearch() {
+        log.debug("REST request to get a list of skill Categories for all users");
+        List<User> users = new ArrayList<User>();
+        User loggedUser = userService.getUserFromLogin().get();
+            if(loggedUser.isDirector() || loggedUser.isGeneralManager()){
+                users = userRepository.findAll();
+            }else if(loggedUser.isConselor()){
+                users = userRepository.findByCounselor(loggedUser);
+            }
+        List<User> finalUsers = users;
+        List<SkillCategory> categories = skillCategoryRepository.findByEnabled(true);
+       
+        
+        categories.forEach(sc ->{
+            List<Skill> tempSkills = sc.getSkills().stream().filter(sk -> sk.getEnabled()).collect(Collectors.toList());
+            sc.setSkills(tempSkills);
+        });
+        
+        return categories;
+    }
+    
+    /**
      * POST /skillCategories -> create a skill Category
      */
     @RequestMapping(value = "/skillCategories",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -1,0 +1,67 @@
+<div ng-cloak>
+  <md-content md-scroll-y class="md-whiteframe-z1">
+    <div layout="column" layout-padding>
+      <h2 translate="">Skills Search</h2>      
+      <md-chips ng-model="selectedSkills" md-autocomplete-snap md-transform-chip="transformChip($chip)"  md-on-remove="removeCheck($chip)" md-require-match="true">    
+        <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" md-items="item in querySearch(searchText)" 
+            md-item-text="item.name" placeholder="Search for a skill">
+          <span md-highlight-text="searchText">{{item.name}}</span>
+        </md-autocomplete>
+        <md-chip-template>
+          <span>
+            <strong>{{$chip.name}}</strong>
+          </span>
+        </md-chip-template>
+      </md-chips>
+       <md-button class="md-raised md-accent md-hue-4" ng-click="showChart($event)">Search</md-button>
+      <md-list>
+       <div ng-repeat="sc in skillCategories">
+         <section>
+           <md-subheader class="md-primary">{{sc.title}}</md-subheader>
+           <md-list-item ng-repeat="skill in sc.skills | filter:filter | orderBy: 'name' ">
+           <md-checkbox ng-model="skill.check" ng-change="addRemoveChip(skill)">  </md-checkbox>
+              <md-icon md-font-icon="fa fa-graduation-cap fa-2x fa-fw" class="md-primary"></md-icon>
+              <p> {{ skill.name  }} </p>
+               <md-button  aria-label="viewUsers" ng-click="viewUsers(skill,$event)"><i class="fa fa-list-ul"></i></md-button>
+        
+           </md-list-item>
+         </section>
+        </div>
+      </md-list>
+    </div>
+  </md-content>
+</div>
+
+<!-- <div ng-cloak>
+  <md-content class="md-padding" layout="column">
+    <h2 class="md-title">Use <code>md-autocomplete</code>  to build an ordered set of chips.</h2>
+    <md-chips ng-model="selectedVegetables" md-autocomplete-snap
+              md-transform-chip="transformChip($chip)"
+              md-require-match="autocompleteDemoRequireMatch">
+      <md-autocomplete
+          md-selected-item="selectedItem"
+          md-search-text="searchText"
+          md-items="item in querySearch(searchText)"
+          md-item-text="item.name"
+          placeholder="Search for a skill">
+        <span md-highlight-text="searchText">{{item.name}}</span>
+      </md-autocomplete>
+      <md-chip-template>
+        <span>
+          <strong>{{$chip.name}}</strong>
+        </span>
+      </md-chip-template>
+    </md-chips>
+   
+    <br />
+    <h2 class="md-title">Vegetable Options</h2>
+    <md-list>
+      <md-list-item class="md-2-line veggie-option" ng-repeat="skill in allSkills" layout="row"
+          layout-wrap>
+        <div class="md-item-text md-whiteframe-z1" flex>
+          <h3>{{skill.name}}</h3>
+        </div>
+      </md-list-item>
+    </md-list>
+  </md-content>
+</div> -->

@@ -19,7 +19,11 @@ angular.module('etmApp')
         url:'api/skillCategories/skillsReview',
         method: 'GET',
         isArray: true},
-    'get': {
+     'search': {
+          url:'api/skillCategories/search',
+          method: 'GET',
+          isArray: true},
+     'get': {
       method: 'GET',
       transformResponse: function (data) {
         data = angular.fromJson(data);

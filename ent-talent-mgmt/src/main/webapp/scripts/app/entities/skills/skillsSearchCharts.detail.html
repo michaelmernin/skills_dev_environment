@@ -1,0 +1,37 @@
+<md-dialog aria-label="Users Rating for Skill : {{ skill.name }}" flex="60" style="margin-top:10px;">
+  <form name="skillCategoryForm">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Skills Review</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+      <div layout-gt-xs="row" layout-align="end center">
+     <md-button class="md-raised md-accent md-hue-4" ng-click="showChart()">{{toggle ? "Hide" : "Visualize Data"}}</md-button>
+     </div>
+     <div id="container" flex style="width:40%"  ng-show="toggle"></div>
+      <md-input-container>
+        <label for="filter" translate="">Search Users</label>
+        <input type="text" id="filter" ng-model="filter">
+     </md-input-container>
+     <md-list>
+       <md-list-item ng-repeat="skill in selectedSkills | filter:filter">
+         <section>
+           <md-subheader class="md-primary">{{skill.name}}</md-subheader>
+                <md-list-item ng-repeat="ranking in skill.rankings">
+                  <md-icon md-font-icon="fa fa-user" class="md-avatar md-primary"></md-icon>
+                  <div class="md-list-item-text" flex> 
+                    <p>{{ ranking.user.login }}</p>
+                    <p>Rank: {{ ranking.rank  }}</p>
+                 </div>
+                </md-list-item>
+          </section>         
+ </md-list-item>
+      </md-list>
+    </md-dialog-content>
+  </form>
+</md-dialog>
