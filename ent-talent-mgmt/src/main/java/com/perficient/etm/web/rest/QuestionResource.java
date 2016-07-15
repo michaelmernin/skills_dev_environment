@@ -1,19 +1,25 @@
 package com.perficient.etm.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.perficient.etm.domain.Question;
-import com.perficient.etm.exception.ResourceNotFoundException;
-import com.perficient.etm.repository.QuestionRepository;
+import java.util.List;
+import java.util.Optional;
+
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
+import com.codahale.metrics.annotation.Timed;
+import com.perficient.etm.domain.Question;
+import com.perficient.etm.exception.ResourceNotFoundException;
+import com.perficient.etm.repository.QuestionRepository;
 
 /**
  * REST controller for managing Question.
@@ -66,6 +72,24 @@ public class QuestionResource implements RestResource {
                 HttpStatus.OK))
             .orElseThrow(() -> {
                 return new ResourceNotFoundException("Question " + id + " cannot be found.");
+            });
+    }
+    
+    /**
+     * GET  /questions/:reviewTypeId/:feedbackTypeId -> get the "id" question.
+     */
+    @RequestMapping(value = "/questions/{reviewTypeId}/{feedbackTypeId}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<List<Question>> getByFeedbackTypeAndReviewType(@PathVariable Long reviewTypeId,@PathVariable Long feedbackTypeId) {
+        log.debug("REST request to get Questions by Feedback Type: {} and Review Type:", reviewTypeId, reviewTypeId);
+        return Optional.ofNullable(questionRepository.findAllByReviewTypeIdAndFeedbackTypeId(reviewTypeId, feedbackTypeId))
+            .map(questions -> new ResponseEntity<>(
+                questions,
+                HttpStatus.OK))
+            .orElseThrow(() -> {
+                return new ResourceNotFoundException("Questions with feedbackTypeId: " + feedbackTypeId + " and reviewTypeId: "+ reviewTypeId +" cannot be found.");
             });
     }
 }

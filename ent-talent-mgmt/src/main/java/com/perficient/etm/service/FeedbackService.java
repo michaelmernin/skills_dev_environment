@@ -19,6 +19,7 @@ import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.TodoResult;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.FeedbackRepository;
+import com.perficient.etm.repository.QuestionRepository;
 import com.perficient.etm.repository.RatingRepository;
 
 @Service
@@ -33,6 +34,9 @@ public class FeedbackService extends AbstractBaseService {
 
     @Inject
     private RatingRepository ratingRepository;
+    
+    @Inject
+    private QuestionRepository questionRepository;
     
     public Feedback addFeedback(Review review, User author, FeedbackType type) {
         return feedbackRepository.findOneByReviewIdAndAuthorId(review.getId(), author.getId())
@@ -92,7 +96,7 @@ public class FeedbackService extends AbstractBaseService {
     }
 
     private Set<Rating> getRatings(Review review, Feedback feedback) {
-        return review.getReviewType().getQuestions().stream()
+        return questionRepository.findAllByReviewTypeIdAndFeedbackTypeId(review.getReviewType().getId(), new Long(feedback.getFeedbackType().getId())).stream()
             .map(question -> {
                 Rating rating = new Rating();
                 rating.setQuestion(question);

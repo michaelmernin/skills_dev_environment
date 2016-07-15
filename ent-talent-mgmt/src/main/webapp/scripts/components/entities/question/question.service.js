@@ -5,11 +5,9 @@ angular.module('etmApp')
         return $resource('api/questions/:id', {}, {
             'query': { method: 'GET', isArray: true},
             'get': {
-                method: 'GET',
-                transformResponse: function (data) {
-                    data = angular.fromJson(data);
-                    return data;
-                }
+              url: 'api/questions/:reviewTypeId/:feedbackTypeId',
+              method: 'GET',
+              isArray: true
             }
         });
     });
