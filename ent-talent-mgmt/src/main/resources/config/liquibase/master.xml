@@ -50,6 +50,7 @@
     <include file="classpath:config/liquibase/seed/20160318145900_skills_seed_data.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/seed/dev/20160330185400_dev_seed_data.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20160711174000_update_entity_Question.xml"/>
-        <include file="classpath:config/liquibase/seed/20160712150000_questions_seed_data.xml"/>
+     <include file="classpath:config/liquibase/seed/20160712150000_questions_seed_data.xml"/>
+     <include file="classpath:config/liquibase/changelog/20160714193200_update_entity_Question2.xml"/>
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>
