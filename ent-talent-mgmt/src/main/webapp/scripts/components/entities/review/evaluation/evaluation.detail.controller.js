@@ -19,7 +19,7 @@ angular.module('etmApp').controller('EvaluationDetailController', function ($sco
   };
   
   $scope.close = function (question) {
-    if (EvaluationUtil.isReviewer(review, user)) {
+ /*   if (EvaluationUtil.isReviewer(review, user)) {
       question.ratings.reviewer.score = reviewerScore[0];
       question.ratings.reviewer.comment = reviewerScore[1];
     } else if (EvaluationUtil.isReviewee(review, user)) {
@@ -32,7 +32,7 @@ angular.module('etmApp').controller('EvaluationDetailController', function ($sco
           question.ratings.peer[key].comment = peer[2];
         }
       });
-    }
+    }*/
     $mdDialog.hide();
   };
 
