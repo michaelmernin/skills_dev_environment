@@ -28,7 +28,7 @@
           "title": "Confirm Review Save",
           "label": "Save Review Confirm",
           "content": "Once you have initiated a review, it cannot be deleted. Are you sure you want to continue?",
-          "ok": "Accept & Create Review",
+          "ok": "Accept and Create Review",
           "cancel": "Cancel"
         }
       }
