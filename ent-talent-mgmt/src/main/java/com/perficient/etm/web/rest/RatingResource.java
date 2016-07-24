@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.Rating;
 import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.RatingRepository;
+import com.perficient.etm.security.SecurityUtils;
 
 /**
  * REST controller for managing Rating.
@@ -64,13 +66,14 @@ public class RatingResource implements RestResource {
     @Timed
     public ResponseEntity<Void> update(@RequestBody Rating rating, @PathVariable Long reviewId, @PathVariable Long feedbackId, @PathVariable Long ratingId) throws URISyntaxException {
         log.debug("REST request to update Rating : {}", rating);
+        Rating newRating = rating;
         // if user does not have access to feedback, user does not have access to rating either
         return Optional.ofNullable(feedbackRepository.findOne(feedbackId)).map(feedback -> {
             return Optional.ofNullable(ratingRepository.findOne(ratingId)).map(oldRating -> {
                 oldRating.setComment(rating.getComment());
-                oldRating.setQuestion(rating.getQuestion());
+                //oldRating.setQuestion(rating.getQuestion());
                 oldRating.setScore(rating.getScore());
-                oldRating.setVisible(rating.isVisible());
+                updateVisibility(oldRating, rating.isVisible());
                 ratingRepository.save(oldRating);
                 return ResponseEntity.ok().build();
             }).orElse(ResponseEntity.badRequest().build());
@@ -111,4 +114,17 @@ public class RatingResource implements RestResource {
                 return new ResourceNotFoundException("Rating " + id + " cannot be found.");
             });
     }
+
+    private void updateVisibility(Rating rating, boolean visibility) {
+        SecurityUtils.getPrincipal().ifPresent(principal -> {
+            // update visibility ONLY if the requesting user is the reviewer
+            Optional.ofNullable(rating).map(Rating::getFeedback).map(Feedback::getReview).ifPresent(review -> {
+                if (review.isReviewer(principal)) {
+                    rating.setVisible(visibility);
+                }
+            });
+        });
+        return;
+    }
+
 }

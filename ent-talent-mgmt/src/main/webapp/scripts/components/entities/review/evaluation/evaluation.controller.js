@@ -81,7 +81,7 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
     return !Evaluation.showReviewerRating(review, user)
       && !Evaluation.showRevieweeRating(review, user)
       && Evaluation.showPeerRating(review, user, peerRating);
-  }
+  };
 
   function updateDirtyRating(rating) {
     if (rating && rating.$dirty) {
@@ -93,8 +93,7 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
         id: rating.id,
         score: rating.score,
         comment: rating.comment,
-        visible: rating.visible,
-        question: {id: rating.question.id}
+        visible: rating.visible
       });
     }
   }

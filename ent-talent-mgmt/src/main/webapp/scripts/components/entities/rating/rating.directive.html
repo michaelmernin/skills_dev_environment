@@ -22,6 +22,8 @@
       </div>
     </div>
   </md-input-container>
+  <md-switch ng-model="rating.visible"></md-switch>
+
 </ng-form>
 <ng-form name="ratingForm" class="etm-rating-form" ng-if="readonly">
    <span ng-if="getScore()">Score: {{getScore()}}</span>
