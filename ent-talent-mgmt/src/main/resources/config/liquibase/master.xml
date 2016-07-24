@@ -52,5 +52,6 @@
     <include file="classpath:config/liquibase/changelog/20160711174000_update_entity_Question.xml"/>
      <include file="classpath:config/liquibase/seed/20160712150000_questions_seed_data.xml"/>
      <include file="classpath:config/liquibase/changelog/20160714193200_update_entity_Question2.xml"/>
+     <include file="classpath:config/liquibase/changelog/20160715172600_update_entity_Rating.xml"/>
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>
