@@ -21,30 +21,28 @@
         </div>
       </div>
     </div>
-    <md-list flex-gt-sm>
-      <md-list-item class="md-3-line" ng-repeat="review in reviews | orderBy:orderByExpression:reverseOrder | filter:reviewSearch" ng-click="goToReview(review.id)">
-        <div layout="row">
-          <div layout-padding layout="column">
-            <div class="md-title" style=" width: 50px; height: 50px; position: absolute; line-height: 50px; text-align: center;padding-top:0px">
-              {{ review.reviewStatus.name.substring(0,2).toUpperCase() }}
-            </div>
-            <md-tooltip>
-              {{ review.reviewStatus.name }}
-            </md-tooltip>
-            <md-progress-circular md-mode="determinate" value="{{ getReviewProgress(review.reviewStatus) | number:0 }}"> </md-progress-circular>
-          </div>
-          <div class="md-list-item-text" layout="column">
-            <h3>
-              {{ review.reviewType.name }} for {{ review.reviewee.firstName }} {{ review.reviewee.lastName }} by 
-              {{ review.reviewer.firstName }} {{ review.reviewer.lastName }}
-            </h3>
-            <h4 ng-show="{{ !!review.project || !!review.client }}">
-              {{ review.project }}<span ng-show="{{ !!review.project && !!review.client }}"> at </span>{{ review.client }}
-            </h4>
-            <p hide-xs hide-sm>{{ review.startDate | date:'MM/dd/yyyy' }} to {{ review.endDate | date:'MM/dd/yyyy' }}</p>
-          </div>
-        </div>
-      </md-list-item>
-    </md-list>
   </div>
+  <div layout="row" layout-wrap>
+  <md-card class="etm-review-card" flex ng-repeat="review in reviews | orderBy:orderByExpression:reverseOrder | filter:reviewSearch">
+    <md-card-title>
+      <md-card-title-text>
+        <span>{{ review.reviewType.name }}</span>
+        <span class="md-subhead">for {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}</span>
+        <span class="md-subhead">by {{ review.reviewer.firstName }} {{ review.reviewer.lastName }}</span>
+      </md-card-title-text>
+      <md-card-title-media>
+        <div layout="row" layout-align="center">
+          <div class="md-title etm-progress-circular">
+            {{ review.reviewStatus.name.substring(0,2).toUpperCase() }}
+          </div>
+          <md-tooltip>
+            {{ review.reviewStatus.name }}
+          </md-tooltip>
+          <md-progress-circular md-mode="determinate" value="{{ getReviewProgress(review.reviewStatus) | number:0 }}"> </md-progress-circular>
+        </div>
+        <md-button  class="md-primary" ng-click="goToReview(review.id)" >VIEW</md-button>
+      </md-card-title-media>
+    </md-card-title>
+  </md-card>
+</div>
 </div>

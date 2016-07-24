@@ -1,0 +1,11 @@
+.etm-progress-circular {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  line-height: 50px;
+  text-align: center;
+  padding-top: 0px
+}
+.etm-review-card {
+  min-width:250px;
+}
