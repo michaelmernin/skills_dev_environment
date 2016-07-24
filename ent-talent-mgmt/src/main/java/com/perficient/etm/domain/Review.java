@@ -23,6 +23,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -330,6 +331,14 @@ public class Review implements Serializable {
             .map(reviewerId -> {
                 return reviewerId == userId;
             }).orElse(false);
+    }
+    
+    public boolean isReviewer(UserDetails principal){
+        return Optional.ofNullable(reviewer)
+                .map(User::getLogin)
+                .map(reviewerLogin -> {
+                    return reviewerLogin == principal.getUsername();
+                }).orElse(false);
     }
     
 }
