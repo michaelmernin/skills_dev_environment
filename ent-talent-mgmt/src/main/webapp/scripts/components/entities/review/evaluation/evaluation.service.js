@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackType, FeedbackStatus, Feedback, EvaluationUtil, Question) {
-  var categories = undefined;
+  var categories;
   var questions = [];
   var questionsIndex = {};
 
@@ -39,7 +39,6 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
 
   function getQuestions(review, user) {
     var feedbackType = userFeedbackType(review, user);
-    console.log(review.reviewType.id);
     return Question.get({reviewTypeId:review.reviewType.id, feedbackTypeId:feedbackType.id});
   }
 
@@ -142,7 +141,6 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
   }
 
   function indexQuestion(question, id) {
-    var id = id || question.id;
     if (!questionsIndex[id]) {
       questionsIndex[id] = question;
       var category = question.category.title;
