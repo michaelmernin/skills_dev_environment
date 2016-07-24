@@ -32,7 +32,7 @@ public class Rating implements Serializable {
     private String comment;
 
     @Column(name = "visible")
-    private Boolean visible;
+    private Boolean visible = true;
 
     @JsonSerialize(using = IdentitySerializer.class)
     @ManyToOne

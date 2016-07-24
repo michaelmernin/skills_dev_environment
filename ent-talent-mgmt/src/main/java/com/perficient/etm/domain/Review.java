@@ -337,7 +337,7 @@ public class Review implements Serializable {
         return Optional.ofNullable(reviewer)
                 .map(User::getLogin)
                 .map(reviewerLogin -> {
-                    return reviewerLogin == principal.getUsername();
+                    return reviewerLogin.equals(principal.getUsername());
                 }).orElse(false);
     }
     
