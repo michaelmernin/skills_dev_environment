@@ -78,9 +78,9 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
   };
 
   $scope.showPeerRating = function (peerRating) {
-    return !Evaluation.showReviewerRating(review, user)
-      && !Evaluation.showRevieweeRating(review, user)
-      && Evaluation.showPeerRating(review, user, peerRating);
+    return !Evaluation.showReviewerRating(review, user) &&
+      !Evaluation.showRevieweeRating(review, user) &&
+      Evaluation.showPeerRating(review, user, peerRating);
   };
 
   function updateDirtyRating(rating) {
@@ -101,6 +101,7 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
   function addErrorClassToQuestions(categories) {
     var hasEmpty;
     var mdTitleSelector;
+    // TODO - Don't use jQuery, use ngClass instead :)
     $.each(categories, function(key, category) {
       mdTitleSelector = ".md-title:contains('" + key + "')";
       if ($("div[ui-view='evaluation'] md-list-item[role='listitem']:not([ng-repeat])").find(mdTitleSelector).hasClass("evaluation-error")) {

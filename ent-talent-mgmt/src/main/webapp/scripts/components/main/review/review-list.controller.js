@@ -3,7 +3,7 @@
 angular.module('etmApp').controller('ReviewListController', function ($scope, $state, $stateParams, Review, Principal, ReviewStatus) {
   var NUM_STEPS = 5;
   $scope.reviews = [];
-  var user; 
+  var user;
   if (Principal.isAuthenticated()) {
     Principal.identity().then(function (account) {
       user = account;
@@ -44,16 +44,16 @@ angular.module('etmApp').controller('ReviewListController', function ($scope, $s
 
   $scope.goToReview = function (reviewId) {
     if (reviewId) {
-      if (this.review.reviewStatus.id == 1) {
+      if (this.review.reviewStatus.id === 1) {
         // check if user is reviewee, reviewer, or peer - if yes, go to review edit. if no, go to review.detail
-        if (user.id == this.review.reviewee.id) {
+        if (user.id === this.review.reviewee.id) {
           $state.go('review.edit', {id: reviewId});
-        } else if (user.id == this.review.reviewer.id) {
+        } else if (user.id === this.review.reviewer.id) {
           $state.go('review.edit', {id: reviewId});
         } else {
           var matchedPeer = false;
           for (var i = 0; i < this.review.peers.length; i++) {
-            if (user.id == this.review.peers[i].id) {
+            if (user.id === this.review.peers[i].id) {
               matchedPeer = true;
               $state.go('review.edit', {id: reviewId});
             }
@@ -72,6 +72,7 @@ angular.module('etmApp').controller('ReviewListController', function ($scope, $s
   
   $scope.reverseOrderFunction = function() {
     $scope.reverseOrder = !$scope.reverseOrder;
+    // TODO - don't user jQuery
     $('.reviewOrder').toggle();
   };
 
@@ -82,14 +83,14 @@ angular.module('etmApp').controller('ReviewListController', function ($scope, $s
     }
     
     var query = $scope.query ? $scope.query.toLowerCase() : '';
-    return isSubstring(review.client, query)
-      || isSubstring(review.project, query)
-      || isSubstring(review.reviewType.name, query)
-      || isSubstring(review.reviewStatus.name, query)
-      || isSubstring(review.reviewee.firstName, query)
-      || isSubstring(review.reviewee.lastName, query)
-      || isSubstring(review.reviewer.firstName, query)
-      || isSubstring(review.reviewer.lastName, query);
+    return isSubstring(review.client, query) ||
+      isSubstring(review.project, query) ||
+      isSubstring(review.reviewType.name, query) ||
+      isSubstring(review.reviewStatus.name, query) ||
+      isSubstring(review.reviewee.firstName, query) ||
+      isSubstring(review.reviewee.lastName, query) ||
+      isSubstring(review.reviewer.firstName, query) ||
+      isSubstring(review.reviewer.lastName, query);
   };
 
   $scope.orderByItems = [

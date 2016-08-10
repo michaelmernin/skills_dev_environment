@@ -20,14 +20,14 @@ angular.module('etmApp').directive('etmRating', function () {
         } else {
           $scope.rating.score = score;
         }
-      }
+      };
 
       $scope.getScore = function () {
         if ($scope.rating.score === 0) {
           return 'N/A';
         }
         return $scope.rating.score;
-      }
+      };
 
       if ($scope.rating) {
         if ($scope.rating.score === null) {
