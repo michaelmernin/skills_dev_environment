@@ -3,6 +3,8 @@
 angular.module('etmApp').controller('EvaluationDetailController', function ($scope, $mdDialog, Evaluation, question, review, user, EvaluationUtil) {
   $scope.question = question;
   $scope.review = review;
+  
+  // TODO - remove those defined and unused variables in if scopes.
   if (question.ratings.reviewer) {
     var reviewerScore = [question.ratings.reviewer.score, question.ratings.reviewer.comment];
   }
@@ -62,10 +64,11 @@ angular.module('etmApp').controller('EvaluationDetailController', function ($sco
   
   function getPeerScores(peers) {
     var peerScores = [];
+    // TODO - stop using jquery, use Angular.each instead
     $.each(peers, function(key, value) {
       var peer = [value.feedback.author.id, value.score, value.comment];
       peerScores.push(peer);
     });
     return peerScores;
-  };
+  }
 });
