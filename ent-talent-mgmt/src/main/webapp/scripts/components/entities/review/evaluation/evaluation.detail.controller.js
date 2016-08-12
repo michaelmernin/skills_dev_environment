@@ -52,6 +52,14 @@ angular.module('etmApp').controller('EvaluationDetailController', function ($sco
     return Evaluation.showPeerRating($scope.review, user, peerRating);
   };
   
+  $scope.isReviewer = function () {
+    if (user.id == review.reviewer.id) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  
   function getPeerScores(peers) {
     var peerScores = [];
     $.each(peers, function(key, value) {

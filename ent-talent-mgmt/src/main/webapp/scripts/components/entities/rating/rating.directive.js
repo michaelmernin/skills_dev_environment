@@ -1,17 +1,23 @@
 'use strict';
 
-angular.module('etmApp').directive('etmRating', function () {
+angular.module('etmApp').directive('etmRating', function (Principal) {
   return {
     restrict: 'E',
     templateUrl: 'scripts/components/entities/rating/rating.directive.html',
     scope: {
       rating: '=ngModel',
       disabled: '=ngDisabled',
-      readonly: '=ngReadonly'
+      readonly: '=ngReadonly',
+      reviewer: '=ngReviewer'
     },
+    
     controller: function ($scope) {
       var score = 0;
       $scope.form = {};
+      var user = {};
+      Principal.identity().then(function (account) {
+        user = account;
+      });
       
       $scope.setNA = function () {
         if ($scope.na) {
@@ -21,7 +27,15 @@ angular.module('etmApp').directive('etmRating', function () {
           $scope.rating.score = score;
         }
       };
-
+      
+      $scope.isEditable = function () {
+        if ($scope.rating.feedback.author.id == user.id) {
+         return true;
+        } else {
+          return false;
+        }
+      };
+      
       $scope.getScore = function () {
         if ($scope.rating.score === 0) {
           return 'N/A';

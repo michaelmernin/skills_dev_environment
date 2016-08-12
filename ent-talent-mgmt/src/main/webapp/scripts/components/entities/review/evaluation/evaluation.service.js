@@ -208,7 +208,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       angular.forEach(ratings, function (rating) {
         if (rating.score) {
           allNull = false;
-          if (rating.score !== 0) {
+          if (rating.score !== 0 && rating.visible) {
             ++count;
             sum += rating.score;
           }
@@ -260,9 +260,6 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return false;
     },
     showPeerRating: function (review, user, peerRating) {
-      if (EvaluationUtil.showAlways(review, user)) {
-        return true;
-      }
       if (eq(user, review.reviewer)) {
         return true;
       }
