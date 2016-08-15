@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.Rating;
 import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.FeedbackRepository;
@@ -66,18 +67,23 @@ public class RatingResource implements RestResource {
     @Timed
     public ResponseEntity<Void> update(@RequestBody Rating rating, @PathVariable Long reviewId, @PathVariable Long feedbackId, @PathVariable Long ratingId) throws URISyntaxException {
         log.debug("REST request to update Rating : {}", rating);
-        Rating newRating = rating;
+        ResponseEntity<Void> badRequest = ResponseEntity.badRequest().build();
         // if user does not have access to feedback, user does not have access to rating either
         return Optional.ofNullable(feedbackRepository.findOne(feedbackId)).map(feedback -> {
             return Optional.ofNullable(ratingRepository.findOne(ratingId)).map(oldRating -> {
-                oldRating.setComment(rating.getComment());
-                //oldRating.setQuestion(rating.getQuestion());
-                oldRating.setScore(rating.getScore());
-                updateVisibility(oldRating, rating.isVisible());
-                ratingRepository.save(oldRating);
-                return ResponseEntity.ok().build();
-            }).orElse(ResponseEntity.badRequest().build());
-        }).orElse(ResponseEntity.badRequest().build());
+                return Optional.ofNullable(feedback.getFeedbackStatus()).map(FeedbackStatus::getId).map(feedbackStatusId ->{
+                    if(feedbackStatusId > FeedbackStatus.READY.getId()){
+                        oldRating.setComment(rating.getComment());
+                        //oldRating.setQuestion(rating.getQuestion());
+                        oldRating.setScore(rating.getScore());
+                        updateVisibility(oldRating, rating.isVisible());
+                        ratingRepository.save(oldRating);
+                        return ResponseEntity.ok().build();
+                    }
+                    return badRequest;
+                }).orElse(badRequest);
+            }).orElse(badRequest);
+        }).orElse(badRequest);
         
     }
 
