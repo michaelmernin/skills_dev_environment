@@ -35,36 +35,9 @@ public class FeedbackResource implements RestResource {
     @Inject
     private FeedbackRepository feedbackRepository;
 
-    @Inject
-    private RatingRepository ratingRepository;
     
     @Inject
     private FeedbackService feedbackService;
-
-    /**
-     * POST /reviews/:id/feedback -> Create a new feedback.
-     */
-    @RequestMapping(value = "/reviews/{reviewId}/feedback", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<Feedback> create(@PathVariable Long reviewId, @RequestBody Feedback feedback,
-            BindingResult result) {
-        log.debug("REST request to save Feedback : {} for Review : {}", feedback, reviewId);
-        if (result.hasErrors()) {
-            throw new InvalidRequestException("Invalid new feedback", result);
-        }
-        if (feedback.getReview() == null) {
-            feedback.setReview(new Review());
-        }
-        if (feedback.getReview().getId() == null) {
-            feedback.getReview().setId(reviewId);
-        }
-        feedbackRepository.save(feedback);
-        feedback.getRatings().stream().forEach((r) -> {
-            r.setFeedback(feedback);
-        });
-        ratingRepository.save(feedback.getRatings());
-        return new ResponseEntity<>(feedback, HttpStatus.CREATED);
-    }
 
     /**
      * PUT /reviews/:id/feedback -> Updates an existing feedback.
