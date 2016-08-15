@@ -13,9 +13,9 @@
       <h4>{{message.from}} to {{message.to}}</h4>
       <iframe style="width: 100%; height: 650px; border: solid #CC1F20 3px;" ng-src="{{htmlSrc}}"></iframe>
     </md-dialog-content>
-    <div class="md-actions" layout="row">
+    <md-dialog-actions>
       <span flex></span>
       <md-button ng-click="cancel()" class="md-primary" >Cancel</md-button>
-    </div>
+    </md-dialog-actions>
   </form>
 </md-dialog>
