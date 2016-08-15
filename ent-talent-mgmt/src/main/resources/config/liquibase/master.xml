@@ -54,5 +54,8 @@
      <include file="classpath:config/liquibase/changelog/20160714193200_update_entity_Question2.xml"/>
      <include file="classpath:config/liquibase/changelog/20160715172600_update_entity_Rating.xml"/>
      <include file="classpath:config/liquibase/changelog/20160814192300_update_entity_Question2.xml"/>
+     <include file="classpath:config/liquibase/seed/dev/20160814204200_dev_seed_data_clear_questio_rating.xml"/>
+     <include file="classpath:config/liquibase/seed/20160813194700_update_questions_seed_data.xml"/>
+     <include file="classpath:config/liquibase/seed/dev/20160814204200_dev_seed_data_update_rating.xml"/>
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

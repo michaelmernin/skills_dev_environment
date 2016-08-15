@@ -96,7 +96,7 @@ public class FeedbackService extends AbstractBaseService {
     }
 
     private Set<Rating> getRatings(Review review, Feedback feedback) {
-        return questionRepository.findAllByReviewTypeIdAndFeedbackTypeId(review.getReviewType().getId(), new Long(feedback.getFeedbackType().getId())).stream()
+        return questionRepository.findAllByReviewTypeId(review.getReviewType().getId()).stream()
             .map(question -> {
                 Rating rating = new Rating();
                 rating.setQuestion(question);
