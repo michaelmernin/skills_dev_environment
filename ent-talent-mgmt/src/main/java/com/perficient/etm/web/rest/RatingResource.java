@@ -72,7 +72,7 @@ public class RatingResource implements RestResource {
         return Optional.ofNullable(feedbackRepository.findOne(feedbackId)).map(feedback -> {
             return Optional.ofNullable(ratingRepository.findOne(ratingId)).map(oldRating -> {
                 return Optional.ofNullable(feedback.getFeedbackStatus()).map(FeedbackStatus::getId).map(feedbackStatusId ->{
-                    if(feedbackStatusId > FeedbackStatus.READY.getId()){
+                    if(feedbackStatusId < FeedbackStatus.READY.getId()){
                         oldRating.setComment(rating.getComment());
                         //oldRating.setQuestion(rating.getQuestion());
                         oldRating.setScore(rating.getScore());

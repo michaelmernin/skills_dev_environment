@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Rating;
 import com.perficient.etm.domain.Review;
@@ -96,6 +97,7 @@ public class RatingResourceTest extends SpringAppTest {
         feedback = new Feedback();
         feedback.setReview(review);
         feedback.setFeedbackType(FeedbackType.PEER);
+        feedback.setFeedbackStatus(FeedbackStatus.OPEN);
         feedback.setAuthor(author);
         Set<Rating> ratings = new HashSet<Rating>(Arrays.asList(rating));
         feedback.setRatings(ratings);

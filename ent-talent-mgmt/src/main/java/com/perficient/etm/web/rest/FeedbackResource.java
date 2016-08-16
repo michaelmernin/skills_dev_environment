@@ -68,9 +68,9 @@ public class FeedbackResource implements RestResource {
                 return Optional.ofNullable(newFeedback.getId()).map(newFeedbackId ->{
                     return Optional.ofNullable(feedbackRepository.findOne(newFeedbackId)).map(existingFeedback ->{
                         return Optional.ofNullable(existingFeedback.getAuthor()).map(User::getId).map(existingAuthorId ->{
-                            if(existingAuthorId.equals(newFeedbackId)){
+                            if(existingFeedback.isAuthor(principal)){
                                 return Optional.ofNullable(existingFeedback.getFeedbackStatus()).map(FeedbackStatus::getId).map(existingDFeedbackStatusId ->{
-                                    if(existingDFeedbackStatusId > 3){
+                                    if(existingDFeedbackStatusId < FeedbackStatus.READY.getId()){
                                         existingFeedback.setFeedbackStatus(newFeedback.getFeedbackStatus());
                                         existingFeedback.setOverallComment(newFeedback.getOverallComment());
                                         existingFeedback.setOverallScore(newFeedback.getOverallScore());
