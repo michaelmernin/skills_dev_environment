@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('etmApp').controller('EvaluationDetailController', function ($scope, $mdDialog, Evaluation, question, review, user, EvaluationUtil) {
+  var backup = angular.copy(question.ratings);
   $scope.question = question;
   $scope.review = review;
   
@@ -35,7 +36,9 @@ angular.module('etmApp').controller('EvaluationDetailController', function ($sco
         }
       });
     }*/
-    $mdDialog.hide();
+    $scope.question.ratings = backup;
+    $scope.evalForm.$setPristine();
+    $mdDialog.cancel();
   };
 
   $scope.showRevieweeRating = function () {
