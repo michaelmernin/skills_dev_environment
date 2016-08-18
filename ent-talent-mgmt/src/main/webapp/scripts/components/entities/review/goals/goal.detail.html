@@ -12,7 +12,7 @@
     <md-dialog-content class="md-dialog-content">
       <md-input-container class="md-block">
         <label translate="review.annual.goals.goal">Goal Title</label>
-        <textarea name="goal" ng-model="goal.name" required md-maxlength="250"></textarea>
+        <textarea ng-disabled="!isReviewee()"  name="goal" ng-model="goal.name" required md-maxlength="250"></textarea>
         <div ng-messages="goalForm.goal.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
           <div ng-message="required">
             <span translate="global.messages.validate.field.enter.required" translate-values="{name: '{{ 'review.a.goal' | translate }}'}">Please enter a value.</span>
@@ -24,7 +24,7 @@
       </md-input-container> 
       <md-input-container class="md-block">
         <label translate="review.annual.goals.description">Description</label>
-        <textarea name="description" ng-model="goal.description" md-maxlength="250"></textarea>
+        <textarea name="description" ng-disabled="!isReviewee()" ng-model="goal.description" md-maxlength="250"></textarea>
         <div ng-messages="goalForm.description.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
           <div ng-message="md-maxlength">
             <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Description' | translate }}', number: '{{ '250' | translate}}'}">Description cannot be larger than 250 characters.</span>
@@ -35,7 +35,7 @@
         <div layout-gt-xs="row" flex-gt-sm>
           <md-input-container class="md-block" flex-gt-xs>
             <label translate="review.annual.goals.targetDate">Target Date</label>
-            <input type="date" name="targetDate" ng-model="goal.targetDate"/>
+            <input type="date" ng-disabled="!isReviewee()" name="targetDate" ng-model="goal.targetDate"/>
             <div ng-messages="goalForm.targetDate.$error">
               <div ng-message="date">
                 <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.annual.goals.targetDate' | translate }}'}" >Please select a valid value.</span>
@@ -44,16 +44,16 @@
           </md-input-container>
         </div>
         <div layout-gt-xs="row" flex-gt-sm>
-          <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="isPopulated()">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
+          <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="isPopulated() && !isReviewee()">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
           <md-input-container class="md-block" flex-gt-xs>
             <label translate="review.annual.goals.completionDate">Completion Date</label>
-            <input type="date" name="completionDate" ng-model="goal.completionDate" ng-disabled="!switchCompletion" />
+            <input type="date" name="completionDate" ng-disabled="!isReviewee()" ng-model="goal.completionDate" ng-disabled="!switchCompletion" />
           </md-input-container>
         </div>
       </div>      
       <md-input-container class="md-block">
         <label translate="review.annual.goals.note">Notes</label>
-        <textarea name="note" ng-model="goal.note" md-maxlength="250"></textarea>
+        <textarea name="note" ng-disabled="!isReviewee()" ng-model="goal.note" md-maxlength="250"></textarea>
         <div ng-messages="goalForm.note.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
           <div ng-message="md-maxlength">
             <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Notes' | translate }}', number: '{{ '250' | translate}}'}">Notes cannot be larger than 250 characters.</span>
