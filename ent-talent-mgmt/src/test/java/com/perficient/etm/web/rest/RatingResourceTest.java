@@ -110,27 +110,6 @@ public class RatingResourceTest extends SpringAppTest {
     @Test
     @Transactional
     @WithUserDetails("dev.user8")
-    public void createRating() throws Exception {
-        int count = (int) ratingRepository.count();
-
-        // Create the Rating
-        restRatingMockMvc.perform(post("/api/reviews/{reviewId}/feedback/{feedbackId}/ratings", REVIEW_ID, FEEDBACK_ID)
-                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
-                .content(ResourceTestUtils.convertObjectToJsonBytes(rating)))
-                .andExpect(status().isCreated());
-
-        // Validate the Rating in the database
-        List<Rating> ratings = ratingRepository.findAll();
-        assertThat(ratings).hasSize(count + 1);
-        Rating testRating = ratings.get(ratings.size() - 1);
-        assertThat(testRating.getScore()).isEqualTo(DEFAULT_SCORE);
-        assertThat(testRating.getComment()).isEqualTo(DEFAULT_COMMENT);
-        assertThat(testRating.isVisible()).isEqualTo(DEFAULT_VISIBLE);
-    }
-
-    @Test
-    @Transactional
-    @WithUserDetails("dev.user8")
     public void getAllRatings() throws Exception {
         // Initialize the database
         Feedback savedfeedback = feedbackRepository.save(feedback);
@@ -152,10 +131,11 @@ public class RatingResourceTest extends SpringAppTest {
     public void getRating() throws Exception {
         // Initialize the database
         Feedback savedfeedback = feedbackRepository.saveAndFlush(feedback);
-        ratingRepository.saveAndFlush(rating);
+        rating.setFeedback(savedfeedback);
+        Rating savedRating = ratingRepository.saveAndFlush(rating);
 
         // Get the rating
-        restRatingMockMvc.perform(get("/api/reviews/{reviewId}/feedback/{feedbackId}/ratings/{id}", REVIEW_ID, savedfeedback.getId(), rating.getId()))
+        restRatingMockMvc.perform(get("/api/reviews/{reviewId}/feedback/{feedbackId}/ratings/{id}", REVIEW_ID, savedfeedback.getId(), savedRating.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(rating.getId().intValue()))
@@ -169,7 +149,7 @@ public class RatingResourceTest extends SpringAppTest {
     public void getNonExistingRating() throws Exception {
         // Get the rating
         restRatingMockMvc.perform(get("/api/reviews/{reviewId}/feedback/{feedbackId}/ratings/{id}", REVIEW_ID, FEEDBACK_ID, Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test

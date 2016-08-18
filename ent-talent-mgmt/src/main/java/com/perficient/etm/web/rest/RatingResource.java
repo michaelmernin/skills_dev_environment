@@ -1,6 +1,5 @@
 package com.perficient.etm.web.rest;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.Set;
@@ -43,22 +42,6 @@ public class RatingResource implements RestResource {
     private FeedbackRepository feedbackRepository;
 
     /**
-     * POST  /reviews/:reviewId/feedback/:feedbackId/ratings -> Create a new rating.
-     */
-    @RequestMapping(value = "/reviews/{reviewId}/feedback/{feedbackId}/ratings",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<Void> create(@RequestBody Rating rating) throws URISyntaxException {
-        log.debug("REST request to save Rating : {}", rating);
-        if (rating.getId() != null) {
-            return ResponseEntity.badRequest().header("Failure", "A new rating cannot already have an ID").build();
-        }
-        ratingRepository.save(rating);
-        return ResponseEntity.created(new URI("/api/ratings/" + rating.getId())).build();
-    }
-
-    /**
      * PUT  /reviews/:reviewId/feedback/:feedbackId/ratings/:ratingId -> Updates an existing rating.
      */
     @RequestMapping(value = "/reviews/{reviewId}/feedback/{feedbackId}/ratings/{ratingId}",
@@ -96,6 +79,7 @@ public class RatingResource implements RestResource {
     @Timed
     public ResponseEntity<Set<Rating>> getAll(@PathVariable Long reviewId, @PathVariable Long feedbackId) {
         log.debug("REST request to get all Ratings");
+        // if user has access to feedback, they have access to ratings within that feedback
         return Optional.ofNullable(feedbackRepository.findOne(feedbackId))
                 .map(feedback -> new ResponseEntity<>(feedback.getRatings(), HttpStatus.OK))
                 .orElseThrow(() -> {
@@ -106,19 +90,21 @@ public class RatingResource implements RestResource {
     /**
      * GET  /reviews/:reviewId/feedback/:feedbackId/ratings/:id -> get the "id" rating.
      */
-    @RequestMapping(value = "/reviews/{reviewId}/feedback/{feedbackId}/ratings/{id}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/reviews/{reviewId}/feedback/{feedbackId}/ratings/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<Rating> get(@PathVariable Long id) {
         log.debug("REST request to get Rating : {}", id);
-        return Optional.ofNullable(ratingRepository.findOne(id))
-            .map(rating -> new ResponseEntity<>(
-                rating,
-                HttpStatus.OK))
-            .orElseThrow(() -> {
-                return new ResourceNotFoundException("Rating " + id + " cannot be found.");
-            });
+        ResponseEntity<Rating> unauthorized = new ResponseEntity<>(new Rating(), HttpStatus.UNAUTHORIZED);
+        return SecurityUtils.getPrincipal().map(principal -> {
+            return Optional.ofNullable(ratingRepository.findOne(id)).map(rating -> {
+                return Optional.ofNullable(rating.getFeedback()).map(feeedback -> {
+                    if (feeedback.isAuthor(principal)) {
+                        return new ResponseEntity<>(rating, HttpStatus.OK);
+                    }
+                    return unauthorized;
+                }).orElse(unauthorized);
+            }).orElse(unauthorized);
+        }).orElse(unauthorized);
     }
 
     private void updateVisibility(Rating rating, boolean visibility) {
