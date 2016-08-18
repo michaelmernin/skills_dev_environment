@@ -84,9 +84,9 @@ public class GoalResource implements RestResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Goal> getAll() {
-        log.debug("REST request to get all Goals");
-        return goalRepository.findAll();
+    public List<Goal> getAll(@PathVariable Long reviewId) {
+        log.debug("REST request to get all Goals for review with id: {}", reviewId);
+        return goalRepository.findAllByReviewId(reviewId);
     }
 
     /**
