@@ -149,6 +149,7 @@ public class GoalResourceTest extends SpringAppTest {
 
     @Test
     @Transactional
+    @WithUserDetails("dev.user4")
     public void updateGoal() throws Exception {
         // Initialize the database
         goalRepository.saveAndFlush(goal);
@@ -177,6 +178,7 @@ public class GoalResourceTest extends SpringAppTest {
 
     @Test
     @Transactional
+    @WithUserDetails("dev.user4")
     public void deleteGoal() throws Exception {
         // Initialize the database
         goalRepository.saveAndFlush(goal);
