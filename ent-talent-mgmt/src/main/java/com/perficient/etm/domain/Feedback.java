@@ -3,6 +3,7 @@ package com.perficient.etm.domain;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -161,6 +163,22 @@ public class Feedback implements Serializable {
         if ( ! Objects.equals(id, feedback.id)) return false;
 
         return true;
+    }
+    
+    public boolean isAuthor(long userId){
+        return Optional.ofNullable(author)
+            .map(User::getId)
+            .map(authorId -> {
+                return authorId == userId;
+            }).orElse(false);
+    }
+    
+    public boolean isAuthor(UserDetails principal){
+        return Optional.ofNullable(author)
+                .map(User::getLogin)
+                .map(authorLogin -> {
+                    return authorLogin.equals(principal.getUsername());
+                }).orElse(false);
     }
 
     @Override

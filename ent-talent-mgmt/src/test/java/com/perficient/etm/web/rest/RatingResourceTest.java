@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Rating;
 import com.perficient.etm.domain.Review;
@@ -96,6 +97,7 @@ public class RatingResourceTest extends SpringAppTest {
         feedback = new Feedback();
         feedback.setReview(review);
         feedback.setFeedbackType(FeedbackType.PEER);
+        feedback.setFeedbackStatus(FeedbackStatus.OPEN);
         feedback.setAuthor(author);
         Set<Rating> ratings = new HashSet<Rating>(Arrays.asList(rating));
         feedback.setRatings(ratings);
@@ -103,27 +105,6 @@ public class RatingResourceTest extends SpringAppTest {
         Review review = new Review();
         review.setId(REVIEW_ID);
         review.setFeedback(new HashSet<>(Arrays.asList(feedback)));
-    }
-
-    @Test
-    @Transactional
-    @WithUserDetails("dev.user8")
-    public void createRating() throws Exception {
-        int count = (int) ratingRepository.count();
-
-        // Create the Rating
-        restRatingMockMvc.perform(post("/api/reviews/{reviewId}/feedback/{feedbackId}/ratings", REVIEW_ID, FEEDBACK_ID)
-                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
-                .content(ResourceTestUtils.convertObjectToJsonBytes(rating)))
-                .andExpect(status().isCreated());
-
-        // Validate the Rating in the database
-        List<Rating> ratings = ratingRepository.findAll();
-        assertThat(ratings).hasSize(count + 1);
-        Rating testRating = ratings.get(ratings.size() - 1);
-        assertThat(testRating.getScore()).isEqualTo(DEFAULT_SCORE);
-        assertThat(testRating.getComment()).isEqualTo(DEFAULT_COMMENT);
-        assertThat(testRating.isVisible()).isEqualTo(DEFAULT_VISIBLE);
     }
 
     @Test
@@ -150,10 +131,11 @@ public class RatingResourceTest extends SpringAppTest {
     public void getRating() throws Exception {
         // Initialize the database
         Feedback savedfeedback = feedbackRepository.saveAndFlush(feedback);
-        ratingRepository.saveAndFlush(rating);
+        rating.setFeedback(savedfeedback);
+        Rating savedRating = ratingRepository.saveAndFlush(rating);
 
         // Get the rating
-        restRatingMockMvc.perform(get("/api/reviews/{reviewId}/feedback/{feedbackId}/ratings/{id}", REVIEW_ID, savedfeedback.getId(), rating.getId()))
+        restRatingMockMvc.perform(get("/api/reviews/{reviewId}/feedback/{feedbackId}/ratings/{id}", REVIEW_ID, savedfeedback.getId(), savedRating.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(rating.getId().intValue()))
@@ -167,7 +149,7 @@ public class RatingResourceTest extends SpringAppTest {
     public void getNonExistingRating() throws Exception {
         // Get the rating
         restRatingMockMvc.perform(get("/api/reviews/{reviewId}/feedback/{feedbackId}/ratings/{id}", REVIEW_ID, FEEDBACK_ID, Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test

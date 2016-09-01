@@ -84,7 +84,7 @@ public class QuestionResource implements RestResource {
     @Timed
     public ResponseEntity<List<Question>> getByFeedbackTypeAndReviewType(@PathVariable Long reviewTypeId,@PathVariable Long feedbackTypeId) {
         log.debug("REST request to get Questions by Feedback Type: {} and Review Type:", reviewTypeId, reviewTypeId);
-        return Optional.ofNullable(questionRepository.findAllByReviewTypeIdAndFeedbackTypeId(reviewTypeId, feedbackTypeId))
+        return Optional.ofNullable(questionRepository.findAllByReviewTypeId(reviewTypeId))
             .map(questions -> new ResponseEntity<>(
                 questions,
                 HttpStatus.OK))

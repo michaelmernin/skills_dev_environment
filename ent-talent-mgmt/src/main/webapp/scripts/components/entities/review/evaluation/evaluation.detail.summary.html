@@ -14,29 +14,29 @@
       <p class="md-title">{{ question.text }}</p>
       <div ng-if="question.ratings.reviewee && showRevieweeRating(1)">
         <h3>Self Feedback by {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}</h3>
-        <etm-rating ng-model="question.ratings.reviewee" ng-disabled="true" ng-readonly="true"></etm-rating>
+        <etm-rating ng-model="question.ratings.reviewee" ng-disabled="true" ng-readonly="true" ng-reviewer="false"></etm-rating>
       </div>
       <div ng-if="question.ratings.reviewer && showReviewerRating(1)">
         <h3>Reviewer Feedback by {{ review.reviewer.firstName }} {{ review.reviewer.lastName }}</h3>
-        <etm-rating ng-model="question.ratings.reviewer" ng-disabled="true" ng-readonly="true"></etm-rating>
+        <etm-rating ng-model="question.ratings.reviewer" ng-disabled="true" ng-readonly="true" ng-reviewer="false"></etm-rating>
       </div>
       <div ng-if="showPeerRatings()">
         <div ng-if="question.ratings.peer.length">
           <h3>Peer Feedback</h3>
           <div ng-repeat="peerRating in question.ratings.peer">
-            <div ng-if="showPeerRating(peerRating)">
+            <div ng-if="peerRating.visible">
               <strong>By {{ peerRating.feedback.author.firstName }} {{ peerRating.feedback.author.lastName }}</strong>
               <br/>
-              <etm-rating ng-model="peerRating" ng-disabled="true" ng-readonly="true"></etm-rating>
+              <etm-rating ng-model="peerRating" ng-disabled="true" ng-readonly="true" ng-reviewer="false"></etm-rating>
               <br/><br/>
             </div>
           </div>
         </div>
       </div>
     </md-dialog-content>
-    <div class="md-actions" layout="row">
+    <md-dialog-actions>
       <span flex></span>
       <md-button ng-click="close()" class="md-primary">Close</md-button>
-    </div>
+    </md-dialog-actions>
   </form>
 </md-dialog>

@@ -21,6 +21,7 @@ import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.QuestionRepository;
 import com.perficient.etm.repository.RatingRepository;
+import com.perficient.etm.security.SecurityUtils;
 
 @Service
 @Transactional
@@ -53,14 +54,22 @@ public class FeedbackService extends AbstractBaseService {
     }
 
     public Feedback openPeerFeedback(Feedback feedback) {
-        if (feedback.getFeedbackType() == FeedbackType.PEER) {
-            if (feedback.getProcessId() == null) {
-                peerService.startPeerProcess(feedback);
-            } else {
-                peerService.completeTaskInFeedbackProcess(feedback, TodoResult.REJECT);
-            }
-        }
-        return feedback;
+        return SecurityUtils.getPrincipal().map(principal->{
+            return Optional.ofNullable(feedback).map(Feedback::getReview).map(review ->{
+                // Current user has to be reviewer to open feedback
+                if(review.isReviewer(principal)){
+                    if (feedback.getFeedbackType() == FeedbackType.PEER) {
+                      if (feedback.getProcessId() == null) {
+                          peerService.startPeerProcess(feedback);
+                      } else {
+                          peerService.completeTaskInFeedbackProcess(feedback, TodoResult.REJECT);
+                      }
+                  }
+                  return feedback;
+                }
+                return feedback;
+            }).orElse(feedback);
+        }).orElse(feedback);
     }
 
     public Feedback closeFeedback(Feedback feedback) {
@@ -96,7 +105,7 @@ public class FeedbackService extends AbstractBaseService {
     }
 
     private Set<Rating> getRatings(Review review, Feedback feedback) {
-        return questionRepository.findAllByReviewTypeIdAndFeedbackTypeId(review.getReviewType().getId(), new Long(feedback.getFeedbackType().getId())).stream()
+        return questionRepository.findAllByReviewTypeId(review.getReviewType().getId()).stream()
             .map(question -> {
                 Rating rating = new Rating();
                 rating.setQuestion(question);

@@ -341,4 +341,12 @@ public class Review implements Serializable {
                 }).orElse(false);
     }
     
+    public boolean isReviewee(UserDetails principal){
+        return Optional.ofNullable(reviewee)
+                .map(User::getLogin)
+                .map(revieweeLogin -> {
+                    return revieweeLogin.equals(principal.getUsername());
+                }).orElse(false);
+    }
+    
 }

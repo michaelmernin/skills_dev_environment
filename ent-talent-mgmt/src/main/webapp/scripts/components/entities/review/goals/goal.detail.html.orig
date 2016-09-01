@@ -44,10 +44,17 @@
           </md-input-container>
         </div>
         <div layout-gt-xs="row" flex-gt-sm>
-          <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="!isReviewee()" ng-click="checkCompletion(switchCompletion)">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
+<<<<<<< HEAD
+          <md-switch class="md-primary" ng-model="switchCompletion" ng-click="checkCompletion(switchCompletion)">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
           <md-input-container class="md-block" flex-gt-xs>
             <label translate="review.annual.goals.completionDate">Completion Date</label>
-            <input type="date" name="completionDate" ng-disabled="!isReviewee() && !switchCompletion" ng-model="goal.completionDate" ng-required="switchCompletion"/>
+            <input type="date" name="completionDate" ng-model="goal.completionDate" ng-disabled="!switchCompletion" ng-required="switchCompletion"/>
+=======
+          <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="isPopulated() && !isReviewee()">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
+          <md-input-container class="md-block" flex-gt-xs>
+            <label translate="review.annual.goals.completionDate">Completion Date</label>
+            <input type="date" name="completionDate" ng-disabled="!isReviewee()" ng-model="goal.completionDate" ng-disabled="!switchCompletion" />
+>>>>>>> aa82a06b9c6ae1e22173abb03930e23db6b2ac4a
           </md-input-container>
         </div>
       </div>      

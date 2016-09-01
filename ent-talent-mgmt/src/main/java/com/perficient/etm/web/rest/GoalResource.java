@@ -26,6 +26,7 @@ import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.repository.GoalRepository;
 import com.perficient.etm.repository.ReviewRepository;
+import com.perficient.etm.security.SecurityUtils;
 
 /**
  * REST controller for managing Goal.
@@ -57,8 +58,12 @@ public class GoalResource implements RestResource {
             throw new InvalidRequestException("Invalid goal", result);
         }
         Review review = reviewRepository.findOne(reviewId);
-        goal.setReview(review);
-        goalRepository.save(goal);
+        SecurityUtils.getPrincipal().ifPresent(principal -> {
+            if (review.isReviewee(principal)) {
+                goal.setReview(review);
+                goalRepository.save(goal);
+            }
+        });
         Goal savedGoal = new Goal(goal);
         savedGoal.setReview(null);
         return new ResponseEntity<>(savedGoal, HttpStatus.CREATED);
@@ -73,7 +78,12 @@ public class GoalResource implements RestResource {
     @Timed
     public ResponseEntity<Void> update(@PathVariable Long reviewId, @RequestBody Goal goal, BindingResult result) throws URISyntaxException {
         log.debug("REST request to update Goal : {}", goal);
-        goalRepository.save(goal);
+        Review review = reviewRepository.findOne(reviewId);
+        SecurityUtils.getPrincipal().ifPresent(principal -> {
+            if (review.isReviewee(principal)) {
+                goalRepository.save(goal);
+            }
+        });
         return ResponseEntity.ok().build();
     }
 
@@ -84,9 +94,9 @@ public class GoalResource implements RestResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Goal> getAll() {
-        log.debug("REST request to get all Goals");
-        return goalRepository.findAll();
+    public List<Goal> getAll(@PathVariable Long reviewId) {
+        log.debug("REST request to get all Goals for review with id: {}", reviewId);
+        return goalRepository.findAllByReviewId(reviewId);
     }
 
     /**
@@ -117,8 +127,13 @@ public class GoalResource implements RestResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long reviewId, @PathVariable Long id) {
         log.debug("REST request to delete Goal : {}", id);
-        Goal goal = goalRepository.getOne(id);
-        goalRepository.delete(goal);
+        Review review = reviewRepository.findOne(reviewId);
+        SecurityUtils.getPrincipal().ifPresent(principal -> {
+            if (review.isReviewee(principal)) {
+                Goal goal = goalRepository.getOne(id);
+                goalRepository.delete(goal);
+            }
+        });
         return ResponseEntity.ok().build();
     }
 }

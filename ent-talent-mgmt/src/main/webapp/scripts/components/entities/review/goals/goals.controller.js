@@ -1,12 +1,18 @@
 'use strict';
 
-angular.module('etmApp').controller('GoalsController', function ($scope, $mdDialog, $stateParams, $state, $window, $mdMedia, Goal) {
+angular.module('etmApp').controller('GoalsController', function ($scope, $mdDialog, $stateParams, $state, $window, $mdMedia, Goal, Principal) {
   var review = {};
-  $scope.goals = [];  
+  $scope.goals = []; 
+  var user = {};
+  var isReviewee = {};
+  Principal.identity().then(function (account) {
+    user = account;
+  });
 
   $scope.$parent.$watch('review', function (parentReview) {
     review = parentReview;
     if (review.id) {
+
       Goal.query({reviewId: review.id}, function (goals) {
         $scope.goals = goals;
       });
@@ -14,13 +20,19 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   });
 
   $scope.addGoal = function (ev) {
+    var goal = new Goal();
+    if (user.id == review.reviewee.id) {
+      goal.isReviewee = true;
+    } else {
+      goal.isReviewee = false;
+    }
     $mdDialog.show({
       controller: 'GoalDetailController',
       templateUrl: 'scripts/components/entities/review/goals/goal.detail.html',
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {
-        goal: new Goal()
+        goal: goal
       }
     }).then(function (goal) {
       goal.$save({reviewId: review.id}, function (savedGoal) {
@@ -38,6 +50,11 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       var tempGoal = new Date(goal.completionDate);
       goal.completionDate = new Date(tempGoal.getTime() + tempGoal.getTimezoneOffset() * 60000);
     }    
+    if (user.id == review.reviewee.id) {
+      goal.isReviewee = true;
+    } else {
+      goal.isReviewee = false;
+    }
     $mdDialog.show({
       controller: 'GoalDetailController',
       templateUrl: $state.current.data.goalsConfig,
@@ -80,6 +97,14 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       return 'green;'
     } else {
       return ''
+    }
+  };
+  
+  $scope.isReviewee = function () {
+    if (user.id == review.reviewee.id) {
+      return true;
+    } else {
+      return false;
     }
   };
   

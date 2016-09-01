@@ -3,7 +3,6 @@ package com.perficient.etm.web.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -24,16 +23,16 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.perficient.etm.domain.Feedback;
+import com.perficient.etm.domain.FeedbackStatus;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Question;
 import com.perficient.etm.domain.Rating;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.FeedbackRepository;
-import com.perficient.etm.repository.RatingRepository;
 import com.perficient.etm.utils.ResourceTestUtils;
 import com.perficient.etm.utils.SpringAppTest;
 
@@ -53,8 +52,6 @@ public class FeedbackResourceTest extends SpringAppTest {
     @Inject
     private FeedbackRepository feedbackRepository;
 
-    @Inject
-    private RatingRepository ratingRepository;
 
     private MockMvc restFeedbackMockMvc;
 
@@ -65,7 +62,6 @@ public class FeedbackResourceTest extends SpringAppTest {
         MockitoAnnotations.initMocks(this);
         FeedbackResource feedbackResource = new FeedbackResource();
         ReflectionTestUtils.setField(feedbackResource, "feedbackRepository", feedbackRepository);
-        ReflectionTestUtils.setField(feedbackResource, "ratingRepository", ratingRepository);
 
         this.restFeedbackMockMvc = ResourceTestUtils.exceptionHandlingMockMvc(feedbackResource).build();
     }
@@ -77,33 +73,12 @@ public class FeedbackResourceTest extends SpringAppTest {
         review.setId(REVIEW_ID);
         feedback.setReview(review);
         feedback.setFeedbackType(FeedbackType.PEER);
+        feedback.setFeedbackStatus(FeedbackStatus.OPEN);
         User author = new User();
         author.setId(AUTHOR_ID);
         author.setLogin("dev.user8");
         feedback.setAuthor(author);
         feedback.setRatings(getRatings());
-    }
-
-    @Test
-    @Transactional
-    @WithUserDetails("dev.user2")
-    public void createFeedback() throws Exception {
-        int count = (int) feedbackRepository.count();
-
-        // Create the Feedback
-        ResultActions result = restFeedbackMockMvc.perform(post("/api/reviews/{reviewId}/feedback", REVIEW_ID)
-                .contentType(ResourceTestUtils.APPLICATION_JSON_UTF8)
-                .content(ResourceTestUtils.convertObjectToJsonBytes(feedback)))
-                .andExpect(status().isCreated());
-
-        // Validate the Feedback in the database
-        List<Feedback> feedback = feedbackRepository.findAll();
-        assertThat(feedback).hasSize(count + 1);
-
-        ResourceTestUtils.assertJsonKeys(result, "$", "id", "ratings", "feedbackType", "author");
-        ResourceTestUtils.assertJsonKeys(result, "$.feedbackType", "id");
-        ResourceTestUtils.assertJsonKeys(result, "$.author", "id");
-        ResourceTestUtils.assertJsonArrayItemKeys(result, "$.ratings", NUM_RATINGS, "id", "score", "question");
     }
 
     @Test
@@ -145,6 +120,7 @@ public class FeedbackResourceTest extends SpringAppTest {
 
     @Test
     @Transactional
+    @WithUserDetails("dev.user8")
     public void updateFeedback() throws Exception {
         // Initialize the database
         feedbackRepository.saveAndFlush(feedback);

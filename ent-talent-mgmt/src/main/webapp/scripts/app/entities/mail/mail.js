@@ -5,7 +5,7 @@ angular.module('etmApp').config(function ($stateProvider) {
     parent: 'entity',
     url: '/mail',
     data: {
-      roles: ['ROLE_USER'],
+      roles: ['ROLE_USER','ROLE_GENERAL_MANAGER'],
       pageTitle: 'mail.title'
     },
     views: {

@@ -42,62 +42,6 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
     return Question.get({reviewTypeId:review.reviewType.id, feedbackTypeId:feedbackType.id});
   }
 
-  function getFeedback(review, user) {
-    if (!review.feedback) {
-      review.feedback = [];
-    }
-
-    if (!userHasFeedback(review.feedback, user) && userCanGiveFeedback(review, user)) {
-      review.feedback.push(createNewFeedback(review, user));
-    }
-
-    return review.feedback;
-  }
-  
-  function userCanGiveFeedback(review, user){
-    return EvaluationUtil.isPeer(review, user) || EvaluationUtil.isReviewer(review, user) || EvaluationUtil.isReviewee(review, user);
-  }
-
-  function userHasFeedback(feedback, user) {
-    var found = false;
-    for (var i = 0; i < feedback.length; ++i) {
-      if (feedback[i].author.id === user.id) {
-        found = true;
-        break;
-      }
-    }
-    return found;
-  }
-
-  function createNewFeedback(review, user) {
-    console.warn('Feedback not found: Creating new feedback');
-    var feedbackType = userFeedbackType(review, user);
-    var userFeedback = {};
-    userFeedback.author = {id: user.id, firstName: user.firstName, lastName: user.lastName};
-    userFeedback.feedbackType = feedbackType;
-    userFeedback.ratings = [];
-    angular.forEach(questions, function (question) {
-      indexQuestion(question);
-      var userRating = {};
-      userRating.question = {id: question.id};
-      userFeedback.ratings.push(userRating);
-    });
-    var feedbackClone = {};
-    angular.copy(userFeedback, feedbackClone);
-    feedbackClone.review = {id: review.id};
-    Feedback.save({reviewId: review.id}, feedbackClone, function (feedbackSaved) {
-      userFeedback.id = feedbackSaved.id;
-      angular.forEach(userFeedback.ratings, function (rating) {
-        angular.forEach(feedbackSaved.ratings, function (ratingSaved) {
-          if (rating.question.id === ratingSaved.question.id) {
-            rating.id = ratingSaved.id;
-          }
-        });
-      });
-    });
-    return userFeedback;
-  }
-
   function setRatings(userFeedback, user) {
     var type = userFeedback.feedbackType.id;
     var canEdit = userFeedback.author.id === user.id;
@@ -185,8 +129,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       Feedback.query({reviewId: review.id}, function (feedback) {
         review.feedback = feedback;
         if (questions.length) {
-          feedback = getFeedback(review, user);
-          angular.forEach(feedback, function (userFeedback) {
+          angular.forEach(review.feedback, function (userFeedback) {
             setRatings(userFeedback, user);
           });
         }
@@ -208,7 +151,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       angular.forEach(ratings, function (rating) {
         if (rating.score) {
           allNull = false;
-          if (rating.score !== 0) {
+          if (rating.score !== 0 && rating.visible) {
             ++count;
             sum += rating.score;
           }
@@ -260,9 +203,6 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return false;
     },
     showPeerRating: function (review, user, peerRating) {
-      if (EvaluationUtil.showAlways(review, user)) {
-        return true;
-      }
       if (eq(user, review.reviewer)) {
         return true;
       }

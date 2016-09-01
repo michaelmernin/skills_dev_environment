@@ -48,6 +48,7 @@
     "reviewee": "Reviewee",
     "reviewer": "Reviewer",
     "comments": "Comments",
+    "showFeedback": "Show Peer Feedback?",
     "na": "N/A",
     "annual": {
       "peers": "Peers",
@@ -64,7 +65,7 @@
       "goals": {
         "addGoal": "Add Goal",
         "goalDetailHeader": "Fill out fields to create goal",
-      	"goalDetailSummaryHeader": "Goal Details",
+        "goalDetailSummaryHeader": "Goal Details",
         "goal": "Goal",
         "targetDate": "Target Date",
         "note": "Status Notes",
@@ -74,7 +75,7 @@
         "description": "Description"
       },
       "evaluation": {
-      	"comment": "A comment is required for any rating other than 3"
+        "comment": "A comment is required for any rating other than 3"
       }
     },
     "a": {

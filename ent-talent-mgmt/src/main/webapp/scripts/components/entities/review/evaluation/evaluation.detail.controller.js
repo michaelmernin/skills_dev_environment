@@ -1,8 +1,11 @@
 'use strict';
 
 angular.module('etmApp').controller('EvaluationDetailController', function ($scope, $mdDialog, Evaluation, question, review, user, EvaluationUtil) {
+  var backup = angular.copy(question.ratings);
   $scope.question = question;
   $scope.review = review;
+  
+  // TODO - remove those defined and unused variables in if scopes.
   if (question.ratings.reviewer) {
     var reviewerScore = [question.ratings.reviewer.score, question.ratings.reviewer.comment];
   }
@@ -33,7 +36,9 @@ angular.module('etmApp').controller('EvaluationDetailController', function ($sco
         }
       });
     }*/
-    $mdDialog.hide();
+    $scope.question.ratings = backup;
+    $scope.evalForm.$setPristine();
+    $mdDialog.cancel();
   };
 
   $scope.showRevieweeRating = function () {
@@ -52,12 +57,21 @@ angular.module('etmApp').controller('EvaluationDetailController', function ($sco
     return Evaluation.showPeerRating($scope.review, user, peerRating);
   };
   
+  $scope.isReviewer = function () {
+    if (user.id == review.reviewer.id) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  
   function getPeerScores(peers) {
     var peerScores = [];
+    // TODO - stop using jquery, use Angular.each instead
     $.each(peers, function(key, value) {
       var peer = [value.feedback.author.id, value.score, value.comment];
       peerScores.push(peer);
     });
     return peerScores;
-  };
+  }
 });

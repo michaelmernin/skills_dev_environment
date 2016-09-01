@@ -15,12 +15,12 @@
       <div ng-if="question.ratings.reviewee && showRevieweeRating()">
         <h3>Self Feedback</h3>
         <h4>By {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}</h4>
-        <etm-rating ng-model="question.ratings.reviewee" ng-disabled="!question.ratings.reviewee.canEdit" ng-readonly="false"></etm-rating>
+        <etm-rating ng-model="question.ratings.reviewee" ng-disabled="!question.ratings.reviewee.canEdit" ng-readonly="false" ng-reviewer="false"></etm-rating>
       </div>
       <div ng-if="question.ratings.reviewer && showReviewerRating()">
         <h3>Reviewer Feedback</h3>
         <h4>By {{ review.reviewer.firstName }} {{ review.reviewer.lastName }}</h4>
-        <etm-rating ng-model="question.ratings.reviewer" ng-disabled="!question.ratings.reviewer.canEdit" ng-readonly="false"></etm-rating>
+        <etm-rating ng-model="question.ratings.reviewer" ng-disabled="!question.ratings.reviewer.canEdit" ng-readonly="false" ng-reviewer="false"></etm-rating>
       </div>
       <div ng-if="showPeerRatings()">
         <div ng-if="question.ratings.peer.length">
@@ -28,17 +28,17 @@
           <div ng-repeat="peerRating in question.ratings.peer">
             <div ng-if="showPeerRating(peerRating)">
               <h4>By {{ peerRating.feedback.author.firstName }} {{ peerRating.feedback.author.lastName }}</h4>
-              <etm-rating ng-model="peerRating" ng-disabled="!peerRating.canEdit" ng-readonly="false"></etm-rating>
+              <etm-rating ng-model="peerRating" ng-disabled="!peerRating.canEdit" ng-readonly="false" ng-reviewer="isReviewer()"></etm-rating>
               <md-divider ng-if="!$last"></md-divider>
             </div>
           </div>
         </div>
       </div>
     </md-dialog-content>
-    <div class="md-actions" layout="row">
+    <md-dialog-actions>
       <span flex></span>
       <md-button ng-click="close(question)" class="md-secondary">Close</md-button>
       <md-button ng-click="save()" class="md-primary">Save</md-button>
-    </div>
+    </md-dialog-actions>
   </form>
 </md-dialog>
