@@ -14,11 +14,9 @@ angular.module('etmApp').controller('GoalDetailController', function ($scope, $m
     }
   };
   
-  $scope.isPopulated = function () {
-    if ($scope.goal.completionDate) {
-      return true;
-    } else {
-      return false;
+  $scope.checkCompletion = function (completed) {
+    if (completed) {
+      $scope.goal.completionDate = "";
     }
   }
   

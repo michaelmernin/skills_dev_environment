@@ -44,10 +44,10 @@
           </md-input-container>
         </div>
         <div layout-gt-xs="row" flex-gt-sm>
-          <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="isPopulated()">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
+          <md-switch class="md-primary" ng-model="switchCompletion" ng-click="checkCompletion(switchCompletion)">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
           <md-input-container class="md-block" flex-gt-xs>
             <label translate="review.annual.goals.completionDate">Completion Date</label>
-            <input type="date" name="completionDate" ng-model="goal.completionDate" ng-disabled="!switchCompletion" />
+            <input type="date" name="completionDate" ng-model="goal.completionDate" ng-disabled="!switchCompletion" ng-required="switchCompletion"/>
           </md-input-container>
         </div>
       </div>      

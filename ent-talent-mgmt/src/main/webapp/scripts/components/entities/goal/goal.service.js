@@ -15,8 +15,6 @@ angular.module('etmApp').factory('Goal', function ($resource, DateUtils) {
     'update': {
       method: 'PUT',
       transformRequest: function (data) {
-        data.targetDate = DateUtils.convertLocaleDateToServer(data.targetDate);
-        data.completionDate = DateUtils.convertLocaleDateToServer(data.completionDate);
         return angular.toJson(data);
       }
     },

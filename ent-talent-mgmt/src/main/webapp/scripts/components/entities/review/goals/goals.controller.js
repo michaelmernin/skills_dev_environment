@@ -47,6 +47,8 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
         goal: goal
       }
     }).then(function (goal) {
+      goal.review = goal.review || {};
+      goal.review.id = goal.review.id || review.id;
       goal.$update({reviewId: review.id});
     });
   };
