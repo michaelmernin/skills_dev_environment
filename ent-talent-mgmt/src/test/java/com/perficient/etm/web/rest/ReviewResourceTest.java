@@ -45,8 +45,8 @@ public class ReviewResourceTest extends SpringAppTest {
     private static final String DEFAULT_TITLE = "SAMPLE_TEXT";
     private static final String UPDATED_TITLE = "UPDATED_TEXT";
 
-    private static final LocalDate DEFAULT_START_DATE = new LocalDate(0L);
-    private static final LocalDate UPDATED_START_DATE = new LocalDate();
+    private static final LocalDate DEFAULT_START_DATE = new LocalDate().now();
+    private static final LocalDate UPDATED_START_DATE = new LocalDate().now();
 
     private static final LocalDate DEFAULT_END_DATE = DEFAULT_START_DATE
             .plusYears(1);
