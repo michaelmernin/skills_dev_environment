@@ -6,6 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.repository.ReviewTypeRepository;
 import com.perficient.etm.repository.UserRepository;
 
@@ -17,12 +18,15 @@ public class ReviewValidator extends DomainValidator<Review> {
 
     @Inject
     UserRepository userRepository;
+    
+    ReviewType reviewType;
 
     @Override
     public void validateDomain(Review review, Errors errors) {
-        validateRequiredFields(errors);
+        boolean isAnnual = !review.getReviewType().getProcessName().equals("annualReview");
+        validateRequiredFields(review, errors, isAnnual);
 
-        if (!errors.hasFieldErrors()) {
+        if (!errors.hasFieldErrors() && isAnnual) {
             validateEndDate(review, errors);
         }
     }
@@ -33,11 +37,13 @@ public class ReviewValidator extends DomainValidator<Review> {
         }
     }
 
-    private void validateRequiredFields(Errors errors) {
+    private void validateRequiredFields(Review review, Errors errors, boolean isAnnual) {
         ValidationUtils.rejectIfEmpty(errors, "reviewType", "required");
         ValidationUtils.rejectIfEmpty(errors, "reviewee", "required");
-        ValidationUtils.rejectIfEmpty(errors, "startDate", "required");
-        ValidationUtils.rejectIfEmpty(errors, "endDate", "required");
+        if (isAnnual) {
+            ValidationUtils.rejectIfEmpty(errors, "startDate", "required");
+            ValidationUtils.rejectIfEmpty(errors, "endDate", "required");
+        }
     }
 
 }

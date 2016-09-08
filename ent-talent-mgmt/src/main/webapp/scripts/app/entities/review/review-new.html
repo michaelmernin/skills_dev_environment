@@ -7,7 +7,7 @@
         <div layout-gt-sm="row">
           <md-input-container class="md-block" flex-gt-sm>
             <label translate="review.reviewType">Review Type</label>
-            <md-select name="reviewType" ng-model="review.reviewType" ng-model-options="{trackBy: '$value.id'}" required>
+            <md-select name="reviewType" ng-model="review.reviewType" ng-model-options="{trackBy: '$value.id'}" ng-change="checkReviewType()" required>
               <md-option ng-value="reviewType" ng-repeat="reviewType in reviewTypes">{{ reviewType.name }}</md-option>
             </md-select>
             <div ng-messages="reviewForm.reviewType.$error" ng-if="reviewForm.$submitted || reviewForm.reviewType.$dirty">
@@ -28,35 +28,37 @@
             </div>
           </md-input-container>
         </div>
-        <h3 translate="review.dates">Review Dates</h3>
-        <div layout-gt-sm="row">
-          <md-input-container class="md-block" flex-gt-sm>
-            <label translate="review.startDate">Start Date</label>
-            <input type="date" name="startDate" ng-model="review.startDate" required/>
-            <div ng-messages="reviewForm.startDate.$error" ng-if="reviewForm.$submitted || reviewForm.startDate.$dirty">
-              <div ng-message="required">
-                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.startDate' | translate }}'}">Please select a value.</span>
+        <div class="date-div">
+          <h3 translate="review.dates">Review Dates</h3>
+          <div layout-gt-sm="row">
+            <md-input-container class="md-block" flex-gt-sm>
+              <label translate="review.startDate">Start Date</label>
+              <input type="date" name="startDate" ng-model="review.startDate" ng-required="{{ review.reviewType.processName !== annualReview }}"/>
+              <div ng-messages="reviewForm.startDate.$error" ng-if="reviewForm.$submitted || reviewForm.startDate.$dirty">
+                <div ng-message="required">
+                  <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.startDate' | translate }}'}">Please select a value.</span>
+                </div>
+                <div ng-message="date">
+                  <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.startDate' | translate }}'}">Please select a valid value.</span>
+                </div>
               </div>
-              <div ng-message="date">
-                <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.startDate' | translate }}'}">Please select a valid value.</span>
+            </md-input-container>
+            <md-input-container class="md-block" flex-gt-sm>
+              <label translate="review.endDate">End Date</label>
+              <input type="date" name="endDate" ng-model="review.endDate" ng-required="{{ review.reviewType.processName !== annualReview }}" min="{{ minEndDate() }}"/>
+              <div ng-messages="reviewForm.endDate.$error" ng-if="reviewForm.$submitted || reviewForm.endDate.$dirty">
+                <div ng-message="required">
+                  <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.endDate' | translate }}'}">Please select a value.</span>
+                </div>
+                <div ng-message="date">
+                  <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.endDate' | translate }}'}">Please select a valid value.</span>
+                </div>
+                <div ng-message="min">
+                  <span translate="review.validate.endDate.min">Please select a value at least one year after the Start Date.</span>
+                </div>
               </div>
-            </div>
-          </md-input-container>
-          <md-input-container class="md-block" flex-gt-sm>
-            <label translate="review.endDate">End Date</label>
-            <input type="date" name="endDate" ng-model="review.endDate" required min="{{ minEndDate() }}"/>
-            <div ng-messages="reviewForm.endDate.$error" ng-if="reviewForm.$submitted || reviewForm.endDate.$dirty">
-              <div ng-message="required">
-                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.endDate' | translate }}'}">Please select a value.</span>
-              </div>
-              <div ng-message="date">
-                <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.endDate' | translate }}'}">Please select a valid value.</span>
-              </div>
-              <div ng-message="min">
-                <span translate="review.validate.endDate.min">Please select a value at least one year after the Start Date.</span>
-              </div>
-            </div>
-          </md-input-container>
+            </md-input-container>
+          </div>
         </div>
         <div layout="row">
           <span flex></span>

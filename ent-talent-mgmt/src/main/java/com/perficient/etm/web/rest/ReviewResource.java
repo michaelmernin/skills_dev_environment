@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -63,6 +64,10 @@ public class ReviewResource implements RestResource {
         log.debug("REST request to create Review : {}", review);
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid new review", result);
+        }
+        if (review.getReviewType().getProcessName().equals("annualReview")) {
+            review.setStartDate(LocalDate.now());
+            review.setEndDate(review.getStartDate().plusYears(1));
         }
         review.sanitize();
         review = getReviewSvc().startReviewProcess(review);
