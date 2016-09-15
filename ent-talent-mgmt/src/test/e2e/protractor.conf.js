@@ -89,16 +89,18 @@ exports.config = {
   
   // Setup the report before any tests start
   beforeLaunch: function() {
+    'use strict';
      return new Promise(function(resolve){
     	 htmlReporter.beforeLaunch(resolve);
      });
   },
   
   onPrepare: function () {
+    'use strict';
     // At this point, global 'protractor' object will be set up, and jasmine
     // will be available. For example, you can add a Jasmine reporter with:
     var jasmineReporters = require('jasmine-reporters');
-
+    
     var jUnitReporter = new jasmineReporters.JUnitXmlReporter({
       savePath: 'build/e2e-test-reports',
       filePrefix: 'TEST-protractor-results',
