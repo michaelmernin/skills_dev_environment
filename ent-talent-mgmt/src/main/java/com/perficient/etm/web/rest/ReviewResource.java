@@ -24,11 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Review;
+import com.perficient.etm.domain.ReviewType;
+import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.InvalidRequestException;
 import com.perficient.etm.exception.ResourceNotFoundException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
+import com.perficient.etm.repository.ReviewTypeRepository;
 import com.perficient.etm.service.ReviewService;
+import com.perficient.etm.service.UserService;
 import com.perficient.etm.web.validator.ReviewValidator;
 
 /**
@@ -50,6 +54,12 @@ public class ReviewResource implements RestResource {
 
     @Inject
     private ReviewService reviewSvc;
+    
+    @Inject
+    private UserService userSvc;
+    
+    @Inject
+    private ReviewTypeRepository reviewTypeRepository;
 
     /**
      * POST  /reviews -> Create a new review.
@@ -154,5 +164,32 @@ public class ReviewResource implements RestResource {
 
     public void setReviewSvc(ReviewService reviewSvc) {
         this.reviewSvc = reviewSvc;
+    }
+    
+    /**
+     * GET  start date of annual review that will be created.
+     */
+    @RequestMapping(value = "/reviews/{id}/annual",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public Review getLatestAnnualStartDate(@PathVariable Long id) {
+        log.debug("REST request to get annual review");
+        ReviewType reviewType = reviewTypeRepository.findOne((long)1);
+        List<Review> annualReviews = getReviewSvc().findAllByReviewTypeAndRevieweeId(reviewType, id);
+        User user = userSvc.getUser(id);
+        Review review = new Review();
+        review.setReviewType(reviewType);
+        if (annualReviews.size() == 0) {
+            review.setStartDate(user.getStartDate().withYear(LocalDate.now().getYear()));
+            review.setEndDate(review.getStartDate().plusYears(1));
+            return review;
+        } else if (annualReviews.size() == 1){
+            review.setStartDate(user.getStartDate().withYear(LocalDate.now().getYear()).plusYears(1));
+            review.setEndDate(review.getStartDate().plusYears(1));
+            return review;
+        } else {
+            return review;
+        }
     }
 }

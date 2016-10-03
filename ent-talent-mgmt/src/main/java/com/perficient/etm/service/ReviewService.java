@@ -151,6 +151,10 @@ public class ReviewService extends AbstractBaseService {
     public List<Review> findAll() {
         return reviewRepository.findAll();
     }
+    
+    public List<Review> findAllByReviewTypeAndRevieweeId(ReviewType reviewType, long id) {
+        return reviewRepository.findAllByReviewTypeAndRevieweeId(reviewType, id);
+    }
 
     /**
      * Returns the Review object with the passed id

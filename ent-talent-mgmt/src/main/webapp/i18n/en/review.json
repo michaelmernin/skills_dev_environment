@@ -30,6 +30,20 @@
           "content": "Once you have initiated a review, it cannot be deleted. Are you sure you want to continue?",
           "ok": "Accept and Create Review",
           "cancel": "Cancel"
+        },
+        "thisYear": {
+          "title": "Create annual review for this year?",
+          "label": "Save Review Confirm",
+          "content": "Once you have initiated a review, it cannot be deleted. Are you sure you want to continue?",
+          "ok": "Accept and Create Review",
+          "cancel": "Cancel"
+        },
+        "nextYear": {
+          "title": "Create annual review for next year?",
+          "label": "Save Review Confirm",
+          "content": "Once you have initiated a review, it cannot be deleted. Are you sure you want to continue?",
+          "ok": "Accept and Create Review",
+          "cancel": "Cancel"
         }
       }
     },
