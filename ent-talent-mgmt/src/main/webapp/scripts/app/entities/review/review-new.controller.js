@@ -26,11 +26,11 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
 
   $scope.save = function (ev) {
     if ($scope.reviewForm.$valid) {
-      $scope.review = $scope.review.$getLatestReview({id: $scope.review.reviewee.id}, function(review) {
+      $scope.review = Review.getLatestReview({id: $scope.review.reviewee.id}, function(review) {
         if (review.startDate) {
           var d = new Date();
           var key;
-          if (review.startDate.substring(0,4) === d.getFullYear().toString()) {
+          if (review.startDate.getFullYear().toString() === d.getFullYear().toString()) {
             translateKeys = translateKeys.map(function (key) {return 'review.new.save.thisYear.' + key;});
             key = "thisYear";
           } else {
@@ -46,8 +46,8 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
               .cancel(translations['review.new.save.' + key + '.cancel'])
               .targetEvent(ev);
             $mdDialog.show(confirmSave).then(function () {
-              $scope.review.$$state.value.reviewee = $scope.reviewees[0];
-              $scope.review.$$state.value.$save(function (review) {
+              $scope.review.reviewee = $scope.reviewees[0];
+              $scope.review.$save(function (review) {
                 $state.go('review.edit', {review: review, id: review.id});
               });
             });

@@ -75,10 +75,6 @@ public class ReviewResource implements RestResource {
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid new review", result);
         }
-        if (review.getReviewType().getProcessName().equals("annualReview")) {
-            review.setStartDate(LocalDate.now());
-            review.setEndDate(review.getStartDate().plusYears(1));
-        }
         review.sanitize();
         review = getReviewSvc().startReviewProcess(review);
         return new ResponseEntity<>(review, HttpStatus.CREATED);

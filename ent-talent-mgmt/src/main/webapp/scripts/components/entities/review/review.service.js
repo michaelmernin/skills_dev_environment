@@ -61,7 +61,8 @@ angular.module('etmApp').factory('Review', function ($resource, DateUtils) {
     },
     'getLatestReview': {
       url: 'api/reviews/:id/annual',
-      method: 'GET'
+      method: 'GET',
+      transformResponse: transformSingle
     }
   });
 });
