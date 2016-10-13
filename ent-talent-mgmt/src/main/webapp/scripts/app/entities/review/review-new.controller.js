@@ -21,43 +21,34 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   };
   $scope.load();
 
-  var translateKeys = ['title', 'label', 'content', 'ok', 'cancel'];
+  var translateKeys = ['title', 'label', 'content', 'ok', 'cancel'],
+  key = "";
   //translateKeys = translateKeys.map(function (key) {return 'review.new.save.dialog.' + key;});
 
   $scope.save = function (ev) {
     if ($scope.reviewForm.$valid) {
-      $scope.review = Review.getLatestReview({id: $scope.review.reviewee.id}, function(review) {
-        if (review.startDate) {
-          var d = new Date();
-          var key;
-          if (review.startDate.getFullYear().toString() === d.getFullYear().toString()) {
-            translateKeys = translateKeys.map(function (key) {return 'review.new.save.thisYear.' + key;});
-            key = "thisYear";
-          } else {
-            translateKeys = translateKeys.map(function (key) {return 'review.new.save.nextYear.' + key;});
-            key = "nextYear";
-          }
-          $translate(translateKeys).then(function (translations) {
-            var confirmSave = $mdDialog.confirm()
-              .title(translations['review.new.save.' + key + '.title'])
-              .ariaLabel(translations['review.new.save.' + key + '.label'])
-              .content(translations['review.new.save.' + key + '.content'])
-              .ok(translations['review.new.save.' + key + '.ok'])
-              .cancel(translations['review.new.save.' + key + '.cancel'])
-              .targetEvent(ev);
-            $mdDialog.show(confirmSave).then(function () {
-              $scope.review.reviewee = $scope.reviewees[0];
-              $scope.review.$save(function (review) {
-                $state.go('review.edit', {review: review, id: review.id});
-              });
-            });
-          });
+      Review.getReviewsByTypeAndReviewee({revieweeId: $scope.review.reviewee.id, reviewTypeId: 1}, function(annualReviewList) {
+        var date = new Date(),
+          startEndDate = new Date($scope.review.reviewee.startDate),
+          latestReviewList = $scope.getLatestReviews(annualReviewList, date);
+        if (latestReviewList.length === 0) {
+          $scope.review.startDate = new Date(startEndDate.setFullYear(date.getFullYear()));
+          $scope.review.endDate = new Date(startEndDate.setFullYear(date.getFullYear() + 1));
+          translateKeys = translateKeys.map(function (key) {return 'review.new.save.thisYear.' + key;});
+          key = "thisYear";
+          $scope.displayConfirmDialog(translateKeys, key, ev);
+        } else if (latestReviewList.length === 1) {
+          $scope.review.startDate = new Date(startEndDate.setFullYear(date.getFullYear() + 1));
+          $scope.review.endDate = new Date(startEndDate.setFullYear(date.getFullYear() + 2));
+          translateKeys = translateKeys.map(function (key) {return 'review.new.save.nextYear.' + key;});
+          key = "nextYear";
+          $scope.displayConfirmDialog(translateKeys, key, ev);
         } else {
           var dialog = $mdDialog.confirm()
-            .title('Cannot create annual review')
-            .ariaLabel('aria label')
-            .content('You already have an annual review created for this year and next year')
-            .ok('Okay');
+              .title('Cannot create annual review')
+              .ariaLabel('aria label')
+              .content('You already have an annual review created for this year and next year')
+              .ok('Okay');
           $mdDialog.show(dialog);
         }
       });
@@ -79,5 +70,33 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
     } else {
       $('.date-div').show();
     }
+  }
+  
+  $scope.displayConfirmDialog = function (translateKeys, key, ev) {
+    $translate(translateKeys).then(function (translations) {
+      var confirmSave = $mdDialog.confirm()
+        .title(translations['review.new.save.' + key + '.title'])
+        .ariaLabel(translations['review.new.save.' + key + '.label'])
+        .content(translations['review.new.save.' + key + '.content'])
+        .ok(translations['review.new.save.' + key + '.ok'])
+        .cancel(translations['review.new.save.' + key + '.cancel'])
+        .targetEvent(ev);
+      $mdDialog.show(confirmSave).then(function () {
+        $scope.review.$save(function (review) {
+          $state.go('review.edit', {review: review, id: review.id});
+        });
+      });
+    });
+  }
+  
+  $scope.getLatestReviews = function (annualReviewList, currentDate) {
+    var list = [];
+    for (var i = 0; annualReviewList.length > i; i++) {
+      if (new Date(annualReviewList[i].startDate).getFullYear() === currentDate.getFullYear() || new Date(annualReviewList[i].startDate).getFullYear() === currentDate.getFullYear() + 1) {
+        list.push(annualReviewList[i]);
+      }
+    }
+    
+    return list;
   }
 });
