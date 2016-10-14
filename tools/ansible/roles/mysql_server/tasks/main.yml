@@ -8,7 +8,12 @@
     - MySQL-python
 
 - name: Load encrypted MySQL passwords from vault
+  tags: copyMyCnf
   include_vars: passwords.yml
+  
+- name: Start the MySQL service
+  sudo: yes
+  service: name=mysqld state=started
 
 # 'localhost' needs to be the last item for idempotency, see
 # http://ansible.cc/docs/modules.html#mysql-user
@@ -39,7 +44,13 @@
   sudo: yes
   action: mysql_db db=test state=absent
   
+- name: Drop etm database
+  tags: drop_create_etm_db
+  sudo: yes
+  mysql_db: name={{ etm_db_name }} collation=utf8_general_ci encoding=utf8 state=absent
+  
 - name: Create etm database
+  tags: drop_create_etm_db
   sudo: yes
   mysql_db: name={{ etm_db_name }} collation=utf8_general_ci encoding=utf8 state=present
 
