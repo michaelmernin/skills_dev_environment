@@ -34,7 +34,7 @@ public class NotificationScheduler {
     @Inject
     private MailService mailService;
 
-    @Scheduled(fixedRate = 50000)
+    @Scheduled(cron = "0 1 1 * * ?")
     public void notifyUsersForAnnualReview() {
         
         List<User> users = getAll();
