@@ -35,7 +35,10 @@ angular.module('etmApp').controller('SkillCategoryController', function ($scope,
       controller: 'AddSkillCategoryDetailController',
       templateUrl: 'scripts/app/admin/skills/addSkillCategory.detail.html',
       parent: angular.element(document.body),
-      targetEvent: ev
+      targetEvent: ev,
+      locals: {
+        skillCategories:$scope.skillCategories
+      }
     });
   };
 

@@ -30,6 +30,9 @@ module.exports = function (config) {
       'main/webapp/bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js',
       'main/webapp/bower_components/angular-local-storage/dist/angular-local-storage.js',
       'main/webapp/bower_components/angular-cache-buster/angular-cache-buster.js',
+      'main/webapp/bower_components/highcharts/highcharts.js',
+      'main/webapp/bower_components/highcharts/highcharts-more.js',
+      'main/webapp/bower_components/highcharts/modules/exporting.js',
       'main/webapp/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'main/webapp/scripts/app/app.js',
