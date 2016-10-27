@@ -26,23 +26,16 @@ describe('Enterprise Talent Management', function() {
       expect(evaluationTab.ui.evaluationTabContent.getAttribute('class')).toContain('md-no-scroll md-active');
     });
 
-    //uncomment this once CDEV-456 is resolved
 
     it('should allow to rate on Consulting Skills category', function() {
-      return evaluationTab.getToggleQuestionnaire('Consulting Skills')
-        .then(function(questions) {
-          // a dummy promise to start the chain
-          var chain = Promise.resolve();
-          questions.forEach(function(question) {
-            chain = chain.then(function() {
-              return question.click();
-            }).then(function() {
-              expect(evaluationTab.ui.evaluationForm.isPresent()).toBe(true);
-              return evaluationTab.ui.closeBtn.click();
-            });
-          });
-          return chain;
-        });
+    	var slider = evaluationTab.getToggleQuestionnaire('Consulting Skills');
+    	evaluationTab.slideRating(slider, 4);
+    	evaluationTab.clickSave();
+    	expect(evaluationTab.ui.reviewCommentWarning.getText()).toBe('A comment is required for any rating other than 3');
+    	evaluationTab.clickSave();
+    	evaluationTab.fillReviewComment("This is a test comment");
+    	evaluationTab.clickSave();
+    	expect(evaluationTab.getCategoryRating('Consulting Skills')).toContain('Reviewer Rating: 4');
     });
 
   });

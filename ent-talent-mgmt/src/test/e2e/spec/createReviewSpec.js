@@ -27,8 +27,6 @@ describe('Enterprise Talent Management', function () {
       createReviewPage.save();
       expect(createReviewPage.ui.reviewTypeError.getText()).toEqual('Please select a Review Type.');
       expect(createReviewPage.ui.revieweeError.getText()).toEqual('Please select a Reviewee.');
-      expect(createReviewPage.ui.startDateError.getText()).toEqual('Please select a Start Date.');
-      expect(createReviewPage.ui.endDateError.getText()).toEqual('Please select an End Date.');
     });
 
     it('should list all review types in dropdown.', function () {
@@ -59,43 +57,42 @@ describe('Enterprise Talent Management', function () {
       expect(selectedValue.isDisplayed()).toBe(true);
     });
 
-    it('should validate that end date is at least one year after start date.', function () {
-    	function getDateFeature() {
-    	  return Modernizr.inputtypes.date;
-    	}
-
-    	browser.executeScript(getDateFeature).then(function (dateSupported) {
-    		if(dateSupported){
-	     	 createReviewPage.startDate = '01/01/2014';
-	        createReviewPage.endDate = '02/01/2014';
-	      }else{
-	     	 createReviewPage.startDate = '2014-11-12';
-	        createReviewPage.endDate = '2014-12-12';
-	      }
-    		createReviewPage.save();
-    		expect(createReviewPage.ui.endDateError.getText()).toEqual('Please select an End Date at least one year after the Start Date.');
-    	});
-    });
+//    it('should validate that end date is at least one year after start date.', function () {
+//    	function getDateFeature() {
+//    	  return Modernizr.inputtypes.date;
+//    	}
+//    	
+//    	browser.executeScript(getDateFeature).then(function (dateSupported) {
+//    		if(dateSupported){
+//	     	 createReviewPage.startDate = '01/01/2014';
+//	        createReviewPage.endDate = '02/01/2014';
+//	      }else{
+//	     	 createReviewPage.startDate = '2014-11-12';
+//	        createReviewPage.endDate = '2014-12-12';
+//	      }
+//    		createReviewPage.save();
+//    		expect(createReviewPage.ui.endDateError.getText()).toEqual('Please select an End Date at least one year after the Start Date.');
+//    	});
+//    	
+//    });
 
      it('should open a modal window when all required values are provided.', function () {
       createReviewPage.getDropdownOptions('review.reviewType');
       createReviewPage.selectDropdownOption('review.reviewType', 'Annual Review');
       createReviewPage.getDropdownOptions('review.reviewee');
-      createReviewPage.selectDropdownOption('review.reviewee', 'Dev UserOne');
-      createReviewPage.startDate = '2015-11-12';
-      createReviewPage.endDate = '2016-11-13';
+      createReviewPage.selectDropdownOption('review.reviewee', 'Dev UserThree');
       createReviewPage.save();
       expect(createReviewPage.ui.modalWindowContainer.isPresent()).toBe(true);
     });
 
     it('should contain desired text in modal window.', function () {
-      var titleText = createReviewPage.verifyDisplayText('.md-title', 'Confirm Review Save');
+      var titleText = createReviewPage.verifyDisplayText('.md-title', 'Create annual review for this year?');
       expect(titleText.isDisplayed()).toBe(true);
       var descriptionText = createReviewPage.verifyDisplayText('.md-dialog-content-body', 'Once you have initiated a review, it cannot be deleted. Are you sure you want to continue?');
       expect(descriptionText.isDisplayed()).toBe(true);
     });
 
-    it('should close the modal window when Cancle button is clicked.', function () {
+   it('should close the modal window when Cancle button is clicked.', function () {
       expect(createReviewPage.ui.modalCancelButton.getText()).toBe('CANCEL');
       createReviewPage.cancel();
       expect(createReviewPage.ui.modalWindowContainer.isPresent()).toBe(false);

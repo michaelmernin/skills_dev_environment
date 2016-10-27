@@ -5,24 +5,26 @@ var EvaluationTabPage = function() {
   'use strict';
   this.ui = {
 
-    //evaluation tab elements
+    // evaluation tab elements
     evaluationTabBtn: element(by.css('md-tab-item:nth-child(4)')),
     evaluationTabContent: element(by.css('md-tab-content:nth-child(4)')),
 
 
-    //evaluation form elements - reviewee
+    // evaluation form elements - reviewee
     evaluationForm: element(by.name('evalForm')),
     revieweeRatingSwitch: elementByModelAndChildModel('question.ratings.reviewee','na'),
-    revieweeRatingSlider: elementByModelAndChildModel('question.ratings.reviewee', 'rating.score'),//.element(by.css('div.md-thumb')),
+    revieweeRatingSlider: elementByModelAndChildModel('question.ratings.reviewee', 'rating.score'),// .element(by.css('div.md-thumb')),
     revieweeRatingValue: elementByModelAndCSS('question.ratings.reviewee','[role="score"]'),
 
-    //evaluation form elements - reviewer
+    // evaluation form elements - reviewer
     reviewerRatingSwitch: elementByModelAndChildModel('question.ratings.reviewer','na'),
-    reviewerRatingSlider: elementByModelAndChildModel('question.ratings.reviewer','rating.score'),//.element(by.css('div.md-thumb')),
+    reviewerRatingSlider: elementByModelAndChildModel('question.ratings.reviewer','rating.score'),// .element(by.css('div.md-thumb')),
     reviewerRatingValue: elementByModelAndCSS('question.ratings.reviewer','[role="score"]'),
+    
+    reviewCommentWarning: element(by.translateKey('review.annual.evaluation.comment')),
 
     reviewerComment: elementByModelAndChildModel('question.ratings.reviewer','rating.comment'),
-    //evaluation form elements - close button
+    // evaluation form elements - close button
     closeBtn: element.all(by.css('[ng-click="close()"]')).first(),
 
   };
@@ -73,20 +75,45 @@ var EvaluationTabPage = function() {
     toggleBtn.click();
   };
 
-  this.getToggleQuestionnaire = function(toggleName) {
-    element.all(by.repeater("category in keys(categories) | orderBy:'toString()'")).filter(function(result) {
+  this.getCategoryElement = function(toggleName) {
+   
+    return element.all(by.repeater("question in questions | orderBy:'position'")).filter(function(result) {
       return result.getText().then(function(text) {
           return text.includes(toggleName);
         });
-    }).first().click();
-    return element.all(by.repeater('question in questions'));
-
+    });
+  }; 
+  
+  this.getToggleQuestionnaire = function(toggleName) {
+  	 element.all(by.repeater("category in keys(categories) | orderBy:'toString()'")).first().click();
+  	 this.getCategoryElement(toggleName).click();
+   // shouldn't use xpath! need a better way to do this
+  	 return element(by.xpath('(//md-slider)[3]'));
   };
 
+  
+  this.getCategoryRating = function(toggleName) {
+  	return this.getCategoryElement(toggleName).first().getText();
+  };
+
+  
+  this.fillReviewComment = function(comment) {
+    element.all(by.model("rating.comment")).filter(function(result) {
+      return result.isEnabled();
+    }).sendKeys(comment);
+  };
+  
+  
+  this.clickSave = function(){
+  	element(by.tagName('md-dialog-actions')).element(by.tagName('button')).element(by.className('md-primary'));
+  };
+  
+  
   this.clickQuestion = function(questionContainer) {
     var questionBtn = questionContainer.element(by.tagName('button'));
     return questionBtn.click();
   };
+  
   this.slideRating = function(slider, ratingNum) {
 
     var i = -400;
@@ -146,5 +173,6 @@ var EvaluationTabPage = function() {
         break;
     }
   };
+  
 };
 module.exports = EvaluationTabPage;
