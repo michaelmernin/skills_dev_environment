@@ -52,7 +52,7 @@ exports.config = {
 
   // ----- What tests to run -----
   //
-  // Spec patterns are relative to the location of this config.
+  // Spec patterns are relative to the location of this config. For e.g.  'spec/peerReviewPageSpec.js',
   specs: [
     'spec/**/*.js',
   ],
@@ -73,7 +73,7 @@ exports.config = {
   directConnect: false,
 
   // A base URL for your application under test. Calls to protractor.get()
-  // with relative paths will be prepended with this.
+  // with relative paths will be prepended with this. For e.g.  baseUrl: 'https://stlerappdev.perficient.com:8443/',
   baseUrl: 'http://localhost:8080',
 
   // Selector for the element housing the angular app - this defaults to

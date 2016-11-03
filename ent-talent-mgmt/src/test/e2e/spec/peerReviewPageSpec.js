@@ -35,12 +35,14 @@ describe('Enterprise Talent Management', function () {
     
     
     it('shoud give valid response if search term match available peer', function(){
-      var availablePeers = peerReviewPage.getPeerOptions('dev');
-      expect(availablePeers.count()).toBe(4);
+    	var availablePeers = peerReviewPage.getPeerOptions('dev');
+      expect(availablePeers.count()).toBe(5);
+      expect(availablePeers.get(0).getText()).toBe('Dev UserOne');
       expect(availablePeers.get(1).getText()).toBe('Dev UserTwo');
       expect(availablePeers.get(2).getText()).toBe('Dev UserSeven');
       expect(availablePeers.get(3).getText()).toBe('Dev UserEight');
       expect(availablePeers.get(4).getText()).toBe('Dev UserNine');
+      
     });
     
     it('shoud allow users to select a peer', function(){
@@ -48,24 +50,14 @@ describe('Enterprise Talent Management', function () {
       var availablePeers = peerReviewPage.getPeerOptions('dev');
       peerReviewPage.selectPeer('Dev UserSeven');
      
-      var selectedPeer = peerReviewPage.getSelectedPeer();
-      expect(selectedPeer.element(by.css('.peer-name')).getText()).toBe('Dev UserTwo');
+      var selectedPeer = peerReviewPage.getSelectedPeer(0);
+      expect(selectedPeer.element(by.css('.peer-name')).getText()).toBe('Dev UserSeven');
       
     });
     
-    it('should list selected peer', function(){
-       
-       
-       var selectedPeer = peerReviewPage.getSelectedPeer(1);
-       expect(selectedPeer.getText()).toContain('Dev UserSeven');
-       
-       
-       });
    
     it('should allow users to delete a peer', function(){
-      
      peerReviewPage.deletePeer('Dev UserSeven');
-     
      expect(element(by.xpath('//md-tab-content[contains(@class, "active")]')).element(by.tagName('md-list-item')).element(by.cssContainingText('.peer-name', 'Dev UserSeven')).isPresent()).toBe(false);
     });
   });

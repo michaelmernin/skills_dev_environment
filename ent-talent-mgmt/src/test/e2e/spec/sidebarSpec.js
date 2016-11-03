@@ -21,8 +21,8 @@ describe('Enterprise Talent Management', function () {
       expect(sidebar.sidebarHeading).toEqual('Navigation');
     });
     
-    it('should have 13 list items', function(){
-    	expect(sidebar.sidebarElements.count()).toBe(13);
+    it('should have 18 list items', function(){
+    	expect(sidebar.sidebarElements.count()).toBe(18);
     });
     
     it('should go to Dashboard', function(){
@@ -72,7 +72,7 @@ describe('Enterprise Talent Management', function () {
     
     it('should go to Mail', function(){
     	expect(sidebar.getTextAndClick('global.menu.admin.mail')).toBe('Mail');
-    	expect(sidebar.getHeader('mail.title')).toEqual('Mail');
+    	expect(browser.getTitle()).toEqual('Mail');
     });
     
     it('should go to Profile', function(){

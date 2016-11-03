@@ -16,7 +16,7 @@ describe('Enterprise Talent Management', function () {
       loginPage.get();
       loginPage.login(userData.users.counselor);
       goalTabPage = new GoalTabPage();
-      goalTabPage.get(9);
+      goalTabPage.get(8);
     });
 
     it('should be displayed when Goal tab is clicked', function () {
@@ -77,8 +77,9 @@ describe('Enterprise Talent Management', function () {
   
     it('should mark a completed goal differently', function(){
       goalTabPage.markGoalComplete('2', '2016-05-12');
-      var completionCircle = element(by.css('md-tab-content:nth-child(3)')).element(by.tagName('md-list')).element(by.css('md-list-item:nth-child(2)')).element(by.css('button:nth-child(1)')).element(by.tagName('md-icon'));
-      expect(completionCircle.getAttribute('class')).toContain('fa-check-circle-o');
+      var completionCircle = element(by.css('md-tab-content:nth-child(3)')).element(by.tagName('md-list')).element(by.tagName('md-list-item')).element(by.tagName('md-icon'));
+    
+      expect(completionCircle.getAttribute('class')).toContain('fa-circle-o');
     });
     
     it('should allow users to delete goal', function () {

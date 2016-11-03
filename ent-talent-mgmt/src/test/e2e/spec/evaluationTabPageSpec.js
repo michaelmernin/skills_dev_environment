@@ -8,64 +8,33 @@ var EvaluationTabPage = require('../page/evaluationTabPage.js');
 describe('Enterprise Talent Management', function() {
   'use strict';
   describe('Evaluation Tab Page', function() {
-    var evaluationTab;
+  	 var evaluationTab;
+     var EC;
 
-    beforeAll(function() {
-      var loginPage = new LoginPage();
-      loginPage.get();
-      loginPage.login(userData.users.counselor);
-      evaluationTab = new EvaluationTabPage();
-      evaluationTab.get(1);
-    });
+     beforeAll(function() {
+       var loginPage = new LoginPage();
+       loginPage.get();
+       loginPage.login(userData.users.counselor);
+       evaluationTab = new EvaluationTabPage();
+       evaluationTab.get(1);
+       EC = protractor.ExpectedConditions;
+     });
 
-    it('should be displayed when Evaluation tab is clicked', function(done) {
-      expect(evaluationTab.ui.evaluationTabBtn.getText()).toBe('EVALUATION');
-      expect(evaluationTab.ui.evaluationTabBtn.getAttribute('class')).toContain('md-ink-ripple md-active');
-      expect(evaluationTab.ui.evaluationTabContent.getAttribute('class')).toContain('md-no-scroll md-active');
-      done();
-    });
+     it('should be displayed when Evaluation tab is clicked', function() {
+       expect(evaluationTab.ui.evaluationTabBtn.getText()).toBe('EVALUATION');
+       expect(evaluationTab.ui.evaluationTabBtn.getAttribute('class')).toContain('md-ink-ripple md-active');
+       expect(evaluationTab.ui.evaluationTabContent.getAttribute('class')).toContain('md-no-scroll md-active');
+     });
 
-    it('should allow to rate on Technical Abilities category', function(done) {
-      evaluationTab.getToggleQuestionnaire('Consulting Skills')
-        .then(function(questions) {
-          // a dummy promise to start the chain
-          var chain = Promise.resolve();
-          questions.forEach(function(question) {
-            var randVal = Math.floor(Math.random() * 5) + 1;
-            var testComment = 'Test Comment' + randVal;
-            chain = chain.then(function() {
-              return question.click();
-            }).then(function() {
-              // verify the default values for switch, slider, score
-              expect(evaluationTab.ui.evaluationForm.isPresent()).toBe(true);
-              // provide rating for the category
-              return evaluationTab.slideRating(evaluationTab.ui.reviewerRatingSlider, randVal);
-            }).then(function(){
-              //browser.pause();
-              expect(evaluationTab.ui.reviewerRatingValue.getText()).toBe(randVal.toString());
-              //testing entering reviewer comments
-              return evaluationTab.ui.reviewerComment.click();
-            }).then(function(){
-              return evaluationTab.ui.reviewerComment.clear();
-            }).then(function(){
-              return evaluationTab.ui.reviewerComment.sendKeys(testComment);
-            }).then(function(){
-              evaluationTab.ui.reviewerComment.getAttribute('value').then(function(val){
-                expect(val).toBe(testComment);
-              });
-              //click Close button to close the modal window form
-              return evaluationTab.ui.closeBtn.click();
-              
-            }).then(function(){
-              // should pass after CDEV-456
-              return browser.wait(expect(evaluationTab.ui.evaluationForm.isPresent()).toBe(false), 5000);
-            });
-          });
-          return chain;
-        }).then(done);
-      /*evaluationTab.clickToggle('Technical Abilities');
-      expect(techAbilitiesquestions.count()).toBe(0);*/
-
+    it('should allow to rate on Technical Abilities category', function() {
+    	var slider = evaluationTab.getToggleQuestionnaire('Technical Abilities');
+    	evaluationTab.slideRating(slider, 5);
+    	evaluationTab.clickSave();
+    	expect(evaluationTab.ui.reviewCommentWarning.getText()).toBe('A comment is required for any rating other than 3');
+    	evaluationTab.clickSave();
+    	evaluationTab.fillReviewComment("This is a test comment");
+    	evaluationTab.clickSave();
+    	expect(evaluationTab.getCategoryRating('Technical Abilities')).toContain('Reviewer Rating: 5');
     });
     /*
      it('- should allow to rate on Consulting Skills category', function(){
