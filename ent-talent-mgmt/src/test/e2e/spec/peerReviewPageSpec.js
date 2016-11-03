@@ -27,10 +27,17 @@ describe('Enterprise Talent Management', function () {
     });
 
     it('shoud give error response if search term does not match available peer', function(){
-      var availablePeers = peerReviewPage.getPeerOptions('test');
-      expect(availablePeers.count()).toBe(1);
-      expect(availablePeers.get(0).getText()).toBe('No peers matching "test" were found.');
-
+      
+    	browser.wait(function() {
+    		peerReviewPage.search('test');
+    		return element(by.css('.md-autocomplete-suggestions')).isPresent();
+      }, 20000).then(function (availablePeers) {
+      	var peerListContainer = element(by.css('.md-autocomplete-suggestions'));
+        var availablePeers = [];
+        availablePeers = peerListContainer.all(by.tagName('li'));
+      	expect(availablePeers.count()).toBe(1);
+      	expect(availablePeers.get(0).getText()).toBe('No peers matching "test" were found.');
+      });
     });
     
     

@@ -37,12 +37,8 @@ this.search = function (searchInput) {
 };
 
 this.getPeerOptions = function(searchKey){
-  this.ui.peerSearchInput.clear();
-  this.ui.peerSearchInput.sendKeys(searchKey);
+  this.search(searchKey);
   var peerListContainer = element(by.css('.md-autocomplete-suggestions'));
-  browser.wait(function() {
-    return browser.isElementPresent(peerListContainer);
-  }, 10000);
   var peers = [];
   peers = peerListContainer.all(by.tagName('li'));
   return peers;
