@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('etmApp').controller('TodoController', function ($scope, $stateParams, $mdDialog, Principal, Todo, Review, ReviewStatus, FeedbackType, Feedback, Evaluation) {
+angular.module('etmApp').controller('TodoController', function ($scope, $stateParams, $mdDialog, Principal, Todo, Review, ReviewStatus, FeedbackType, Feedback, Evaluation, EvaluationUtil) {
   $scope.todo = Todo.query();
   var reviewerFeedback = {};
   var review = {};
   var user = {};
-  
+
   Principal.identity().then(function (account) {
     user = account;
     $scope.$parent.$watch('review', function (parentReview) {
@@ -42,7 +42,12 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
       .ok("Okay")
       .targetEvent(ev);
     var categories = Evaluation.getCategories(review, user);
-    var hasEmptyQuestion = checkForEmptyQuestions(categories);
+    var hasEmptyQuestion = false;
+    var isDirector = EvaluationUtil.isDirector(review, user);
+    var isGM = EvaluationUtil.isGM(review, user);
+    if(!isDirector && !isGM){
+      hasEmptyQuestion = checkForEmptyQuestions(categories);
+    }
     if (!hasEmptyQuestion) {
       $mdDialog.show(confirmAction).then(function () {
           Todo.update({id: action.todoId}, action, loadTodo);
@@ -51,7 +56,7 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
       $mdDialog.show(missingQuestionDialog);
     }
   };
-  
+
   function checkForEmptyQuestions(categories) {
     var hasEmpty;
     var stopSubmit;
@@ -62,10 +67,10 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
         if (question.editableRating.score === null || question.editableRating.score === undefined) {
           hasEmpty = true;
           stopSubmit = true;
-          $.each($("div[ui-view='evaluation'] md-list-item[role='listitem'][ng-repeat]"), function(key, value) { 
-            if (question.text.indexOf($(value).find("h4.ng-binding").text()) > -1){ 
+          $.each($("div[ui-view='evaluation'] md-list-item[role='listitem'][ng-repeat]"), function(key, value) {
+            if (question.text.indexOf($(value).find("h4.ng-binding").text()) > -1){
               $(this).find("h4.ng-binding").addClass("evaluation-error");
-            } 
+            }
           });
         }
       });
