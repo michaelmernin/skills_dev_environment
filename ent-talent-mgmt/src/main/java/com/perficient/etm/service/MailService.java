@@ -182,6 +182,7 @@ public class MailService {
 		context.setVariable(EmailConstants.User.LOGIN, user.getLogin());
 		context.setVariable(EmailConstants.User.TITLE, user.getTitle());
 		context.setVariable(EmailConstants.User.TARGET_TITLE, user.getTargetTitle());
+		
 		return context;
 	}
 
@@ -240,6 +241,26 @@ public class MailService {
 	        return contextMap;
 	    }).orElse(null);
 	}
+	
+	/**
+     * return Map<String, Object> of current user details
+     * @return
+     */
+    private Map<String, Object> getMapWithUser(User u){
+        return Optional.ofNullable(u).map(user ->{
+            Map<String, Object> contextMap = new HashMap<String, Object>();
+            contextMap.put(EmailConstants.CurrentUser.FIRST_NAME, user.getFirstName());
+            contextMap.put(EmailConstants.CurrentUser.LAST_NAME, user.getLastName());
+            contextMap.put(EmailConstants.CurrentUser.FULL_NAME, user.getFullName());
+            contextMap.put(EmailConstants.CurrentUser.ID, user.getId());
+            contextMap.put(EmailConstants.CurrentUser.EMAIL, user.getEmail());
+            contextMap.put(EmailConstants.CurrentUser.LOGIN, user.getLogin());
+            contextMap.put(EmailConstants.CurrentUser.TITLE, user.getTitle());
+            contextMap.put(EmailConstants.CurrentUser.TARGET_TITLE, user.getTargetTitle());
+            return contextMap;
+        }).orElse(null);
+    }
+
 
 	@Async
 	public void sendActivationEmail(Long userId) {
@@ -247,6 +268,36 @@ public class MailService {
 		sendEmail(userId, null, EmailConstants.Subjects.ACTIVATION, EmailConstants.Templates.ACTIVATION, null);
 	}
 
+	/**
+	 * Reminder mail for Review Start
+	 * @param userId
+	 */
+	public void sendNotificationEmailForReviewStart(Long userId, User reviewee){
+	    log.debug("Sending notification email for Review Start");
+	    sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_REVIEW_START, EmailConstants.Templates.NOTIFICATION_REVIEW_START,getMapWithUser(reviewee));
+	}
+	
+	/**
+	 * Reminder for completing the Review before the end date
+	 * @param userId
+	 */
+	public void sendNotificationEmailForReviewCompletion(Long userId){
+        log.debug("Sending notification email for Review Completion");
+        sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_REVIEW_COMPLETION, EmailConstants.Templates.NOTIFICATION_REVIEW_COMPLETION,null);
+    }
+	
+	
+	/**
+     * Reminder for review Late
+     * @param userId
+     */
+    public void sendNotificationEmailForReviewLate(Long userId){
+        log.debug("Sending notification email for Review Late");
+        sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_REVIEW_LATE, EmailConstants.Templates.NOTIFICATION_REVIEW_LATE,null);
+    }
+    
+	
+	
 	/**
 	 * Sends an email to user with userId and includes reviewId for the review
 	 * URL. Intended for use with activinti.

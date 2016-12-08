@@ -20,6 +20,17 @@ public final class EmailConstants {
         public static final String TITLE = "CURRENT_USER_TITLE";
         public static final String TARGET_TITLE = "CURRENT_USER_TARGET_TITLE";
     }
+    
+    public final class Reviewee {
+        public static final String FIRST_NAME = "CURRENT_USER_FIRST_NAME";
+        public static final String LAST_NAME = "CURRENT_USER_LAST_NAME";
+        public static final String FULL_NAME = "CURRENT_USER_FULL_NAME";
+        public static final String ID = "CURRENT_USER_ID";
+        public static final String EMAIL = "CURRENT_USER_EMAIL";
+        public static final String LOGIN = "CURRENT_USER_LOGIN";
+        public static final String TITLE = "CURRENT_USER_TITLE";
+        public static final String TARGET_TITLE = "CURRENT_USER_TARGET_TITLE";
+    }
 
     public final class User {
         public static final String FIRST_NAME = "FIRST_NAME";
@@ -61,6 +72,9 @@ public final class EmailConstants {
         public static final String SELF_FEEDBACK_SUBMITTED = "selfFeedbackSubmitted";
         public static final String REVIEWER_FEEDBACK_SUBMITTED = "reviewerFeedbackSubmitted";
         public static final String REVIEWE_STATUS_CHANGED = "reviewStatusChanged";
+        public static final String NOTIFICATION_REVIEW_START = "notificationReviewStart";
+        public static final String NOTIFICATION_REVIEW_COMPLETION = "notificationReviewCompletion";
+        public static final String NOTIFICATION_REVIEW_LATE = "notificationReviewLate";
     }
 
     public final class Subjects {
@@ -75,7 +89,9 @@ public final class EmailConstants {
         public static final String SELF_FEEDBACK_SUBMITTED = "mail.selfFeedback.submitted.subject";
         public static final String REVIEWER_FEEDBACK_SUBMITTED = "mail.reviewerFeedback.submitted.subject";
         public static final String REVIEWE_STATUS_CHANGED = "mail.annualReview.statusChanged.subject";
-
+        public static final String NOTIFICATION_REVIEW_START = "mail.notification.annualReview.start";
+        public static final String NOTIFICATION_REVIEW_COMPLETION = "mail.notification.annualReview.completion";
+        public static final String NOTIFICATION_REVIEW_LATE = "mail.notification.annualReview.late";    
     }
 
 }
