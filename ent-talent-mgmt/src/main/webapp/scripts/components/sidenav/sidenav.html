@@ -41,7 +41,7 @@
             <span translate="global.menu.skillsSearch">Skills Search</span>
           </md-button>
         </md-list-item>
-        <md-list-item ng-show="{{ENV === 'dev' || ENV === 'tst'}}">
+        <md-list-item ng-show="isDev || isTest">
           <md-button class="md-primary" ui-sref="mail">
             <i class="fa fa-envelope"></i>&#xA0;
             <span translate="global.menu.admin.mail">Mail</span>
