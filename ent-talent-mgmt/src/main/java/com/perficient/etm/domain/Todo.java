@@ -100,7 +100,7 @@ public class Todo implements Serializable {
         todo.setName(task.getName());
         todo.setId(task.getId());
         todo.setUserId(user.getId());
-        todo.setReview(review.toPublicReview());
+        todo.setReview(review.toPublicReview(user));
         todo.setCreateDate(LocalDate.fromDateFields(task.getCreateTime()));
         /*Optional.ofNullable(task.getProcessVariables()).ifPresent(vars -> {
             todo.setReviewId((Long) vars.get(ProcessConstants.REVIEW_VARIABLE));

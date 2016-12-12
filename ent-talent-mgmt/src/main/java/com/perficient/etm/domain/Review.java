@@ -1,9 +1,11 @@
 package com.perficient.etm.domain;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -299,12 +301,13 @@ public class Review implements Serializable {
                 ", reviewer='" + (reviewer != null ? reviewer.getLogin() : null) + "'" +
                 '}';
     }
-    
+
     /**
      * @param review
      * @return review with only public fields (id, client endDate, processID, reviewee, reviewer, reviewStats, reviewType, startDate, title)
+     * enhanced to add peers if requestor is a peer.
      */
-    public Review toPublicReview() {
+    public Review toPublicReview(User requesterUser) {
         Review pubReview = new Review();
         pubReview.setId(id);
         pubReview.setClient(client);
@@ -316,10 +319,15 @@ public class Review implements Serializable {
         pubReview.setReviewType(reviewType);
         pubReview.setStartDate(startDate);
         pubReview.setTitle(title);
+        if(this.isPeer(requesterUser)){
+            Set<User> newPeers= new HashSet<User>();
+            newPeers.add(requesterUser);
+            pubReview.setPeers(newPeers);
+        }
         return pubReview;
     }
-    
-    
+
+
     /**
      * checks if user is a reviewer on the review
      * @param userId
@@ -332,7 +340,7 @@ public class Review implements Serializable {
                 return reviewerId == userId;
             }).orElse(false);
     }
-    
+
     public boolean isReviewer(UserDetails principal){
         return Optional.ofNullable(reviewer)
                 .map(User::getLogin)
@@ -340,7 +348,7 @@ public class Review implements Serializable {
                     return reviewerLogin.equals(principal.getUsername());
                 }).orElse(false);
     }
-    
+
     public boolean isReviewee(UserDetails principal){
         return Optional.ofNullable(reviewee)
                 .map(User::getLogin)
@@ -348,5 +356,17 @@ public class Review implements Serializable {
                     return revieweeLogin.equals(principal.getUsername());
                 }).orElse(false);
     }
-    
+
+    // if user is a peer on this review.
+    public boolean isPeer(User user){
+        if(user == null || user.getLogin() == null){
+            return false;
+        }
+        return Optional.ofNullable(this.getPeers())
+            .map(Collection::stream)
+            .map(stream -> stream.map(User::getLogin))
+            .map(stream -> stream.anyMatch(login -> login.equals(user.getLogin())))
+            .orElse(false);
+    }
+
 }
