@@ -83,7 +83,7 @@ public class QuestionResource implements RestResource {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<List<Question>> getByFeedbackTypeAndReviewType(@PathVariable Long reviewTypeId,@PathVariable Long feedbackTypeId) {
-        log.debug("REST request to get Questions by Feedback Type: {} and Review Type:", reviewTypeId, reviewTypeId);
+        log.debug("REST request to get Questions by Feedback Type: {} and Review Type: {}", feedbackTypeId, reviewTypeId);
         return Optional.ofNullable(questionRepository.findAllByReviewTypeId(reviewTypeId))
             .map(questions -> new ResponseEntity<>(
                 questions,

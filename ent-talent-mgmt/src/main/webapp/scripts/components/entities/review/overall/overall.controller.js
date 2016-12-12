@@ -21,6 +21,22 @@ angular.module('etmApp').controller('OverallController', function ($scope, Princ
       }
     });
   });
+  
+  $scope.getAllAvgScore = function(categories, userType) {
+    if (Object.keys(categories).length !== 0) {
+      var questions = [],
+        questionList = [];
+      for (var category in categories) {
+        questionList = categories[category];
+        questionList.forEach(function(question) {
+          questions.push(question);
+        });
+      }
+      return $scope.getAvgScore($scope.getRatings(questions, userType));
+    } else {
+      return "N/A";
+    }
+  };
 
   $scope.showRevieweeRating = function () {
     return Evaluation.showRevieweeRating(review, user);
