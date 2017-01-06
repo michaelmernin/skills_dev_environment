@@ -44,7 +44,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
 
   function setRatings(userFeedback, user) {
     var type = userFeedback.feedbackType.id;
-    var canEdit = userFeedback.author.id === user.id;
+    var canEdit = userFeedback.author.id === user.id && userFeedback.feedbackStatus.id === 2;
 
     angular.forEach(userFeedback.ratings, function (rating) {
       rating.feedback = userFeedback;
