@@ -30,22 +30,22 @@
     <div layout-gt-xs="row" class="md-body-2">
       <div layout="row" flex-gt-xs>
         <span flex>
-          <i class="fa fa-comment-o"></i>
-          Self: {{ showRevieweeRating() ? getAvgScore(getRatings(questions, 'reviewee')) : 0 }}
+          <i class="fa fa-comment-o"></i>{{s}}
+          Self: {{ showRevieweeRating() ? getAllAvgScore(getAllRatings(categories, 'reviewee')) : 0 }}
         </span>
         <span flex>
           <i class="fa fa-comment"></i>
-          Reviewer: {{ showReviewerRating() ? getAvgScore(getRatings(questions, 'reviewer')) : 0 }}
+          Reviewer: {{ showReviewerRating() ? getAllAvgScore(getRatings(questions, 'reviewer')) : 0 }}
         </span>
       </div>
       <div layout="row" flex-gt-xs>
         <span flex>
           <i class="fa fa-comments-o"></i>
-          Peers: {{ showPeerRatings() ? getAvgScore(getRatings(questions, 'peer')) : 0 }}
+          Peers: {{ showPeerRatings() ? getAllAvgScore(getRatings(questions, 'peer')) : 0 }}
         </span>
         <span flex>
           <i class="fa fa-comments"></i>
-          All: {{ showAllRating() ? getAvgScore(getRatings(questions)) : 0 }}
+          All: {{ showAllRating() ? getAllAvgScore(getRatings(questions)) : 0 }}
         </span>
       </div>
     </div>
