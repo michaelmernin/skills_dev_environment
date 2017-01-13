@@ -2,6 +2,9 @@ package com.perficient.etm.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -16,6 +19,7 @@ import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
+import com.perficient.etm.repository.FeedbackRepository;
 import com.perficient.etm.repository.ReviewAuditRepository;
 import com.perficient.etm.repository.ReviewRepository;
 import com.perficient.etm.repository.UserRepository;
@@ -60,6 +64,9 @@ public class ReviewService extends AbstractBaseService {
     
     @Inject
     private FeedbackService feedbackService;
+    
+    @Inject
+    private FeedbackRepository feedbackRepository;
 
     public ReviewService() {
         super();
@@ -102,6 +109,23 @@ public class ReviewService extends AbstractBaseService {
                 r.setReviewStatus(status);
                 return reviewRepository.save(r);
             }).orElse(null);
+    }
+    
+    public Review setReviewAndFeedbackStatusById(Long id, ReviewStatus status) {
+        Review review = Optional.ofNullable(reviewRepository.getOne(id))
+            .map(r -> {
+                r.setReviewStatus(status);
+                return reviewRepository.save(r);
+            }).orElse(null);
+        Optional.ofNullable(feedbackService.getAllFeedbackByReviewId(id))
+            .map(List::stream)
+            .orElseGet(Stream::empty)
+            .map(feedback -> {
+                feedback.setFeedbackStatus(feedbackService.initialFeedbackStatus(feedback.getFeedbackType()));
+                return feedbackRepository.save(feedback);  
+            })
+            .collect(Collectors.toList());
+        return review;
     }
 
     private Pair<Long, Long> createFeedback(final Review review) {

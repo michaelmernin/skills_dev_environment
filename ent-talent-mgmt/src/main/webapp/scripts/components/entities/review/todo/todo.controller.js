@@ -64,7 +64,7 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
     $.each(categories, function(key, category) {
       hasEmpty = false;
       $.each(category, function(key, question) {
-        if (question.editableRating.score === null || question.editableRating.score === undefined) {
+        if (question.editableRating !== undefined && (question.editableRating.score === null || question.editableRating.score === undefined)) {
           hasEmpty = true;
           stopSubmit = true;
           $.each($("div[ui-view='evaluation'] md-list-item[role='listitem'][ng-repeat]"), function(key, value) {

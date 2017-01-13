@@ -84,8 +84,17 @@ public class FeedbackService extends AbstractBaseService {
                 return feedbackRepository.save(f);
             }).orElse(null);
     }
+    
+    public Feedback setStatusByFeedback(Feedback feedback, FeedbackStatus status) {
+        feedback.setFeedbackStatus(status);
+        return feedbackRepository.save(feedback);
+    }
+    
+    public List<Feedback> getAllFeedbackByReviewId(Long id) {
+        return feedbackRepository.findAllByReviewId(id);
+    }
 
-    private FeedbackStatus initialFeedbackStatus(FeedbackType type) {
+    public FeedbackStatus initialFeedbackStatus(FeedbackType type) {
         switch (type) {
         case PEER:
             return FeedbackStatus.NOT_SENT;
