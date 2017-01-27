@@ -71,19 +71,18 @@ describe('Enterprise Talent Management', function () {
     
     it('should allow users to submit goal details', function () {
       goalTabPage.addGoal('Learn Protractor', 'I want to learn protractor framework to learn automation testing.', '2014-11-12', 'Learning it while writing test cases for ETM Project');
-      goalTabPage.deleteGoal(2);
+      goalTabPage.deleteGoal(1);
       goalTabPage.addGoal('Automation testing Goal', 'This is for description of the goal', '2015-10-15', 'Status is not a required field');
     });
   
     it('should mark a completed goal differently', function(){
-      goalTabPage.markGoalComplete('2', '2016-05-12');
+      goalTabPage.markGoalComplete('1', '2016-05-12');
       var completionCircle = element(by.css('md-tab-content:nth-child(3)')).element(by.tagName('md-list')).element(by.tagName('md-list-item')).element(by.tagName('md-icon'));
-    
       expect(completionCircle.getAttribute('class')).toContain('fa-circle-o');
     });
     
     it('should allow users to delete goal', function () {
-      goalTabPage.deleteGoal(2);
+      goalTabPage.deleteGoal(0);
     });
     
     it('- completing the test suite', function(){

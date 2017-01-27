@@ -43,12 +43,12 @@ describe('Enterprise Talent Management', function () {
     
     it('shoud give valid response if search term match available peer', function(){
     	var availablePeers = peerReviewPage.getPeerOptions('dev');
-      expect(availablePeers.count()).toBe(5);
-      expect(availablePeers.get(0).getText()).toBe('Dev UserOne');
-      expect(availablePeers.get(1).getText()).toBe('Dev UserTwo');
-      expect(availablePeers.get(2).getText()).toBe('Dev UserSeven');
-      expect(availablePeers.get(3).getText()).toBe('Dev UserEight');
-      expect(availablePeers.get(4).getText()).toBe('Dev UserNine');
+    	
+      expect(availablePeers.count()).toBe(4);
+      expect(availablePeers.get(0).getText()).toBe('Dev UserTwo');
+      expect(availablePeers.get(1).getText()).toBe('Dev UserSeven');
+      expect(availablePeers.get(2).getText()).toBe('Dev UserEight');
+      expect(availablePeers.get(3).getText()).toBe('Dev UserNine');
       
     });
     
@@ -58,7 +58,7 @@ describe('Enterprise Talent Management', function () {
       peerReviewPage.selectPeer('Dev UserSeven');
      
       var selectedPeer = peerReviewPage.getSelectedPeer(0);
-      expect(selectedPeer.element(by.css('.peer-name')).getText()).toBe('Dev UserSeven');
+      expect(selectedPeer.element(by.css('.peer-name')).getText()).toBe('Dev UserOne');
       
     });
     
