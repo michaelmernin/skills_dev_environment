@@ -26,7 +26,7 @@ task gruntBuild(type: Exec) {
    commandLine gruntCommand, '--force', 'buildTest'
 }
 task gruntTest(type: Exec) {
-   commandLine gruntCommand, 'test'
+   commandLine gruntCommand, 'test -v'
 }
 gruntBuild.dependsOn 'npmInstall'
 gruntBuild.dependsOn 'bower'
