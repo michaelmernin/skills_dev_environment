@@ -35,9 +35,9 @@
               <i class="fa fa-comments-o"></i>
               Average Peer Rating: {{ getAvgScore(question.ratings.peer) }}
             </span>
-            <span class="score" ng-if="(question.editableRating.score !== null && question.editableRating.score !== undefined) && showPeerRating(question.editableRating)">
+            <span class="score" ng-if="(question.ratings.peer[0] !== null && question.ratings.peer[0] !== undefined) && showPeerRating(question.ratings.peer[0])">
               <i class="fa fa-comments-o"></i>
-              Peer Rating: {{ getScore(question.editableRating) }}
+              Peer Rating: {{ getScore(question.ratings.peer[0]) }}
             </span>
           </p>
         </div>
