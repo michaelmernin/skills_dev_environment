@@ -13,7 +13,6 @@
           <users>
             <user>Simon.Montague</user>
             <user>ahmed.musallam</user>
-            <user>alex.blanco</user>
             <user>craig.smith</user>
             <user>david.brooks</user>
             <user>elizabeth.henrich</user>
@@ -62,6 +61,10 @@
           <job name="npm">
             <tasks>
               <exec command="npm" workingdir="ent-talent-mgmt">
+                <arg>install</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bower" workingdir="ent-talent-mgmt">
                 <arg>install</arg>
                 <runif status="passed" />
               </exec>
@@ -281,4 +284,3 @@
     <agent hostname="STLERAppDEV.perficient.com" ipaddress="10.128.6.95" uuid="910bf32a-b774-482e-9f5f-3d74463c81be" />
   </agents>
 </cruise>
-
