@@ -3,7 +3,7 @@
 angular.module('etmApp').config(function ($stateProvider) {
   $stateProvider.state('skillsSearch', {
     parent: 'entity',
-    url: '/skillsSearch',
+    url: '',
     data: {
       roles: ['ROLE_GENERAL_MANAGER'],
       pageTitle: 'global.menu.skillsSearch'

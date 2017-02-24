@@ -50,6 +50,22 @@ public class ReviewTypeResource implements RestResource {
         log.debug("REST request to get all ReviewTypes");
         return reviewTypeRepository.findAll();
     }
+    
+    /**
+     * GET  /reviewTypes -> get all the reviewTypes except annual review.
+     */
+    @RequestMapping(value = "/reviewTypes/allExceptAR",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<ReviewType> getAllExceptAR() {
+        log.debug("REST request to get all ReviewTypes");
+        ReviewType type = new ReviewType();
+        type.setId((long)1);
+        List<ReviewType> list = reviewTypeRepository.findAll();
+        list.remove(type);
+        return list;
+    }
 
     /**
      * GET  /reviewTypes/:id -> get the "id" reviewType.

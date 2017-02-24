@@ -15,7 +15,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   });
 
   $scope.load = function () {
-    ReviewType.query(function (result) {
+    ReviewType.getAllExceptAR(function (result) {
       $scope.reviewTypes = result;
     });
   };

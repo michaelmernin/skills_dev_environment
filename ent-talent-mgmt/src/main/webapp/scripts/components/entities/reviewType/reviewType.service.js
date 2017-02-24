@@ -10,6 +10,11 @@ angular.module('etmApp')
                     data = angular.fromJson(data);
                     return data;
                 }
+            },
+            'getAllExceptAR': {
+                url: 'api/reviewTypes/allExceptAR',
+                method: 'GET', 
+                isArray: true
             }
         });
     });
