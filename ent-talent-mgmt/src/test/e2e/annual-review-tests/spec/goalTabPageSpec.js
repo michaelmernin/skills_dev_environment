@@ -61,7 +61,6 @@ describe('Enterprise Talent Management', function () {
     
     it(' - Goal Form should allow user to mark a goal complete', function(){
         goalTabPage.ui.addGoalBtn.click();
-        expect(goalTabPage.ui.completionDateInput.getAttribute('disabled')).toContain('true');
         goalTabPage.ui.completeInputButton.click();
         expect(goalTabPage.ui.completeInputButton.getAttribute('class')).toContain('md-checked');
         goalTabPage.completionDateInput = '2016-05-12';
