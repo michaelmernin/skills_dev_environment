@@ -281,9 +281,9 @@ public class MailService {
 	 * Reminder for completing the Review before the end date
 	 * @param userId
 	 */
-	public void sendNotificationEmailForReviewCompletion(Long userId){
+	public void sendNotificationEmailForReviewCompletion(Long userId, User reviewee){
         log.debug("Sending notification email for Review Completion");
-        sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_REVIEW_COMPLETION, EmailConstants.Templates.NOTIFICATION_REVIEW_COMPLETION,null);
+        sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_REVIEW_COMPLETION, EmailConstants.Templates.NOTIFICATION_REVIEW_COMPLETION,getMapWithUser(reviewee));
     }
 	
 	
@@ -291,9 +291,9 @@ public class MailService {
      * Reminder for review Late
      * @param userId
      */
-    public void sendNotificationEmailForReviewLate(Long userId){
+    public void sendNotificationEmailForReviewLate(Long userId, User reviewee){
         log.debug("Sending notification email for Review Late");
-        sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_REVIEW_LATE, EmailConstants.Templates.NOTIFICATION_REVIEW_LATE,null);
+        sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_REVIEW_LATE, EmailConstants.Templates.NOTIFICATION_REVIEW_LATE,getMapWithUser(reviewee));
     }
     
 	
