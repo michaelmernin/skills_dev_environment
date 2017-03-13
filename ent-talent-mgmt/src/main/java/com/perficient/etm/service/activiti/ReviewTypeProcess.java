@@ -4,7 +4,7 @@ import com.perficient.etm.domain.ReviewType;
 
 public enum ReviewTypeProcess {
 
-    ANNUAL("annualReview"), PEER("peerReview");
+    ANNUAL("annualReview"), PEER("peerReview"), ENGAGEMENT("engagementReview");
 
     private final String processId;
 
@@ -22,6 +22,8 @@ public enum ReviewTypeProcess {
         switch (type.getName()) {
         case "Annual Review":
             return ANNUAL;
+        case "Engagement Review":
+            return ENGAGEMENT;
         default:
             return null;
         }

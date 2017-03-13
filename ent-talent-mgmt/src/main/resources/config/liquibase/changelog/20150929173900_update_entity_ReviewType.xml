@@ -13,7 +13,5 @@
           <constraints nullable="false"/>
         </column>
       </addColumn>
-
-      <dropDefaultValue tableName="T_REVIEWTYPE" columnName="interval"/>
     </changeSet>
 </databaseChangeLog>

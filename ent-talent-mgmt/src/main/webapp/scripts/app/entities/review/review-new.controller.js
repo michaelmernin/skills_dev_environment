@@ -15,7 +15,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   });
 
   $scope.load = function () {
-    ReviewType.getAllExceptAR(function (result) {
+    ReviewType.query(function (result) {
       $scope.reviewTypes = result;
     });
   };
@@ -27,38 +27,43 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
 
   $scope.save = function (ev) {
     if ($scope.reviewForm.$valid) {
-      Review.getReviewsByTypeAndReviewee({revieweeId: $scope.review.reviewee.id, reviewTypeId: 1}, function(annualReviewList) {
-        var date = new Date(),
-          startEndDate = new Date($scope.review.reviewee.startDate),
-          latestReviewList = $scope.getLatestReviews(annualReviewList, date);
-        if (latestReviewList.length === 0) {
-          $scope.review.startDate = new Date(startEndDate.setFullYear(date.getFullYear()));
-          $scope.review.endDate = new Date(startEndDate.setFullYear(date.getFullYear() + 1));
-          translateKeys = translateKeys.map(function (key) {return 'review.new.save.thisYear.' + key;});
-          key = "thisYear";
-          $scope.displayConfirmDialog(translateKeys, key, ev);
-        } else if (latestReviewList.length === 1) {
-          $scope.review.startDate = new Date(startEndDate.setFullYear(date.getFullYear() + 1));
-          $scope.review.endDate = new Date(startEndDate.setFullYear(date.getFullYear() + 2));
-          translateKeys = translateKeys.map(function (key) {return 'review.new.save.nextYear.' + key;});
-          key = "nextYear";
-          $scope.displayConfirmDialog(translateKeys, key, ev);
-        } else {
-          var dialog = $mdDialog.confirm()
-              .title('Cannot create annual review')
-              .ariaLabel('aria label')
-              .content('You already have an annual review created for this year and next year')
-              .ok('Okay');
-          $mdDialog.show(dialog);
-        }
-      });
+      if ($scope.review.reviewType.id == 1) {
+        Review.getReviewsByTypeAndReviewee({revieweeId: $scope.review.reviewee.id, reviewTypeId: 1}, function(annualReviewList) {
+          var date = new Date(),
+            startEndDate = new Date($scope.review.reviewee.startDate),
+            latestReviewList = $scope.getLatestReviews(annualReviewList, date);
+          if (latestReviewList.length === 0) {
+            $scope.review.startDate = new Date(startEndDate.setFullYear(date.getFullYear()));
+            $scope.review.endDate = new Date(startEndDate.setFullYear(date.getFullYear() + 1));
+            translateKeys = translateKeys.map(function (key) {return 'review.new.save.thisYear.' + key;});
+            key = "thisYear";
+            $scope.displayConfirmDialog(translateKeys, key, ev);
+          } else if (latestReviewList.length === 1) {
+            $scope.review.startDate = new Date(startEndDate.setFullYear(date.getFullYear() + 1));
+            $scope.review.endDate = new Date(startEndDate.setFullYear(date.getFullYear() + 2));
+            translateKeys = translateKeys.map(function (key) {return 'review.new.save.nextYear.' + key;});
+            key = "nextYear";
+            $scope.displayConfirmDialog(translateKeys, key, ev);
+          } else {
+            var dialog = $mdDialog.confirm()
+                .title('Cannot create annual review')
+                .ariaLabel('aria label')
+                .content('You already have an annual review created for this year and next year')
+                .ok('Okay');
+            $mdDialog.show(dialog);
+          }
+        });
+      } else {
+        translateKeys = translateKeys.map(function (key) {return 'review.new.save.engagement.' + key;});
+        $scope.displayConfirmDialog(translateKeys, "engagement", ev);
+      }
     }
   };
 
   $scope.minEndDate = function () {
     if ($scope.reviewForm.startDate.$valid) {
       var minDate = new Date($scope.review.startDate);
-      minDate.setMonth(minDate.getMonth() + 12);
+      minDate.setDate(minDate.getDate() + 1);
       return minDate;
     }
     return '';

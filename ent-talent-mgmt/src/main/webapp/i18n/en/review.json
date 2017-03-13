@@ -44,6 +44,13 @@
           "content": "Once you have initiated a review, it cannot be deleted. Are you sure you want to continue?",
           "ok": "Accept and Create Review",
           "cancel": "Cancel"
+        },
+        "engagement": {
+          "title": "Create engagement review?",
+          "label": "Save Review Confirm",
+          "content": "Once you have initiated a review, it cannot be deleted. Are you sure you want to continue?",
+          "ok": "Accept and Create Review",
+          "cancel": "Cancel"
         }
       }
     },

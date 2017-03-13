@@ -158,6 +158,7 @@ public class ReviewService extends AbstractBaseService {
             review.setReviewee(u);
             switch(review.getReviewType().getInterval()) {
             case ANNUAL:
+            case ENGAGEMENT:
                 review.setReviewer(u.getCounselor());
                 break;
             default:

@@ -23,27 +23,29 @@ public class ReviewValidator extends DomainValidator<Review> {
 
     @Override
     public void validateDomain(Review review, Errors errors) {
-        boolean isAnnual = !review.getReviewType().getProcessName().equals("annualReview");
-        validateRequiredFields(review, errors, isAnnual);
+        boolean isAnnual = review.getReviewType().getProcessName().equals("annualReview");
+        validateRequiredFields(review, errors);
 
-        if (!errors.hasFieldErrors() && isAnnual) {
-            validateEndDate(review, errors);
+        if (!errors.hasFieldErrors()) {
+            validateEndDate(review, errors, isAnnual);
         }
     }
 
-    private void validateEndDate(Review review, Errors errors) {
-        if (review.getStartDate().plusYears(1).isAfter(review.getEndDate())) {
-            errors.rejectValue("endDate", "min");
+    private void validateEndDate(Review review, Errors errors, Boolean isAnnual) {
+        if (isAnnual && review.getStartDate().plusYears(1).isAfter(review.getEndDate())) {
+            errors.rejectValue("endDate", "min.review.endDate.year");
+        }
+        
+        if (!isAnnual && review.getStartDate().plusDays(1).isAfter(review.getEndDate())) {
+            errors.rejectValue("endDate", "min.review.endDate");
         }
     }
 
-    private void validateRequiredFields(Review review, Errors errors, boolean isAnnual) {
+    private void validateRequiredFields(Review review, Errors errors) {
         ValidationUtils.rejectIfEmpty(errors, "reviewType", "required");
         ValidationUtils.rejectIfEmpty(errors, "reviewee", "required");
-        if (isAnnual) {
-            ValidationUtils.rejectIfEmpty(errors, "startDate", "required");
-            ValidationUtils.rejectIfEmpty(errors, "endDate", "required");
-        }
+        ValidationUtils.rejectIfEmpty(errors, "startDate", "required");
+        ValidationUtils.rejectIfEmpty(errors, "endDate", "required");
     }
 
 }

@@ -21,13 +21,13 @@
     <include file="classpath:config/liquibase/changelog/20150626010500_update_entity_User.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150626104100_update_entity_Authority.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150626144500_update_entity_Question.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20150929173900_update_entity_ReviewType.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20151007190300_update_entity_ReviewType.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/seed/20150626144700_initial_seed_data.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/seed/dev/20150815130800_dev_seed_data.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150819133000_update_entity_User.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150819135800_update_entity_User.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/seed/dev/20150910135200_dev_seed_data.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20150929173900_update_entity_ReviewType.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151007190300_update_entity_ReviewType.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/seed/dev/20151009173300_dev_seed_data.xml" relativeToChangelogFile="false"/>    
     <include file="classpath:config/liquibase/changelog/20151021181700_update_entity_Goal.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/seed/dev/20151104175500_dev_seed_data.xml" relativeToChangelogFile="false"/>

@@ -12,7 +12,7 @@ angular.module('etmApp')
                 }
             },
             'getAllExceptAR': {
-                url: 'api/reviewTypes/allExceptAR',
+                url: 'api/reviewTypes',
                 method: 'GET', 
                 isArray: true
             }

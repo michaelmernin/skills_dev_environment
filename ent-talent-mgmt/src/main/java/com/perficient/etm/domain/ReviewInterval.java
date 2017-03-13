@@ -3,7 +3,8 @@ package com.perficient.etm.domain;
 public enum ReviewInterval {
     ANNUAL(12),
     PROJECT(6),
-    INAUGURAL;
+    INAUGURAL,
+    ENGAGEMENT;
 
     private Integer months;
 
