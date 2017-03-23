@@ -1,21 +1,25 @@
 package com.perficient.etm.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.perficient.etm.domain.Project;
-
-import com.perficient.etm.repository.ProjectRepository;
-import com.perficient.etm.web.rest.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
+
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.codahale.metrics.annotation.Timed;
+import com.perficient.etm.domain.Project;
+import com.perficient.etm.repository.ProjectRepository;
 
 /**
  * REST controller for managing Project.
@@ -27,43 +31,40 @@ public class ProjectResource {
     private final Logger log = LoggerFactory.getLogger(ProjectResource.class);
 
     private static final String ENTITY_NAME = "project";
-        
-    private final ProjectRepository projectRepository;
 
-    public ProjectResource(ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
-    }
+    @Autowired
+    private ProjectRepository projectRepository;
 
     /**
-     * POST  /projects : Create a new project.
+     * POST /projects : Create a new project.
      *
-     * @param project the project to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new project, or with status 400 (Bad Request) if the project has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param project
+     *            the project to create
+     * @return the ResponseEntity with status 201 (Created) and with body the
+     *         new project, or with status 400 (Bad Request) if the project has
+     *         already an ID
+     * @throws URISyntaxException
+     *             if the Location URI syntax is incorrect
      */
-    @PostMapping("/projects")
+    @RequestMapping(value = "/projects", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<Project> createProject(@Valid @RequestBody Project project) throws URISyntaxException {
-        log.debug("REST request to save Project : {}", project);
-        if (project.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new project cannot already have an ID")).body(null);
-        }
-        Project result = projectRepository.save(project);
-        return ResponseEntity.created(new URI("/api/projects/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        return new ResponseEntity(projectRepository.findOne(project.getId()), HttpStatus.ACCEPTED);
     }
 
     /**
-     * PUT  /projects : Updates an existing project.
+     * PUT /projects : Updates an existing project.
      *
-     * @param project the project to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated project,
-     * or with status 400 (Bad Request) if the project is not valid,
-     * or with status 500 (Internal Server Error) if the project couldnt be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @param project
+     *            the project to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated
+     *         project, or with status 400 (Bad Request) if the project is not
+     *         valid, or with status 500 (Internal Server Error) if the project
+     *         couldnt be updated
+     * @throws URISyntaxException
+     *             if the Location URI syntax is incorrect
      */
-    @PutMapping("/projects")
+    @RequestMapping(value = "/projects", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<Project> updateProject(@Valid @RequestBody Project project) throws URISyntaxException {
         log.debug("REST request to update Project : {}", project);
@@ -71,17 +72,16 @@ public class ProjectResource {
             return createProject(project);
         }
         Project result = projectRepository.save(project);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, project.getId().toString()))
-            .body(result);
+        return ResponseEntity.ok().body(result);
     }
 
     /**
-     * GET  /projects : get all the projects.
+     * GET /projects : get all the projects.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of projects in body
+     * @return the ResponseEntity with status 200 (OK) and the list of projects
+     *         in body
      */
-    @GetMapping("/projects")
+    @RequestMapping(value = "/projects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public List<Project> getAllProjects() {
         log.debug("REST request to get all Projects");
@@ -90,31 +90,34 @@ public class ProjectResource {
     }
 
     /**
-     * GET  /projects/:id : get the "id" project.
+     * GET /projects/:id : get the "id" project.
      *
-     * @param id the id of the project to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the project, or with status 404 (Not Found)
+     * @param id
+     *            the id of the project to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the
+     *         project, or with status 404 (Not Found)
      */
-    @GetMapping("/projects/{id}")
+    @RequestMapping(value = "/projects/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<Project> getProject(@PathVariable Long id) {
         log.debug("REST request to get Project : {}", id);
         Project project = projectRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(project));
+        return new ResponseEntity<Project>(project, HttpStatus.OK);
     }
 
     /**
-     * DELETE  /projects/:id : delete the "id" project.
+     * DELETE /projects/:id : delete the "id" project.
      *
-     * @param id the id of the project to delete
+     * @param id
+     *            the id of the project to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/projects/{id}")
+    @RequestMapping(value = "/projects/{id}", method = RequestMethod.DELETE)
     @Timed
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         log.debug("REST request to delete Project : {}", id);
         projectRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.ok().build();
     }
 
 }

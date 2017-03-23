@@ -1,18 +1,27 @@
 package com.perficient.etm.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Project.
  */
 @Entity
-@Table(name = "project")
+@Table(name = "T_PROJECT")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Project implements Serializable {
 
@@ -36,8 +45,11 @@ public class Project implements Serializable {
     @Column(name = "client")
     private String client;
 
-    @ManyToOne
-    private User managedprojects;
+    @OneToOne
+    private User projectManager;
+
+    @ManyToMany
+    private Set<User> projectMember;
 
     public Long getId() {
         return id;
@@ -99,17 +111,34 @@ public class Project implements Serializable {
         this.client = client;
     }
 
-    public User getManagedprojects() {
-        return managedprojects;
+    /**
+     * @return the projectManager
+     */
+    public User getProjectManager() {
+        return projectManager;
     }
 
-    public Project managedprojects(User user) {
-        this.managedprojects = user;
-        return this;
+    /**
+     * @param projectManager
+     *            the projectManager to set
+     */
+    public void setProjectManager(User projectManager) {
+        this.projectManager = projectManager;
     }
 
-    public void setManagedprojects(User user) {
-        this.managedprojects = user;
+    /**
+     * @return the projectMembers
+     */
+    public Set<User> getProjectMembers() {
+        return projectMember;
+    }
+
+    /**
+     * @param projectMembers
+     *            the projectMembers to set
+     */
+    public void setProjectMembers(Set<User> projectMember) {
+        this.projectMember = projectMember;
     }
 
     @Override
@@ -134,12 +163,7 @@ public class Project implements Serializable {
 
     @Override
     public String toString() {
-        return "Project{" +
-            "id=" + id +
-            ", name='" + name + "'" +
-            ", manager='" + manager + "'" +
-            ", description='" + description + "'" +
-            ", client='" + client + "'" +
-            '}';
+        return "Project{" + "id=" + id + ", name='" + name + "'" + ", manager='" + manager + "'" + ", description='"
+                + description + "'" + ", client='" + client + "'" + '}';
     }
 }

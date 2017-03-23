@@ -9,10 +9,10 @@
     <changeSet id="20170313211409-2" author="jhipster">
         
         <addForeignKeyConstraint baseColumnNames="managedprojects_id"
-                                 baseTableName="project"
+                                 baseTableName="T_PROJECT"
                                  constraintName="fk_project_managedprojects_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="jhi_user"/>
+                                 referencedTableName="T_USER"/>
 
     </changeSet>
 </databaseChangeLog>
