@@ -10,7 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -36,6 +36,7 @@ public class Project implements Serializable {
     private String name;
 
     @NotNull
+    @ManyToOne
     @Column(name = "manager", nullable = false)
     private String manager;
 
@@ -45,11 +46,14 @@ public class Project implements Serializable {
     @Column(name = "client")
     private String client;
 
-    @OneToOne
-    private User projectManager;
+    @Column(name = "start_date")
+    private String startDate;
+
+    @Column(name = "end_date")
+    private String endDate;
 
     @ManyToMany
-    private Set<User> projectMember;
+    private Set<User> projectMembers;
 
     public Long getId() {
         return id;
@@ -112,33 +116,18 @@ public class Project implements Serializable {
     }
 
     /**
-     * @return the projectManager
-     */
-    public User getProjectManager() {
-        return projectManager;
-    }
-
-    /**
-     * @param projectManager
-     *            the projectManager to set
-     */
-    public void setProjectManager(User projectManager) {
-        this.projectManager = projectManager;
-    }
-
-    /**
      * @return the projectMembers
      */
     public Set<User> getProjectMembers() {
-        return projectMember;
+        return projectMembers;
     }
 
     /**
      * @param projectMembers
      *            the projectMembers to set
      */
-    public void setProjectMembers(Set<User> projectMember) {
-        this.projectMember = projectMember;
+    public void setProjectMembers(Set<User> projectMembers) {
+        this.projectMembers = projectMembers;
     }
 
     @Override

@@ -52,6 +52,11 @@
                   file="config/liquibase/seed/review_statuses.csv"
                   tableName="T_REVIEWSTATUS"
                   primaryKey="id"/>
+                  
+       <!--   <loadUpdateData encoding="UTF-8" separator=";"
+                  file="config/liquibase/seed/project.csv"
+                  tableName="T_PROJECT"
+                  primaryKey="id"/> -->
 
     </changeSet>
 </databaseChangeLog>
