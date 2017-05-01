@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,6 +24,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.domain.User;
@@ -54,7 +54,6 @@ public class ReviewResourceTest extends SpringAppTest {
             .plusYears(1);
     private static final String DEFAULT_CLIENT = "SAMPLE_TEXT";
     private static final String UPDATED_CLIENT = "UPDATED_TEXT";
-    private static final String DEFAULT_PROJECT = "SAMPLE_TEXT";
     private static final String UPDATED_PROJECT = "UPDATED_TEXT";
     private static final String DEFAULT_ROLE = "SAMPLE_TEXT";
     private static final String UPDATED_ROLE = "UPDATED_TEXT";
@@ -93,7 +92,6 @@ public class ReviewResourceTest extends SpringAppTest {
         review.setStartDate(DEFAULT_START_DATE);
         review.setEndDate(DEFAULT_END_DATE);
         review.setClient(DEFAULT_CLIENT);
-        review.setProject(DEFAULT_PROJECT);
         review.setRole(DEFAULT_ROLE);
         review.setResponsibilities(DEFAULT_RESPONSIBILITIES);
         review.setRating(DEFAULT_RATING);
@@ -130,7 +128,6 @@ public class ReviewResourceTest extends SpringAppTest {
         assertThat(testReview.getStartDate()).isEqualTo(DEFAULT_START_DATE);
         assertThat(testReview.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testReview.getClient()).isEqualTo(DEFAULT_CLIENT);
-        assertThat(testReview.getProject()).isEqualTo(DEFAULT_PROJECT);
         assertThat(testReview.getRole()).isEqualTo(DEFAULT_ROLE);
         assertThat(testReview.getResponsibilities())
                 .isEqualTo(DEFAULT_RESPONSIBILITIES);
@@ -182,8 +179,6 @@ public class ReviewResourceTest extends SpringAppTest {
                         .value(DEFAULT_END_DATE.toString()))
                 .andExpect(
                         jsonPath("$.client").value(DEFAULT_CLIENT.toString()))
-                .andExpect(
-                        jsonPath("$.project").value(DEFAULT_PROJECT.toString()))
                 .andExpect(jsonPath("$.role").value(DEFAULT_ROLE.toString()))
                 .andExpect(jsonPath("$.responsibilities")
                         .value(DEFAULT_RESPONSIBILITIES.toString()))

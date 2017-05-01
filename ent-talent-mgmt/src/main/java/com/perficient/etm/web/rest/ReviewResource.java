@@ -129,7 +129,6 @@ public class ReviewResource implements RestResource {
         List<Review> enagagements = new ArrayList<Review>();
         Review engagement = new Review();
         engagement.setRole("Technical Whosit");
-        engagement.setProject("A Tech Project");
         engagement.setClient("Some Client Name");
         engagement.setResponsibilities("Such and such responsibilities. This is usually pretty long. We have lots of responsibilitites.");
         engagement.setRating(3.25);
@@ -138,7 +137,6 @@ public class ReviewResource implements RestResource {
         enagagements.add(engagement);
         engagement = new Review();
         engagement.setRole("Business Whatsit");
-        engagement.setProject("A Business Project");
         engagement.setClient("Another Client Name");
         engagement.setResponsibilities("Such and such responsibilities. This is usually pretty long. We have lots of responsibilitites. With another sentence.");
         engagement.setRating(4.0);

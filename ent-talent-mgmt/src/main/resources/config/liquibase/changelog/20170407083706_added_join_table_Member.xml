@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <!--
+        Added the join table Member.
+        Will be used to link users to projects
+    -->
+    <changeSet id="20170407083706" author="michael">
+        <createTable tableName="T_MEMBER">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="user_id, project_id" tableName="T_MEMBER"/>
+        
+        <addForeignKeyConstraint baseColumnNames="project_id"
+                                 baseTableName="T_MEMBER"
+                                 constraintName="fk_member_review_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_PROJECT"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="T_MEMBER"
+                                 constraintName="fk_member_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_USER"/>
+
+    </changeSet>
+</databaseChangeLog>

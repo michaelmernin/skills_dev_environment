@@ -3,11 +3,11 @@ package com.perficient.etm.web.rest;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Project;
+import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.ProjectRepository;
+import com.perficient.etm.service.UserService;
 
 /**
  * REST controller for managing Project.
@@ -32,8 +34,11 @@ public class ProjectResource {
 
     private static final String ENTITY_NAME = "project";
 
-    @Autowired
+    @Inject
     private ProjectRepository projectRepository;
+    
+    @Inject
+    private UserService userService;
 
     /**
      * POST /projects : Create a new project.
@@ -90,7 +95,7 @@ public class ProjectResource {
     }
 
     /**
-     * GET /projects/:id : get the "id" project.
+     * GET /project/:id : get the "id" project.
      *
      * @param id
      *            the id of the project to retrieve
@@ -120,4 +125,16 @@ public class ProjectResource {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * GET  /projects -> get all the projects by user id.
+     */
+    @RequestMapping(value = "/projects/getAllByUserId",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<Project> getProjectsByUserId(Long id) {
+        log.debug("REST request to get projects by user");
+        User user = userService.getUser(id);
+        return projectRepository.findAllByUser(user);
+    }
 }

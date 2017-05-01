@@ -1,18 +1,11 @@
 'use strict';
 
-angular.module('etmApp').controller('ReviewNewController', function ($scope, $state, $mdDialog, $translate, Review, ReviewType, Principal, User) {
+angular.module('etmApp').controller('ReviewNewController', function ($scope, $state, $mdDialog, $translate, Review, ReviewType, Principal, User, Project) {
   $scope.review = new Review();
   $scope.reviewTypes = [];
   $scope.reviewees = [];
-
-  Principal.identity().then(function (account) {
-    $scope.reviewees.push(account);
-    if (Principal.isInRole('ROLE_COUNSELOR')) {
-      User.queryCounselees(function (result) {
-        Array.prototype.push.apply($scope.reviewees, result);
-      });
-    }
-  });
+  $scope.currentUser = User.profile();
+  $scope.projects = [];
 
   $scope.load = function () {
     ReviewType.query(function (result) {
@@ -69,11 +62,11 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
     return '';
   };
   
-  $scope.checkReviewType = function () {
-    if (this.review.reviewType.processName === 'annualReview') {
-      $('.date-div').hide();
+  $scope.toggleDates = function () {
+    if (!this.review.reviewType || this.review.reviewType.processName === 'annualReview') {
+      return true;
     } else {
-      $('.date-div').show();
+      return false;
     }
   }
   
@@ -103,5 +96,32 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
     }
     
     return list;
+  }
+  
+  $scope.populateShowReviewees = function () {
+    if (this.review.reviewType.processName === 'annualReview') {
+      Principal.identity().then(function (account) {
+        $scope.reviewees.push(account);
+        if (Principal.isInRole('ROLE_COUNSELOR')) {
+          User.queryCounselees(function (result) {
+            $scope.reviewees = [];
+            Array.prototype.push.apply($scope.reviewees, result);
+          });
+        }
+      });
+    } else if ($scope.projects.length > 0 && this.review.reviewType.processName === 'engagementReview'){
+      var project = $scope.review.project;
+      $scope.reviewees = [];
+      Array.prototype.push.apply($scope.reviewees, project.projectMembers);
+    }
+  }
+  
+  $scope.populateProjects= function () {
+    if (this.review.reviewType.processName === 'engagementReview') {
+      Project.queryProjects({id: $scope.currentUser.id}, function(projects) {
+        $scope.projects = []
+        Array.prototype.push.apply($scope.projects, projects);
+      })
+    }
   }
 });

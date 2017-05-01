@@ -2,7 +2,6 @@ package com.perficient.etm.service;
 
 import org.joda.time.LocalDate;
 import org.mockito.Mockito;
-import org.springframework.security.test.context.support.WithUserDetails;
 
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.Review;
@@ -27,7 +26,6 @@ public class ServicesTestUtils {
 
     private static final LocalDate DEFAULT_END_DATE = DEFAULT_START_DATE.plusYears(1);
     private static final String DEFAULT_CLIENT = "SAMPLE_TEXT";
-    private static final String DEFAULT_PROJECT = "SAMPLE_TEXT";
     private static final String DEFAULT_ROLE = "SAMPLE_TEXT";
     private static final String DEFAULT_RESPONSIBILITIES = "SAMPLE_TEXT";
 
@@ -139,7 +137,6 @@ public class ServicesTestUtils {
         review.setStartDate(DEFAULT_START_DATE);
         review.setEndDate(DEFAULT_END_DATE);
         review.setClient(DEFAULT_CLIENT);
-        review.setProject(DEFAULT_PROJECT);
         review.setRole(DEFAULT_ROLE);
         review.setResponsibilities(DEFAULT_RESPONSIBILITIES);
         review.setRating(DEFAULT_RATING);

@@ -6,9 +6,12 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -16,6 +19,16 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.perficient.etm.domain.util.CustomLocalDateSerializer;
+import com.perficient.etm.domain.util.ISO8601LocalDateDeserializer;
+import com.perficient.etm.domain.util.PublicSerializer;
+import com.perficient.etm.web.view.View;
 
 /**
  * A Project.
@@ -27,32 +40,50 @@ public class Project implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @JsonView(View.Identity.class)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @JsonView(View.Public.class)
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
-    @NotNull
+    @JsonSerialize(using = PublicSerializer.class)
     @ManyToOne
-    @Column(name = "manager", nullable = false)
-    private String manager;
+    @JsonView(View.Public.class)
+    private User manager;
 
+    @JsonView(View.Public.class)
     @Column(name = "description")
     private String description;
 
+    @JsonView(View.Public.class)
     @Column(name = "client")
     private String client;
 
-    @Column(name = "start_date")
-    private String startDate;
+    @JsonView(View.Public.class)
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    @JsonSerialize(using = CustomLocalDateSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateDeserializer.class)
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
 
-    @Column(name = "end_date")
-    private String endDate;
+    @JsonView(View.Public.class)
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    @JsonSerialize(using = CustomLocalDateSerializer.class)
+    @JsonDeserialize(using = ISO8601LocalDateDeserializer.class)
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
 
-    @ManyToMany
+    @JsonView(View.Public.class)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "T_MEMBER",
+            joinColumns = {@JoinColumn(name = "project_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<User> projectMembers;
 
     public Long getId() {
@@ -76,16 +107,16 @@ public class Project implements Serializable {
         this.name = name;
     }
 
-    public String getManager() {
+    public User getManager() {
         return manager;
     }
 
-    public Project manager(String manager) {
+    public Project manager(User manager) {
         this.manager = manager;
         return this;
     }
 
-    public void setManager(String manager) {
+    public void setManager(User manager) {
         this.manager = manager;
     }
 

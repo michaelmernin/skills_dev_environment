@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -75,10 +74,6 @@ public class Review implements Serializable {
     private String client;
 
     @JsonView(View.Public.class)
-    @Column(name = "project")
-    private String project;
-
-    @JsonView(View.Public.class)
     @Column(name = "role")
     private String role;
 
@@ -108,6 +103,11 @@ public class Review implements Serializable {
     @JsonSerialize(using = PublicSerializer.class)
     @ManyToOne
     private User reviewer;
+    
+    @JsonView(View.Public.class)
+    @JsonSerialize(using = PublicSerializer.class)
+    @ManyToOne
+    private Project project;
 
     @JsonView(View.Public.class)
     @ManyToMany(fetch = FetchType.EAGER)
@@ -195,11 +195,11 @@ public class Review implements Serializable {
         this.peers = peers;
     }
 
-    public String getProject() {
+    public Project getProject() {
         return project;
     }
 
-    public void setProject(String project) {
+    public void setProject(Project project) {
         this.project = project;
     }
 

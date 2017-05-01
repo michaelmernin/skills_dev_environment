@@ -7,12 +7,23 @@
         <div layout-gt-sm="row">
           <md-input-container class="md-block" flex-gt-sm>
             <label translate="review.reviewType">Review Type</label>
-            <md-select name="reviewType" ng-model="review.reviewType" ng-model-options="{trackBy: '$value.id'}" ng-change="checkReviewType()" required>
+            <md-select name="reviewType" ng-model="review.reviewType" ng-model-options="{trackBy: '$value.id'}" ng-change="toggleDates(); populateShowReviewees(); populateProjects()" required>
               <md-option ng-value="reviewType" ng-repeat="reviewType in reviewTypes">{{ reviewType.name }}</md-option>
             </md-select>
             <div ng-messages="reviewForm.reviewType.$error" ng-if="reviewForm.$submitted || reviewForm.reviewType.$dirty">
               <div ng-message="required">
                 <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.reviewType' | translate }}'}">Please select a value.</span>
+              </div>
+            </div>
+          </md-input-container>
+          <md-input-container class="md-block" flex-gt-sm ng-hide="toggleDates()">
+            <label translate="review.project">Project</label>
+            <md-select name="project" ng-model="review.project" ng-model-options="{trackBy: '$value.login'}" ng-change="populateShowReviewees()" ng-required="{{ review.reviewType.processName !== annualReview }}">
+              <md-option ng-value="project" ng-repeat="project in projects">{{ project.name }}</md-option>
+            </md-select>
+            <div ng-messages="reviewForm.project.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
+              <div ng-message="required">
+                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.project' | translate }}'}">Please select a value.</span>
               </div>
             </div>
           </md-input-container>
@@ -28,7 +39,7 @@
             </div>
           </md-input-container>
         </div>
-        <div class="date-div">
+        <div class="date-div" ng-hide="toggleDates()">
           <h3 translate="review.dates">Review Dates</h3>
           <div layout-gt-sm="row">
             <md-input-container class="md-block" flex-gt-sm>
