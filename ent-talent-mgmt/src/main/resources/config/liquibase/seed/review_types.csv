@@ -1,3 +1,2 @@
-id;version;name;description;active;interval;process_name
-1;1;Annual Review;NULL;true;ANNUAL;annualReview
-2;1;Engagement Review;NULL;true;ENGAGEMENT;engagementReview
+id;version;name;description;active
+1;1;Annual Review;NULL;true

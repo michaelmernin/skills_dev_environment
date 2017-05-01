@@ -21,8 +21,6 @@
     <include file="classpath:config/liquibase/changelog/20150626010500_update_entity_User.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150626104100_update_entity_Authority.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150626144500_update_entity_Question.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20150929173900_update_entity_ReviewType.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20151007190300_update_entity_ReviewType.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170313211409_added_entity_Project.xml"/>
     <include file="classpath:config/liquibase/changelog/20170407083706_added_join_table_Member.xml"/>
     <include file="classpath:config/liquibase/seed/20150626144700_initial_seed_data.xml" relativeToChangelogFile="false"/>
@@ -30,7 +28,9 @@
     <include file="classpath:config/liquibase/changelog/20150819133000_update_entity_User.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150819135800_update_entity_User.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/seed/dev/20150910135200_dev_seed_data.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/seed/dev/20151009173300_dev_seed_data.xml" relativeToChangelogFile="false"/>    
+    <include file="classpath:config/liquibase/changelog/20150929173900_update_entity_ReviewType.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20151007190300_update_entity_ReviewType.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/seed/dev/20151009173300_dev_seed_data.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20151021181700_update_entity_Goal.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/seed/dev/20151104175500_dev_seed_data.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20151120095000_update_entity_Feedback.xml" relativeToChangelogFile="false"/>
@@ -59,6 +59,7 @@
     <include file="classpath:config/liquibase/seed/dev/20160814204200_dev_seed_data_clear_questio_rating.xml"/>
     <include file="classpath:config/liquibase/seed/20160813194700_update_questions_seed_data.xml"/>
     <include file="classpath:config/liquibase/seed/dev/20160814204200_dev_seed_data_update_rating.xml"/>
+    <include file="classpath:config/liquibase/seed/20170425110500_update_review_typeseed_data.xml"/>
     <include file="classpath:config/liquibase/seed/20170414102500_project_seed_data.xml"/>
     <include file="classpath:config/liquibase/seed/dev/20170407085203_dev_seed_data.xml"/>
     <include file="classpath:config/liquibase/changelog/20170501155300_update_entity_Review.xml"/>

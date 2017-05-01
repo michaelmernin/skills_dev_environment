@@ -13,5 +13,8 @@
           <constraints nullable="false"/>
         </column>
       </addColumn>
+
+      <dropDefaultValue tableName="T_REVIEWTYPE" columnName="process_name"/>
+
     </changeSet>
 </databaseChangeLog>
