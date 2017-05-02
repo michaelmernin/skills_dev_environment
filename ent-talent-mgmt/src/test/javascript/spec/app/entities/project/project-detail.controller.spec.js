@@ -30,7 +30,7 @@ describe('Controller Tests', function() {
         }));
 
 
-        describe('Root Scope Listening', function() {
+        xdescribe('Root Scope Listening', function() {
             it('Unregisters root scope listener upon scope destruction', function() {
                 var eventType = 'etmApp:projectUpdate';
 
