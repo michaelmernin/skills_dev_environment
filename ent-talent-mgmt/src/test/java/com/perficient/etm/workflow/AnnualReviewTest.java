@@ -18,6 +18,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.ProcessInstanceHistoryLog;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -168,6 +169,7 @@ public class AnnualReviewTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     public void testReviewersReject() {
         Map<String,Object> variables = getProcessVariables();
         ProcessInstance processInstance = runtimeSvc.startProcessInstanceByKey("annualReview",variables);

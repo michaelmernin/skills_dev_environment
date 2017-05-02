@@ -107,7 +107,7 @@ public class RatingResourceTest extends SpringAppTest {
 
     @Test
     @Transactional
-    // @WithUserDetails("dev.user8")
+    @WithUserDetails("dev.user8")
     public void getAllRatings() throws Exception {
         // Initialize the database
         Feedback savedfeedback = feedbackRepository.save(feedback);
