@@ -9,10 +9,7 @@
     -->
     <changeSet id="20150929173900" author="donovan">
       <addColumn tableName="T_REVIEWTYPE">
-
-        <column name="interval" type="varchar(20)">
-          <constraints nullable="false"/>
-        </column>
+        <column name="interval" type="varchar(20)"></column>
       </addColumn>
     </changeSet>
 </databaseChangeLog>

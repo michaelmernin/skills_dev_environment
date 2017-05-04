@@ -63,5 +63,7 @@
     <include file="classpath:config/liquibase/seed/20170414102500_project_seed_data.xml"/>
     <include file="classpath:config/liquibase/seed/dev/20170407085203_dev_seed_data.xml"/>
     <include file="classpath:config/liquibase/changelog/20170501155300_update_entity_Review.xml"/>
+    <include file="classpath:config/liquibase/changelog/20170504170000_update_entity_ReviewType.xml"/>
+
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

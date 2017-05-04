@@ -9,9 +9,7 @@
     -->
     <changeSet id="20151007190300" author="craig">
       <addColumn tableName="T_REVIEWTYPE">
-        <column name="process_name" type="varchar(40)">
-          <constraints nullable="false"/>
-        </column>
+        <column name="process_name" type="varchar(40)"></column>
       </addColumn>
     </changeSet>
 </databaseChangeLog>
