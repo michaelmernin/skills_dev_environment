@@ -21,6 +21,7 @@ import org.activiti.engine.task.Task;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithUserDetails;
 
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewStatus;
@@ -169,7 +170,7 @@ public class AnnualReviewTest extends SpringAppTest {
     }
 
     @Test
-    @Ignore
+    @WithUserDetails("dev.user2")
     public void testReviewersReject() {
         Map<String,Object> variables = getProcessVariables();
         ProcessInstance processInstance = runtimeSvc.startProcessInstanceByKey("annualReview",variables);
