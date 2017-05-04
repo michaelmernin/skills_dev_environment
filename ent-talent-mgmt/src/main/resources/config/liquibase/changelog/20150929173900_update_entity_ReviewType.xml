@@ -9,10 +9,10 @@
     -->
     <changeSet id="20150929173900" author="donovan">
       <addColumn tableName="T_REVIEWTYPE">
-        <column name="interval" type="varchar(20)" defaultValue="ANNUAL">
+
+        <column name="interval" type="varchar(20)">
           <constraints nullable="false"/>
         </column>
       </addColumn>
-      <dropDefaultValue tableName="T_REVIEWTYPE" columnName="interval"/>
     </changeSet>
 </databaseChangeLog>

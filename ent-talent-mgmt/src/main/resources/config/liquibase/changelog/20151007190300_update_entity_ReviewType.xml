@@ -9,12 +9,9 @@
     -->
     <changeSet id="20151007190300" author="craig">
       <addColumn tableName="T_REVIEWTYPE">
-        <column name="process_name" type="varchar(40)" defaultValue="annualReview">
+        <column name="process_name" type="varchar(40)">
           <constraints nullable="false"/>
         </column>
       </addColumn>
-
-      <dropDefaultValue tableName="T_REVIEWTYPE" columnName="process_name"/>
-
     </changeSet>
 </databaseChangeLog>
