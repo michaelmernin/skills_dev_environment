@@ -5,7 +5,7 @@
 
   <!-- Update the project column to be a project id -->
   <changeSet id="20170501155300" author="michael">
-    <renameColumn tableName="T_REVIEW" oldColumnName="project" newColumnName="project_id"/>
+    <renameColumn tableName="T_REVIEW" columnDataType="varchar(255)" oldColumnName="project" newColumnName="project_id"/>
     <modifyDataType tableName="T_REVIEW" columnName="project_id" newDataType="bigint"/>
     
     <addForeignKeyConstraint baseColumnNames="project_id"
