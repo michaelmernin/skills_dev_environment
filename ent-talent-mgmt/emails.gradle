@@ -5,6 +5,7 @@ apply plugin: 'com.moowork.gulp'
 
 ext {
    npmCommand = Os.isFamily(Os.FAMILY_WINDOWS) ? 'npm.cmd' : 'npm'
+   yarnCommand = Os.isFamily(Os.FAMILY_WINDOWS) ? 'yarn.cmd' : 'yarn'
 }
 
 task emails(type: Exec){
@@ -12,7 +13,7 @@ task emails(type: Exec){
   workingDir '../tools/etm-email-templates'
   
   // do npm install
-  commandLine npmCommand, 'install'
+  commandLine yarnCommand, 'install'
 }
 
 task deployEmails(type: Exec){

@@ -60,7 +60,7 @@
         <jobs>
           <job name="npm">
             <tasks>
-              <exec command="npm" workingdir="ent-talent-mgmt">
+              <exec command="yarn" workingdir="ent-talent-mgmt">
                 <arg>install</arg>
                 <runif status="passed" />
               </exec>
@@ -284,3 +284,4 @@
     <agent hostname="STLERAppDEV.perficient.com" ipaddress="10.128.6.95" uuid="910bf32a-b774-482e-9f5f-3d74463c81be" />
   </agents>
 </cruise>
+

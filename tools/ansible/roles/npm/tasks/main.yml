@@ -20,6 +20,23 @@
     name: nodejs
     state: latest
 
+- name: Install yarn repo
+  tags: yarn
+  sudo: yes
+  get_url:
+    url: https://dl.yarnpkg.com/rpm/yarn.repo
+    dest: /etc/yum.repos.d/yarn.repo
+    owner: root
+    mode: 0644
+
+- name: Install yarn
+  tags: yarn
+  sudo: yes
+  yum:
+    name: yarn
+    state: latest
+    update_cache: yes
+
 - name: Clean up node setup
   tags: npm
   sudo: yes
