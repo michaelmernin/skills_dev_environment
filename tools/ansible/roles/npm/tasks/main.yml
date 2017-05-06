@@ -35,7 +35,6 @@
   yum:
     name: yarn
     state: latest
-    update_cache: yes
 
 - name: Clean up node setup
   tags: npm
