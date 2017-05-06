@@ -11,7 +11,7 @@
         Add engagement review type
     -->
     <changeSet id="20170425110500" author="ahmed">
-        <loadData encoding="UTF-8" separator=";"
+        <loadUpdateData encoding="UTF-8" separator=";"
                         file="config/liquibase/seed/review_types_engagement.csv"
                         tableName="T_REVIEWTYPE"
                         primaryKey="id"/>
