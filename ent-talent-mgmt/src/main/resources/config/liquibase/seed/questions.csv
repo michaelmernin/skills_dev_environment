@@ -1,39 +1,39 @@
-id;reviewtype_id;category_id;feedbacktype_id;position;title;text
-1;1;3;3;0;Productivity;Manages a fair workload, volunteers for additional work, prioritizes tasks, develops good work procedures, manages time well, handles information flow.
-2;1;3;3;1;Quality;Is attentive to detail and accuracy, is committed to excellence, looks for improvements continuously, monitors quality levels, finds root cause of quality problems, owns/acts on quality problems.
-3;1;3;3;2;Results;Completes the assigned engagement deliverables and activities as expected: on time, within budget, and high quality.
-4;1;3;3;3;Technical Skills;Possesses relevant skills for the engagement, demonstrates ability to apply knowledge in the specific situations.
-5;1;4;3;0;Adaptability;Adapts to change, is open to new ideas, takes on new responsibilities, handles pressure, adjusts plans to meet changing needs.
-6;1;4;3;1;Communication;Communicates well both verbally and in writing, creates accurate and punctual reports, delivers presentations, shares information and ideas with others, has good listening skills.
-7;1;4;3;2;Interpersonal Skills;Has good listening skills, builds strong relationships, is flexible/open-minded, negotiates effectively, solicits performance feedback and handles constructive criticism.
-8;1;4;3;3;Core Consuling Skills;Possesses relevant skills for the engagement, demonstrates ability to apply knowledge in the specific situations.
-9;1;5;3;0;Attitude;Self-starter, positive, and optimistic view of career and assignments.
-10;1;5;3;1;Dependability;Meets commitments, works independently, accepts accountability, handles change, sets personal standards, stays focused under pressure, meets attendance/punctuality requirements.
-11;1;5;3;2;Initiative;Tackles problems and takes independent action, seeks out new responsibilities, acts on opportunities, generates new ideas, practices self-development.
-12;1;5;3;3;Professionalism;Is confident, well mannered and well groomed, serves as a role model to others.
-13;1;6;3;0;Decision Making;Makes decisions systematically, can make decisions under pressure, builds a consensus, can make difficult/unpopular decisions, considers impact of decisions.
-14;1;6;3;1;Leadership;Demonstrates effective leadership abilities both formally and informally, effectively leads engagements to success (as applicable), serves as a mentor to less experienced team member.
-15;1;7;3;0;Teamwork;Works well in groups, helps resolve conflicts, facilitates meetings, works well with other departments, is flexible and open-minded, focuses team on strategies and goals.
-16;1;7;3;1;Customer Focus;Builds customer confidence, Committed to increasing customer satisfaction, sets achievable customer expectations, assumes responsibility for solving customer problems, ensures commitments to customers are met, solicits opinions and ideas from customers.
-17;1;1;1;0;Client Engagements;Provided high levels of service to clients satisfaction;built client confidence
-18;1;1;1;1;Technical Abilities;Possessed technical skills and abilities relevant to business;exhibited technical achievement and technical leadership
-19;1;1;1;2;Consulting Skills;Demonstrated written and verbal communication skills and listening skills;was adaptable;handled pressure;shared information and ideas;built strong relationships;recognized opportunities
-20;1;1;1;3;Professionalism;Took initiative and maintained a positive outlook;was dependable;committed to career and dedicated to excellence;maintained high personal standards
-21;1;1;1;4;Leadership;Made sound judgments and provided clear direction;instilled confidence in others;was consistently successful;worked to build consensus
-22;1;1;1;5;Teamwork;Actions and decisions considered the team before self;showed ability to cooperate;committed to Perficient
-23;1;2;1;0;Business Development;Colleague is appropriately involved in business development efforts given their level in the company.  List supported BD efforts in comments.
-24;1;2;1;1;Career Counseling;Colleague is an active participant in the Uplink program, demonstrated by on-time and thorough career documentation.  If the colleague is above a Lead, colleague also participates as a counselor.
-25;1;2;1;2;Recruiting Assistance;Colleague assists with phone interviews and on-site interviews in support of the recruiting process
-26;1;2;1;3;Internal Contributions;Colleague contributes to the development of the business unit through knowledge sharing, culture contributions, or internal projects.
-27;1;2;1;4;Perficient Basics;Time Reporting and Expense Reporting is on time and error-free;Resume is current and posted in the Resume Repository;colleague has been well-prepared for client interviews
-28;1;1;2;0;Client Engagements;Provided high levels of service to clients satisfaction;built client confidence
-29;1;1;2;1;Technical Abilities;Possessed technical skills and abilities relevant to business;exhibited technical achievement and technical leadership
-30;1;1;2;2;Consulting Skills;Demonstrated written and verbal communication skills and listening skills;was adaptable;handled pressure;shared information and ideas;built strong relationships;recognized opportunities
-31;1;1;2;3;Professionalism;Took initiative and maintained a positive outlook;was dependable;committed to career and dedicated to excellence;maintained high personal standards
-32;1;1;2;4;Leadership;Made sound judgments and provided clear direction;instilled confidence in others;was consistently successful;worked to build consensus
-33;1;1;2;5;Teamwork;Actions and decisions considered the team before self;showed ability to cooperate;committed to Perficient
-34;1;2;2;0;Business Development;Colleague is appropriately involved in business development efforts given their level in the company.  List supported BD efforts in comments.
-35;1;2;2;1;Career Counseling;Colleague is an active participant in the Uplink program, demonstrated by on-time and thorough career documentation.  If the colleague is above a Lead, colleague also participates as a counselor.
-36;1;2;2;2;Recruiting Assistance;Colleague assists with phone interviews and on-site interviews in support of the recruiting process
-37;1;2;2;3;Internal Contributions;Colleague contributes to the development of the business unit through knowledge sharing, culture contributions, or internal projects.
-38;1;2;2;4;Perficient Basics;Time Reporting and Expense Reporting is on time and error-free;Resume is current and posted in the Resume Repository;colleague has been well-prepared for client interviews
+"id";"reviewtype_id";"category_id";"feedbacktype_id";"position";"title";"text"
+"1";"1";"3";"3";"0";"Productivity";"Manages a fair workload, volunteers for additional work, prioritizes tasks, develops good work procedures, manages time well, handles information flow."
+"2";"1";"3";"3";"1";"Quality";"Is attentive to detail and accuracy, is committed to excellence, looks for improvements continuously, monitors quality levels, finds root cause of quality problems, owns/acts on quality problems."
+"3";"1";"3";"3";"2";"Results";"Completes the assigned engagement deliverables and activities as expected: on time, within budget, and high quality."
+"4";"1";"3";"3";"3";"Technical Skills";"Possesses relevant skills for the engagement, demonstrates ability to apply knowledge in the specific situations."
+"5";"1";"4";"3";"0";"Adaptability";"Adapts to change, is open to new ideas, takes on new responsibilities, handles pressure, adjusts plans to meet changing needs."
+"6";"1";"4";"3";"1";"Communication";"Communicates well both verbally and in writing, creates accurate and punctual reports, delivers presentations, shares information and ideas with others, has good listening skills."
+"7";"1";"4";"3";"2";"Interpersonal Skills";"Has good listening skills, builds strong relationships, is flexible/open-minded, negotiates effectively, solicits performance feedback and handles constructive criticism."
+"8";"1";"4";"3";"3";"Core Consuling Skills";"Possesses relevant skills for the engagement, demonstrates ability to apply knowledge in the specific situations."
+"9";"1";"5";"3";"0";"Attitude";"Self-starter, positive, and optimistic view of career and assignments."
+"10";"1";"5";"3";"1";"Dependability";"Meets commitments, works independently, accepts accountability, handles change, sets personal standards, stays focused under pressure, meets attendance/punctuality requirements."
+"11";"1";"5";"3";"2";"Initiative";"Tackles problems and takes independent action, seeks out new responsibilities, acts on opportunities, generates new ideas, practices self-development."
+"12";"1";"5";"3";"3";"Professionalism";"Is confident, well mannered and well groomed, serves as a role model to others."
+"13";"1";"6";"3";"0";"Decision Making";"Makes decisions systematically, can make decisions under pressure, builds a consensus, can make difficult/unpopular decisions, considers impact of decisions."
+"14";"1";"6";"3";"1";"Leadership";"Demonstrates effective leadership abilities both formally and informally, effectively leads engagements to success (as applicable), serves as a mentor to less experienced team member."
+"15";"1";"7";"3";"0";"Teamwork";"Works well in groups, helps resolve conflicts, facilitates meetings, works well with other departments, is flexible and open-minded, focuses team on strategies and goals."
+"16";"1";"7";"3";"1";"Customer Focus";"Builds customer confidence, Committed to increasing customer satisfaction, sets achievable customer expectations, assumes responsibility for solving customer problems, ensures commitments to customers are met, solicits opinions and ideas from customers."
+"17";"1";"1";"1";"0";"Client Engagements";"Provided high levels of service to clients satisfaction;built client confidence"
+"18";"1";"1";"1";"1";"Technical Abilities";"Possessed technical skills and abilities relevant to business;exhibited technical achievement and technical leadership"
+"19";"1";"1";"1";"2";"Consulting Skills";"Demonstrated written and verbal communication skills and listening skills;was adaptable;handled pressure;shared information and ideas;built strong relationships;recognized opportunities"
+"20";"1";"1";"1";"3";"Professionalism";"Took initiative and maintained a positive outlook;was dependable;committed to career and dedicated to excellence;maintained high personal standards"
+"21";"1";"1";"1";"4";"Leadership";"Made sound judgments and provided clear direction;instilled confidence in others;was consistently successful;worked to build consensus"
+"22";"1";"1";"1";"5";"Teamwork";"Actions and decisions considered the team before self;showed ability to cooperate;committed to Perficient"
+"23";"1";"2";"1";"0";"Business Development";"Colleague is appropriately involved in business development efforts given their level in the company.  List supported BD efforts in comments."
+"24";"1";"2";"1";"1";"Career Counseling";"Colleague is an active participant in the Uplink program, demonstrated by on-time and thorough career documentation.  If the colleague is above a Lead, colleague also participates as a counselor."
+"25";"1";"2";"1";"2";"Recruiting Assistance";"Colleague assists with phone interviews and on-site interviews in support of the recruiting process"
+"26";"1";"2";"1";"3";"Internal Contributions";"Colleague contributes to the development of the business unit through knowledge sharing, culture contributions, or internal projects."
+"27";"1";"2";"1";"4";"Perficient Basics";"Time Reporting and Expense Reporting is on time and error-free;Resume is current and posted in the Resume Repository;colleague has been well-prepared for client interviews"
+"28";"1";"1";"2";"0";"Client Engagements";"Provided high levels of service to clients satisfaction;built client confidence"
+"29";"1";"1";"2";"1";"Technical Abilities";"Possessed technical skills and abilities relevant to business;exhibited technical achievement and technical leadership"
+"30";"1";"1";"2";"2";"Consulting Skills";"Demonstrated written and verbal communication skills and listening skills;was adaptable;handled pressure;shared information and ideas;built strong relationships;recognized opportunities"
+"31";"1";"1";"2";"3";"Professionalism";"Took initiative and maintained a positive outlook;was dependable;committed to career and dedicated to excellence;maintained high personal standards"
+"32";"1";"1";"2";"4";"Leadership";"Made sound judgments and provided clear direction;instilled confidence in others;was consistently successful;worked to build consensus"
+"33";"1";"1";"2";"5";"Teamwork";"Actions and decisions considered the team before self;showed ability to cooperate;committed to Perficient"
+"34";"1";"2";"2";"0";"Business Development";"Colleague is appropriately involved in business development efforts given their level in the company.  List supported BD efforts in comments."
+"35";"1";"2";"2";"1";"Career Counseling";"Colleague is an active participant in the Uplink program, demonstrated by on-time and thorough career documentation.  If the colleague is above a Lead, colleague also participates as a counselor."
+"36";"1";"2";"2";"2";"Recruiting Assistance";"Colleague assists with phone interviews and on-site interviews in support of the recruiting process"
+"37";"1";"2";"2";"3";"Internal Contributions";"Colleague contributes to the development of the business unit through knowledge sharing, culture contributions, or internal projects."
+"38";"1";"2";"2";"4";"Perficient Basics";"Time Reporting and Expense Reporting is on time and error-free;Resume is current and posted in the Resume Repository;colleague has been well-prepared for client interviews"

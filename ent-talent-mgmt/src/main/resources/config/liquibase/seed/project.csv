@@ -1,3 +1,3 @@
 id;name;manager_id;description;client;start_date;end_date
 1;sample project;5;sample data for the project entity.;exampleclient;2017-01-01;2018-01-01
-2;second project;5;the second project;second client;2017-02-03;2017-06-15;
+2;second project;5;the second project;second client;2017-02-03;2017-06-15
