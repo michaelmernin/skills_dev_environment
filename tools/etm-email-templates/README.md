@@ -16,7 +16,7 @@ This project is built from the official project [Foundation for Emails](http://f
 
 If you followed [ETM developer setup](https://github.com/Perficient/ent-talent-mgmt/wiki/Developer-Setup) , you should have node installed.
 
-If you only want to work on email templates, [install Node version 4.2.4](https://nodejs.org/download/release/v4.2.4/) (tested).
+If you only want to work on email templates, [install Node version 6.10.0](https://nodejs.org/download/release/v6.10.0/) (tested).
 
 ### Using the CLI
 
