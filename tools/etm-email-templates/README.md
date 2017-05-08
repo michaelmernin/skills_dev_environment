@@ -44,7 +44,7 @@ Run `npm run build` to inline your CSS into your HTML along with the rest of the
         └── partials            # Email html fragments like header, footer ..etc
         
 ## Thymeleaf
-We are using Thymeleaf 1.2 to inject variables and do some logic for emails before we send them. [Thymeleaf docs can be found here] (http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#dialects-the-standard-dialect).
+We are using Thymeleaf 1.2 to inject variables and do some logic for emails before we send them. [Thymeleaf docs can be found here](http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#dialects-the-standard-dialect).
 if you take a look at `com.perficient.etm.service.EmailConstants` you'll find standard variables that you can use in the email templates, those variables are injected into thymeleaf template processor in the mail service class `com.perficient.etm.service.MailService`. meaning they will be available for every email template:
 
 **Current user:** information about the currently loged in user (also know as the email sender)
