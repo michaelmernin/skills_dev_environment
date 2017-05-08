@@ -58,7 +58,7 @@
       </materials>
       <stage name="install" cleanWorkingDir="true">
         <jobs>
-          <job name="npm">
+          <job name="yarn_bower">
             <tasks>
               <exec command="yarn" workingdir="ent-talent-mgmt">
                 <arg>install</arg>
@@ -249,9 +249,9 @@
     <pipeline name="etm-acceptance">
       <stage name="install">
         <jobs>
-          <job name="npm">
+          <job name="yarn">
             <tasks>
-              <exec command="npm" workingdir="ent-talent-mgmt">
+              <exec command="yarn" workingdir="ent-talent-mgmt">
                 <arg>install</arg>
                 <runif status="passed" />
               </exec>
