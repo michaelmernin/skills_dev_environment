@@ -25,7 +25,7 @@
     <appender-ref ref="FILE"/>
   </appender>
 
-  <logger name="com.perficient.etm" level="INFO"/>
+  <logger name="com.perficient.etm" level="DEBUG"/>
 
   <logger name="javax.activation" level="WARN"/>
   <logger name="javax.mail" level="WARN"/>
@@ -38,11 +38,11 @@
   <logger name="io.undertow" level="WARN"/>
   <logger name="net.sf.ehcache" level="WARN"/>
   <logger name="org.apache" level="WARN"/>
-  <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+  <logger name="org.apache.catalina.startup.DigesterFactory" level="WARN"/>
   <logger name="org.bson" level="WARN"/>
   <logger name="org.hibernate.validator" level="WARN"/>
   <logger name="org.hibernate" level="WARN"/>
-  <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+  <logger name="org.hibernate.ejb.HibernatePersistence" level="WARN"/>
   <logger name="org.springframework" level="WARN"/>
   <logger name="org.springframework.web" level="WARN"/>
   <logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="WARN"/>
