@@ -112,4 +112,34 @@
   <cache name="com.perficient.etm.domain.ReviewType.questions"
          timeToLiveSeconds="3600">
   </cache>
+
+  <cache name="com.perficient.etm.domain.ReviewAudit"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.SkillCategory"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Project"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.SkillRankingHistory"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.SkillRanking"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Skill"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  <cache name="com.perficient.etm.domain.Project.projectMembers"
+         timeToLiveSeconds="3600">
+  </cache>
+
+  Project
 </ehcache>
