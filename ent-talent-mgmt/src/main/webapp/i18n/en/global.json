@@ -39,6 +39,7 @@
         "apidocs": "API Docs",
         "database": "Database",
         "users": "Manage Users",
+        "projects": "Manage Projects",
         "skills": "Manage Skills",
         "skillsCategories": "Manage SkillsCategories",
         "mail": "Mail"

@@ -1,0 +1,98 @@
+<md-dialog aria-label="{{ user.firstName }} {{ user.lastName }}" flex="65">
+  <form name="userForm">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+      <h3>Account</h3>
+      <div layout-gt-sm="row">
+        <div layout-gt-xs="row" flex-gt-sm>
+          <md-input-container class="md-block" flex-gt-xs>
+            <label>First Name</label>
+            <input type="text" name="firstName" ng-model="user.firstName" required/>
+            <div ng-messages="userForm.firstName.$error" ng-show="userForm.firstName.$dirty">
+              <div ng-message="required">This is required!</div>
+              <div ng-message="minlength">This is too short!</div>
+            </div>
+          </md-input-container>
+          <md-input-container class="md-block" flex-gt-xs>
+            <label>First Name</label>
+            <input type="text" name="lastName" ng-model="user.lastName" required minlength="2"/>
+            <div ng-messages="userForm.lastName.$error" ng-show="userForm.lastName.$dirty">
+              <div ng-message="required">This is required!</div>
+              <div ng-message="minlength">This is too short!</div>
+            </div>
+          </md-input-container>
+        </div>
+        <div layout-gt-xs="row" flex-gt-sm>
+          <md-input-container class="md-block" flex-gt-xs>
+            <label>User Name</label>
+            <input type="text" name="login" ng-model="user.login" required minlength="4"/>
+            <div ng-messages="userForm.login.$error" ng-show="userForm.login.$dirty">
+              <div ng-message="required">This is required!</div>
+              <div ng-message="minlength">This is too short!</div>
+            </div>
+          </md-input-container>
+          <md-input-container class="md-block" flex-gt-xs>
+            <label>Email</label>
+            <input type="email" name="email" ng-model="user.email" required/>
+            <div ng-messages="userForm.email.$error" ng-show="userForm.email.$dirty">
+              <div ng-message="required">This is required!</div>
+              <div ng-message="email">This is not a valid email!</div>
+            </div>
+          </md-input-container>
+        </div>
+      </div>
+      <h3>Organization</h3>
+      <div layout-gt-sm="row">
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Roles</label>
+          <md-select multiple="multiple" ng-model="user.authorities" ng-model-options="{trackBy: '$value.name'}" required>
+            <md-option ng-value="role" ng-repeat="role in roles">{{ role.description }}</md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Counselor</label>
+          <md-select ng-model="user.counselor" ng-model-options="{trackBy: '$value.id'}">
+            <md-option ng-value="counselor" ng-repeat="counselor in counselors">{{ counselor.firstName }} {{ counselor.lastName }}</md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+      <h3>Employment</h3>
+      <div layout-gt-sm="row">
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Start Date</label>
+          <input type="date" name="startDate" ng-model="user.startDate"/>
+          <div ng-messages="userForm.startDate.$error" ng-show="userForm.startDate.$dirty">
+            <div ng-message="date">This is not a valid date!</div>
+          </div>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Title</label>
+          <input type="text" name="title" ng-model="user.title" minlength="8"/>
+          <div ng-messages="userForm.title.$error" ng-show="userForm.title.$dirty">
+            <div ng-message="minlength">This is too short!</div>
+          </div>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Target Title</label>
+          <input type="text" name="targetTitle" ng-model="user.targetTitle" minlength="8"/>
+          <div ng-messages="userForm.targetTitle.$error" ng-show="userForm.targetTitle.$dirty">
+            <div ng-message="minlength">This is too short!</div>
+          </div>
+        </md-input-container>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions>
+      <span flex></span>
+      <md-button ng-click="cancel()" class="md-primary">Cancel</md-button>
+      <md-button ng-click="save()" class="md-primary">Save</md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>
