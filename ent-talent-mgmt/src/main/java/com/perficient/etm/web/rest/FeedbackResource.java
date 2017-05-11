@@ -5,11 +5,13 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import com.perficient.etm.security.UserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,7 +54,7 @@ public class FeedbackResource implements RestResource {
      */
     @RequestMapping(value = "/reviews/{reviewId}/feedback", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Void> update(@PathVariable Long reviewId, @RequestBody Feedback feedback,
+    public ResponseEntity<?> update(@PathVariable Long reviewId, @RequestBody Feedback feedback,
             BindingResult result) {
         log.debug("REST request to update Feedback : {} for Review : {}", feedback, reviewId);
         if (result.hasErrors()) {
@@ -62,30 +64,26 @@ public class FeedbackResource implements RestResource {
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid new feedback", result);
         }
-        ResponseEntity<Void> badrequest = ResponseEntity.badRequest().build();
-        return SecurityUtils.getPrincipal().map(principal -> {
-            return Optional.ofNullable(feedback).map(newFeedback ->{
-                return Optional.ofNullable(newFeedback.getId()).map(newFeedbackId ->{
-                    return Optional.ofNullable(feedbackRepository.findOne(newFeedbackId)).map(existingFeedback ->{
-                        return Optional.ofNullable(existingFeedback.getAuthor()).map(User::getId).map(existingAuthorId ->{
-                            if(existingFeedback.isAuthor(principal)){
-                                return Optional.ofNullable(existingFeedback.getFeedbackStatus()).map(FeedbackStatus::getId).map(existingDFeedbackStatusId ->{
-                                    if(existingDFeedbackStatusId < FeedbackStatus.READY.getId()){
-                                        existingFeedback.setFeedbackStatus(newFeedback.getFeedbackStatus());
-                                        existingFeedback.setOverallComment(newFeedback.getOverallComment());
-                                        existingFeedback.setOverallScore(newFeedback.getOverallScore());
-                                        feedbackRepository.save(existingFeedback);
-                                        return ResponseEntity.ok().build();
-                                    }
-                                    return badrequest;
-                                }).orElse(badrequest);
-                            }
-                            return badrequest;
-                        }).orElse(badrequest);
-                    }).orElse(badrequest);
-                }).orElse(badrequest);
-            }).orElse(badrequest);
-        }).orElse(badrequest);
+        ResponseEntity<String> badrequest = ResponseEntity.badRequest().build();
+
+        UserDetails principal = SecurityUtils.getPrincipal().get();
+        Long id = feedback.getId();
+        if(principal == null || id == null) return badrequest;
+
+        Feedback existingFeedback = feedbackRepository.findOne(id);
+        if(existingFeedback == null) return badrequest;
+
+        if(existingFeedback.isAuthor(principal)){
+            Integer existingDFeedbackStatusId = existingFeedback.getFeedbackStatus().getId();
+            if(existingDFeedbackStatusId < FeedbackStatus.READY.getId()){
+                existingFeedback.setFeedbackStatus(feedback.getFeedbackStatus());
+                existingFeedback.setOverallComment(feedback.getOverallComment());
+                existingFeedback.setOverallScore(feedback.getOverallScore());
+                feedbackRepository.save(existingFeedback);
+                return ResponseEntity.ok().build();
+            }
+        }
+        return badrequest;
     }
         
     /**
