@@ -50,10 +50,10 @@ public class CacheConfiguration {
 
     @Bean
     public CacheManager cacheManager() {
-        log.debug("Starting Ehcache");
+        log.info("Starting Ehcache");
         cacheManager = net.sf.ehcache.CacheManager.create();
         cacheManager.getConfiguration().setMaxBytesLocalHeap(env.getProperty("cache.ehcache.maxBytesLocalHeap", String.class, "16M"));
-        log.debug("Registering Ehcache Metrics gauges");
+        log.info("Registering Ehcache Metrics gauges");
         Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
         for (EntityType<?> entity : entities) {
 

@@ -1,0 +1,82 @@
+<md-dialog aria-label="{{ project.name  }}" flex="65">
+  <form name="projectForm">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{ project.name }}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+      <h3>Account</h3>
+      <div layout-gt-sm="row">
+        <div layout-gt-xs="row" flex-gt-sm>
+          <md-input-container class="md-block" flex-gt-xs>
+            <label>Project Name</label>
+            <input type="text" name="project name" ng-model="project.name" required/>
+            <div ng-messages="projectForm.name.$error" ng-show="projectForm.name.$dirty">
+              <div ng-message="required">This is required!</div>
+              <div ng-message="minlength">This is too short!</div>
+            </div>
+          </md-input-container>
+        </div>
+        <md-input-container class="md-block" flex-gt-xs>
+          <label>Project Name</label>
+          <input type="text" name="project description" ng-model="project.description" required/>
+          <div ng-messages="projectForm.description.$error" ng-show="projectForm.description.$dirty">
+            <div ng-message="required">This is required!</div>
+            <div ng-message="minlength">This is too short!</div>
+          </div>
+        </md-input-container>
+      </div>
+      <!--
+      <h3>Organization</h3>
+      <div layout-gt-sm="row">
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Roles</label>
+          <md-select multiple="multiple" ng-model="user.authorities" ng-model-options="{trackBy: '$value.name'}" required>
+            <md-option ng-value="role" ng-repeat="role in roles">{{ role.description }}</md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Counselor</label>
+          <md-select ng-model="user.counselor" ng-model-options="{trackBy: '$value.id'}">
+            <md-option ng-value="counselor" ng-repeat="counselor in counselors">{{ counselor.firstName }} {{ counselor.lastName }}</md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+      <h3>Employment</h3>
+      <div layout-gt-sm="row">
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Start Date</label>
+          <input type="date" name="startDate" ng-model="user.startDate"/>
+          <div ng-messages="projectForm.startDate.$error" ng-show="projectForm.startDate.$dirty">
+            <div ng-message="date">This is not a valid date!</div>
+          </div>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Title</label>
+          <input type="text" name="title" ng-model="user.title" minlength="8"/>
+          <div ng-messages="projectForm.title.$error" ng-show="projectForm.title.$dirty">
+            <div ng-message="minlength">This is too short!</div>
+          </div>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Target Title</label>
+          <input type="text" name="targetTitle" ng-model="user.targetTitle" minlength="8"/>
+          <div ng-messages="projectForm.targetTitle.$error" ng-show="projectForm.targetTitle.$dirty">
+            <div ng-message="minlength">This is too short!</div>
+          </div>
+        </md-input-container>
+      </div>
+      -->
+    </md-dialog-content>
+    <md-dialog-actions>
+      <span flex></span>
+      <md-button ng-click="cancel()" class="md-primary">Cancel</md-button>
+      <md-button ng-click="save()" class="md-primary">Save</md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

@@ -68,16 +68,16 @@ war {
 }
 
 repositories {
+    maven { url 'http://repo.maven.apache.org/maven2' }
     maven { url 'http://repo.spring.io/milestone' }
     maven { url 'http://repo.spring.io/snapshot' }
     maven { url 'https://repository.jboss.org/nexus/content/repositories/releases' }
     maven { url 'https://oss.sonatype.org/content/repositories/releases' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url 'http://repo.maven.apache.org/maven2' }
 }
 
 dependencies {
-    compile(group: 'org.activiti', name: 'spring-boot-starter-basic', version: '5.17.0') {
+    compile(group: 'org.activiti', name: 'activiti-spring-boot-starter-basic', version: '5.22.0') {
         exclude module: 'org.springframework.boot:spring-boot-actuator'
         exclude module: 'org.springframework.boot:spring-boot-starter-web'
         exclude module: 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -91,9 +91,9 @@ dependencies {
         exclude module: 'org.springframework.boot:spring-boot-starter-jdbc'
       exclude module: 'com.h2database:h2'
     }
-//  compile group: 'org.activiti', name: 'spring-boot-starter-rest-api', version: '5.17.0'
-    compile group: 'org.activiti', name: 'spring-boot-starter-actuator', version: '5.17.0'
-//  compile group: 'org.activiti', name: 'spring-boot-starter-jpa', version: '5.17.0'
+//  compile group: 'org.activiti', name: 'spring-boot-starter-rest-api', version: '5.22.0'
+    compile group: 'org.activiti', name: 'activiti-spring-boot-starter-actuator', version: '5.22.0'
+//  compile group: 'org.activiti', name: 'spring-boot-starter-jpa', version: '5.22.0'
     compile group: 'com.codahale.metrics', name: 'metrics-core', version: codahale_metrics_version
     compile group: 'com.codahale.metrics', name: 'metrics-ehcache', version: codahale_metrics_version
     compile group: 'com.codahale.metrics', name: 'metrics-graphite', version: codahale_metrics_version

@@ -15,6 +15,5 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     @Query("select project from Project project where project.manager.login = ?#{principal.username}")
     List<Project> findByManagedprojectsIsCurrentUser();
 
-    @Query("select p from Project p where p.manager = ?1 or ?1 member of p.projectMembers")
-    List<Project> findAllByUser(User user);
+    List<Project> findAllByManager(User user);
 }
