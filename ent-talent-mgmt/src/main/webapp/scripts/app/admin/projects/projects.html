@@ -1,7 +1,7 @@
 <div ng-cloak>
   <md-content md-scroll-y class="md-whiteframe-z1">
     <div layout="column" layout-padding>
-      <h2 translate="projects.title">Manage Users</h2>
+      <h2 translate="projects.title">Manage Projects</h2>
     
       <md-input-container>
         <label for="filter" translate="projects.filter">Filter</label>
@@ -9,13 +9,13 @@
       </md-input-container>
 
       <md-list>
-        <md-list-item ng-repeat="user in users | filter:filter" class="md-3-line" ng-click="viewUserDetails(user, $event)">
+        <md-list-item ng-repeat="project in projects | filter:filter" class="md-3-line" ng-click="viewProjectDetails(project, $event)">
           <md-icon md-font-icon="fa fa-thumb-tack fa-3x" class="md-avatar md-primary"></md-icon>
           <div class="md-list-item-text">
-            <h3>{{user.firstName}} {{user.lastName}}</h3>
-            <h4>{{user.login}}</h4>
-            <p>{{user.email}}</p>
-            <md-icon md-font-icon="fa fa-trash-o fa-lg" class="md-secondary" ng-click="deleteUser(user, $event)" aria-label="Delete User"></md-icon>
+            <h3>{{project.name}}</h3>
+            <h4>{{project.description}}</h4>
+            <p>{{project.client}}</p>
+            <md-icon md-font-icon="fa fa-trash-o fa-lg" class="md-secondary" ng-click="deleteProject(project, $event)" aria-label="Delete Project"></md-icon>
           </div>
         </md-list-item>
       </md-list>

@@ -3,9 +3,11 @@ package com.perficient.etm.web.rest;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import com.perficient.etm.security.AuthoritiesConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -53,8 +55,12 @@ public class ProjectResource {
      */
     @RequestMapping(value = "/projects", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @RolesAllowed(AuthoritiesConstants.ADMIN)
     public ResponseEntity<Project> createProject(@Valid @RequestBody Project project) throws URISyntaxException {
-        return new ResponseEntity(projectRepository.findOne(project.getId()), HttpStatus.ACCEPTED);
+
+        if(projectRepository.exists(project.getId())) return ResponseEntity.badRequest().body(null);
+        Project createdProj = projectRepository.save(project);
+        return ResponseEntity.ok().body(createdProj);
     }
 
     /**
@@ -71,13 +77,14 @@ public class ProjectResource {
      */
     @RequestMapping(value = "/projects", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @RolesAllowed(AuthoritiesConstants.ADMIN)
     public ResponseEntity<Project> updateProject(@Valid @RequestBody Project project) throws URISyntaxException {
         log.debug("REST request to update Project : {}", project);
         if (project.getId() == null) {
             return createProject(project);
         }
-        Project result = projectRepository.save(project);
-        return ResponseEntity.ok().body(result);
+        Project updatedProj = projectRepository.save(project);
+        return ResponseEntity.ok().body(updatedProj);
     }
 
     /**
@@ -88,6 +95,7 @@ public class ProjectResource {
      */
     @RequestMapping(value = "/projects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @RolesAllowed(AuthoritiesConstants.ADMIN)
     public List<Project> getAllProjects() {
         log.debug("REST request to get all Projects");
         List<Project> projects = projectRepository.findAll();
@@ -104,10 +112,11 @@ public class ProjectResource {
      */
     @RequestMapping(value = "/projects/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @RolesAllowed(AuthoritiesConstants.ADMIN)
     public ResponseEntity<Project> getProject(@PathVariable Long id) {
         log.debug("REST request to get Project : {}", id);
         Project project = projectRepository.findOne(id);
-        return new ResponseEntity<Project>(project, HttpStatus.OK);
+        return ResponseEntity.ok(project);
     }
 
     /**
@@ -119,6 +128,7 @@ public class ProjectResource {
      */
     @RequestMapping(value = "/projects/{id}", method = RequestMethod.DELETE)
     @Timed
+    @RolesAllowed(AuthoritiesConstants.ADMIN)
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         log.debug("REST request to delete Project : {}", id);
         projectRepository.delete(id);
@@ -128,13 +138,14 @@ public class ProjectResource {
     /**
      * GET  /projects -> get all the projects by user id.
      */
-    @RequestMapping(value = "/projects/getAllByUserId",
+    @RequestMapping(value = "/projects/byManager/{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Project> getProjectsByUserId(Long id) {
+    @RolesAllowed(AuthoritiesConstants.ADMIN)
+    public List<Project> getProjectsByUserId(@PathVariable Long id) {
         log.debug("REST request to get projects by user");
         User user = userService.getUser(id);
-        return projectRepository.findAllByUser(user);
+        return projectRepository.findAllByManager(user);
     }
 }

@@ -1,48 +1,40 @@
 'use strict';
 
-angular.module('etmApp').controller('ProjectsController', function ($scope, $mdDialog, $filter, User) {
-  $scope.users = [];
+angular.module('etmApp').controller('ProjectsController', function ($scope, $mdDialog, $filter, Project) {
+  $scope.projects = [];
   $scope.loadAll = function () {
-    User.query(function (result) {
-      $scope.users = result;
+    Project.getAll(function (result) {
+      $scope.projects = result;
     });
   };
   $scope.loadAll();
 
-  function userHasRole(role, user) {
-    return user.authorities.some(function (authority) {
-      return role === authority.name;
-    });
-  }
-
-  $scope.viewUserDetails = function (user, ev) {
-    var counselors = $scope.users.filter(userHasRole.bind(null, 'ROLE_COUNSELOR'));
+  $scope.viewProjectDetails = function (project, ev) {
     $mdDialog.show({
-      controller: 'UserDetailController',
+      controller: 'ProjectDetailController',
       templateUrl: 'scripts/app/admin/projects/project.detail.html',
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {
-        user: user,
-        counselors: counselors
+        project: project
       }
-    }).then(function (updatedUser) {
-      angular.copy(updatedUser, user);
-      User.update(user);
+    }).then(function (updatedProject) {
+      angular.copy(updatedProject, project);
+      Project.update(project);
     });
   };
   
-  $scope.deleteUser = function (user, ev) {
+  $scope.deleteProject = function (project, ev) {
     var confirmDelete = $mdDialog.confirm()
-      .title('Confirm User Deletion')
-      .ariaLabel('Delete User Confirm')
-      .content('Delete ' + user.firstName + ' ' + user.lastName + '?')
+      .title('Confirm Project Deletion')
+      .ariaLabel('Delete Project Confirm')
+      .content('Delete ' + project.name +'?')
       .ok('Delete')
       .cancel('Cancel')
       .targetEvent(ev);
     $mdDialog.show(confirmDelete).then(function () {
-      User.delete({id: user.id}, function () {
-        $scope.users.splice($scope.users.indexOf(user), 1);
+      Project.delete({id: project.id}, function () {
+        $scope.projects.splice($scope.projects.indexOf(project), 1);
       });
     });
   };

@@ -5,55 +5,38 @@ angular.module('etmApp').factory('Project', function ($resource, DateUtils) {
     data.startDate = DateUtils.convertLocaleDateFromServer(data.startDate);
   }
 
-  return $resource('api/users/:id', {}, {
-    'query': {
+  function responseTransformer(data){
+    if(!data) return data;
+    var jsondata = angular.fromJson(data);
+    if(!jsondata.length) convertFromServer(jsondata)
+    else jsondata.forEach(convertFromServer);
+    return jsondata;
+  }
+
+  return $resource('api/projects/:id', {}, {
+    'getAll': {
+      url:'api/projects',
       method: 'GET',
       isArray: true,
-      transformResponse: function (data) {
-        data = angular.fromJson(data);
-        data.forEach(convertFromServer);
-        return data;
-      }
+      transformResponse: responseTransformer
     },
     'get': {
       method: 'GET',
-      transformResponse: function (data) {
-        data = angular.fromJson(data);
-        convertFromServer(data);
-        return data;
-      }
+      transformResponse: responseTransformer
     },
     'update': {
       method:'PUT',
-      params: {id: '@id'},
-      transformRequest: function (data) {
-        data.startDate = DateUtils.convertLocaleDateToServer(data.startDate);
-        return angular.toJson(data);
-      }
+      transformResponse: responseTransformer
     },
-    'queryCounselees': {
-      url: 'api/counselees',
+    'delete':{
+      method:'DELETE',
+      transformResponse: responseTransformer
+    },
+    'getAllbyManager': {
+      url: 'api/projects/byManager/:id',
       method: 'GET',
       isArray: true,
-      transformResponse: function (data) {
-        data = angular.fromJson(data);
-        data.forEach(convertFromServer);
-        return data;
-      }
-    },
-    'autocomplete': {
-      url: 'api/users/autocomplete',
-      method: 'GET',
-      isArray: true
-    },
-    'profile': {
-      url: 'api/profile',
-      method: 'GET',
-      transformResponse: function (data) {
-        data = angular.fromJson(data);
-        convertFromServer(data);
-        return data;
-      }
+      transformResponse: responseTransformer
     }
   });
 });
