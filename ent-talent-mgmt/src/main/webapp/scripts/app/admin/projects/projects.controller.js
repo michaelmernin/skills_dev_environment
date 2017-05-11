@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('ProjectsController', function ($scope, $mdDialog, $filter, Project) {
+angular.module('etmApp').controller('ProjectsController', function ($scope, $mdDialog, $mdToast, $filter, Project) {
   $scope.projects = [];
   $scope.loadAll = function () {
     Project.getAll(function (result) {
@@ -20,7 +20,8 @@ angular.module('etmApp').controller('ProjectsController', function ($scope, $mdD
       }
     }).then(function (updatedProject) {
       angular.copy(updatedProject, project);
-      Project.update(project);
+      Project.update(project)
+      .$promise.then(function () {showToast('Updated project'+ project.name)},showToast);
     });
   };
   
@@ -35,7 +36,15 @@ angular.module('etmApp').controller('ProjectsController', function ($scope, $mdD
     $mdDialog.show(confirmDelete).then(function () {
       Project.delete({id: project.id}, function () {
         $scope.projects.splice($scope.projects.indexOf(project), 1);
-      });
+      }).$promise.then(function () {showToast('Deleted project'+ project.name)},showToast);
     });
   };
+
+  function showToast(msg){
+    $mdToast
+    .show($mdToast.simple()
+       .textContent(msg)
+       .hideDelay(3000));
+  };
+
 });
