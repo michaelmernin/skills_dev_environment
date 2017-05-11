@@ -51,21 +51,22 @@ public class RatingResource implements RestResource {
     public ResponseEntity<Void> update(@RequestBody Rating rating, @PathVariable Long reviewId, @PathVariable Long feedbackId, @PathVariable Long ratingId) throws URISyntaxException {
         log.debug("REST request to update Rating : {}", rating);
         ResponseEntity<Void> badRequest = ResponseEntity.badRequest().build();
-
-        Feedback existingFeedback = feedbackRepository.findOne(feedbackId);
-        if(existingFeedback == null ||
-           existingFeedback.getFeedbackStatus().getId() >= FeedbackStatus.READY.getId() ) return badRequest;
-
-        Rating existingRating = existingFeedback.getRatings()
-                                .stream()
-                                .filter(r -> r.getId() == ratingId)
-                                .findFirst().get();
-        existingRating.setComment(rating.getComment());
-        //oldRating.setQuestion(rating.getQuestion());
-        existingRating.setScore(rating.getScore());
-        updateVisibility(existingRating, rating.isVisible());
-        ratingRepository.save(existingRating);
-        return ResponseEntity.ok().build();
+        // if user does not have access to feedback, user does not have access to rating either
+        return Optional.ofNullable(feedbackRepository.findOne(feedbackId)).map(feedback -> {
+            return Optional.ofNullable(ratingRepository.findOne(ratingId)).map(oldRating -> {
+                return Optional.ofNullable(feedback.getFeedbackStatus()).map(FeedbackStatus::getId).map(feedbackStatusId ->{
+                    if(feedbackStatusId < FeedbackStatus.READY.getId()){
+                        oldRating.setComment(rating.getComment());
+                        //oldRating.setQuestion(rating.getQuestion());
+                        oldRating.setScore(rating.getScore());
+                        updateVisibility(oldRating, rating.isVisible());
+                        ratingRepository.save(oldRating);
+                        return ResponseEntity.ok().build();
+                    }
+                    return badRequest;
+                }).orElse(badRequest);
+            }).orElse(badRequest);
+        }).orElse(badRequest);
         
     }
 
