@@ -37,6 +37,16 @@ angular.module('etmApp').factory('Project', function ($resource, DateUtils) {
       method: 'GET',
       isArray: true,
       transformResponse: responseTransformer
+    },
+    'queryProjects': {
+      url: 'api/projects/getAllByUserId',
+      method: 'GET',
+      isArray: true,
+      transformResponse: function (data) {
+        data = angular.fromJson(data);
+        data.forEach(convertFromServer);
+        return data;
+      }
     }
   });
 });

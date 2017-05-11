@@ -7,10 +7,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
-import com.perficient.etm.security.AuthoritiesConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +21,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.perficient.etm.domain.Project;
 import com.perficient.etm.domain.User;
 import com.perficient.etm.repository.ProjectRepository;
+import com.perficient.etm.security.AuthoritiesConstants;
 import com.perficient.etm.service.UserService;
 
 /**
@@ -143,7 +142,20 @@ public class ProjectResource {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RolesAllowed(AuthoritiesConstants.ADMIN)
-    public List<Project> getProjectsByUserId(@PathVariable Long id) {
+    public List<Project> getProjectsByManagerId(@PathVariable Long id) {
+        log.debug("REST request to get projects by user");
+        User user = userService.getUser(id);
+        return projectRepository.findAllByManager(user);
+    }
+    
+    /**
+     * GET  /projects -> get all the projects by user id.
+     */
+    @RequestMapping(value = "/projects/getAllByUserId",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<Project> getProjectsByUserId(Long id) {
         log.debug("REST request to get projects by user");
         User user = userService.getUser(id);
         return projectRepository.findAllByManager(user);
