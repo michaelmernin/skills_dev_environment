@@ -54,7 +54,7 @@ public class FeedbackResource implements RestResource {
      */
     @RequestMapping(value = "/reviews/{reviewId}/feedback", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<?> update(@PathVariable Long reviewId, @RequestBody Feedback feedback,
+    public ResponseEntity<Void> update(@PathVariable Long reviewId, @RequestBody Feedback feedback,
             BindingResult result) {
         log.debug("REST request to update Feedback : {} for Review : {}", feedback, reviewId);
         if (result.hasErrors()) {
@@ -64,7 +64,7 @@ public class FeedbackResource implements RestResource {
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid new feedback", result);
         }
-        ResponseEntity<String> badrequest = ResponseEntity.badRequest().build();
+        ResponseEntity<Void> badrequest = ResponseEntity.badRequest().build();
 
         UserDetails principal = SecurityUtils.getPrincipal().get();
         Long id = feedback.getId();
