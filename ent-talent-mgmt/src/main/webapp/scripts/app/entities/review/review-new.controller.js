@@ -48,6 +48,9 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
         });
       } else {
         translateKeys = translateKeys.map(function (key) {return 'review.new.save.engagement.' + key;});
+        var selectedDate = $scope.review.startDate;
+        $scope.review.startDate = new Date(moment(selectedDate).startOf('quarter').format());
+        $scope.review.endDate = new Date(moment(selectedDate).endOf('quarter').startOf('day').format());
         $scope.displayConfirmDialog(translateKeys, "engagement", ev);
       }
     }
@@ -62,7 +65,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
     return '';
   };
   
-  $scope.toggleDates = function () {
+  $scope.toggleEngagementDropdowns = function () {
     if (!this.review.reviewType || this.review.reviewType.processName === 'annualReview') {
       return true;
     } else {
@@ -104,24 +107,40 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
         $scope.reviewees.push(account);
         if (Principal.isInRole('ROLE_COUNSELOR')) {
           User.queryCounselees(function (result) {
-            $scope.reviewees = [];
             Array.prototype.push.apply($scope.reviewees, result);
           });
         }
       });
-    } else if ($scope.projects.length > 0 && this.review.reviewType.processName === 'engagementReview'){
+    } else if (this.review.reviewType.processName === 'engagementReview' && $scope.review.project !== undefined) {
       var project = $scope.review.project;
-      $scope.reviewees = [];
       Array.prototype.push.apply($scope.reviewees, project.projectMembers);
     }
   }
   
-  $scope.populateProjects= function () {
+  $scope.populateProjects = function () {
     if (this.review.reviewType.processName === 'engagementReview') {
       Project.queryProjects({id: $scope.currentUser.id}, function(projects) {
-        $scope.projects = []
         Array.prototype.push.apply($scope.projects, projects);
       })
     }
   }
+  
+  $scope.clearDropdowns = function () {
+    $scope.projects.length = 0;
+    delete $scope.review.project;
+    $scope.clearReviewees();
+  }
+  
+  $scope.clearReviewees = function () {
+    $scope.reviewees.length = 0;
+  }
+
+}).config(function($mdDateLocaleProvider) {
+  $mdDateLocaleProvider.formatDate = function(date) {
+    return moment(date, 'MM-DD-YYYY', true).isValid() ? moment(date).format('Q-YYYY') : '';
+  };
+  
+  $mdDateLocaleProvider.parseDate = function(date) {
+    return moment(date).format('MM-DD-YYYY');
+  };
 });

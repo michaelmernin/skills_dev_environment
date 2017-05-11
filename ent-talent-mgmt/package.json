@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "Enterprise Talent Management",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "moment": "^2.18.1"
+  },
   "devDependencies": {
     "event-stream": "3.2.1",
     "generator-jhipster": "2.4.0",

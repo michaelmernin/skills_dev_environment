@@ -5,9 +5,9 @@
         <h2 class="md-display-1" translate="review.new.title">Create a Review</h2>
         <h3 translate="review.info">Review Info</h3>
         <div layout-gt-sm="row">
-          <md-input-container class="md-block" flex-gt-sm>
+          <md-input-container class="md-block" flex-gt-sm="50">
             <label translate="review.reviewType">Review Type</label>
-            <md-select name="reviewType" ng-model="review.reviewType" ng-model-options="{trackBy: '$value.id'}" ng-change="toggleDates(); populateShowReviewees(); populateProjects()" required>
+            <md-select name="reviewType" ng-model="review.reviewType" ng-model-options="{trackBy: '$value.id'}" ng-change="clearDropdowns(); toggleEngagementDropdowns(); populateShowReviewees(); populateProjects()" required>
               <md-option ng-value="reviewType" ng-repeat="reviewType in reviewTypes">{{ reviewType.name }}</md-option>
             </md-select>
             <div ng-messages="reviewForm.reviewType.$error" ng-if="reviewForm.$submitted || reviewForm.reviewType.$dirty">
@@ -16,18 +16,7 @@
               </div>
             </div>
           </md-input-container>
-          <md-input-container class="md-block" flex-gt-sm ng-hide="toggleDates()">
-            <label translate="review.project">Project</label>
-            <md-select name="project" ng-model="review.project" ng-model-options="{trackBy: '$value.login'}" ng-change="populateShowReviewees()" ng-required="{{ review.reviewType.processName !== annualReview }}">
-              <md-option ng-value="project" ng-repeat="project in projects">{{ project.name }}</md-option>
-            </md-select>
-            <div ng-messages="reviewForm.project.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
-              <div ng-message="required">
-                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.project' | translate }}'}">Please select a value.</span>
-              </div>
-            </div>
-          </md-input-container>
-          <md-input-container class="md-block" flex-gt-sm>
+          <md-input-container class="md-block" flex-gt-sm="50" ng-hide="!review.reviewType">
             <label translate="review.reviewee">Reviewee</label>
             <md-select name="reviewee" ng-model="review.reviewee" ng-model-options="{trackBy: '$value.login'}" required>
               <md-option ng-value="reviewee" ng-repeat="reviewee in reviewees">{{ reviewee.firstName }} {{ reviewee.lastName }}</md-option>
@@ -39,37 +28,20 @@
             </div>
           </md-input-container>
         </div>
-        <div class="date-div" ng-hide="toggleDates()">
-          <h3 translate="review.dates">Review Dates</h3>
-          <div layout-gt-sm="row">
-            <md-input-container class="md-block" flex-gt-sm>
-              <label translate="review.startDate">Start Date</label>
-              <input type="date" name="startDate" ng-model="review.startDate" ng-required="{{ review.reviewType.processName !== annualReview }}"/>
-              <div ng-messages="reviewForm.startDate.$error" ng-if="reviewForm.$submitted || reviewForm.startDate.$dirty">
-                <div ng-message="required">
-                  <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.startDate' | translate }}'}">Please select a value.</span>
-                </div>
-                <div ng-message="date">
-                  <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.startDate' | translate }}'}">Please select a valid value.</span>
-                </div>
+        <div layout-gt-sm="row">
+          <md-input-container class="md-block" flex-gt-sm="50" ng-hide="toggleEngagementDropdowns()">
+            <label translate="review.project">Project</label>
+            <md-select name="project" ng-model="review.project" ng-model-options="{trackBy: '$value.id'}" ng-change="clearReviewees(); populateShowReviewees()" ng-required="{{ review.reviewType.processName !== annualReview }}">
+              <md-option ng-value="project" ng-repeat="project in projects">{{ project.name }}</md-option>
+            </md-select>
+            <div ng-messages="reviewForm.project.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
+              <div ng-message="required">
+                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.project' | translate }}'}">Please select a value.</span>
               </div>
-            </md-input-container>
-            <md-input-container class="md-block" flex-gt-sm>
-              <label translate="review.endDate">End Date</label>
-              <input type="date" name="endDate" ng-model="review.endDate" ng-required="{{ review.reviewType.processName !== annualReview }}" min="{{ minEndDate() }}"/>
-              <div ng-messages="reviewForm.endDate.$error" ng-if="reviewForm.$submitted || reviewForm.endDate.$dirty">
-                <div ng-message="required">
-                  <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.endDate' | translate }}'}">Please select a value.</span>
-                </div>
-                <div ng-message="date">
-                  <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.endDate' | translate }}'}">Please select a valid value.</span>
-                </div>
-                <div ng-message="min">
-                  <span translate="review.validate.endDate.min">End Date cannot be before Start Date.</span>
-                </div>
-              </div>
-            </md-input-container>
-          </div>
+            </div>
+          </md-input-container>
+          <label flex-gt-sm="50" ng-hide="toggleEngagementDropdowns()">Select quarter of engagement review</label>
+          <md-datepicker name="startDate" ng-model="review.startDate" md-placeholder="Select quarter of engagement review" flex-gt-sm="50" ng-hide="toggleEngagementDropdowns()"></md-datepicker>
         </div>
         <div layout="row">
           <span flex></span>
