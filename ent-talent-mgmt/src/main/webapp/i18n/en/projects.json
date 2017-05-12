@@ -1,7 +1,7 @@
 {
   "projects": {
     "title": "Manage Projects",
-    "filter": "Filter (by Login)",
+    "filter": "Filter (by Name)",
     "add": {
       "button": "Add Project"
     }

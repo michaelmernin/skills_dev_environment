@@ -7,6 +7,11 @@ angular.module('etmApp').controller('ProjectDetailController', function ($scope,
   });
 
   $scope.project = angular.copy(project);
+
+  // date conversions
+  $scope.project.startDate = new Date($scope.project.startDate);
+  $scope.project.endDate = new Date($scope.project.endDate);
+
   $scope.dialogType = dialogType;
 
   $scope.cancel = function () {
