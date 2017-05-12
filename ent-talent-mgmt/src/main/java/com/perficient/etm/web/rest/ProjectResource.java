@@ -141,21 +141,7 @@ public class ProjectResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    @RolesAllowed(AuthoritiesConstants.ADMIN)
     public List<Project> getProjectsByManagerId(@PathVariable Long id) {
-        log.debug("REST request to get projects by user");
-        User user = userService.getUser(id);
-        return projectRepository.findAllByManager(user);
-    }
-    
-    /**
-     * GET  /projects -> get all the projects by user id.
-     */
-    @RequestMapping(value = "/projects/getAllByUserId",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public List<Project> getProjectsByUserId(Long id) {
         log.debug("REST request to get projects by user");
         User user = userService.getUser(id);
         return projectRepository.findAllByManager(user);

@@ -113,12 +113,16 @@
       "reviewee": "a Reviewee",
       "reviewer": "a Reviewer",
       "goal": "a Goal",
-      "targetDate": "a Target Date"
+      "targetDate": "a Target Date",
+      "quarter": "a Quarter",
+      "year": "a Year"
     },
     "validate": {
       "endDate": {
         "min": "Please select an End Date at least one year after the Start Date."
       }
-    }
+    },
+    "year": "Year",
+    "quarter": "Quarter"
   }
 }

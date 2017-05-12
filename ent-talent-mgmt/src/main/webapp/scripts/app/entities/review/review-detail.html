@@ -3,7 +3,7 @@
     <form name="reviewForm" novalidate>
       <div layout="column">
         <h2 layout-padding class="md-display-1">
-          {{ review.startDate.getFullYear() }}-{{ review.endDate.getFullYear() }} {{ review.reviewType.name }} for {{ review.reviewee.firstName }} {{ review.reviewee.lastName }}
+          {{ reviewTitle }}
         </h2>
         <md-card>
           <md-toolbar>
@@ -40,20 +40,32 @@
         
         <div ui-view="todo"></div>
         
-        <md-tabs md-dynamic-height md-border-bottom>
-          <md-tab label="peers" ng-if="allTabs()">
+        <md-tabs md-dynamic-height md-border-bottom ng-if="review.reviewType.processName == 'annualReview'">
+          <md-tab label="peers">
             <div ui-view="peers"></div>
           </md-tab>
-          <md-tab label="engagements" ng-if="allTabs()">
+          <md-tab label="engagements">
             <div ui-view="engagements"></div>
           </md-tab>
-          <md-tab label="goals" ng-if="allTabs()">
+          <md-tab label="goals">
             <div ui-view="goals"></div>
           </md-tab>
           <md-tab label="evaluation">
             <div ui-view="evaluation"></div>
           </md-tab>
-          <md-tab label="overall" ng-if="allTabs()">
+          <md-tab label="overall">
+            <div ui-view="overall"></div>
+          </md-tab>
+        </md-tabs>
+        
+        <md-tabs md-dynamic-height md-border-bottom ng-if="review.reviewType.processName == 'engagementReview'">
+          <md-tab label="goals">
+            <div ui-view="goals"></div>
+          </md-tab>
+          <md-tab label="evaluation">
+            <div ui-view="evaluation"></div>
+          </md-tab>
+          <md-tab label="overall">
             <div ui-view="overall"></div>
           </md-tab>
         </md-tabs>

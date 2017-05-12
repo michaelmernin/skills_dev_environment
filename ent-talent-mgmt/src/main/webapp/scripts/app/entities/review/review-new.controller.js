@@ -6,6 +6,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   $scope.reviewees = [];
   $scope.currentUser = User.profile();
   $scope.projects = [];
+  $scope.years = [];
 
   $scope.load = function () {
     ReviewType.query(function (result) {
@@ -48,9 +49,11 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
         });
       } else {
         translateKeys = translateKeys.map(function (key) {return 'review.new.save.engagement.' + key;});
-        var selectedDate = $scope.review.startDate;
-        $scope.review.startDate = new Date(moment(selectedDate).startOf('quarter').format());
-        $scope.review.endDate = new Date(moment(selectedDate).endOf('quarter').startOf('day').format());
+        var year = $scope.year;
+        var quarter = $scope.quarter;
+        var date = moment(year, 'YYYY');
+        $scope.review.startDate = new Date(date.quarter(quarter).startOf('quarter').format());
+        $scope.review.endDate = new Date(date.quarter(quarter).endOf('quarter').format());
         $scope.displayConfirmDialog(translateKeys, "engagement", ev);
       }
     }
@@ -119,7 +122,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   
   $scope.populateProjects = function () {
     if (this.review.reviewType.processName === 'engagementReview') {
-      Project.queryProjects({id: $scope.currentUser.id}, function(projects) {
+      Project.getAllbyManager({id: $scope.currentUser.id}, function(projects) {
         Array.prototype.push.apply($scope.projects, projects);
       })
     }
@@ -134,13 +137,15 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   $scope.clearReviewees = function () {
     $scope.reviewees.length = 0;
   }
-
-}).config(function($mdDateLocaleProvider) {
-  $mdDateLocaleProvider.formatDate = function(date) {
-    return moment(date, 'MM-DD-YYYY', true).isValid() ? moment(date).format('Q-YYYY') : '';
-  };
   
-  $mdDateLocaleProvider.parseDate = function(date) {
-    return moment(date).format('MM-DD-YYYY');
-  };
+  $scope.populateYears = function () {
+    $scope.years.length = 0;
+    var startYear = moment($scope.review.project.startDate).year();
+    var endYear = moment($scope.review.project.endDate).year();
+    if (startYear === endYear) {
+      Array.prototype.push.apply($scope.years, [startYear]);
+    } else {
+      Array.prototype.push.apply($scope.years, [startYear, endYear]);
+    }
+  }
 });
