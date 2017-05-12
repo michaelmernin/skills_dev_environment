@@ -10,7 +10,7 @@ angular.module('etmApp').controller('ProjectsController', function ($scope, $mdD
   $scope.loadAll();
 
   $scope.viewProjectDetails = function (project, ev) {
-    _projectDialog(project, ev).then(function (updatedProject) {
+    _projectDialog(project, ev, 'edit').then(function (updatedProject) {
       angular.copy(updatedProject, project);
       Project.update(project)
       .$promise.then(function () {_showToast('Updated project: '+ project.name)},_showToast);
@@ -34,12 +34,11 @@ angular.module('etmApp').controller('ProjectsController', function ($scope, $mdD
 
  $scope.addProject = function (ev) {
     var project = new Project();
-    _projectDialog(project,ev)
+    _projectDialog(project, ev, 'add')
     .then(function (p) {
       p.$save(function (savedProject) {
         $scope.projects.push(savedProject);
         _showToast("Added Project: "+savedProject.name);
-        console.log(savedProject);
       });
     });
   };
@@ -51,14 +50,15 @@ angular.module('etmApp').controller('ProjectsController', function ($scope, $mdD
        .hideDelay(3000));
   };
 
-  function _projectDialog(p, ev){
+  function _projectDialog(p, ev, type){
     return $mdDialog.show({
       controller: 'ProjectDetailController',
       templateUrl: 'scripts/app/admin/projects/project.detail.html',
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {
-        project: p
+        project: p,
+        dialogType:type
       }
     });
   }
