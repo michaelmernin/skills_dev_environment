@@ -10,18 +10,10 @@ angular.module('etmApp').controller('ProjectsController', function ($scope, $mdD
   $scope.loadAll();
 
   $scope.viewProjectDetails = function (project, ev) {
-    $mdDialog.show({
-      controller: 'ProjectDetailController',
-      templateUrl: 'scripts/app/admin/projects/project.detail.html',
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      locals: {
-        project: project
-      }
-    }).then(function (updatedProject) {
+    _projectDialog(project, ev).then(function (updatedProject) {
       angular.copy(updatedProject, project);
       Project.update(project)
-      .$promise.then(function () {showToast('Updated project'+ project.name)},showToast);
+      .$promise.then(function () {_showToast('Updated project: '+ project.name)},_showToast);
     });
   };
   
@@ -36,15 +28,39 @@ angular.module('etmApp').controller('ProjectsController', function ($scope, $mdD
     $mdDialog.show(confirmDelete).then(function () {
       Project.delete({id: project.id}, function () {
         $scope.projects.splice($scope.projects.indexOf(project), 1);
-      }).$promise.then(function () {showToast('Deleted project'+ project.name)},showToast);
+      }).$promise.then(function () {_showToast('Deleted project: '+ project.name)},_showToast);
     });
   };
 
-  function showToast(msg){
+ $scope.addProject = function (ev) {
+    var project = new Project();
+    _projectDialog(project,ev)
+    .then(function (p) {
+      p.$save(function (savedProject) {
+        $scope.projects.push(savedProject);
+        _showToast("Added Project: "+savedProject.name);
+        console.log(savedProject);
+      });
+    });
+  };
+
+  function _showToast(msg){
     $mdToast
     .show($mdToast.simple()
        .textContent(msg)
        .hideDelay(3000));
   };
+
+  function _projectDialog(p, ev){
+    return $mdDialog.show({
+      controller: 'ProjectDetailController',
+      templateUrl: 'scripts/app/admin/projects/project.detail.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      locals: {
+        project: p
+      }
+    });
+  }
 
 });
