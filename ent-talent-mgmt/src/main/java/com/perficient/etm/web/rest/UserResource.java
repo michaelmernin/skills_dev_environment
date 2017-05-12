@@ -146,12 +146,13 @@ public class UserResource implements RestResource {
         log.debug("REST request to get users for autocomplete");
         String loweredQuery = query.toLowerCase();
         String[] splitQuery = loweredQuery.split(" ");
-        List<User> usersList = new ArrayList<User>();        
+        List<User> usersList = new ArrayList<User>();
         if (splitQuery.length > 1) {
           usersList.addAll(userRepository.findUsersForAutocompleteByFullName(splitQuery[0], splitQuery[1]));
         } else {
           usersList.addAll(userRepository.findUsersForAutocomplete(loweredQuery));
         }
+        if(reviewId == null) return usersList;
         Review review = reviewRepository.findOne(reviewId);
         User reviewee = review.getReviewee();
         User reviewer = review.getReviewer();

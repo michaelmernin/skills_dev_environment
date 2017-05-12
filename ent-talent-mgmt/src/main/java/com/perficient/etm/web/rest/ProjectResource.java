@@ -55,9 +55,9 @@ public class ProjectResource {
     @RequestMapping(value = "/projects", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RolesAllowed(AuthoritiesConstants.ADMIN)
-    public ResponseEntity<Project> createProject(@Valid @RequestBody Project project) throws URISyntaxException {
+    public ResponseEntity<Project> createProject(@RequestBody Project project) throws URISyntaxException {
 
-        if(projectRepository.exists(project.getId())) return ResponseEntity.badRequest().body(null);
+        if(project.getId() != null && projectRepository.exists(project.getId())) return ResponseEntity.badRequest().body(null);
         Project createdProj = projectRepository.save(project);
         return ResponseEntity.ok().body(createdProj);
     }

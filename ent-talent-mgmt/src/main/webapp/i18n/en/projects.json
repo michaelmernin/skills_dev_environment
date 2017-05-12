@@ -1,12 +1,9 @@
 {
   "projects": {
     "title": "Manage Projects",
-    "filter": "Filter (by Login)",
-    "table": {
-      "login": "Login",
-      "name": "Name",
-      "email": "Email",
-      "roles": "Roles"
+    "filter": "Filter (by Name)",
+    "add": {
+      "button": "Add Project"
     }
   }
 }

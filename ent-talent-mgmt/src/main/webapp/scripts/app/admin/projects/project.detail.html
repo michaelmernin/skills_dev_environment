@@ -1,8 +1,8 @@
-<md-dialog aria-label="{{ project.name  }}" flex="65">
+<md-dialog aria-label="{{ dialogType == 'add' ? 'Add New Project' : project.name  }}" flex="65">
   <form name="projectForm">
     <md-toolbar>
       <div class="md-toolbar-tools">
-        <h2>{{ project.name }}</h2>
+        <h2>{{ dialogType == 'add' ? 'Add New Project' : project.name  }}</h2>
         <span flex></span>
         <md-button class="md-icon-button" ng-click="cancel()">
           <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
@@ -11,8 +11,6 @@
     </md-toolbar>
     <md-dialog-content class="md-dialog-content">
       <h3>Account</h3>
-      <div layout-gt-sm="row">
-        <div layout-gt-xs="row" flex-gt-sm>
           <md-input-container class="md-block" flex-gt-xs>
             <label>Project Name</label>
             <input type="text" name="project name" ng-model="project.name" required/>
@@ -21,16 +19,65 @@
               <div ng-message="minlength">This is too short!</div>
             </div>
           </md-input-container>
-        </div>
         <md-input-container class="md-block" flex-gt-xs>
-          <label>Project Name</label>
+          <label>Project Description</label>
           <input type="text" name="project description" ng-model="project.description" required/>
           <div ng-messages="projectForm.description.$error" ng-show="projectForm.description.$dirty">
             <div ng-message="required">This is required!</div>
             <div ng-message="minlength">This is too short!</div>
           </div>
         </md-input-container>
-      </div>
+        <div layout-gt-sm="row">
+          <md-autocomplete
+              flex-gt-xs
+              md-no-cache="true"
+              md-input-name="manager"
+              md-selected-item="selectedManager"
+              md-item-text="manager.firstName + ' ' + manager.lastName"
+              md-selected-item-change="managerSelected(manager)"
+              md-search-text="managerSearchText"
+              md-min-length="3"
+              md-items="manager in getMatches(managerSearchText)"
+              md-floating-label="Project Manager">
+            <md-item-template>
+              <span md-highlight-text="managerSearchText" md-highlight-flags="^i">
+                {{manager.firstName}} {{manager.lastName}}
+              </span>
+            </md-item-template>
+            <div ng-messages="searchForm.autocompleteField.$error" ng-if="searchForm.autocompleteField.$touched">
+              <div ng-message="required">This is required!</div>
+              <div ng-message="minlength">This is too short!</div>
+            </div>
+          </md-autocomplete>
+          <md-input-container class="md-block" flex-gt-xs>
+            <label>Client</label>
+            <input type="text" name="Client" ng-model="project.client" required/>
+            <div ng-messages="projectForm.client.$error" ng-show="projectForm.client.$dirty">
+              <div ng-message="required">This is required!</div>
+              <div ng-message="minlength">This is too short!</div>
+            </div>
+          </md-input-container>
+        </div>
+        <div layout-gt-sm="row">
+          <md-input-container class="md-block" flex-gt-xs>
+            <label>Start Date</label>
+            <input type="date" name="startDate" ng-model="project.startDate" required/>
+            <div ng-messages="projectForm.startDate.$error">
+              <div ng-message="required">This is required!</div>
+              <div ng-message="date">Please select a valid value.</div>
+            </div>
+          </md-input-container>
+          <md-input-container class="md-block" flex-gt-xs>
+          <label>End Date</label>
+          <input type="date" name="endDate" ng-model="project.endDate" required/>
+            <div ng-messages="projectForm.endDate.$error">
+            <div ng-message="required">This is required!</div>
+            <div ng-message="date">Please select a valid value.</div>
+          </div>
+          </md-input-container>
+        </div>
+
+
       <!--
       <h3>Organization</h3>
       <div layout-gt-sm="row">

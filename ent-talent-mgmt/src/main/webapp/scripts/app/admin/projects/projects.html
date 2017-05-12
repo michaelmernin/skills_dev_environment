@@ -2,6 +2,11 @@
   <md-content md-scroll-y class="md-whiteframe-z1">
     <div layout="column" layout-padding>
       <h2 translate="projects.title">Manage Projects</h2>
+      <p>
+        <md-button class="md-raised md-primary" ng-click="addProject()">
+          <i class="fa fa-plus"></i>&nbsp;{{ 'projects.add.button' | translate }}
+        </md-button>
+      </p>
     
       <md-input-container>
         <label for="filter" translate="projects.filter">Filter</label>
@@ -19,7 +24,6 @@
           </div>
         </md-list-item>
       </md-list>
-
     </div>
   </md-content>
 </div>
