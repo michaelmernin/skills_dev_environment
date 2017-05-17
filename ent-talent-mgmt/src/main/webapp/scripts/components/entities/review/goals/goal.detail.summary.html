@@ -28,10 +28,10 @@
         <span ng-if="goal.completionDate" flex>{{ goal.completionDate | date:'MM/dd/yyyy' }}</span>
         <strong ng-if="!switchCompletion">Not Completed</strong>
         <br/><br/>
-        <strong ng-if="goal.note" translate="review.annual.goals.note">Notes</strong>
-        <br ng-if="goal.note" />
-        <span ng-if="goal.note" flex>{{ goal.note }}</span>
-        <br ng-if="goal.note" />
+        <strong ng-if="goal.reviewerComment" translate="review.annual.goals.note">Notes</strong>
+        <br ng-if="goal.reviewerComment" />
+        <span ng-if="goal.reviewerComment" flex>{{ goal.reviewerComment }}</span>
+        <br ng-if="goal.reviewerComment" />
     </md-dialog-content>
   </form>
 </md-dialog>

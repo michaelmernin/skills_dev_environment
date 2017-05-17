@@ -53,7 +53,7 @@
       </div>
       <md-input-container class="md-block">
         <label translate="review.annual.goals.note">Notes</label>
-        <textarea name="note" ng-disabled="!isReviewee()" ng-model="goal.note" md-maxlength="250"></textarea>
+        <textarea name="note" ng-disabled="!isReviewee()" ng-model="goal.reviewerComment" md-maxlength="250"></textarea>
         <div ng-messages="goalForm.note.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
           <div ng-message="md-maxlength">
             <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Notes' | translate }}', number: '{{ '250' | translate}}'}">Notes cannot be larger than 250 characters.</span>

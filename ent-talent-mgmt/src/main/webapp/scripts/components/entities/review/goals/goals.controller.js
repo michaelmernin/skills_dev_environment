@@ -35,6 +35,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
         goal: goal
       }
     }).then(function (goal) {
+      goal.author = user;
       goal.$save({reviewId: review.id}, function (savedGoal) {
         $scope.goals.push(savedGoal);
       });      

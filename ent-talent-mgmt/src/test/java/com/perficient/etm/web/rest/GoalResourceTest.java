@@ -42,8 +42,8 @@ public class GoalResourceTest extends SpringAppTest {
 
     private static final String DEFAULT_NAME = "SAMPLE_TEXT";
     private static final String UPDATED_NAME = "UPDATED_TEXT";
-    private static final String DEFAULT_NOTE = "SAMPLE_TEXT";
-    private static final String UPDATED_NOTE = "UPDATED_TEXT";
+    private static final String DEFAULT_COMMENT = "SAMPLE_TEXT";
+    private static final String UPDATED_COMMENT = "UPDATED_TEXT";
 
     private static final LocalDate DEFAULT_TARGET_DATE = new LocalDate(0L);
     private static final LocalDate UPDATED_TARGET_DATE = new LocalDate();
@@ -76,7 +76,8 @@ public class GoalResourceTest extends SpringAppTest {
     public void initTest() {
         goal = new Goal();
         goal.setName(DEFAULT_NAME);
-        goal.setNote(DEFAULT_NOTE);
+        goal.setReviewerComment(DEFAULT_COMMENT);
+        goal.setEmployeeComment(DEFAULT_COMMENT);
         goal.setTargetDate(DEFAULT_TARGET_DATE);
         goal.setCompletionDate(DEFAULT_COMPLETION_DATE);
         goal.setReview(new Review());
@@ -100,7 +101,8 @@ public class GoalResourceTest extends SpringAppTest {
         assertThat(goals).hasSize(databaseSizeBeforeCreate + 1);
         Goal testGoal = goals.get(goals.size() - 1);
         assertThat(testGoal.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testGoal.getNote()).isEqualTo(DEFAULT_NOTE);
+        assertThat(testGoal.getReviewerComment()).isEqualTo(DEFAULT_COMMENT);
+        assertThat(testGoal.getEmployeeComment()).isEqualTo(DEFAULT_COMMENT);
         assertThat(testGoal.getTargetDate()).isEqualTo(DEFAULT_TARGET_DATE);
         assertThat(testGoal.getCompletionDate()).isEqualTo(DEFAULT_COMPLETION_DATE);
     }
@@ -117,7 +119,8 @@ public class GoalResourceTest extends SpringAppTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(goal.getId().intValue())))
                 .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-                .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
+                .andExpect(jsonPath("$.[*].reviewerComment").value(hasItem(DEFAULT_COMMENT.toString())))
+                .andExpect(jsonPath("$.[*].employeeComment").value(hasItem(DEFAULT_COMMENT.toString())))
                 .andExpect(jsonPath("$.[*].targetDate").value(hasItem(DEFAULT_TARGET_DATE.toString())))
                 .andExpect(jsonPath("$.[*].completionDate").value(hasItem(DEFAULT_COMPLETION_DATE.toString())));
     }
@@ -134,7 +137,7 @@ public class GoalResourceTest extends SpringAppTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(goal.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
+            .andExpect(jsonPath("$.note").value(DEFAULT_COMMENT.toString()))
             .andExpect(jsonPath("$.targetDate").value(DEFAULT_TARGET_DATE.toString()))
             .andExpect(jsonPath("$.completionDate").value(DEFAULT_COMPLETION_DATE.toString()));
     }
@@ -158,7 +161,8 @@ public class GoalResourceTest extends SpringAppTest {
 
         // Update the goal
         goal.setName(UPDATED_NAME);
-        goal.setNote(UPDATED_NOTE);
+        goal.setReviewerComment(UPDATED_COMMENT);
+        goal.setEmployeeComment(UPDATED_COMMENT);
         goal.setTargetDate(UPDATED_TARGET_DATE);
         goal.setCompletionDate(UPDATED_COMPLETION_DATE);
         restGoalMockMvc.perform(put("/api/reviews/{reviewId}/goals", goal.getReview().getId())
@@ -171,7 +175,8 @@ public class GoalResourceTest extends SpringAppTest {
         assertThat(goals).hasSize(databaseSizeBeforeUpdate);
         Goal testGoal = goals.get(goals.size() - 1);
         assertThat(testGoal.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testGoal.getNote()).isEqualTo(UPDATED_NOTE);
+        assertThat(testGoal.getReviewerComment()).isEqualTo(UPDATED_COMMENT);
+        assertThat(testGoal.getEmployeeComment()).isEqualTo(UPDATED_COMMENT);
         assertThat(testGoal.getTargetDate()).isEqualTo(UPDATED_TARGET_DATE);
         assertThat(testGoal.getCompletionDate()).isEqualTo(UPDATED_COMPLETION_DATE);
     }

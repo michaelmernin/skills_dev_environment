@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- Refactor of Goal to match engagement requirements. -->
+    <changeSet id="20170517104500" author="michael">
+        <dropColumn tableName="T_GOAL" columnName="note"/>
+        <addColumn tableName="T_GOAL">
+            <column name="employee_comment" type="varchar(255)"></column>
+            <column name="reviewer_comment" type="varchar(255)"></column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

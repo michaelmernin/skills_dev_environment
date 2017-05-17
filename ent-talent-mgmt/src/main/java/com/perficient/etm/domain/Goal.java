@@ -30,8 +30,11 @@ public class Goal implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "note")
-    private String note;
+    @Column(name = "reviewer_comment")
+    private String reviewerComment;
+    
+    @Column(name = "employee_comment")
+    private String employeeComment;
 
     @Column(name = "description")
     private String description;
@@ -60,7 +63,7 @@ public class Goal implements Serializable {
         this.description = goal.description;
         this.id = goal.id;
         this.name = goal.name;
-        this.note = goal.note;
+        this.reviewerComment = goal.reviewerComment;
         this.review = goal.review;
         this.targetDate = goal.targetDate;
     }
@@ -84,12 +87,21 @@ public class Goal implements Serializable {
         this.name = name;
     }
 
-    public String getNote() {
-        return note;
+    public String getReviewerComment() {
+        return reviewerComment;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setReviewerComment(String reviewerComment) {
+        this.reviewerComment = reviewerComment;
+    }
+
+    
+    public String getEmployeeComment() {
+        return employeeComment;
+    }
+    
+    public void setEmployeeComment(String employeeComment) {
+        this.employeeComment = employeeComment;
     }
 
     public String getDescription() {

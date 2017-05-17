@@ -8,7 +8,7 @@
         <p class="md-title">Goal Title: {{goal.name}}</p>
         <p class="md-title">Target Date: {{goal.targetDate | date:'MM/dd/yyyy'}} - Completion Date: {{goal.completionDate | date:'MM/dd/yyyy'}}</p>
         <p class="md-title">Description: <span class="md-subhead">{{goal.description}}</span></p>        
-        <p class="md-title" ng-if="goal.note">Notes: <span class="md-subhead">{{goal.note}}</span></p>          
+        <p class="md-title" ng-if="goal.reviewerComment">Notes: <span class="md-subhead">{{goal.reviewerComment}}</span></p>          
       </div>
     </md-list-item>
   </md-list>
