@@ -1,0 +1,80 @@
+<md-dialog flex="65">
+  <form name="goalForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 translate="review.engagement.deliverables.deliverableDetailHeader">Fill out fields to create deliverable</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+      <md-input-container class="md-block">
+        <label translate="review.engagement.deliverables.deliverable">Deliverable</label>
+        <textarea ng-disabled="!isReviewee()" name="goal" ng-model="goal.name" required md-maxlength="250"></textarea>
+        <div ng-messages="goalForm.goal.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
+          <div ng-message="required">
+            <span translate="global.messages.validate.field.enter.required" translate-values="{name: '{{ 'Deliverable' | translate }}'}">Please enter a Deliverable.</span>
+          </div>
+          <div ng-message="md-maxlength">
+            <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Deliverable' | translate }}', number: '{{ '250' | translate}}'}">Deliverable cannot be larger than 250 characters.</span>
+          </div>
+        </div>
+      </md-input-container> 
+      <md-input-container class="md-block">
+        <label translate="review.engagement.deliverables.description">Measure of Success</label>
+        <textarea name="description" ng-disabled="!isReviewee()" ng-model="goal.description" md-maxlength="250"></textarea>
+        <div ng-messages="goalForm.description.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
+          <div ng-message="md-maxlength">
+            <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Measure of Success' | translate }}', number: '{{ '250' | translate}}'}">Measure of Success cannot be larger than 250 characters.</span>
+          </div>
+        </div>
+      </md-input-container> 
+      <div layout-gt-sm="row">
+        <div layout-gt-xs="row" flex-gt-sm>
+          <md-input-container class="md-block" flex-gt-xs>
+            <label translate="review.engagement.deliverables.targetDate">Target Date</label>
+            <input type="date" ng-disabled="!isReviewee()" name="targetDate" ng-model="goal.targetDate"/>
+            <div ng-messages="goalForm.targetDate.$error">
+              <div ng-message="date">
+                <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.engagement.deliverables.targetDate' | translate }}'}" >Please select a valid value.</span>
+              </div>
+            </div>
+          </md-input-container>
+        </div>
+        <div layout-gt-xs="row" flex-gt-sm>
+          <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="!isReviewee()" ng-click="checkCompletion(switchCompletion)">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
+          <md-input-container class="md-block" flex-gt-xs>
+            <label translate="review.engagement.deliverables.completionDate">Completion Date</label>
+            <input type="date" name="completionDate" ng-disabled="!isReviewee() && !switchCompletion" ng-model="goal.completionDate" ng-required="switchCompletion"/>
+          </md-input-container>
+        </div>
+      </div>
+	  <md-input-container class="md-block">
+        <label translate="review.engagement.deliverables.employeeComment">Employee Comment</label>
+        <textarea name="employeeComment" ng-disabled="!isReviewee()" ng-model="goal.employeeComment" md-maxlength="250"></textarea>
+        <div ng-messages="goalForm.employeeComment.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
+          <div ng-message="md-maxlength">
+            <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Employee Comments' | translate }}', number: '{{ '250' | translate}}'}">Employee Comments cannot be larger than 250 characters.</span>
+          </div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label translate="review.engagement.deliverables.reviewerComment">Reviewer Comment</label>
+        <textarea name="reviewerComment" ng-disabled="!isReviewee()" ng-model="goal.reviewerComment" md-maxlength="250"></textarea>
+        <div ng-messages="goalForm.reviewerComment.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
+          <div ng-message="md-maxlength">
+            <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Reviewer Comments' | translate }}', number: '{{ '250' | translate}}'}">Employee Comments cannot be larger than 250 characters.</span>
+          </div>
+        </div>
+      </md-input-container>
+      
+    </md-dialog-content>
+    <md-dialog-actions>
+      <span flex></span>
+      <md-button ng-click="cancel()" class="md-primary" translate="review.engagement.deliverables.cancel">Cancel</md-button>
+      <md-button type="submit" ng-click="hide()" class="md-primary" translate="review.engagement.deliverables.save">Save</md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

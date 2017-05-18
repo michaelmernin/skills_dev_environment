@@ -99,6 +99,20 @@
         "comment": "A comment is required for any rating other than 3"
       }
     },
+    "engagement": {
+     "deliverables": {
+       "addDeliverable": "Add Deliverable",
+       "deliverable": "Deliverable",
+       "deliverableDetailHeader": "Fill out fields to create deliverable",
+       "cancel": "Cancel",
+       "save": "Save",
+       "description": "Measure of Success",
+       "targetDate": "Target Date",
+       "completionDate": "Completion Date",
+       "employeeComment": "Employee Comment",
+       "reviewerComment": "Reviewer Comment"
+     }
+    },
     "a": {
       "title": "a Title",
       "startDate": "a Start Date",
