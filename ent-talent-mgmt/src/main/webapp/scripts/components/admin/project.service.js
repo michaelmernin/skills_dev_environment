@@ -32,8 +32,8 @@ angular.module('etmApp').factory('Project', function ($resource, DateUtils) {
       method:'DELETE',
       transformResponse: responseTransformer
     },
-    'getAllbyManager': {
-      url: 'api/projects/byManager/:id',
+    'getAllByUser': {
+      url: 'api/projects/byUser/:id',
       method: 'GET',
       isArray: true,
       transformResponse: responseTransformer

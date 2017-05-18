@@ -116,13 +116,17 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
       });
     } else if (this.review.reviewType.processName === 'engagementReview' && $scope.review.project !== undefined) {
       var project = $scope.review.project;
-      Array.prototype.push.apply($scope.reviewees, project.projectMembers);
+      if ($scope.currentUser.id === project.manager.id) {
+        $scope.reviewees = project.projectMembers.concat(project.manager);
+      } else {
+        Array.prototype.push.apply($scope.reviewees, [$scope.currentUser]);
+      }
     }
   }
   
   $scope.populateProjects = function () {
     if (this.review.reviewType.processName === 'engagementReview') {
-      Project.getAllbyManager({id: $scope.currentUser.id}, function(projects) {
+      Project.getAllByUser({id: $scope.currentUser.id}, function(projects) {
         Array.prototype.push.apply($scope.projects, projects);
       })
     }

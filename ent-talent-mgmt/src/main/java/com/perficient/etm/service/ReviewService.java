@@ -5,17 +5,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
 import javax.inject.Inject;
+
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
+
 
 import com.perficient.etm.domain.Feedback;
 import com.perficient.etm.domain.FeedbackType;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewStatus;
 import com.perficient.etm.domain.ReviewType;
+import com.perficient.etm.domain.User;
 import com.perficient.etm.exception.ActivitiProcessInitiationException;
 import com.perficient.etm.exception.ETMException;
 import com.perficient.etm.exception.ReviewProcessNotFound;
@@ -158,8 +162,15 @@ public class ReviewService extends AbstractBaseService {
             review.setReviewee(u);
             switch(review.getReviewType().getInterval()) {
             case ANNUAL:
-            case ENGAGEMENT:
                 review.setReviewer(u.getCounselor());
+                break;
+            case ENGAGEMENT:
+                User manager = review.getProject().getManager();
+                if (manager.getId() != u.getId()) {
+                    review.setReviewer(manager);
+                } else {
+                    review.setReviewer(u.getCounselor());
+                }
                 break;
             default:
                 break;
