@@ -137,7 +137,6 @@ public class GoalResourceTest extends SpringAppTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(goal.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.note").value(DEFAULT_COMMENT.toString()))
             .andExpect(jsonPath("$.targetDate").value(DEFAULT_TARGET_DATE.toString()))
             .andExpect(jsonPath("$.completionDate").value(DEFAULT_COMPLETION_DATE.toString()));
     }
