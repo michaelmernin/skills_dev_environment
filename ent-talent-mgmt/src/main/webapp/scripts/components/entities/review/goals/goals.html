@@ -1,10 +1,8 @@
 <div ng-cloak>
   <div class="layout-padding">
-    <br ng-if="goals.length == 0" />
     <div ng-if="goals.length == 0">No {{ isEngagementReview() ? 'deliverables' : 'goals' }} have been created for this review</div>
     <md-button class="md-raised" ng-if="isReviewee() && isEngagementReview()" ng-click="addGoal($event)" translate="review.engagement.deliverables.addDeliverable">Add Deliverable</md-button>
     <md-button class="md-raised" ng-if="isReviewee() && !isEngagementReview()" ng-click="addGoal($event)" translate="review.annual.goals.addGoal">Add Goal</md-button>
-    <br ng-if="goals.length"/>
     <md-list>
       <md-list-item class="md-3-line goal" ng-repeat="goal in goals" ng-click="editGoal(goal, $event)">
         <md-icon md-font-icon="{{ getIcon(goal.completionDate)}}" style="color: {{ getColor(goal.completionDate) }}" class="status-icon {{ getIcon(goal.completionDate) }}"></md-icon>
