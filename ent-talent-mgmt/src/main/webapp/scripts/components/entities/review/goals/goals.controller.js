@@ -2,7 +2,7 @@
 
 angular.module('etmApp').controller('GoalsController', function ($scope, $mdDialog, $stateParams, $state, $window, $mdMedia, Goal, Principal) {
   var review = {};
-  $scope.goals = []; 
+  $scope.goals = [];
   var user = {};
   var isReviewee = {};
   Principal.identity().then(function (account) {
@@ -38,10 +38,33 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       goal.author = user;
       goal.$save({reviewId: review.id}, function (savedGoal) {
         $scope.goals.push(savedGoal);
-      });      
+      });
     });
   };
-  
+
+  $scope.addDeliverable = function (ev) {
+    var goal = new Goal();
+    if (user.id == review.reviewee.id) {
+      goal.isReviewee = true;
+    } else {
+      goal.isReviewee = false;
+    }
+    $mdDialog.show({
+      controller: 'GoalDetailController',
+      templateUrl: 'scripts/components/entities/review/goals/deliverable.detail.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      locals: {
+        goal: goal
+      }
+    }).then(function (goal) {
+      goal.author = user;
+      goal.$save({reviewId: review.id}, function (savedGoal) {
+        $scope.goals.push(savedGoal);
+      });
+    });
+  };
+
   $scope.editGoal = function (goal, ev) {
     if (goal.targetDate != null) {
       var tempGoal = new Date(goal.targetDate);
@@ -50,7 +73,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     if (goal.completionDate != null) {
       var tempGoal = new Date(goal.completionDate);
       goal.completionDate = new Date(tempGoal.getTime() + tempGoal.getTimezoneOffset() * 60000);
-    }    
+    }
     if (user.id == review.reviewee.id) {
       goal.isReviewee = true;
     } else {
@@ -70,7 +93,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       goal.$update({reviewId: review.id});
     });
   };
-  
+
   $scope.deleteGoal = function (goal, ev) {
     var confirmDelete = $mdDialog.confirm()
       .title('Confirm Goal Deletion')
@@ -84,7 +107,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       Goal.delete({reviewId: review.id, id: goal.id});
     });
   };
-  
+
   $scope.getIcon = function (completionDate) {
     if (completionDate) {
       return 'fa fa-lg fa-check-circle-o'
@@ -92,23 +115,23 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       return 'fa fa-lg fa-circle-o'
     }
   };
-  
+
   $scope.getColor = function (completionDate) {
-    if(completionDate) {
+    if (completionDate) {
       return 'green;'
     } else {
       return ''
     }
   };
-  
+
   $scope.isReviewee = function () {
-    if (user.id == review.reviewee.id) {
-      return true;
-    } else {
-      return false;
-    }
+    return user.id == review.reviewee.id;
   };
-  
+
+  $scope.isEngagementReview = function () {
+    return review.reviewType.processName === 'engagementReview';
+  };
+
   $scope.fieldLimit = function () {
     var width = Math.max(320, $window.innerWidth);
     var padding = 100;
