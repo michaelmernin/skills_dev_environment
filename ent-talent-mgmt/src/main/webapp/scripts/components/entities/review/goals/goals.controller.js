@@ -95,10 +95,12 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   };
 
   $scope.deleteGoal = function (goal, ev) {
+    var isEngagementReview = goal.review.reviewType.id === 2;
+    var label = isEngagementReview ? 'Deliverable' : 'Goal';
     var confirmDelete = $mdDialog.confirm()
-      .title('Confirm Goal Deletion')
-      .ariaLabel('Delete Goal Confirm')
-      .content('Delete Goal: ' + goal.name + '?')
+      .title('Confirm ' + label + ' Deletion')
+      .ariaLabel('Delete ' + label + ' Confirm')
+      .content('Delete ' + label + ': ' + goal.name + '?')
       .ok('Delete')
       .cancel('Cancel')
       .targetEvent(ev);
@@ -125,11 +127,11 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   };
 
   $scope.isReviewee = function () {
-    return user.id == review.reviewee.id;
+    return review.reviewee && user.id == review.reviewee.id;
   };
 
   $scope.isEngagementReview = function () {
-    return review.reviewType.processName === 'engagementReview';
+    return review.reviewType.id === 2;
   };
 
   $scope.fieldLimit = function () {

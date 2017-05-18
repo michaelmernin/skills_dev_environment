@@ -16,7 +16,7 @@
           </h4>
           <p>{{goal.description | limitTo:fieldLimit()}}</p>
         </div>
-        <md-icon ng-if="isReviewee()" md-font-icon="fa fa-lg fa-trash" class="md-secondary" aria-label="Delete Goal" ng-click="deleteGoal(goal, $event)"></md-icon>
+        <md-icon ng-if="isReviewee()" md-font-icon="fa fa-lg fa-trash" class="md-secondary" aria-label="Delete {{ isEngagementReview() ? 'Deliverable' : 'Goal' }}" ng-click="deleteGoal(goal, $event)"></md-icon>
       </md-list-item>
     </md-list>
   </div>
