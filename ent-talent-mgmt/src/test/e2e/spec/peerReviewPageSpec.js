@@ -5,7 +5,7 @@ var userData = require('../data/userData.js');
 var AnnualReviewPage = require('../page/annualReviewPage.js');
 var PeerReviewPage = require('../page/peerReviewPage.js');
 
-describe('Enterprise Talent Management', function () {
+xdescribe('Enterprise Talent Management', function () {
   describe('Peer Review Tab', function () {
     var annualReviewPage;
     var peerReviewPage;
