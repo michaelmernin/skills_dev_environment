@@ -76,49 +76,26 @@
           </div>
           </md-input-container>
         </div>
-
-
-      <!--
-      <h3>Organization</h3>
-      <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
-          <label>Roles</label>
-          <md-select multiple="multiple" ng-model="user.authorities" ng-model-options="{trackBy: '$value.name'}" required>
-            <md-option ng-value="role" ng-repeat="role in roles">{{ role.description }}</md-option>
-          </md-select>
-        </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
-          <label>Counselor</label>
-          <md-select ng-model="user.counselor" ng-model-options="{trackBy: '$value.id'}">
-            <md-option ng-value="counselor" ng-repeat="counselor in counselors">{{ counselor.firstName }} {{ counselor.lastName }}</md-option>
-          </md-select>
-        </md-input-container>
-      </div>
-      <h3>Employment</h3>
-      <div layout-gt-sm="row">
-        <md-input-container class="md-block" flex-gt-sm>
-          <label>Start Date</label>
-          <input type="date" name="startDate" ng-model="user.startDate"/>
-          <div ng-messages="projectForm.startDate.$error" ng-show="projectForm.startDate.$dirty">
-            <div ng-message="date">This is not a valid date!</div>
-          </div>
-        </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
-          <label>Title</label>
-          <input type="text" name="title" ng-model="user.title" minlength="8"/>
-          <div ng-messages="projectForm.title.$error" ng-show="projectForm.title.$dirty">
-            <div ng-message="minlength">This is too short!</div>
-          </div>
-        </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
-          <label>Target Title</label>
-          <input type="text" name="targetTitle" ng-model="user.targetTitle" minlength="8"/>
-          <div ng-messages="projectForm.targetTitle.$error" ng-show="projectForm.targetTitle.$dirty">
-            <div ng-message="minlength">This is too short!</div>
-          </div>
-        </md-input-container>
-      </div>
-      -->
+      <md-chips ng-model="project.projectMembers" md-autocomplete-snap
+                md-transform-chip="transformChip($chip)"
+                md-require-match="true">
+        <md-autocomplete
+            md-no-cache="true"
+            md-selected-item="selectedMember"
+            md-search-text="memberSearchText"
+            md-items="member in getMatches(memberSearchText, true)"
+            md-item-text="member.firstName+' '+member.lastName"
+            md-min-length="3"
+            placeholder="Add member">
+          <span md-highlight-text="memberSearchText">{{member.firstName}} {{member.lastName}}</span>
+        </md-autocomplete>
+        <md-chip-template>
+        <span>
+          <strong>{{$chip.firstName}} {{$chip.lastName}}</strong>
+          <em>(member)</em>
+        </span>
+        </md-chip-template>
+      </md-chips>
     </md-dialog-content>
     <md-dialog-actions>
       <span flex></span>
