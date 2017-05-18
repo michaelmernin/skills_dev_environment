@@ -26,32 +26,12 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     } else {
       goal.isReviewee = false;
     }
+    var isEngagementReview = review.reviewType.id === 2;
+    var templateUrl = 'scripts/components/entities/review/goals/';
+    templateUrl += isEngagementReview ? 'deliverable.detail.html' : 'goal.detail.html';
     $mdDialog.show({
       controller: 'GoalDetailController',
       templateUrl: 'scripts/components/entities/review/goals/goal.detail.html',
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      locals: {
-        goal: goal
-      }
-    }).then(function (goal) {
-      goal.author = user;
-      goal.$save({reviewId: review.id}, function (savedGoal) {
-        $scope.goals.push(savedGoal);
-      });
-    });
-  };
-
-  $scope.addDeliverable = function (ev) {
-    var goal = new Goal();
-    if (user.id == review.reviewee.id) {
-      goal.isReviewee = true;
-    } else {
-      goal.isReviewee = false;
-    }
-    $mdDialog.show({
-      controller: 'GoalDetailController',
-      templateUrl: 'scripts/components/entities/review/goals/deliverable.detail.html',
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {
@@ -79,9 +59,10 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     } else {
       goal.isReviewee = false;
     }
+    var isEngagementReview = review.reviewType.id === 2;
     $mdDialog.show({
       controller: 'GoalDetailController',
-      templateUrl: $state.current.data.goalsConfig,
+      templateUrl: isEngagementReview ? $state.current.data.deliverablesConfig : $state.current.data.goalsConfig,
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {
@@ -95,7 +76,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   };
 
   $scope.deleteGoal = function (goal, ev) {
-    var isEngagementReview = goal.review.reviewType.id === 2;
+    var isEngagementReview = review.reviewType.id === 2;
     var label = isEngagementReview ? 'Deliverable' : 'Goal';
     var confirmDelete = $mdDialog.confirm()
       .title('Confirm ' + label + ' Deletion')
