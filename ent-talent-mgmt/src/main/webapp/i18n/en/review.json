@@ -103,7 +103,14 @@
      "deliverables": {
        "addDeliverable": "Add Deliverable",
        "deliverable": "Deliverable",
-       "deliverableDetailHeader": "Fill out fields to create deliverable"
+       "deliverableDetailHeader": "Fill out fields to create deliverable",
+       "cancel": "Cancel",
+       "save": "Save",
+       "description": "Measure of Success",
+       "targetDate": "Target Date",
+       "completionDate": "Completion Date",
+       "employeeComment": "Employee Comment",
+       "reviewerComment": "Reviewer Comment"
      }
     },
     "a": {
