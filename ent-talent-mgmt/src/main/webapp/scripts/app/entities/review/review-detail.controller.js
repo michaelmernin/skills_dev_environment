@@ -11,7 +11,7 @@ angular.module('etmApp').controller('ReviewDetailController', function ($scope, 
   
   $scope.getReviewTitle = function () {
     var bulkTitle = ' ' + $scope.review.reviewType.name + ' for ' + $scope.review.reviewee.firstName + ' ' + $scope.review.reviewee.lastName;
-    if ($scope.review.processName === 'annualReview') {
+    if ($scope.review.reviewType.processName === 'annualReview') {
       return $scope.review.startDate.getFullYear() + '-' + $scope.review.endDate.getFullYear() + bulkTitle;
     } else {
       var q = moment($scope.review.startDate).format('Q');
