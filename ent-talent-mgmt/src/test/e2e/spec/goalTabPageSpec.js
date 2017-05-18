@@ -5,7 +5,7 @@ var LoginPage = require('../page/loginPage.js');
 var userData = require('../data/userData.js');
 var GoalTabPage = require('../page/goalTabPage.js');
 
-xdescribe('Enterprise Talent Management', function () {
+describe('Enterprise Talent Management', function () {
   'use strict';
   describe('Goal Tab', function () {
     var goalTabPage;
