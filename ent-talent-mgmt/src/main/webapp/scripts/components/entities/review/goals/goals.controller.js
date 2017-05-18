@@ -31,7 +31,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     templateUrl += isEngagementReview ? 'deliverable.detail.html' : 'goal.detail.html';
     $mdDialog.show({
       controller: 'GoalDetailController',
-      templateUrl: 'scripts/components/entities/review/goals/goal.detail.html',
+      templateUrl: templateUrl,
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {
