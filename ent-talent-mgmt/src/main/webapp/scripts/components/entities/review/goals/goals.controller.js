@@ -5,6 +5,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   $scope.goals = [];
   var user = {};
   var isReviewee = {};
+  $scope.isEngagementReview = false;
   Principal.identity().then(function (account) {
     user = account;
   });
@@ -12,6 +13,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   $scope.$parent.$watch('review', function (parentReview) {
     review = parentReview;
     if (review.id) {
+      $scope.isEngagementReview = review.reviewType.id === 2
 
       Goal.query({reviewId: review.id}, function (goals) {
         $scope.goals = goals;
@@ -27,6 +29,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       goal.isReviewee = false;
     }
     var isEngagementReview = review.reviewType.id === 2;
+
     var templateUrl = 'scripts/components/entities/review/goals/';
     templateUrl += isEngagementReview ? 'deliverable.detail.html' : 'goal.detail.html';
     $mdDialog.show({
@@ -59,7 +62,6 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     } else {
       goal.isReviewee = false;
     }
-    var isEngagementReview = review.reviewType.id === 2;
     $mdDialog.show({
       controller: 'GoalDetailController',
       templateUrl: isEngagementReview ? $state.current.data.deliverablesConfig : $state.current.data.goalsConfig,
@@ -109,10 +111,6 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
 
   $scope.isReviewee = function () {
     return review.reviewee && user.id == review.reviewee.id;
-  };
-
-  $scope.isEngagementReview = function () {
-    return review.reviewType.id === 2;
   };
 
   $scope.fieldLimit = function () {
