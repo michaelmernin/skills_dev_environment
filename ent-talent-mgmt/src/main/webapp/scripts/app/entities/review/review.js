@@ -40,6 +40,7 @@ angular.module('etmApp').config(function ($stateProvider) {
       roles: ['ROLE_USER'],
       pageTitle: 'review.detail.title',
       goalsConfig: 'scripts/components/entities/review/goals/goal.detail.summary.html',
+      deliverablesConfig: 'scripts/components/entities/review/goals/deliverable.detail.summary.html',
       evaluationConfig: 'scripts/components/entities/review/evaluation/evaluation.detail.summary.html'
     },
     views: {
