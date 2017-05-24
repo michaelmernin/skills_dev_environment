@@ -97,7 +97,8 @@
       },
       "evaluation": {
         "comment": "A comment is required for any rating other than 3"
-      }
+      },
+      "reviewer": "Reviewer"
     },
     "engagement": {
      "deliverables": {

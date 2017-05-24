@@ -1,258 +1,332 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- origin at X=0.0 Y=0.0 -->
+<!-- origin at X=-80.0 Y=0.0 -->
 <definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:modeler="http://activiti.com/modeler" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.omg.org/spec/DD/20100524/DI http://www.omg.org/spec/DD/20100524/DI-XMI http://www.omg.org/spec/DD/20100524/DC http://www.omg.org/spec/DD/20100524/DC-XMI http://www.omg.org/spec/BPMN/20100524/DI http://www.omg.org/spec/BPMN/20100524/DI-XMI" id="Definitions_1" modeler:version="1.0en" modeler:exportDateTime="20150216104339475" modeler:modelId="933057" modeler:modelVersion="3" modeler:modelLastUpdated="1424083415708" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.1.2.201502162150" targetNamespace="http://www.activiti.org/processdef">
   <process id="engagementReview" name="Enterprise Engagement Review Process" isExecutable="true">
-    <startEvent id="anualReviewStart" name="Start">
-      <outgoing>SequenceFlow_33</outgoing>
+    <startEvent id="engagementReviewStart" name="Start">
+      <outgoing>SequenceFlow_startExclusiveFeedback</outgoing>
     </startEvent>
-    <parallelGateway id="ParallelGateway_3" name="Start Feedback">
-      <incoming>SequenceFlow_33</incoming>
-      <incoming>SequenceFlow_48</incoming>
-      <outgoing>SequenceFlow_34</outgoing>
-      <outgoing>SequenceFlow_35</outgoing>
-    </parallelGateway>
-    <sequenceFlow id="SequenceFlow_33" sourceRef="anualReviewStart" targetRef="ParallelGateway_3"/>
-    <userTask id="UserTask_3" name="Reviewer Feedback">
-      <incoming>SequenceFlow_34</incoming>
-      <outgoing>SequenceFlow_49</outgoing>
-    </userTask>
-    <userTask id="UserTask_4" name="Reviewee Feedback">
-      <incoming>SequenceFlow_35</incoming>
-      <outgoing>SequenceFlow_50</outgoing>
-    </userTask>
-    <sequenceFlow id="SequenceFlow_34" sourceRef="ParallelGateway_3" targetRef="UserTask_3"/>
-    <sequenceFlow id="SequenceFlow_35" sourceRef="ParallelGateway_3" targetRef="UserTask_4"/>
-    <parallelGateway id="ParallelGateway_4" name="End Feedback / Start Approval">
-      <incoming>SequenceFlow_36</incoming>
-      <incoming>SequenceFlow_43</incoming>
-      <outgoing>SequenceFlow_44</outgoing>
-      <outgoing>SequenceFlow_45</outgoing>
-    </parallelGateway>
-    <sequenceFlow id="SequenceFlow_36" sourceRef="ServiceTask_2" targetRef="ParallelGateway_4"/>
-    <exclusiveGateway id="ExclusiveGateway_2" name="Both People Approve?">
-      <incoming>SequenceFlow_46</incoming>
-      <incoming>SequenceFlow_47</incoming>
-      <outgoing>SequenceFlow_39</outgoing>
-      <outgoing>SequenceFlow_51</outgoing>
+    <sequenceFlow id="SequenceFlow_startExclusiveFeedback" sourceRef="engagementReviewStart" targetRef="ExclusiveGateway_startFeedback"/>
+    <exclusiveGateway id="ExclusiveGateway_startFeedback" name="Gather all feedback triggers">
+      <incoming>SequenceFlow_startExclusiveFeedback</incoming>
+      <incoming>SequenceFlow_setReviewAndFeedbackToOpen</incoming>
+      <outgoing>SequenceFlow_startParallelFeedback</outgoing>
     </exclusiveGateway>
-    <serviceTask id="ServiceTask_1" activiti:expression="${reviewService.setStatusById(Review,'COMPLETE')}" name="Set Review to Complete">
-      <incoming>SequenceFlow_39</incoming>
-      <outgoing>SequenceFlow_40</outgoing>
+    <sequenceFlow id="SequenceFlow_startParallelFeedback" sourceRef="ExclusiveGateway_startFeedback" targetRef="ParallelGateway_startFeedback"/>
+    <parallelGateway id="ParallelGateway_startFeedback" name="Start Feedback">
+      <incoming>SequenceFlow_startParallelFeedback</incoming>
+      <outgoing>SequenceFlow_startReviewerFeedback</outgoing>
+      <outgoing>SequenceFlow_startRevieweeFeedback</outgoing>
+    </parallelGateway>
+    <sequenceFlow id="SequenceFlow_startReviewerFeedback" sourceRef="ParallelGateway_startFeedback" targetRef="UserTask_completeReviewerFeedback"/>
+    <sequenceFlow id="SequenceFlow_startRevieweeFeedback" sourceRef="ParallelGateway_startFeedback" targetRef="UserTask_completeRevieweeFeedback"/>
+    <userTask id="UserTask_completeReviewerFeedback" activiti:assignee="${Reviewer}" name="Reviewer Feedback">
+      <incoming>SequenceFlow_startReviewerFeedback</incoming>
+      <outgoing>SequenceFlow_setReviewerFeedbackReady</outgoing>
+    </userTask>
+    <userTask id="UserTask_completeRevieweeFeedback" activiti:assignee="${Reviewee}" name="Reviewee Feedback">
+      <incoming>SequenceFlow_startRevieweeFeedback</incoming>
+      <outgoing>SequenceFlow_setRevieweeFeedbackReady</outgoing>
+    </userTask>
+    <sequenceFlow id="SequenceFlow_setReviewerFeedbackReady" sourceRef="UserTask_completeReviewerFeedback" targetRef="ServiceTask_setReviewerFeedbackReady"/>
+    <sequenceFlow id="SequenceFlow_setRevieweeFeedbackReady" sourceRef="UserTask_completeRevieweeFeedback" targetRef="ServiceTask_setRevieweeFeedbackReady"/>
+    <serviceTask id="ServiceTask_setReviewerFeedbackReady" activiti:expression="${feedbackService.setStatusById(ReviewerFeedback,'READY')}" name="Set Reviewer Feedback to Ready">
+      <incoming>SequenceFlow_setReviewerFeedbackReady</incoming>
+      <outgoing>SequenceFlow_endReviewerFeedback</outgoing>
     </serviceTask>
-    <endEvent id="EndEvent_1" name="End Event 1">
-      <incoming>SequenceFlow_40</incoming>
+    <serviceTask id="ServiceTask_setRevieweeFeedbackReady" activiti:expression="${feedbackService.setStatusById(RevieweeFeedback,'READY')}" name="Set Reviewee Feedback to Ready">
+      <incoming>SequenceFlow_setRevieweeFeedbackReady</incoming>
+      <outgoing>SequenceFlow_endRevieweeFeedback</outgoing>
+    </serviceTask>
+    <sequenceFlow id="SequenceFlow_endReviewerFeedback" sourceRef="ServiceTask_setReviewerFeedbackReady" targetRef="ParallelGateway_endFeedback"/>
+    <sequenceFlow id="SequenceFlow_endRevieweeFeedback" sourceRef="ServiceTask_setRevieweeFeedbackReady" targetRef="ParallelGateway_endFeedback"/>
+    <parallelGateway id="ParallelGateway_endFeedback" name="End Feedback">
+      <incoming>SequenceFlow_endReviewerFeedback</incoming>
+      <incoming>SequenceFlow_endRevieweeFeedback</incoming>
+      <outgoing>SequenceFlow_setReviewToJointApproval</outgoing>
+    </parallelGateway>
+    <sequenceFlow id="SequenceFlow_setReviewToJointApproval" sourceRef="ParallelGateway_endFeedback" targetRef="ServiceTask_setReviewToJointApproval"/>
+    <serviceTask id="ServiceTask_setReviewToJointApproval" activiti:expression="${reviewService.setStatusById(Review,'JOINT_APPROVAL')}" name="Set Review to Joint Approval">
+      <incoming>SequenceFlow_setReviewToJointApproval</incoming>
+      <outgoing>SequenceFlow_startApproval</outgoing>
+    </serviceTask>
+    <sequenceFlow id="SequenceFlow_startApproval" sourceRef="ServiceTask_setReviewToJointApproval" targetRef="ParallelGateway_startApproval"/>
+    <parallelGateway id="ParallelGateway_startApproval" name="Start Approval">
+      <incoming>SequenceFlow_startApproval</incoming>
+      <outgoing>SequenceFlow_startReviewerApproval</outgoing>
+      <outgoing>SequenceFlow_startRevieweeApproval</outgoing>
+    </parallelGateway>
+    <sequenceFlow id="SequenceFlow_startReviewerApproval" sourceRef="ParallelGateway_startApproval" targetRef="ReviewerJointApproval"/>
+    <sequenceFlow id="SequenceFlow_startRevieweeApproval" sourceRef="ParallelGateway_startApproval" targetRef="RevieweeJointApproval"/>
+    <userTask id="ReviewerJointApproval" activiti:assignee="${Reviewer}" name="Reviewer Approval">
+      <incoming>SequenceFlow_startReviewerApproval</incoming>
+      <outgoing>SequenceFlow_reviewerJointApproval</outgoing>
+    </userTask>
+    <userTask id="RevieweeJointApproval" activiti:assignee="${Reviewee}" name="Reviewee Approval">
+      <incoming>SequenceFlow_startRevieweeApproval</incoming>
+      <outgoing>SequenceFlow_revieweeJointApproval</outgoing>
+    </userTask>
+    <sequenceFlow id="SequenceFlow_reviewerJointApproval" sourceRef="ReviewerJointApproval" targetRef="ParallelGateway_jointApprovalParallelJoin"/>
+    <sequenceFlow id="SequenceFlow_revieweeJointApproval" sourceRef="RevieweeJointApproval" targetRef="ParallelGateway_jointApprovalParallelJoin"/>
+    <parallelGateway id="ParallelGateway_jointApprovalParallelJoin" name="Joint Approval Parallel Join">
+      <incoming>SequenceFlow_reviewerJointApproval</incoming>
+      <incoming>SequenceFlow_revieweeJointApproval</incoming>
+      <outgoing>SequenceFlow_joinApprovalExclusiveGateway</outgoing>
+    </parallelGateway>
+    <sequenceFlow id="SequenceFlow_joinApprovalExclusiveGateway" sourceRef="ParallelGateway_jointApprovalParallelJoin" targetRef="ExclusiveGateway_jointApprovalExclusiveGateway"/>
+    <exclusiveGateway id="ExclusiveGateway_jointApprovalExclusiveGateway" name="Both People Approve?">
+      <incoming>SequenceFlow_joinApprovalExclusiveGateway</incoming>
+      <outgoing>SequenceFlow_jointAcceptFlow</outgoing>
+      <outgoing>SequenceFlow_jointRejectFlow</outgoing>
+    </exclusiveGateway>
+    <sequenceFlow id="SequenceFlow_jointAcceptFlow" name="yes" sourceRef="ExclusiveGateway_jointApprovalExclusiveGateway" targetRef="ServiceTask_setReviewToComplete">
+      <conditionExpression xsi:type="tFormalExpression" id="FormalExpression_5"><![CDATA[${REVIEWER_RESULT == true and REVIEWEE_RESULT == true}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="SequenceFlow_jointRejectFlow" name="No" sourceRef="ExclusiveGateway_jointApprovalExclusiveGateway" targetRef="ServiceTask_setReviewAndFeedbackToOpen">
+      <conditionExpression xsi:type="tFormalExpression" id="FormalExpression_6"><![CDATA[${REVIEWER_RESULT == false or REVIEWEE_RESULT == false}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="ServiceTask_setReviewToComplete" activiti:expression="${reviewService.setStatusById(Review,'COMPLETE')}" name="Set Review to Complete">
+      <incoming>SequenceFlow_jointAcceptFlow</incoming>
+      <outgoing>SequenceFlow_setReviewToComplete</outgoing>
+    </serviceTask>
+    <sequenceFlow id="SequenceFlow_setReviewToComplete" sourceRef="ServiceTask_setReviewToComplete" targetRef="EndEvent_1"/>
+    <endEvent id="EndEvent_1" name="End">
+      <incoming>SequenceFlow_setReviewToComplete</incoming>
     </endEvent>
-    <sequenceFlow id="SequenceFlow_39" sourceRef="ExclusiveGateway_2" targetRef="ServiceTask_1"/>
-    <sequenceFlow id="SequenceFlow_40" sourceRef="ServiceTask_1" targetRef="EndEvent_1"/>
-    <sequenceFlow id="SequenceFlow_43" sourceRef="ServiceTask_3" targetRef="ParallelGateway_4"/>
-    <userTask id="UserTask_5" name="Reviewer Approval">
-      <incoming>SequenceFlow_44</incoming>
-      <outgoing>SequenceFlow_46</outgoing>
-    </userTask>
-    <userTask id="UserTask_6" name="Reviewee Approval">
-      <incoming>SequenceFlow_45</incoming>
-      <outgoing>SequenceFlow_47</outgoing>
-    </userTask>
-    <sequenceFlow id="SequenceFlow_44" sourceRef="ParallelGateway_4" targetRef="UserTask_5"/>
-    <sequenceFlow id="SequenceFlow_45" sourceRef="ParallelGateway_4" targetRef="UserTask_6"/>
-    <sequenceFlow id="SequenceFlow_46" sourceRef="UserTask_5" targetRef="ExclusiveGateway_2"/>
-    <sequenceFlow id="SequenceFlow_47" sourceRef="UserTask_6" targetRef="ExclusiveGateway_2"/>
-    <sequenceFlow id="SequenceFlow_48" sourceRef="ServiceTask_4" targetRef="ParallelGateway_3"/>
-    <serviceTask id="ServiceTask_2" activiti:expression="${feedbackService.setStatusById(RevieweeFeedback,'READY')}" name="Set Reviewer Feedback to Ready">
-      <incoming>SequenceFlow_49</incoming>
-      <outgoing>SequenceFlow_36</outgoing>
+    <serviceTask id="ServiceTask_setReviewAndFeedbackToOpen" activiti:expression="${reviewService.setReviewAndFeedbackStatusById(Review,'OPEN')}" name="Set Feedbacks and Review back to Open status">
+      <incoming>SequenceFlow_jointRejectFlow</incoming>
+      <outgoing>SequenceFlow_setReviewAndFeedbackToOpen</outgoing>
     </serviceTask>
-    <sequenceFlow id="SequenceFlow_49" sourceRef="UserTask_3" targetRef="ServiceTask_2"/>
-    <serviceTask id="ServiceTask_3" activiti:expression="${feedbackService.setStatusById(RevieweeFeedback,'READY')}" name="Set Reviewee Feedback to Ready">
-      <incoming>SequenceFlow_50</incoming>
-      <outgoing>SequenceFlow_43</outgoing>
-    </serviceTask>
-    <sequenceFlow id="SequenceFlow_50" sourceRef="UserTask_4" targetRef="ServiceTask_3"/>
-    <serviceTask id="ServiceTask_4" activiti:expression="${reviewService.setReviewAndFeedbackStatusById(Review,'OPEN')}" name="Set Feedbacks and Review back to Open status">
-      <incoming>SequenceFlow_51</incoming>
-      <outgoing>SequenceFlow_48</outgoing>
-    </serviceTask>
-    <sequenceFlow id="SequenceFlow_51" name="No" sourceRef="ExclusiveGateway_2" targetRef="ServiceTask_4"/>
+    <sequenceFlow id="SequenceFlow_setReviewAndFeedbackToOpen" sourceRef="ServiceTask_setReviewAndFeedbackToOpen" targetRef="ExclusiveGateway_startFeedback"/>
   </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_annualReview">
-    <bpmndi:BPMNPlane id="BPMNPlane_annualReview" bpmnElement="engagementReview">
-      <bpmndi:BPMNShape id="BPMNShape_anualReviewStart" bpmnElement="anualReviewStart">
-        <omgdc:Bounds height="35.0" width="35.0" x="0.0" y="251.0"/>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_engagementReview">
+    <bpmndi:BPMNPlane id="BPMNPlane_engagementReview" bpmnElement="engagementReview">
+      <bpmndi:BPMNShape id="BPMNShape_engagementReviewStart" bpmnElement="engagementReviewStart">
+        <omgdc:Bounds height="35.0" width="35.0" x="0.0" y="232.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="17.0" width="31.0" x="2.0" y="267.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_startFeedback" bpmnElement="ParallelGateway_startFeedback" isMarkerVisible="true">
+        <omgdc:Bounds height="50.0" width="50.0" x="152.0" y="225.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="34.0" width="64.0" x="145.0" y="275.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_UserTask_completeReviewerFeedback" bpmnElement="UserTask_completeReviewerFeedback">
+        <omgdc:Bounds height="50.0" width="110.0" x="300.0" y="183.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="34.0" width="65.0" x="322.0" y="191.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_UserTask_completeRevieweeFeedback" bpmnElement="UserTask_completeRevieweeFeedback">
+        <omgdc:Bounds height="50.0" width="110.0" x="290.0" y="276.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_4" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="34.0" width="68.0" x="311.0" y="284.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_setReviewerFeedbackReady" bpmnElement="ServiceTask_setReviewerFeedbackReady">
+        <omgdc:Bounds height="50.0" width="110.0" x="438.0" y="160.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="51.0" width="91.0" x="447.0" y="160.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_setRevieweeFeedbackReady" bpmnElement="ServiceTask_setRevieweeFeedbackReady">
+        <omgdc:Bounds height="50.0" width="110.0" x="438.0" y="286.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="51.0" width="94.0" x="446.0" y="286.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_endFeedback" bpmnElement="ParallelGateway_endFeedback" isMarkerVisible="true">
+        <omgdc:Bounds height="50.0" width="50.0" x="600.0" y="220.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_7" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="34.0" width="64.0" x="593.0" y="270.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_setReviewToJointApproval" bpmnElement="ServiceTask_setReviewToJointApproval">
+        <omgdc:Bounds height="50.0" width="110.0" x="680.0" y="232.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_8" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="34.0" width="94.0" x="688.0" y="240.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_startApproval" bpmnElement="ParallelGateway_startApproval" isMarkerVisible="true">
+        <omgdc:Bounds height="50.0" width="50.0" x="852.0" y="225.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_9" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="17.0" width="31.0" x="2.0" y="286.0"/>
+          <omgdc:Bounds height="34.0" width="56.0" x="849.0" y="275.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_3" bpmnElement="ParallelGateway_3" isMarkerVisible="true">
-        <omgdc:Bounds height="50.0" width="50.0" x="79.0" y="244.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_78" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="34.0" width="64.0" x="72.0" y="294.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_ReviewerJointApproval" bpmnElement="ReviewerJointApproval">
+        <omgdc:Bounds height="50.0" width="110.0" x="952.0" y="118.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="34.0" width="65.0" x="974.0" y="126.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_UserTask_3" bpmnElement="UserTask_3">
-        <omgdc:Bounds height="50.0" width="110.0" x="170.0" y="162.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_80" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="34.0" width="65.0" x="192.0" y="170.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_RevieweeJointApproval" bpmnElement="RevieweeJointApproval">
+        <omgdc:Bounds height="50.0" width="110.0" x="973.0" y="308.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_11" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="34.0" width="68.0" x="994.0" y="316.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_UserTask_4" bpmnElement="UserTask_4">
-        <omgdc:Bounds height="50.0" width="110.0" x="147.0" y="302.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_81" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="34.0" width="68.0" x="168.0" y="310.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_jointApprovalParallelJoin" bpmnElement="ParallelGateway_jointApprovalParallelJoin" isMarkerVisible="true">
+        <omgdc:Bounds height="50.0" width="50.0" x="1110.0" y="212.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="51.0" width="78.0" x="1096.0" y="262.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_4" bpmnElement="ParallelGateway_4" isMarkerVisible="true">
-        <omgdc:Bounds height="50.0" width="50.0" x="600.0" y="203.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_84" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="68.0" width="76.0" x="587.0" y="253.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_jointApprovalExclusiveGateway" bpmnElement="ExclusiveGateway_jointApprovalExclusiveGateway" isMarkerVisible="true">
+        <omgdc:Bounds height="50.0" width="50.0" x="1285.0" y="212.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_13" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="51.0" width="61.0" x="1280.0" y="262.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_2" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
-        <omgdc:Bounds height="50.0" width="50.0" x="996.0" y="195.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_87" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="51.0" width="61.0" x="991.0" y="245.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_setReviewToComplete" bpmnElement="ServiceTask_setReviewToComplete">
+        <omgdc:Bounds height="50.0" width="110.0" x="1400.0" y="212.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="34.0" width="94.0" x="1408.0" y="220.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_1" bpmnElement="ServiceTask_1">
-        <omgdc:Bounds height="50.0" width="110.0" x="1110.0" y="220.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_89" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="34.0" width="94.0" x="1118.0" y="228.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_setReviewAndFeedbackToOpen" bpmnElement="ServiceTask_setReviewAndFeedbackToOpen">
+        <omgdc:Bounds height="59.0" width="125.0" x="1226.0" y="432.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="51.0" width="115.0" x="1231.0" y="436.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_1">
-        <omgdc:Bounds height="36.0" width="36.0" x="1270.0" y="227.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_90" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="17.0" width="79.0" x="1249.0" y="263.0"/>
+        <omgdc:Bounds height="36.0" width="36.0" x="1539.0" y="227.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_16" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="17.0" width="26.0" x="1544.0" y="263.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_UserTask_5" bpmnElement="UserTask_5">
-        <omgdc:Bounds height="50.0" width="110.0" x="820.0" y="150.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_97" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="34.0" width="65.0" x="842.0" y="158.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_startFeedback" bpmnElement="ExclusiveGateway_startFeedback" isMarkerVisible="true">
+        <omgdc:Bounds height="50.0" width="50.0" x="80.0" y="232.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_17" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="51.0" width="66.0" x="72.0" y="282.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_UserTask_6" bpmnElement="UserTask_6">
-        <omgdc:Bounds height="50.0" width="110.0" x="810.0" y="270.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_98" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="34.0" width="68.0" x="831.0" y="278.0"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_startExclusiveFeedback" bpmnElement="SequenceFlow_startExclusiveFeedback" sourceElement="BPMNShape_engagementReviewStart" targetElement="BPMNShape_ExclusiveGateway_startFeedback">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="35.0" y="249.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="55.0" y="249.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="55.0" y="257.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="80.0" y="257.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_18" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_startParallelFeedback" bpmnElement="SequenceFlow_startParallelFeedback" sourceElement="BPMNShape_ExclusiveGateway_startFeedback" targetElement="BPMNShape_ParallelGateway_startFeedback">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="130.0" y="257.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="151.0" y="257.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="151.0" y="285.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="177.0" y="285.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="177.0" y="275.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_19" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_startReviewerFeedback" bpmnElement="SequenceFlow_startReviewerFeedback" sourceElement="BPMNShape_ParallelGateway_startFeedback" targetElement="BPMNShape_UserTask_completeReviewerFeedback">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="177.0" y="225.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="177.0" y="208.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="300.0" y="208.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_20" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_startRevieweeFeedback" bpmnElement="SequenceFlow_startRevieweeFeedback" sourceElement="BPMNShape_ParallelGateway_startFeedback" targetElement="BPMNShape_UserTask_completeRevieweeFeedback">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="202.0" y="250.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="241.0" y="250.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="241.0" y="301.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="290.0" y="301.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_21" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_setReviewerFeedbackReady" bpmnElement="SequenceFlow_setReviewerFeedbackReady" sourceElement="BPMNShape_UserTask_completeReviewerFeedback" targetElement="BPMNShape_ServiceTask_setReviewerFeedbackReady">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="410.0" y="208.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="422.0" y="208.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="422.0" y="185.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="438.0" y="185.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_22" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_setRevieweeFeedbackReady" bpmnElement="SequenceFlow_setRevieweeFeedbackReady" sourceElement="BPMNShape_UserTask_completeRevieweeFeedback" targetElement="BPMNShape_ServiceTask_setRevieweeFeedbackReady">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="400.0" y="301.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="417.0" y="301.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="417.0" y="311.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="438.0" y="311.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_23" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_endReviewerFeedback" bpmnElement="SequenceFlow_endReviewerFeedback" sourceElement="BPMNShape_ServiceTask_setReviewerFeedbackReady" targetElement="BPMNShape_ParallelGateway_endFeedback">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="548.0" y="185.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="625.0" y="185.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="625.0" y="220.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_24" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_endRevieweeFeedback" bpmnElement="SequenceFlow_endRevieweeFeedback" sourceElement="BPMNShape_ServiceTask_setRevieweeFeedbackReady" targetElement="BPMNShape_ParallelGateway_endFeedback">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="548.0" y="311.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="625.0" y="311.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="625.0" y="270.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_25" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_setReviewToJointApproval" bpmnElement="SequenceFlow_setReviewToJointApproval" sourceElement="BPMNShape_ParallelGateway_endFeedback" targetElement="BPMNShape_ServiceTask_setReviewToJointApproval">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="650.0" y="245.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="663.0" y="245.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="663.0" y="257.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="680.0" y="257.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_26" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_startApproval" bpmnElement="SequenceFlow_startApproval" sourceElement="BPMNShape_ServiceTask_setReviewToJointApproval" targetElement="BPMNShape_ParallelGateway_startApproval">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="790.0" y="257.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="817.0" y="257.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="817.0" y="250.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="852.0" y="250.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_27" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_startReviewerApproval" bpmnElement="SequenceFlow_startReviewerApproval" sourceElement="BPMNShape_ParallelGateway_startApproval" targetElement="BPMNShape_ReviewerJointApproval">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="877.0" y="225.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="877.0" y="143.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="952.0" y="143.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_28" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_startRevieweeApproval" bpmnElement="SequenceFlow_startRevieweeApproval" sourceElement="BPMNShape_ParallelGateway_startApproval" targetElement="BPMNShape_RevieweeJointApproval">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="877.0" y="275.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="877.0" y="333.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="973.0" y="333.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_29" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_reviewerJointApproval" bpmnElement="SequenceFlow_reviewerJointApproval" sourceElement="BPMNShape_ReviewerJointApproval" targetElement="BPMNShape_ParallelGateway_jointApprovalParallelJoin">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1062.0" y="143.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1135.0" y="143.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1135.0" y="212.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_30" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_revieweeJointApproval" bpmnElement="SequenceFlow_revieweeJointApproval" sourceElement="BPMNShape_RevieweeJointApproval" targetElement="BPMNShape_ParallelGateway_jointApprovalParallelJoin">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1083.0" y="333.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1135.0" y="333.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1135.0" y="262.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_31" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_joinApprovalExclusiveGateway" bpmnElement="SequenceFlow_joinApprovalExclusiveGateway" sourceElement="BPMNShape_ParallelGateway_jointApprovalParallelJoin" targetElement="BPMNShape_ExclusiveGateway_jointApprovalExclusiveGateway">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1160.0" y="237.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1285.0" y="237.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_32" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_jointAcceptFlow" bpmnElement="SequenceFlow_jointAcceptFlow" sourceElement="BPMNShape_ExclusiveGateway_jointApprovalExclusiveGateway" targetElement="BPMNShape_ServiceTask_setReviewToComplete">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1335.0" y="237.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1400.0" y="237.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_33" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="17.0" width="23.0" x="1339.0" y="233.0"/>
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_2" bpmnElement="ServiceTask_2">
-        <omgdc:Bounds height="50.0" width="110.0" x="419.0" y="142.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_104" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="51.0" width="91.0" x="428.0" y="142.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_jointRejectFlow" bpmnElement="SequenceFlow_jointRejectFlow" sourceElement="BPMNShape_ExclusiveGateway_jointApprovalExclusiveGateway" targetElement="BPMNShape_ServiceTask_setReviewAndFeedbackToOpen">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1310.0" y="262.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1310.0" y="338.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1288.0" y="338.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1288.0" y="432.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_34" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="17.0" width="18.0" x="1282.0" y="339.0"/>
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_3" bpmnElement="ServiceTask_3">
-        <omgdc:Bounds height="50.0" width="110.0" x="390.0" y="286.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_106" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="51.0" width="94.0" x="398.0" y="286.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_4" bpmnElement="ServiceTask_4">
-        <omgdc:Bounds height="81.0" width="133.0" x="906.0" y="410.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_108" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="51.0" width="130.0" x="907.0" y="425.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_33" bpmnElement="SequenceFlow_33" sourceElement="BPMNShape_anualReviewStart" targetElement="BPMNShape_ParallelGateway_3">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="35.0" y="268.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="54.0" y="268.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="54.0" y="269.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="79.0" y="269.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_79" labelStyle="BPMNLabelStyle_1"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_34" bpmnElement="SequenceFlow_34" sourceElement="BPMNShape_ParallelGateway_3" targetElement="BPMNShape_UserTask_3">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="129.0" y="269.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="147.0" y="269.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="147.0" y="187.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="170.0" y="187.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_82" labelStyle="BPMNLabelStyle_1"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_setReviewToComplete" bpmnElement="SequenceFlow_setReviewToComplete" sourceElement="BPMNShape_ServiceTask_setReviewToComplete" targetElement="BPMNShape_EndEvent_1">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1510.0" y="237.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1523.0" y="237.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1523.0" y="245.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1539.0" y="245.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_35" labelStyle="BPMNLabelStyle_1"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_35" bpmnElement="SequenceFlow_35" sourceElement="BPMNShape_ParallelGateway_3" targetElement="BPMNShape_UserTask_4">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="104.0" y="294.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="104.0" y="327.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="147.0" y="327.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_83" labelStyle="BPMNLabelStyle_1"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_36" bpmnElement="SequenceFlow_36" sourceElement="BPMNShape_ServiceTask_2" targetElement="BPMNShape_ParallelGateway_4">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="529.0" y="167.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="625.0" y="167.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="625.0" y="203.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_85" labelStyle="BPMNLabelStyle_1"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_39" bpmnElement="SequenceFlow_39" sourceElement="BPMNShape_ExclusiveGateway_2" targetElement="BPMNShape_ServiceTask_1">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1046.0" y="220.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1074.0" y="220.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1074.0" y="245.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1110.0" y="245.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_91" labelStyle="BPMNLabelStyle_1"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_40" bpmnElement="SequenceFlow_40" sourceElement="BPMNShape_ServiceTask_1" targetElement="BPMNShape_EndEvent_1">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1220.0" y="245.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1270.0" y="245.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_92" labelStyle="BPMNLabelStyle_1"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_43" bpmnElement="SequenceFlow_43" sourceElement="BPMNShape_ServiceTask_3" targetElement="BPMNShape_ParallelGateway_4">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="500.0" y="311.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="545.0" y="311.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="545.0" y="228.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="600.0" y="228.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_96" labelStyle="BPMNLabelStyle_1"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_44" bpmnElement="SequenceFlow_44" sourceElement="BPMNShape_ParallelGateway_4" targetElement="BPMNShape_UserTask_5">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="650.0" y="228.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="726.0" y="228.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="726.0" y="175.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="820.0" y="175.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_99" labelStyle="BPMNLabelStyle_1"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_45" bpmnElement="SequenceFlow_45" sourceElement="BPMNShape_ParallelGateway_4" targetElement="BPMNShape_UserTask_6">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="625.0" y="253.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="625.0" y="295.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="810.0" y="295.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_100" labelStyle="BPMNLabelStyle_1"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_46" bpmnElement="SequenceFlow_46" sourceElement="BPMNShape_UserTask_5" targetElement="BPMNShape_ExclusiveGateway_2">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="930.0" y="175.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1021.0" y="175.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1021.0" y="195.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_101" labelStyle="BPMNLabelStyle_1"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_47" bpmnElement="SequenceFlow_47" sourceElement="BPMNShape_UserTask_6" targetElement="BPMNShape_ExclusiveGateway_2">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="920.0" y="295.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="954.0" y="295.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="954.0" y="220.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="996.0" y="220.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_102" labelStyle="BPMNLabelStyle_1"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_48" bpmnElement="SequenceFlow_48" sourceElement="BPMNShape_ServiceTask_4" targetElement="BPMNShape_ParallelGateway_3">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="906.0" y="450.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="104.0" y="450.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="104.0" y="294.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_103" labelStyle="BPMNLabelStyle_1"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_49" bpmnElement="SequenceFlow_49" sourceElement="BPMNShape_UserTask_3" targetElement="BPMNShape_ServiceTask_2">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="280.0" y="187.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="342.0" y="187.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="342.0" y="167.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="419.0" y="167.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_105" labelStyle="BPMNLabelStyle_1"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_50" bpmnElement="SequenceFlow_50" sourceElement="BPMNShape_UserTask_4" targetElement="BPMNShape_ServiceTask_3">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="257.0" y="327.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="316.0" y="327.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="316.0" y="311.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="390.0" y="311.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_107" labelStyle="BPMNLabelStyle_1"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_51" bpmnElement="SequenceFlow_51" sourceElement="BPMNShape_ExclusiveGateway_2" targetElement="BPMNShape_ServiceTask_4">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1021.0" y="245.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1021.0" y="319.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="972.0" y="319.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="972.0" y="410.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_109" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="17.0" width="18.0" x="980.0" y="320.0"/>
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_setReviewAndFeedbackToOpen" bpmnElement="SequenceFlow_setReviewAndFeedbackToOpen" sourceElement="BPMNShape_ServiceTask_setReviewAndFeedbackToOpen" targetElement="BPMNShape_ParallelGateway_startFeedback">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1226.0" y="461.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="105.0" y="461.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="105.0" y="282.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_36" labelStyle="BPMNLabelStyle_1"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

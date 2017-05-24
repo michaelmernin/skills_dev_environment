@@ -28,7 +28,7 @@
                 <span flex>{{ review.endDate | date:'MM/dd/yyyy' }}</span>
               </div>
               <div layout="row" flex-gt-xs flex-order-gt-xs="1">
-                <strong flex translate="review.annual.counselor">Counselor:</strong>
+                <strong flex translate="review.annual.reviewer">Reviewer:</strong>
                 <span flex>{{ review.reviewer.firstName }} {{ review.reviewer.lastName }}</span>
               </div>
             </div>
@@ -37,7 +37,12 @@
                 <strong flex translate="review.annual.status">Status:</strong>
                 <span flex>{{ review.reviewStatus.name }}</span>
               </div>
-              <div flex-gt-xs></div>
+              <div flex-gt-xs>
+                <md-input-container class="md-block">
+                  <label>Role</label>
+                  <input ng-model="review.role">
+                </md-input-container>
+              </div>
             </div>
           </md-card-content>
         </md-card>

@@ -31,8 +31,12 @@
                 <span flex>{{ review.reviewStatus.name }}</span>
               </md-grid-tile>
               <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
-                <strong flex translate="review.annual.counselor">Counselor:</strong>
+                <strong flex translate="review.annual.reviewer">Reviewer:</strong>
                 <span flex>{{ review.revieweer.firstName }} {{ review.revieweer.lastName }}</span>
+              </md-grid-tile>
+              <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+                <strong flex translate="review.annual.role">Role:</strong>
+                <span flex>{{ review.role }}</span>
               </md-grid-tile>
             </md-grid-list>
           </md-card-content>
