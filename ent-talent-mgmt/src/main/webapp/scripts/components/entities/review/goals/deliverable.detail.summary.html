@@ -1,0 +1,42 @@
+<md-dialog flex="65">
+  <form name="goalForm" novalidate>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 translate="review.engagement.deliverables.deliverableDetailSummaryHeader">Deliverable Details</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-icon="fa fa-lg fa-close" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+
+        <strong translate="review.annual.goals.goal">Deliverable</strong>
+        <br/>
+        <span flex>{{ goal.name }}</span>
+        <br/><br/>
+        <strong translate="review.engagement.deliverables.description">Measure Of Success</strong>
+        <br/>
+        <span flex>{{ goal.description }}</span>
+        <br/><br/>
+        <strong translate="review.engagement.deliverables.targetDate">Target Date</strong>
+        <br/>
+        <span flex>{{ goal.targetDate | date:'MM/dd/yyyy' }}</span>
+        <br/><br/>
+        <strong ng-if="switchCompletion" translate="review.engagement.deliverables.completionDate">Completion Date</strong>
+        <br ng-if="switchCompletion" />
+        <span ng-if="goal.completionDate" flex>{{ goal.completionDate | date:'MM/dd/yyyy' }}</span>
+        <strong ng-if="!switchCompletion">Not Completed</strong>
+        <br/><br/>
+        <strong ng-if="goal.employeeComment" translate="review.engagement.deliverables.employeeComment">Employee Comment</strong>
+        <br ng-if="goal.employeeComment" />
+        <span ng-if="goal.employeeComment" flex>{{ goal.employeeComment }}</span>
+        <br ng-if="goal.employeeComment" />
+        <br/><br/>
+        <strong ng-if="goal.reviewerComment" translate="review.engagement.deliverables.reviewerComment">Reviewer Comment</strong>
+        <br ng-if="goal.reviewerComment" />
+        <span ng-if="goal.reviewerComment" flex>{{ goal.reviewerComment }}</span>
+        <br ng-if="goal.reviewerComment" />
+    </md-dialog-content>
+  </form>
+</md-dialog>

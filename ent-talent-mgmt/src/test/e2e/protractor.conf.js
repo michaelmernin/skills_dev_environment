@@ -45,6 +45,7 @@ exports.config = {
   // The tests will be run remotely using SauceLabs.
   sauceUser: null,
   sauceKey: null,
+  allScriptsTimeout:20000,
 
   // The address of a running selenium server. If specified, Protractor will
   // connect to an already running instance of selenium. This usually looks like

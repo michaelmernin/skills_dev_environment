@@ -28,22 +28,22 @@ describe('Enterprise Talent Management', function () {
 
     it('shoud give error response if search term does not match available peer', function(){
       
-    	browser.wait(function() {
-    		peerReviewPage.search('test');
-    		return element(by.css('.md-autocomplete-suggestions')).isPresent();
+      browser.wait(function() {
+        peerReviewPage.search('test');
+        return element(by.css('.md-autocomplete-suggestions')).isPresent();
       }, 20000).then(function (availablePeers) {
-      	var peerListContainer = element(by.css('.md-autocomplete-suggestions'));
+        var peerListContainer = element(by.css('.md-autocomplete-suggestions'));
         var availablePeers = [];
         availablePeers = peerListContainer.all(by.tagName('li'));
-      	expect(availablePeers.count()).toBe(1);
-      	expect(availablePeers.get(0).getText()).toBe('No peers matching "test" were found.');
+        expect(availablePeers.count()).toBe(1);
+        expect(availablePeers.get(0).getText()).toBe('No peers matching "test" were found.');
       });
     });
     
     
     it('shoud give valid response if search term match available peer', function(){
-    	var availablePeers = peerReviewPage.getPeerOptions('dev');
-    	
+      var availablePeers = peerReviewPage.getPeerOptions('dev');
+      
       expect(availablePeers.count()).toBe(4);
       expect(availablePeers.get(0).getText()).toBe('Dev UserTwo');
       expect(availablePeers.get(1).getText()).toBe('Dev UserSeven');

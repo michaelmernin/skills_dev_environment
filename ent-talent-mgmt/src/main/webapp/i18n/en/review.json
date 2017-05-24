@@ -105,6 +105,7 @@
        "addDeliverable": "Add Deliverable",
        "deliverable": "Deliverable",
        "deliverableDetailHeader": "Fill out fields to create deliverable",
+       "deliverableDetailSummaryHeader": "Deliverable Details",
        "cancel": "Cancel",
        "save": "Save",
        "description": "Measure of Success",

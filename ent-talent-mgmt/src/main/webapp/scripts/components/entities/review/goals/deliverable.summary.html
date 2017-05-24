@@ -6,10 +6,10 @@
 	    <md-list-item class="md-3-line goal" ng-repeat="goal in goals" ng-click="editGoal(goal, $event)">
 	      <md-icon md-font-icon="{{ getIcon(goal.completionDate)}}" style="color: {{getColor(goal.completionDate)}}" class="status-icon {{getIcon(goal.completionDate)}}"></md-icon>
 	      <div class="md-list-item-text">
-	        <p class="md-title">Goal Title: {{goal.name}}</p>
+	        <p class="md-title">Deliverable: {{goal.name}}</p>
 	        <p class="md-title">Target Date: {{goal.targetDate | date:'MM/dd/yyyy'}} - Completion Date: {{goal.completionDate | date:'MM/dd/yyyy'}}</p>
-	        <p class="md-title">Description: <span class="md-subhead">{{goal.description}}</span></p>        
-	        <p class="md-title" ng-if="goal.reviewerComment">Notes: <span class="md-subhead">{{goal.reviewerComment}}</span></p>          
+	        <p class="md-title">Measure of Success: <span class="md-subhead">{{goal.description}}</span></p>        
+	        <p class="md-title" ng-if="goal.reviewerComment">Reviewer Comment: <span class="md-subhead">{{goal.reviewerComment}}</span></p>          
 	      </div>
 	    </md-list-item>
 	  </md-list>

@@ -24,9 +24,10 @@ describe('Enterprise Talent Management', function () {
     });
 
     it('should require all fields to create a review.', function () {
-      createReviewPage.save();
-      expect(createReviewPage.ui.reviewTypeError.getText()).toEqual('Please select a Review Type.');
-      expect(createReviewPage.ui.revieweeError.getText()).toEqual('Please select a Reviewee.');
+      createReviewPage.save()
+      .then( function(){
+        expect(createReviewPage.ui.reviewTypeError.getText()).toEqual('Please select a Review Type.');
+      })
     });
 
     it('should list all review types in dropdown.', function () {
@@ -34,7 +35,7 @@ describe('Enterprise Talent Management', function () {
       // Need to update this test case once all reviews are listed.
       var reviewTypes = createReviewPage.getDropdownOptions('review.reviewType');
       
-      expect(reviewTypes.count()).toBe(1);
+      expect(reviewTypes.count()).toBe(2);
       expect(reviewTypes.get(0).getText()).toBe('Annual Review');
     });
 
@@ -80,8 +81,8 @@ describe('Enterprise Talent Management', function () {
     });
 
     it('should create the Review and close the modal window when Accept button is clicked', function () {
-    	 createReviewPage.save();
-       expect(createReviewPage.ui.modalWindowContainer.isPresent()).toBe(true);
+      createReviewPage.save();
+      expect(createReviewPage.ui.modalWindowContainer.isPresent()).toBe(true);
       createReviewPage.accept();
       expect(browser.getTitle()).toEqual('Edit Review');
       createReviewPage.logout();

@@ -1,10 +1,15 @@
 'use strict';
 
 angular.module('etmApp').controller('GoalsController', function ($scope, $mdDialog, $stateParams, $state, $window, $mdMedia, Goal, Principal) {
+
   var review = {};
-  $scope.goals = [];
   var user = {};
   var isReviewee = {};
+
+  $scope.goals = [];
+  $scope.isEngagementReview = false;
+  $scope.isReviewee = false;
+
   Principal.identity().then(function (account) {
     user = account;
   });
@@ -12,6 +17,8 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   $scope.$parent.$watch('review', function (parentReview) {
     review = parentReview;
     if (review.id) {
+      $scope.isEngagementReview = review.reviewType.id === 2;
+      $scope.isReviewee = review.reviewee && user && user.id == review.reviewee.id;
 
       Goal.query({reviewId: review.id}, function (goals) {
         $scope.goals = goals;
@@ -21,17 +28,12 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
 
   $scope.addGoal = function (ev) {
     var goal = new Goal();
-    if (user.id == review.reviewee.id) {
-      goal.isReviewee = true;
-    } else {
-      goal.isReviewee = false;
-    }
-    var isEngagementReview = review.reviewType.id === 2;
+    goal.isReviewee = $scope.isReviewee;
     var templateUrl = 'scripts/components/entities/review/goals/';
-    templateUrl += isEngagementReview ? 'deliverable.detail.html' : 'goal.detail.html';
+    templateUrl += $scope.isEngagementReview ? 'deliverable.detail.html' : 'goal.detail.html';
     $mdDialog.show({
       controller: 'GoalDetailController',
-      templateUrl: 'scripts/components/entities/review/goals/goal.detail.html',
+      templateUrl: templateUrl,
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {
@@ -54,15 +56,10 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       var tempGoal = new Date(goal.completionDate);
       goal.completionDate = new Date(tempGoal.getTime() + tempGoal.getTimezoneOffset() * 60000);
     }
-    if (user.id == review.reviewee.id) {
-      goal.isReviewee = true;
-    } else {
-      goal.isReviewee = false;
-    }
-    var isEngagementReview = review.reviewType.id === 2;
+    goal.isReviewee = $scope.isReviewee;
     $mdDialog.show({
       controller: 'GoalDetailController',
-      templateUrl: isEngagementReview ? $state.current.data.deliverablesConfig : $state.current.data.goalsConfig,
+      templateUrl: $scope.isEngagementReview ? $state.current.data.deliverablesConfig : $state.current.data.goalsConfig,
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {
@@ -76,8 +73,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   };
 
   $scope.deleteGoal = function (goal, ev) {
-    var isEngagementReview = review.reviewType.id === 2;
-    var label = isEngagementReview ? 'Deliverable' : 'Goal';
+    var label = $scope.isEngagementReview ? 'Deliverable' : 'Goal';
     var confirmDelete = $mdDialog.confirm()
       .title('Confirm ' + label + ' Deletion')
       .ariaLabel('Delete ' + label + ' Confirm')
@@ -107,14 +103,6 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     }
   };
 
-  $scope.isReviewee = function () {
-    return review.reviewee && user.id == review.reviewee.id;
-  };
-
-  $scope.isEngagementReview = function () {
-    return review.reviewType.id === 2;
-  };
-
   $scope.fieldLimit = function () {
     var width = Math.max(320, $window.innerWidth);
     var padding = 100;
@@ -128,4 +116,5 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     }
     return Math.floor((width - padding) * 0.136);
   };
+
 });
