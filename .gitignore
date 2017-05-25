@@ -44,3 +44,5 @@ build
 docs/er-diagram.mwb.bak
 /ent-talent-mgmt/.nb-gradle/
 docs/requirements/~$$EnterpriseReviewProcess.~vsd
+tools/etm-email-templates/yarn.lock
+ent-talent-mgmt/src/main/resources/.h2.server.properties
