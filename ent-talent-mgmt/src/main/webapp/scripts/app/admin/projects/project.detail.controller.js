@@ -26,19 +26,27 @@ angular.module('etmApp').controller('ProjectDetailController', function ($scope,
 
   $scope.managerSelected = function(m){ $scope.project.manager = m; }
 
-  function isNotMember(user){
+
+  // returns false if user is manager or member. true otherwise.
+  function isNotMemberOrManager(user){
+    // if user is manager, return true
+    var manager = $scope.project.manager;
+    if(manager && user && user.id === manager.id) return false;
+
+    // get members, if non, return true.
     var members = $scope.project.projectMembers;
     if(!members || !members.length) return true;
 
-    var filteredMembers =  members.filter(function (m){ return  m.id === user.id})
-    return filteredMembers.length == 0;
+    //if user is already a member, return false
+    var filteredMembers =  members.filter(function (m){ return  m.id === user.id; })
+    return filteredMembers.length === 0;
   }
 
   $scope.getMatches = function (query, filterMembers) {
     return User.autocomplete({query: query, reviewId:""}).$promise
       .then(function(response){
         return filterMembers
-               ? response.filter(isNotMember)
+               ? response.filter(isNotMemberOrManager)
                : response;
       });
   };
