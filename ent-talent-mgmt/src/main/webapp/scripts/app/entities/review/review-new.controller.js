@@ -21,6 +21,14 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
 
   $scope.save = function (ev) {
     if ($scope.reviewForm.$valid) {
+      if ($scope.review.reviewee.counselor == null) {
+      	  var errorDialog = $mdDialog.confirm()
+            .title('Cannot create review - Selected reviewee has no counselor')
+            .ariaLabel('aria label')
+            .content('Please contact IT to assign this reviewee a counselor in order to create this review.')
+            .ok('Okay');
+            $mdDialog.show(errorDialog);
+        } else {
       if ($scope.review.reviewType.id == 1) {
         Review.getReviewsByTypeAndReviewee({revieweeId: $scope.review.reviewee.id, reviewTypeId: 1}, function(annualReviewList) {
           var date = new Date(),
@@ -57,6 +65,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
         $scope.displayConfirmDialog(translateKeys, "engagement", ev);
       }
     }
+    }  
   };
 
   $scope.minEndDate = function () {
