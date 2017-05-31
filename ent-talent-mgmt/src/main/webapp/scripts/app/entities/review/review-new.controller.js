@@ -1,3 +1,4 @@
+/* globals moment */
 'use strict';
 
 angular.module('etmApp').controller('ReviewNewController', function ($scope, $state, $mdDialog, $translate, Review, ReviewType, Principal, User, Project) {
@@ -7,6 +8,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   $scope.currentUser = User.profile();
   $scope.projects = [];
   $scope.years = [];
+  $scope.isAnnual = null;
 
   $scope.load = function () {
     ReviewType.query(function (result) {
@@ -19,73 +21,60 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   key = "";
   //translateKeys = translateKeys.map(function (key) {return 'review.new.save.dialog.' + key;});
 
-  $scope.save = function (ev) {
-    if ($scope.reviewForm.$valid) {
-      if ($scope.review.reviewee.counselor == null) {
-      	  var errorDialog = $mdDialog.confirm()
-            .title('Cannot create review - Selected reviewee has no counselor')
-            .ariaLabel('aria label')
-            .content('Please contact IT to assign this reviewee a counselor in order to create this review.')
-            .ok('Okay');
-            $mdDialog.show(errorDialog);
-        } else {
-      if ($scope.review.reviewType.id == 1) {
-        Review.getReviewsByTypeAndReviewee({revieweeId: $scope.review.reviewee.id, reviewTypeId: 1}, function(annualReviewList) {
-          var date = new Date(),
-            startEndDate = new Date($scope.review.reviewee.startDate),
-            latestReviewList = $scope.getLatestReviews(annualReviewList, date);
-          if (latestReviewList.length === 0) {
-            $scope.review.startDate = new Date(startEndDate.setFullYear(date.getFullYear()));
-            $scope.review.endDate = new Date(startEndDate.setFullYear(date.getFullYear() + 1));
-            translateKeys = translateKeys.map(function (key) {return 'review.new.save.thisYear.' + key;});
-            key = "thisYear";
-            $scope.displayConfirmDialog(translateKeys, key, ev);
-          } else if (latestReviewList.length === 1) {
-            $scope.review.startDate = new Date(startEndDate.setFullYear(date.getFullYear() + 1));
-            $scope.review.endDate = new Date(startEndDate.setFullYear(date.getFullYear() + 2));
-            translateKeys = translateKeys.map(function (key) {return 'review.new.save.nextYear.' + key;});
-            key = "nextYear";
-            $scope.displayConfirmDialog(translateKeys, key, ev);
-          } else {
-            var dialog = $mdDialog.confirm()
-                .title('Cannot create annual review')
-                .ariaLabel('aria label')
-                .content('You already have an annual review created for this year and next year')
-                .ok('Okay');
-            $mdDialog.show(dialog);
-          }
-        });
+  /**
+  *      PRIVATE HELPERS
+  */
+  
+  var _populateShowReviewees = function () {
+    if ($scope.review.reviewType.processName === 'annualReview') {
+      Principal.identity().then(function (account) {
+        $scope.reviewees.push(account);
+        if (Principal.isInRole('ROLE_COUNSELOR')) {
+          User.queryCounselees(function (result) {
+            Array.prototype.push.apply($scope.reviewees, result);
+          });
+        }
+      });
+    } else if ($scope.review.reviewType.processName === 'engagementReview' && $scope.review.project !== undefined) {
+      var project = $scope.review.project;
+      if ($scope.currentUser.id === project.manager.id) {
+        $scope.reviewees = project.projectMembers.concat(project.manager);
       } else {
-        translateKeys = translateKeys.map(function (key) {return 'review.new.save.engagement.' + key;});
-        var year = $scope.year;
-        var quarter = $scope.quarter;
-        var date = moment(year, 'YYYY');
-        $scope.review.startDate = new Date(date.quarter(quarter).startOf('quarter').format());
-        $scope.review.endDate = new Date(date.quarter(quarter).endOf('quarter').format());
-        $scope.displayConfirmDialog(translateKeys, "engagement", ev);
+        Array.prototype.push.apply($scope.reviewees, [$scope.currentUser]);
       }
     }
-    }  
   };
 
-  $scope.minEndDate = function () {
-    if ($scope.reviewForm.startDate.$valid) {
-      var minDate = new Date($scope.review.startDate);
-      minDate.setDate(minDate.getDate() + 1);
-      return minDate;
+  var _populateProjects = function () {
+    if ($scope.review.reviewType.processName === 'engagementReview') {
+      Project.getAllByUser({id: $scope.currentUser.id}, function(projects) {
+        Array.prototype.push.apply($scope.projects, projects);
+      });
     }
-    return '';
+  };
+
+  var _clearReviewees = function () {
+    $scope.reviewees.length = 0;
   };
   
-  $scope.toggleEngagementDropdowns = function () {
-    if (!this.review.reviewType || this.review.reviewType.processName === 'annualReview') {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  var _clearDropdowns = function () {
+    $scope.projects.length = 0;
+    delete $scope.review.project;
+    _clearReviewees();
+  };
   
-  $scope.displayConfirmDialog = function (translateKeys, key, ev) {
+  var _populateYears = function () {
+    $scope.years.length = 0;
+    var startYear = moment($scope.review.project.startDate).year();
+    var endYear = moment($scope.review.project.endDate).year();
+    if (startYear === endYear) {
+      Array.prototype.push.apply($scope.years, [startYear]);
+    } else {
+      Array.prototype.push.apply($scope.years, [startYear, endYear]);
+    }
+  };
+
+  var _displayConfirmDialog = function (translateKeys, key, ev) {
     $translate(translateKeys).then(function (translations) {
       var confirmSave = $mdDialog.confirm()
         .title(translations['review.new.save.' + key + '.title'])
@@ -100,7 +89,95 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
         });
       });
     });
-  }
+  };
+
+ /**
+  *      PUBLIC SCOPE METHODS
+  */
+  // triggered by save button, creates a new review
+  $scope.save = function (ev) {
+
+    if(!$scope.reviewForm.$valid){ return;}
+
+    // case, creating a review for a reviewee with no councelor
+    if ($scope.review.reviewee.counselor === null) {
+      var errorDialog = $mdDialog.confirm()
+        .title('Cannot create review - Selected reviewee has no counselor')
+        .ariaLabel('aria label')
+        .content('Please contact IT to assign this reviewee a counselor in order to create this review.')
+        .ok('Okay');
+      $mdDialog.show(errorDialog);
+     }
+     // case, annual review 
+     else if ($scope.review.reviewType.id === 1) {
+        Review.getReviewsByTypeAndReviewee({revieweeId: $scope.review.reviewee.id, reviewTypeId: 1}, function(annualReviewList) {
+          var date = new Date(),
+            startEndDate = new Date($scope.review.reviewee.startDate),
+            latestReviewList = $scope.getLatestReviews(annualReviewList, date);
+          // reviewer has no reviews for this year or th next
+          if (latestReviewList.length === 0) {
+            $scope.review.startDate = new Date(startEndDate.setFullYear(date.getFullYear()));
+            $scope.review.endDate = new Date(startEndDate.setFullYear(date.getFullYear() + 1));
+            translateKeys = translateKeys.map(function (key) {return 'review.new.save.thisYear.' + key;});
+            key = 'thisYear';
+            _displayConfirmDialog(translateKeys, key, ev);
+          }
+          // reviewer has review for this year only
+          else if (latestReviewList.length === 1) {
+            $scope.review.startDate = new Date(startEndDate.setFullYear(date.getFullYear() + 1));
+            $scope.review.endDate = new Date(startEndDate.setFullYear(date.getFullYear() + 2));
+            translateKeys = translateKeys.map(function (key) {return 'review.new.save.nextYear.' + key;});
+            key = 'nextYear';
+            _displayConfirmDialog(translateKeys, key, ev);
+          } 
+          // case, reviewee has annual reviews for this year and the next
+          else {
+            var dialog = $mdDialog.confirm()
+                .title('Cannot create annual review')
+                .ariaLabel('aria label')
+                .content('You already have an annual review created for this year and next year')
+                .ok('Okay');
+            $mdDialog.show(dialog);
+          }
+        });
+
+      // case, engagement review
+      } else {
+        translateKeys = translateKeys.map(function (key) {return 'review.new.save.engagement.' + key;});
+        var year = $scope.year;
+        var quarter = $scope.quarter;
+        var date = moment(year, 'YYYY');
+        $scope.review.startDate = new Date(date.quarter(quarter).startOf('quarter').format());
+        $scope.review.endDate = new Date(date.quarter(quarter).endOf('quarter').format());
+        _displayConfirmDialog(translateKeys, 'engagement', ev);
+      }
+  };
+
+  // Triggered on reviewType dropdown change
+  $scope.reviewTypeChange = function(){
+    _clearDropdowns();
+    _populateShowReviewees();
+    _populateProjects();
+    $scope.isAnnual = $scope.review.reviewType.id === 1;
+  };
+
+  // Triggered on project dropdown change
+  $scope.projectChange = function(){
+    _clearReviewees();
+    _populateShowReviewees();
+    _populateYears();
+  };
+
+  /* TODO: remove unused
+  $scope.minEndDate = function () {
+    if ($scope.reviewForm.startDate.$valid) {
+      var minDate = new Date($scope.review.startDate);
+      minDate.setDate(minDate.getDate() + 1);
+      return minDate;
+    }
+    return '';
+  };
+  */
   
   $scope.getLatestReviews = function (annualReviewList, currentDate) {
     var list = [];
@@ -111,54 +188,6 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
     }
     
     return list;
-  }
-  
-  $scope.populateShowReviewees = function () {
-    if (this.review.reviewType.processName === 'annualReview') {
-      Principal.identity().then(function (account) {
-        $scope.reviewees.push(account);
-        if (Principal.isInRole('ROLE_COUNSELOR')) {
-          User.queryCounselees(function (result) {
-            Array.prototype.push.apply($scope.reviewees, result);
-          });
-        }
-      });
-    } else if (this.review.reviewType.processName === 'engagementReview' && $scope.review.project !== undefined) {
-      var project = $scope.review.project;
-      if ($scope.currentUser.id === project.manager.id) {
-        $scope.reviewees = project.projectMembers.concat(project.manager);
-      } else {
-        Array.prototype.push.apply($scope.reviewees, [$scope.currentUser]);
-      }
-    }
-  }
-  
-  $scope.populateProjects = function () {
-    if (this.review.reviewType.processName === 'engagementReview') {
-      Project.getAllByUser({id: $scope.currentUser.id}, function(projects) {
-        Array.prototype.push.apply($scope.projects, projects);
-      })
-    }
-  }
-  
-  $scope.clearDropdowns = function () {
-    $scope.projects.length = 0;
-    delete $scope.review.project;
-    $scope.clearReviewees();
-  }
-  
-  $scope.clearReviewees = function () {
-    $scope.reviewees.length = 0;
-  }
-  
-  $scope.populateYears = function () {
-    $scope.years.length = 0;
-    var startYear = moment($scope.review.project.startDate).year();
-    var endYear = moment($scope.review.project.endDate).year();
-    if (startYear === endYear) {
-      Array.prototype.push.apply($scope.years, [startYear]);
-    } else {
-      Array.prototype.push.apply($scope.years, [startYear, endYear]);
-    }
-  }
+  };
+
 });

@@ -5,9 +5,10 @@
         <h2 class="md-display-1" translate="review.new.title">Create a Review</h2>
         <h3 translate="review.info">Review Info</h3>
         <div layout-gt-sm="row">
+          <!-- REVIEW TYPE -->
           <md-input-container class="md-block" flex-gt-sm="50">
             <label translate="review.reviewType">Review Type</label>
-            <md-select name="reviewType" ng-model="review.reviewType" ng-model-options="{trackBy: '$value.id'}" ng-change="clearDropdowns(); toggleEngagementDropdowns(); populateShowReviewees(); populateProjects()" required>
+            <md-select name="reviewType" ng-model="review.reviewType" ng-model-options="{trackBy: '$value.id'}" ng-change="reviewTypeChange()" required>
               <md-option ng-value="reviewType" ng-repeat="reviewType in reviewTypes">{{ reviewType.name }}</md-option>
             </md-select>
             <div ng-messages="reviewForm.reviewType.$error" ng-if="reviewForm.$submitted || reviewForm.reviewType.$dirty">
@@ -16,9 +17,12 @@
               </div>
             </div>
           </md-input-container>
-          <md-input-container class="md-block" flex-gt-sm="50" ng-hide="toggleEngagementDropdowns()">
+          <!-- // REVIEW TYPE -->
+
+          <!-- PROJECT -->
+          <md-input-container class="md-block" flex-gt-sm="50" ng-show="isAnnual !== null && !isAnnual">
             <label translate="review.project">Project</label>
-            <md-select name="project" ng-model="review.project" ng-model-options="{trackBy: '$value.id'}" ng-change="clearReviewees(); populateShowReviewees(); populateYears()" ng-required="!toggleEngagementDropdowns()">
+            <md-select name="project" ng-model="review.project" ng-model-options="{trackBy: '$value.id'}" ng-change="projectChange()" ng-required="!isAnnual">
               <md-option ng-value="project" ng-repeat="project in projects">{{ project.name }}</md-option>
             </md-select>
             <div ng-messages="reviewForm.project.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
@@ -27,9 +31,12 @@
               </div>
             </div>
           </md-input-container>
-          <md-input-container class="md-block" flex-gt-sm="50" ng-hide="!review.reviewType || !toggleEngagementDropdowns()">
+          <!-- // PROJECT -->
+
+          <!-- REVIEWEE - annual -->
+          <md-input-container class="md-block" flex-gt-sm="50" ng-show="isAnnual !== null && isAnnual">
             <label translate="review.reviewee">Reviewee</label>
-            <md-select name="reviewee" ng-model="review.reviewee" ng-model-options="{trackBy: '$value.login'}" ng-required="toggleEngagementDropdowns()">
+            <md-select name="reviewee" ng-model="review.reviewee" ng-model-options="{trackBy: '$value.login'}" ng-required="isAnnual">
               <md-option ng-value="reviewee" ng-repeat="reviewee in reviewees">{{ reviewee.firstName }} {{ reviewee.lastName }}</md-option>
             </md-select>
             <div ng-messages="reviewForm.reviewee.$error" ng-if="reviewForm.$submitted || reviewForm.reviewee.$dirty">
@@ -38,11 +45,14 @@
               </div>
             </div>
           </md-input-container>
+          <!-- // REVIEWEE - annual -->
         </div>
+
+        <!-- REVIEWEE - engagement -->
         <div layout-gt-sm="row">
-          <md-input-container class="md-block" flex-gt-sm="50" ng-hide="!review.reviewType || toggleEngagementDropdowns()">
+          <md-input-container class="md-block" flex-gt-sm="50" ng-show="isAnnual !== null && !isAnnual">
             <label translate="review.reviewee">Reviewee</label>
-            <md-select name="reviewee" ng-model="review.reviewee" ng-model-options="{trackBy: '$value.login'}" ng-required="!toggleEngagementDropdowns()">
+            <md-select name="reviewee" ng-model="review.reviewee" ng-model-options="{trackBy: '$value.login'}" ng-required="!isAnnual">
               <md-option ng-value="reviewee" ng-repeat="reviewee in reviewees">{{ reviewee.firstName }} {{ reviewee.lastName }}</md-option>
             </md-select>
             <div ng-messages="reviewForm.reviewee.$error" ng-if="reviewForm.$submitted || reviewForm.reviewee.$dirty">
@@ -51,9 +61,12 @@
               </div>
             </div>
           </md-input-container>
-          <md-input-container class="md-block" flex-gt-sm="50" ng-hide="toggleEngagementDropdowns()">
+          <!-- // REVIEWEE - engagement -->
+
+          <!-- QUARTER -->
+          <md-input-container class="md-block" flex-gt-sm="50" ng-show="isAnnual !== null && !isAnnual">
             <label translate="review.quarter">Quarter</label>
-            <md-select name="quarter" ng-model="quarter" ng-required="!toggleEngagementDropdowns()">
+            <md-select name="quarter" ng-model="quarter" ng-required="!isAnnual">
               <md-option value="1">Quarter 1</md-option>
               <md-option value="2">Quarter 2</md-option>
               <md-option value="3">Quarter 3</md-option>
@@ -65,9 +78,12 @@
               </div>
             </div>
           </md-input-container>
-          <md-input-container class="md-block" flex-gt-sm="50" ng-hide="toggleEngagementDropdowns()">
+          <!-- // QUARTER -->
+
+          <!-- YEAR -->
+          <md-input-container class="md-block" flex-gt-sm="50" ng-show="isAnnual !== null && !isAnnual">
             <label translate="review.year">Year</label>
-            <md-select name="year" ng-model="year" ng-required="!toggleEngagementDropdowns()">
+            <md-select name="year" ng-model="year" ng-required="!isAnnual">
               <md-option ng-repeat="year in years" value="{{ year }}">{{ year }}</md-option>
             </md-select>
             <div ng-messages="reviewForm.year.$error" ng-if="reviewForm.$submitted || reviewForm.year.$dirty">
@@ -76,6 +92,7 @@
               </div>
             </div>
           </md-input-container>
+          <!-- // YEAR -->
         </div>
         <div layout="row">
           <span flex></span>
