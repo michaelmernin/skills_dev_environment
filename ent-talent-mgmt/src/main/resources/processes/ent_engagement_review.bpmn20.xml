@@ -122,7 +122,7 @@
       <outgoing>SequenceFlow_jointRejectFlow</outgoing>
     </exclusiveGateway>
     <sequenceFlow id="SequenceFlow_jointAcceptFlow" name="yes" sourceRef="ExclusiveGateway_jointApprovalExclusiveGateway" targetRef="ServiceTask_setReviewToComplete">
-      <conditionExpression xsi:type="tFormalExpression" id="FormalExpression_3"><![CDATA[${(REVIEWER_RESULT == true and REVIEWEE_RESULT == true and MANAGER_RESULT == true) or (REVIEWER_RESULT == true and REVIEWEE_RESULT == true and MANAGER_RESULT == null)}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression" id="FormalExpression_3"><![CDATA[${(REVIEWER_RESULT == true and REVIEWEE_RESULT == true) and (MANAGER_RESULT == null or MANAGER_RESULT == true)}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="SequenceFlow_jointRejectFlow" name="No" sourceRef="ExclusiveGateway_jointApprovalExclusiveGateway" targetRef="ServiceTask_setReviewAndFeedbackToOpen">
       <conditionExpression xsi:type="tFormalExpression" id="FormalExpression_4"><![CDATA[${REVIEWER_RESULT == false or REVIEWEE_RESULT == false or MANAGER_RESULT == false}]]></conditionExpression>
