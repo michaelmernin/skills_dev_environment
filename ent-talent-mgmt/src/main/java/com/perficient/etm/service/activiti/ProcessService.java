@@ -56,6 +56,7 @@ public class ProcessService {
         variables.put(ProcessConstants.DIRECTOR_VARIABLE, review.getReviewee().getDirector().getId());
         variables.put(ProcessConstants.GENERAL_MANAGER_VARIABLE, review.getReviewee().getGeneralManager().getId());
         variables.put(ProcessConstants.INITIATOR, userSvc.getUserFromLogin().map(User::getId).get());
+        variables.put(ProcessConstants.MANAGER, review.getReviewee().getCounselor().getId());
         
         try {
             ProcessInstance processInstance = runtimeSvc.startProcessInstanceByKey(reviewType.getProcessId(), variables );

@@ -53,10 +53,17 @@ public class TodoService extends AbstractBaseService {
             String processVariable;
             switch (task.getTaskDefinitionKey()) {
             case "ReviewerJointApproval":
+            case "ReviewerOneJointApproval":
+            case "ReviewerTwoJointApproval":
                 processVariable = ProcessConstants.REVIEWER_RESULT_VARIABLE;
                 break;
             case "RevieweeJointApproval":
+            case "RevieweeOneJointApproval":
+            case "RevieweeTwoJointApproval":
                 processVariable = ProcessConstants.REVIEWEE_RESULT_VARIABLE;
+                break;
+            case "ManagerTwoJointApproval":
+                processVariable = ProcessConstants.MANAGER_RESULT_VARIABLE;
                 break;
             default:
                 processVariable = ProcessConstants.RESULT_VARIABLE;
