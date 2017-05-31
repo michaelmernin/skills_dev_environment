@@ -37,11 +37,9 @@
                 <strong flex translate="review.annual.status">Status:</strong>
                 <span flex>{{ review.reviewStatus.name }}</span>
               </div>
-              <div flex-gt-xs>
-                <md-input-container class="md-block">
-                  <label>Role</label>
-                  <input ng-model="review.role">
-                </md-input-container>
+              <div layout="row" flex-gt-xs>
+                <strong flex>Role:</strong>
+                <span flex>{{ review.role }}</span>
               </div>
             </div>
           </md-card-content>

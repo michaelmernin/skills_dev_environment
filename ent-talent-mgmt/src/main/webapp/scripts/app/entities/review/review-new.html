@@ -92,6 +92,15 @@
               </div>
             </div>
           </md-input-container>
+          <md-input-container class="md-block" flex-gt-sm="50" ng-show="isAnnual !== null && !isAnnual">
+            <label>Role</label>
+            <input ng-model="review.role">
+            <div ng-messages="reviewForm.role.$error" ng-if="reviewForm.$submitted || reviewForm.role.$dirty">
+              <div ng-message="required">
+                <span translate="global.messages.validate.field.enter.required" translate-values="{name: '{{ 'review.a.role' | translate }}'}">Please enter a value</span>
+              </div>
+            </div>
+          </md-input-container>
           <!-- // YEAR -->
         </div>
         <div layout="row">
