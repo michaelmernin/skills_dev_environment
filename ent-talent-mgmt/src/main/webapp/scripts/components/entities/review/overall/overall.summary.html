@@ -1,7 +1,7 @@
 <div ng-cloak>
   <div layout-padding>
     <h2>Composite Scores</h2>
-    <div ng-repeat="(category, questions) in categories | orderBy:'toString()'">
+    <div ng-repeat="(category, questions) in categories">
       <div class="md-title">{{ category }}</div>
       <div layout-gt-xs="row" class="md-body-1">
         <div layout="row" flex-gt-xs>
