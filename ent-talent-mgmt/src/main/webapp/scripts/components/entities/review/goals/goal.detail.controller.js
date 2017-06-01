@@ -5,6 +5,7 @@ angular.module('etmApp').controller('GoalDetailController', function ($scope, $m
   $scope.switchCompletion = goal.completionDate ? true : false;
   $scope.load = function() {
     $scope.isReviewee = goal.isReviewee;
+    $scope.isReviewer = goal.isReviewer;
   };
   $scope.load();
 

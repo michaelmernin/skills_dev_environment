@@ -81,7 +81,14 @@ public class GoalResource implements RestResource {
         Review review = reviewRepository.findOne(reviewId);
         SecurityUtils.getPrincipal().ifPresent(principal -> {
             if (review.isReviewee(principal)) {
-                goalRepository.save(goal);
+                Goal currentGoal = goalRepository.findOne(goal.getId());
+                goal.setReviewerComment(currentGoal.getReviewerComment());
+            	goalRepository.save(goal);
+            }
+            if (review.isReviewer(principal)) {
+                Goal currentGoal = goalRepository.findOne(goal.getId());
+                currentGoal.setReviewerComment(goal.getReviewerComment());
+            	goalRepository.save(currentGoal);
             }
         });
         return ResponseEntity.ok().build();
