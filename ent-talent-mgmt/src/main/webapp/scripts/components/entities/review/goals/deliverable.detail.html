@@ -52,7 +52,7 @@
         </div>
       </div>
 	  <md-input-container class="md-block">
-        <label translate="review.engagement.deliverables.employeeComment">Employee Comment</label>
+        <label translate="review.engagement.deliverables.employeeComment">Reviewee Comment</label>
         <textarea name="employeeComment" ng-disabled="!isReviewee" ng-model="goal.employeeComment" md-maxlength="250"></textarea>
         <div ng-messages="goalForm.employeeComment.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
           <div ng-message="md-maxlength">
