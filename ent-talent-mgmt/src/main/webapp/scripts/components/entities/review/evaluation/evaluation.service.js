@@ -173,6 +173,9 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       if (eq(user, review.reviewee)) {
         return true;
       }
+      if (showByReviewStatus(review)) {
+          return true;
+      }
       return false;
     },
     showReviewerRating: function (review, user) {
