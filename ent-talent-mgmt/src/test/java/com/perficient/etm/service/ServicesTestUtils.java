@@ -84,6 +84,8 @@ public class ServicesTestUtils {
         Mockito.when(review.getReviewee()).thenReturn(reviewee);
         Mockito.when(reviewee.getDirector()).thenReturn(director);
         Mockito.when(reviewee.getGeneralManager()).thenReturn(generalManager);
+        Mockito.when(review.getReviewee().getCounselor()).thenReturn(reviewer);
+        Mockito.when(review.getReviewee().getCounselor().getId()).thenReturn(5L);
 
         return new User[]{reviewer, reviewee};
     }
