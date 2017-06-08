@@ -111,7 +111,7 @@
        "description": "Measure of Success",
        "targetDate": "Target Date",
        "completionDate": "Completion Date",
-       "employeeComment": "Employee Comment",
+       "employeeComment": "Reviewee Comment",
        "reviewerComment": "Reviewer Comment"
      }
     },
