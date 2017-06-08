@@ -63,6 +63,7 @@ public class Goal implements Serializable {
         this.description = goal.description;
         this.id = goal.id;
         this.name = goal.name;
+        this.employeeComment = goal.employeeComment;
         this.reviewerComment = goal.reviewerComment;
         this.review = goal.review;
         this.targetDate = goal.targetDate;

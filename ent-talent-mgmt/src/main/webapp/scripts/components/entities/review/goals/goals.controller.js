@@ -5,10 +5,14 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   var review = {};
   var user = {};
   var isReviewee = {};
+  var isReviewer = {};
+
 
   $scope.goals = [];
   $scope.isEngagementReview = false;
   $scope.isReviewee = false;
+  $scope.isReviewer = false;
+
 
   Principal.identity().then(function (account) {
     user = account;
@@ -19,6 +23,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     if (review.id) {
       $scope.isEngagementReview = review.reviewType.id === 2;
       $scope.isReviewee = review.reviewee && user && user.id == review.reviewee.id;
+      $scope.isReviewer = review.reviewer && user && user.id == review.reviewer.id; 
 
       Goal.query({reviewId: review.id}, function (goals) {
         $scope.goals = goals;
@@ -29,6 +34,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   $scope.addGoal = function (ev) {
     var goal = new Goal();
     goal.isReviewee = $scope.isReviewee;
+    goal.isReviewer = $scope.isReviewer;
     var templateUrl = 'scripts/components/entities/review/goals/';
     templateUrl += $scope.isEngagementReview ? 'deliverable.detail.html' : 'goal.detail.html';
     $mdDialog.show({
@@ -57,6 +63,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       goal.completionDate = new Date(tempGoal.getTime() + tempGoal.getTimezoneOffset() * 60000);
     }
     goal.isReviewee = $scope.isReviewee;
+    goal.isReviewer = $scope.isReviewer;
     $mdDialog.show({
       controller: 'GoalDetailController',
       templateUrl: $scope.isEngagementReview ? $state.current.data.deliverablesConfig : $state.current.data.goalsConfig,
