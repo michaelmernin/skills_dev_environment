@@ -68,8 +68,11 @@ public class InstallCert {
         File file = new File("jssecacerts");
         if (file.isFile() == false) {
             char SEP = File.separatorChar;
-            File dir = new File(System.getProperty("java.home") + SEP
-                    + "lib" + SEP + "security");
+//            File dir = new File(System.getProperty("java.home") + SEP
+//                    + "lib" + SEP + "security");
+            
+            File dir = new File("/Users/davidbrooks/Documents/code/etm/tools/ssl");            
+ 
             file = new File(dir, "jssecacerts");
             if (file.isFile() == false) {
                 file = new File(dir, "cacerts");
