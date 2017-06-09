@@ -62,3 +62,9 @@ swagger:
     contact:
     license: Apache 2.0
     licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
+
+etm:
+    notification:
+        annualreview:
+            reminderDaysBeforeReviewIsDelayed: 60
+            reminderDaysAfterReviewIsDelayed: 1
