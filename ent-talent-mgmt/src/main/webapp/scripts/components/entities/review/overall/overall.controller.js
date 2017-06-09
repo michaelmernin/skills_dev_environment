@@ -82,4 +82,11 @@ angular.module('etmApp').controller('OverallController', function ($scope, Princ
       }
     }
   };
+  
+  $scope.isAnnual = function () {
+    if ($scope.review.reviewType !== undefined && $scope.review.reviewType.processName === "annualReview") {
+      return true;
+    }
+  return false;
+}
 });

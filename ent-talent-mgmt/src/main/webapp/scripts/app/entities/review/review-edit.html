@@ -38,8 +38,8 @@
                 <span flex>{{ review.reviewStatus.name }}</span>
               </div>
               <div layout="row" flex-gt-xs>
-                <strong flex>Role:</strong>
-                <span flex>{{ review.role }}</span>
+                <strong flex ng-show="!isAnnual()">Role:</strong>
+                <span flex ng-show="!isAnnual()">{{ review.role }}</span>
               </div>
             </div>
           </md-card-content>
@@ -47,7 +47,7 @@
 
         <div ui-view="todo"></div>
         
-        <md-tabs md-dynamic-height md-border-bottom ng-if="review.reviewType.processName == 'annualReview'">
+        <md-tabs md-dynamic-height md-border-bottom ng-if="isAnnual()">
           <md-tab label="peers">
             <div ui-view="peers"></div>
           </md-tab>
@@ -65,7 +65,7 @@
           </md-tab>
         </md-tabs>
         
-        <md-tabs md-dynamic-height md-border-bottom ng-if="review.reviewType.processName == 'engagementReview'">
+        <md-tabs md-dynamic-height md-border-bottom ng-if="!isAnnual()">
           <md-tab label="deliverables">
             <div ui-view="goals"></div>
           </md-tab>

@@ -15,7 +15,7 @@
           </span>
         </div>
         <div layout="row" flex-gt-xs>
-          <span flex>
+          <span flex ng-show="isAnnual()">
             <i class="fa fa-comments-o"></i>
             Peers: {{ showPeerRatings() ? getAvgScore(getRatings(questions, 'peer')) : 0 }}
           </span>
@@ -39,7 +39,7 @@
         </span>
       </div>
       <div layout="row" flex-gt-xs>
-        <span flex>
+        <span flex  ng-show="isAnnual()">
           <i class="fa fa-comments-o"></i>
           Peers: {{ showPeerRatings() ? getAllAvgScore(categories, 'peer') : 0 }}
         </span>

@@ -19,8 +19,10 @@ angular.module('etmApp').controller('PeersController', function ($scope, $stateP
   });
   
   Principal.identity().then(function (account) {
-    $scope.isReviewer = account.id === review.reviewer.id;
-    $scope.isReviewee = account.id === review.reviewee.id;
+    if (review.reviewer !== undefined || review.reviewee !== undefined) { 
+      $scope.isReviewer = account.id === review.reviewer.id;
+      $scope.isReviewee = account.id === review.reviewee.id;
+    }
   });
 
   $scope.getMatches = function (query) {
