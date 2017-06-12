@@ -115,7 +115,7 @@ public class ReviewService extends AbstractBaseService {
             }).orElse(null);
     }
     
-    public Review setReviewAndFeedbackStatusById(Long id, ReviewStatus status) {
+    public Review setReviewAndNonPeerFeedbackStatusById(Long id, ReviewStatus status) {
         Review review = Optional.ofNullable(reviewRepository.getOne(id))
             .map(r -> {
                 r.setReviewStatus(status);
@@ -124,6 +124,7 @@ public class ReviewService extends AbstractBaseService {
         Optional.ofNullable(feedbackService.getAllFeedbackByReviewId(id))
             .map(List::stream)
             .orElseGet(Stream::empty)
+            .filter(feedback -> feedback.getAuthor().getId() == review.getReviewee().getId() || feedback.getAuthor().getId() == review.getReviewer().getId())
             .map(feedback -> {
                 feedback.setFeedbackStatus(feedbackService.initialFeedbackStatus(feedback.getFeedbackType()));
                 return feedbackRepository.save(feedback);  

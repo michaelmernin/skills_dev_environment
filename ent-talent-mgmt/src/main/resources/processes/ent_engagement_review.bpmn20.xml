@@ -92,7 +92,7 @@
     <endEvent id="EndEvent_1" name="End">
       <incoming>SequenceFlow_setReviewToComplete</incoming>
     </endEvent>
-    <serviceTask id="ServiceTask_setReviewAndFeedbackToOpen" activiti:expression="${reviewService.setReviewAndFeedbackStatusById(Review,'OPEN')}" name="Set Feedbacks and Review back to Open status">
+    <serviceTask id="ServiceTask_setReviewAndFeedbackToOpen" activiti:expression="${reviewService.setReviewAndNonPeerFeedbackStatusById(Review,'OPEN')}" name="Set Feedbacks and Review back to Open status">
       <incoming>SequenceFlow_jointRejectFlow</incoming>
       <outgoing>SequenceFlow_setReviewAndFeedbackToOpen</outgoing>
     </serviceTask>

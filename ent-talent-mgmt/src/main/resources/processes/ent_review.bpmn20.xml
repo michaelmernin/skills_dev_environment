@@ -167,7 +167,7 @@
     <endEvent id="End" name="End">
       <incoming>sf_26</incoming>
     </endEvent>
-    <serviceTask id="rejectReviewToOpen" activiti:expression="${reviewService.setReviewAndFeedbackStatusById(Review,'OPEN')}" name="Set Review Back to Open and Feedbacks Back to Initial Statuses">
+    <serviceTask id="rejectReviewToOpen" activiti:expression="${reviewService.setReviewAndNonPeerFeedbackStatusById(Review,'OPEN')}" name="Set Review Back to Open and Feedbacks Back to Initial Statuses">
       <incoming>ReviewersRejectFlow</incoming>
       <incoming>DirectorRejectFlow</incoming>
       <incoming>JointRejectFlow</incoming>
