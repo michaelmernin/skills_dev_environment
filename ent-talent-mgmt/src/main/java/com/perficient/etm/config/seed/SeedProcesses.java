@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
+import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ import com.perficient.etm.service.FeedbackService;
 import com.perficient.etm.service.ReviewService;
 import com.perficient.etm.service.activiti.ProcessService;
 
-public class SeedProcesses implements ApplicationListener<ContextRefreshedEvent> {
+public class SeedProcesses implements ApplicationListener<ApplicationPreparedEvent> {
 
     @Inject
     private UserRepository userRepository;
@@ -45,7 +46,7 @@ public class SeedProcesses implements ApplicationListener<ContextRefreshedEvent>
 
     @Override
     @Transactional
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(ApplicationPreparedEvent event) {
         SecurityUtils.runAsSystem(userRepository, this::startAllReviewProcesses);
     }
 
