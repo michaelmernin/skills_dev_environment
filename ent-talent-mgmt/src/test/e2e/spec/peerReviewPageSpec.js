@@ -58,7 +58,7 @@ describe('Enterprise Talent Management', function () {
       peerReviewPage.selectPeer('Dev UserSeven');
      
       var selectedPeer = peerReviewPage.getSelectedPeer(0);
-      expect(selectedPeer.element(by.css('.peer-name')).getText()).toBe('Dev UserOne');
+      expect(selectedPeer.element(by.css('.peer-name')).getText()).toBe('Dev UserSeven');
       
     });
     
