@@ -33,6 +33,8 @@
     "grunt-text-replace": "0.4.0",
     "grunt-usemin": "3.0.0",
     "grunt-wiredep": "2.0.0",
+    "gulp": "^3.9.1",
+    "gulp-protractor-qa": "^0.2.0",
     "jasmine-reporters": "2.0.7",
     "jasmine-spec-reporter": "2.5.0",
     "jshint-stylish": "1.0.0",
