@@ -16,7 +16,7 @@ describe('Enterprise Talent Management', function() {
        loginPage.get();
        loginPage.login(userData.users.counselor);
        evaluationTab = new EvaluationTabPage();
-       evaluationTab.get(1);
+       evaluationTab.get(2);
        EC = protractor.ExpectedConditions;
      });
 
