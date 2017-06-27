@@ -9,14 +9,7 @@ angular.module('etmApp').controller('UsersController', function ($scope, $mdDial
   };
   $scope.loadAll();
 
-  function userHasRole(role, user) {
-    return user.authorities.some(function (authority) {
-      return role === authority.name;
-    });
-  }
-
   $scope.viewUserDetails = function (user, ev) {
-    var counselors = $scope.users.filter(userHasRole.bind(null, 'ROLE_COUNSELOR'));
     $mdDialog.show({
       controller: 'UserDetailController',
       templateUrl: 'scripts/app/admin/users/user.detail.html',
@@ -24,14 +17,14 @@ angular.module('etmApp').controller('UsersController', function ($scope, $mdDial
       targetEvent: ev,
       locals: {
         user: user,
-        counselors: counselors
+        users: $scope.users
       }
     }).then(function (updatedUser) {
       angular.copy(updatedUser, user);
       User.update(user);
     });
   };
-  
+
   $scope.deleteUser = function (user, ev) {
     var confirmDelete = $mdDialog.confirm()
       .title('Confirm User Deletion')

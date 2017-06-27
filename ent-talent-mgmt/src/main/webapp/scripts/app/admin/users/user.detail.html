@@ -57,12 +57,22 @@
             <md-option ng-value="role" ng-repeat="role in roles">{{ role.description }}</md-option>
           </md-select>
         </md-input-container>
-        <md-input-container class="md-block" flex-gt-sm>
-          <label>Counselor</label>
-          <md-select ng-model="user.counselor" ng-model-options="{trackBy: '$value.id'}">
-            <md-option ng-value="counselor" ng-repeat="counselor in counselors">{{ counselor.firstName }} {{ counselor.lastName }}</md-option>
-          </md-select>
-        </md-input-container>
+        <div class="md-block" flex-gt-sm>
+	      <md-autocomplete
+	      	md-no-cache="true"
+	      	md-input-name="counselor"
+	      	md-selected-item="user.counselor"
+	      	md-input-id="counselor.id"
+	      	md-item-text="counselor.firstName + ' ' + counselor.lastName"
+	      	md-search-text="counselorSearchText"
+	      	md-min-length="3"
+	      	md-items="counselor in getMatches(counselorSearchText)"
+	      	md-floating-label="Counselor">
+	      	<md-item-template>
+		        <span md-highlight-text="counselorSearchText" md-highlight-flags="^i">{{counselor.firstName}} {{counselor.lastName}}</span>
+	      	</md-item-template>
+	      </md-autocomplete>
+        </div>
       </div>
       <h3>Employment</h3>
       <div layout-gt-sm="row">
