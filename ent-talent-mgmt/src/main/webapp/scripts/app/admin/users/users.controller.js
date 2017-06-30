@@ -1,13 +1,23 @@
 'use strict';
 
-angular.module('etmApp').controller('UsersController', function ($scope, $mdDialog, $filter, User) {
-  $scope.users = [];
-  $scope.loadAll = function () {
-    User.query(function (result) {
-      $scope.users = result;
-    });
+angular.module('etmApp').controller('UsersController', function ($scope, $mdDialog, User) {
+  $scope.selectedUser = null;
+
+  $scope.selectUser = function(user) {
+    $scope.selectedUser = user;
   };
-  $scope.loadAll();
+
+  $scope.getMatches = function (query) {
+    if (query.trim().length) {
+      return User.autocomplete({query: query, reviewId:""}).$promise
+        .then(function(response){
+          var nbrUsers = response.length || 0;
+          return nbrUsers > 10 ? response.slice(0,11) : response;
+        });
+    } else {
+      return [];
+    }
+  };
 
   $scope.viewUserDetails = function (user, ev) {
     $mdDialog.show({
@@ -16,8 +26,7 @@ angular.module('etmApp').controller('UsersController', function ($scope, $mdDial
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {
-        user: user,
-        users: $scope.users
+        user: user
       }
     }).then(function (updatedUser) {
       angular.copy(updatedUser, user);
@@ -34,9 +43,7 @@ angular.module('etmApp').controller('UsersController', function ($scope, $mdDial
       .cancel('Cancel')
       .targetEvent(ev);
     $mdDialog.show(confirmDelete).then(function () {
-      User.delete({id: user.id}, function () {
-        $scope.users.splice($scope.users.indexOf(user), 1);
-      });
+      User.delete({id: user.id});
     });
   };
 });

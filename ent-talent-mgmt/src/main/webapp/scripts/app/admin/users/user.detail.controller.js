@@ -1,15 +1,21 @@
 'use strict';
 
-angular.module('etmApp').controller('UserDetailController', function ($scope, $mdDialog, Authority, User, user, users) {
+angular.module('etmApp').controller('UserDetailController', function ($scope, $mdDialog, Authority, User, user) {
   $scope.roles = [];
   Authority.query(function (result) {
     $scope.roles = result;
   });
 
   $scope.user = angular.copy(user);
-  $scope.users = users;
-  $scope.counselors = $scope.users.filter(userHasRole.bind(null, 'ROLE_COUNSELOR'));
-
+  $scope.counselors = [];
+  $scope.loadCounselors = function () {
+    var users = [];
+    User.query(function (result) {
+      users = result;
+      $scope.counselors = users.filter(userHasRole.bind(null, 'ROLE_COUNSELOR'));
+    });
+  };
+  $scope.loadCounselors();
   $scope.cancel = function () {
     $mdDialog.cancel();
   };
