@@ -3,31 +3,31 @@
     <div layout="column" layout-padding>
       <h2 translate="users.title">Manage Users</h2>
       
-      <md-autocomplete 
-      	flex-at-xs 
-      	md-no-cache="true"
-      	md-input-name="user"
-      	md-selected-item="selectedUser"
-      	md-item-text="user.firstName + ' ' + user.lastName"
-      	md-selected-item-change="selectUser(user)"
-      	md-search-text="userSearchText"
-      	md-min-length="3"
-      	md-items="user in getMatches(userSearchText)"
-      	md-floating-label="Search for User">
-      	<md-item-template>
-	        <span md-highlight-text="userSearchText" md-highlight-flags="^i">{{user.firstName}} {{user.lastName}}</span>
-      	</md-item-template>
+      <md-autocomplete
+        flex-at-xs
+        md-no-cache="true"
+        md-input-name="user"
+        md-selected-item="selectedUser"
+        md-item-text="user.firstName + ' ' + user.lastName"
+        md-selected-item-change="selectUser(user)"
+        md-search-text="userSearchText"
+        md-min-length="3"
+        md-items="user in getMatches(userSearchText)"
+        md-floating-label="Search for User">
+        <md-item-template>
+          <span md-highlight-text="userSearchText" md-highlight-flags="^i">{{user.firstName}} {{user.lastName}}</span>
+        </md-item-template>
       </md-autocomplete>
       <md-list ng-if="selectedUser">
-	 	  <md-list-item class="md-3-line" ng-click="viewUserDetails(selectedUser, $event)">
-		      <md-icon md-font-icon="fa fa-user fa-3x" class="md-avatar md-primary"></md-icon>
-		      <div class="md-list-item-text">
-		        <h3>{{selectedUser.firstName}} {{selectedUser.lastName}}</h3>
-		        <h4>{{selectedUser.login}}</h4>
-		        <p>{{selectedUser.email}}</p>
-		        <md-icon md-font-icon="fa fa-trash-o fa-lg" class="md-secondary" ng-click="deleteUser(selectedUser, $event)" aria-label="Delete User"></md-icon>
-		      </div>
-	      </md-list-item>
+        <md-list-item class="md-3-line" ng-click="viewUserDetails(selectedUser, $event)">
+          <md-icon md-font-icon="fa fa-user fa-3x" class="md-avatar md-primary"></md-icon>
+          <div class="md-list-item-text">
+            <h3>{{selectedUser.firstName}} {{selectedUser.lastName}}</h3>
+            <h4>{{selectedUser.login}}</h4>
+            <p>{{selectedUser.email}}</p>
+            <md-icon md-font-icon="fa fa-trash-o fa-lg" class="md-secondary" ng-click="deleteUser(selectedUser, $event)" aria-label="Delete User"></md-icon>
+          </div>
+        </md-list-item>
       </md-list>
 
     </div>
