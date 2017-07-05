@@ -2,30 +2,18 @@
   <md-content md-scroll-y class="md-whiteframe-z1">
     <div layout="column" layout-padding>
       <h2 translate="users.title">Manage Users</h2>
-      
-      <md-autocomplete
-        flex-at-xs
-        md-no-cache="true"
-        md-input-name="user"
-        md-selected-item="selectedUser"
-        md-item-text="user.firstName + ' ' + user.lastName"
-        md-selected-item-change="selectUser(user)"
-        md-search-text="userSearchText"
-        md-min-length="3"
-        md-items="user in getMatches(userSearchText)"
-        md-floating-label="Search for User">
-        <md-item-template>
-          <span md-highlight-text="userSearchText" md-highlight-flags="^i">{{user.firstName}} {{user.lastName}}</span>
-        </md-item-template>
-      </md-autocomplete>
-      <md-list ng-if="selectedUser">
-        <md-list-item class="md-3-line" ng-click="viewUserDetails(selectedUser, $event)">
+      <md-input-container class="md-block" flex-gt-xs>
+	    <label>Search for User</label>
+	    <input name="userText" ng-model="userText" ng-change="findUsers($event)">
+	  </md-input-container>
+      <md-list ng-show="foundUsers">
+        <md-list-item class="md-3-line" ng-repeat="foundUser in foundUsers" ng-click="viewUserDetails(foundUser, $event)">
           <md-icon md-font-icon="fa fa-user fa-3x" class="md-avatar md-primary"></md-icon>
           <div class="md-list-item-text">
-            <h3>{{selectedUser.firstName}} {{selectedUser.lastName}}</h3>
-            <h4>{{selectedUser.login}}</h4>
-            <p>{{selectedUser.email}}</p>
-            <md-icon md-font-icon="fa fa-trash-o fa-lg" class="md-secondary" ng-click="deleteUser(selectedUser, $event)" aria-label="Delete User"></md-icon>
+            <h3>{{foundUser.firstName}} {{foundUser.lastName}}</h3>
+            <h4>{{foundUser.login}}</h4>
+            <p>{{foundUser.email}}</p>
+            <md-icon md-font-icon="fa fa-trash-o fa-lg" class="md-secondary" ng-click="deleteUser(foundUser, $event)" aria-label="Delete User"></md-icon>
           </div>
         </md-list-item>
       </md-list>

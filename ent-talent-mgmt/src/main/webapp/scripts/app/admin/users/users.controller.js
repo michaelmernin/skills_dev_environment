@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('etmApp').controller('UsersController', function ($scope, $mdDialog, $mdToast, User) {
-  $scope.selectedUser = null;
-
+  $scope.foundUsers = null;
+  $scope.userText = '';
 
   function toast(str){
     $mdToast.show(
@@ -12,25 +12,23 @@ angular.module('etmApp').controller('UsersController', function ($scope, $mdDial
     );
   }
 
-
-  $scope.selectUser = function(user) {
-    $scope.selectedUser = user;
-  };
-
-  $scope.getMatches = function (query) {
-    if (query.trim().length) {
+  $scope.findUsers = function() {
+    var query = $scope.userText;
+    query = query.length ? query.trim() : '';
+    var queryLength = query.length;
+    if (queryLength) {
       return User.autocomplete({query: query, reviewId:""}).$promise
         .then(function(response){
           var nbrUsers = response.length || 0;
-          return nbrUsers > 10 ? response.slice(0,11) : response;
+          $scope.foundUsers = nbrUsers > 10 ? response.slice(0,11) : response;
         });
     } else {
-      return [];
+      $scope.foundUsers = [];
     }
   };
 
   $scope.viewUserDetails = function (user, ev) {
-    if(user.id == null){
+    if (user.id == null){
       toast('userWithoutId error');
       console.error("cannot edit user without id", user);
       return;
