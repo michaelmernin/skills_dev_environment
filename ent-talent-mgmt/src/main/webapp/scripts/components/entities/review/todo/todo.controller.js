@@ -35,11 +35,11 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
       .ok(action.result)
       .cancel('Cancel')
       .targetEvent(ev);
-    var missingQuestionDialog = $mdDialog.confirm()
-      .title("Feedback questions missing rating")
+    var missingQuestionDialog = $mdDialog.alert()
+      .title('Feedback questions missing rating')
       .ariaLabel('Missing Feedbacks Dialog')
-      .content("One or more feedback questions are missing a rating.")
-      .ok("Okay")
+      .content('One or more feedback questions are missing a rating.')
+      .ok('Okay')
       .targetEvent(ev);
     var categories = Evaluation.getCategories(review, user);
     var hasEmptyQuestion = false;
