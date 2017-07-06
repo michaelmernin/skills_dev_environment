@@ -2,20 +2,18 @@
   <md-content md-scroll-y class="md-whiteframe-z1">
     <div layout="column" layout-padding>
       <h2 translate="users.title">Manage Users</h2>
-    
-      <md-input-container>
-        <label for="filter" translate="users.filter">Filter</label>
-        <input type="text" id="filter" ng-model="filter">
-      </md-input-container>
-
-      <md-list>
-        <md-list-item ng-repeat="user in users | filter:filter" class="md-3-line" ng-click="viewUserDetails(user, $event)">
+      <md-input-container class="md-block" flex-gt-xs>
+	    <label>Search for User</label>
+	    <input name="userText" ng-model="userText" ng-change="findUsers($event)">
+	  </md-input-container>
+      <md-list ng-show="foundUsers">
+        <md-list-item class="md-3-line" ng-repeat="foundUser in foundUsers" ng-click="viewUserDetails(foundUser, $event)">
           <md-icon md-font-icon="fa fa-user fa-3x" class="md-avatar md-primary"></md-icon>
           <div class="md-list-item-text">
-            <h3>{{user.firstName}} {{user.lastName}}</h3>
-            <h4>{{user.login}}</h4>
-            <p>{{user.email}}</p>
-            <md-icon md-font-icon="fa fa-trash-o fa-lg" class="md-secondary" ng-click="deleteUser(user, $event)" aria-label="Delete User"></md-icon>
+            <h3>{{foundUser.firstName}} {{foundUser.lastName}}</h3>
+            <h4>{{foundUser.login}}</h4>
+            <p>{{foundUser.email}}</p>
+            <md-icon md-font-icon="fa fa-trash-o fa-lg" class="md-secondary" ng-click="deleteUser(foundUser, $event)" aria-label="Delete User"></md-icon>
           </div>
         </md-list-item>
       </md-list>
