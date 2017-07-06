@@ -16,7 +16,7 @@ angular.module('etmApp').controller('UsersController', function ($scope, $mdDial
     var query = $scope.userText;
     query = query.length ? query.trim() : '';
     var queryLength = query.length;
-    if (queryLength) {
+    if (queryLength >= 3) {
       return User.autocomplete({query: query, reviewId:""}).$promise
         .then(function(response){
           var nbrUsers = response.length || 0;
