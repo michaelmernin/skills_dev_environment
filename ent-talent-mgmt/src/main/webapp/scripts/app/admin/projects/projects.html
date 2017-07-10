@@ -3,7 +3,7 @@
     <div layout="column" layout-padding>
       <h2 translate="projects.title">Manage Projects</h2>
       <p>
-        <md-button class="md-raised md-primary" ng-click="addProject()">
+        <md-button class="md-raised md-accent" ng-click="addProject()">
           <i class="fa fa-plus"></i>&nbsp;{{ 'projects.add.button' | translate }}
         </md-button>
       </p>
@@ -15,7 +15,7 @@
 
       <md-list>
         <md-list-item ng-repeat="project in projects | filter:filter" class="md-3-line" ng-click="viewProjectDetails(project, $event)">
-          <md-icon md-font-icon="fa fa-thumb-tack fa-3x" class="md-avatar md-primary"></md-icon>
+          <md-icon md-font-icon="fa fa-thumb-tack fa-3x" class="md-avatar md-accent"></md-icon>
           <div class="md-list-item-text">
             <h3>{{project.name}}</h3>
             <h4>{{project.description}}</h4>

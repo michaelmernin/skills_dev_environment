@@ -45,6 +45,7 @@ angular.module('etmApp', [
     }
   };
 }).config(["$mdThemingProvider", function ($mdThemingProvider) {
+    $mdThemingProvider.definePalette('black', $mdThemingProvider.extendPalette('grey', { '500': '000000', 'contrastDefaultColor': 'light' }));
     $mdThemingProvider.definePalette('prft-red', {
       '50': 'fae2e2',
       '100': 'efb9ba',
@@ -56,23 +57,23 @@ angular.module('etmApp', [
       '700': 'a51819',
       '800': '911514',
       '900': '6a0f0e',
-      'A100': 'efb9ba',
-      'A200': 'e68e90',
-      'A400': 'd33f41',
-      'A700': 'a51819',
+      'A100': 'cc1f20',
+      'A200': 'cc1f20',
+      'A400': 'cc1f20',
+      'A700': 'cc1f20',
       'contrastDefaultColor': 'light',
       'contrastDarkColors': ['50', '100', '200', '300', '400', 'A100'],
       'contrastLightColors': undefined
     });
     $mdThemingProvider.theme('default')
-      .primaryPalette('prft-red')
-      .accentPalette('red');
+      .primaryPalette('black')
+      .accentPalette('prft-red');
 }]).config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, httpRequestInterceptorCacheBusterProvider) {
 
   //enable CSRF
   $httpProvider.defaults.xsrfCookieName = 'CSRF-TOKEN';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRF-TOKEN';
-  
+
   //enable global http error handling
   $httpProvider.interceptors.push('HttpErrorInterceptor');
 

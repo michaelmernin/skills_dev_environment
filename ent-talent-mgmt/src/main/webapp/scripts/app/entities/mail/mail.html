@@ -4,7 +4,7 @@
       <h2>Mail ({{messages.length}})</h2>
       <md-list>
         <md-list-item class="md-3-line" ng-repeat="message in messages" layout="row" ng-click="previewMessage(message,$event)">
-          <md-icon md-font-icon="fa fa-envelope fa-2x" class="md-avatar ng-isolate-scope md-font fa fa-envelope fa-2x material-icons" aria-hidden="true" ng-class="{'md-primary': !message.open}"></md-icon>
+          <md-icon md-font-icon="fa fa-envelope fa-2x" class="md-avatar md-accent ng-isolate-scope md-font fa fa-envelope fa-2x material-icons" aria-hidden="true" ng-class="{'md-primary': !message.open}"></md-icon>
           <div class="md-list-item-text" layout="column">
             <h3>{{ message.subject }}</h3>
             <p>{{ message.text | limitTo:200 }}...</p>
