@@ -25,7 +25,7 @@
         "settings": "Profile",
         "password": "Password",
         "sessions": "Sessions",
-        "login": "Authenticate",
+        "login": "Log in",
         "logout": "Log out"
       },
       "admin": {
