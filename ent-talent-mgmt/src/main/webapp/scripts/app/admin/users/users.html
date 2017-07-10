@@ -8,7 +8,7 @@
 	  </md-input-container>
       <md-list ng-show="foundUsers">
         <md-list-item class="md-3-line" ng-repeat="foundUser in foundUsers" ng-click="viewUserDetails(foundUser, $event)">
-          <md-icon md-font-icon="fa fa-user fa-3x" class="md-avatar md-primary"></md-icon>
+          <md-icon md-font-icon="fa fa-user fa-3x" class="md-avatar md-accent"></md-icon>
           <div class="md-list-item-text">
             <h3>{{foundUser.firstName}} {{foundUser.lastName}}</h3>
             <h4>{{foundUser.login}}</h4>

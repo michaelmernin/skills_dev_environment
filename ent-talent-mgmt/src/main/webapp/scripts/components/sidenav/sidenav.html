@@ -1,9 +1,9 @@
 <md-sidenav class="sidenav md-sidenav-right md-whiteframe-z2" md-component-id="right-nav" md-is-locked-open="$mdMedia('gt-md')" style="height: 100vh;">
-  <md-toolbar class="md-theme-light">
+  <md-toolbar class="md-accent md-whiteframe-z1">
     <h1 class="md-toolbar-tools">
       Navigation
       <span flex></span>
-      <md-button class="md-icon-button md-primary" ng-show="$mdMedia('md') || $mdMedia('sm')" ng-click="toggleSideNav()" aria-label="Close Right Nav">
+      <md-button class="md-icon-button md-accent" ng-show="$mdMedia('md') || $mdMedia('sm')" ng-click="toggleSideNav()" aria-label="Close Right Nav">
         <i class="fa fa-lg fa-close"></i>
       </md-button>
     </h1>
@@ -12,37 +12,37 @@
     <section ng-show="isInRole('ROLE_USER')">
       <md-list>
         <md-list-item>
-          <md-button class="md-primary" ui-sref="home">
+          <md-button class="md-accent" ui-sref="home">
             <i class="fa fa-home"></i>&#xA0;
             <span translate="global.menu.dashboard">Dashboard</span>
           </md-button>
         </md-list-item>
         <md-list-item>
-          <md-button class="md-primary" ui-sref="review.new">
+          <md-button class="md-accent" ui-sref="review.new">
             <i class="fa fa-comments"></i>&#xA0;
             <span translate="global.menu.createReview">Create a Review</span>
           </md-button>
         </md-list-item>
         <md-list-item>
-          <md-button class="md-primary" ui-sref="skills">
+          <md-button class="md-accent" ui-sref="skills">
             <i class="fa fa-graduation-cap"></i>&#xA0;
             <span translate="global.menu.skills">Skills</span>
           </md-button>
         </md-list-item>
         <md-list-item ng-show="isInRole('ROLE_COUNSELOR') || isInRole('ROLE_GENERAL_MANAGER')">
-          <md-button class="md-primary" ui-sref="skillsReview">
+          <md-button class="md-accent" ui-sref="skillsReview">
             <i class="fa fa-pie-chart"></i>&#xA0;
             <span translate="global.menu.skillsReview">Skills Review</span>
           </md-button>
         </md-list-item>
         <md-list-item ng-show="isInRole('ROLE_GENERAL_MANAGER')">
-          <md-button class="md-primary" ui-sref="skillsSearch">
+          <md-button class="md-accent" ui-sref="skillsSearch">
             <i class="fa fa-search"></i>&#xA0;
             <span translate="global.menu.skillsSearch">Skills Search</span>
           </md-button>
         </md-list-item>
         <md-list-item ng-show="isDev || isTest">
-          <md-button class="md-primary" ui-sref="mail">
+          <md-button class="md-accent" ui-sref="mail">
             <i class="fa fa-envelope"></i>&#xA0;
             <span translate="global.menu.admin.mail">Mail</span>
           </md-button>
@@ -57,67 +57,67 @@
       </md-subheader>
       <md-list>
         <md-list-item>
-          <md-button class="md-primary" ui-sref="users">
+          <md-button class="md-accent" ui-sref="users">
             <i class="fa fa-users"></i>&#xA0;
             <span translate="global.menu.admin.users">Manage Users</span>
           </md-button>
         </md-list-item>
         <md-list-item>
-          <md-button class="md-primary" ui-sref="projects">
+          <md-button class="md-accent" ui-sref="projects">
             <i class="fa fa-sliders"></i>&#xA0;
             <span translate="global.menu.admin.projects">Manage Projects</span>
           </md-button>
         </md-list-item>
          <md-list-item>
-          <md-button class="md-primary" ui-sref="skillCategory">
+          <md-button class="md-accent" ui-sref="skillCategory">
             <i class="fa fa-cogs"></i>&#xA0;
             <span translate="global.menu.admin.skills">Manage Skills</span>
           </md-button>
         </md-list-item>
         <md-list-item>
-          <md-button class="md-primary" ui-sref="status">
+          <md-button class="md-accent" ui-sref="status">
             <i class="fa fa-dashboard"></i>&#xA0;
             <span translate="global.menu.admin.status">Status</span>
           </md-button>
         </md-list-item>
         <md-list-item>
-          <md-button class="md-primary" ui-sref="health">
+          <md-button class="md-accent" ui-sref="health">
             <i class="fa fa-heartbeat"></i>&#xA0;
             <span translate="global.menu.admin.health">Health</span>
           </md-button>
         </md-list-item>
         <md-list-item>
-          <md-button class="md-primary" ui-sref="activiti">
+          <md-button class="md-accent" ui-sref="activiti">
             <i class="fa fa-tasks"></i>&#xA0;
             <span>Activiti</span>
           </md-button>
         </md-list-item>
         <md-list-item>
-          <md-button class="md-primary" ui-sref="configuration">
+          <md-button class="md-accent" ui-sref="configuration">
             <i class="fa fa-wrench"></i>&#xA0;
             <span translate="global.menu.admin.configuration">Configuration</span>
           </md-button>
         </md-list-item>
         <md-list-item>
-          <md-button class="md-primary" ui-sref="audits">
+          <md-button class="md-accent" ui-sref="audits">
             <i class="fa fa-history"></i>&#xA0;
             <span translate="global.menu.admin.audits">Audits</span>
           </md-button>
         </md-list-item>
         <md-list-item>
-          <md-button class="md-primary" ui-sref="logs">
+          <md-button class="md-accent" ui-sref="logs">
             <i class="fa fa-list-alt"></i>&#xA0;
             <span translate="global.menu.admin.logs">Logs</span>
           </md-button>
         </md-list-item>
         <md-list-item>
-          <md-button class="md-primary" ui-sref="docs">
+          <md-button class="md-accent" ui-sref="docs">
             <i class="fa fa-book"></i>&#xA0;
             <span translate="global.menu.admin.apidocs">API Docs</span>
           </md-button>
         </md-list-item>
         <md-list-item ng-show="{{ENV === 'dev'}}">
-          <md-button class="md-primary" href="/console" target="_tab">
+          <md-button class="md-accent" href="/console" target="_tab">
             <i class="fa fa-database"></i>&#xA0;
             <span translate="global.menu.admin.database">Database</span>
           </md-button>
@@ -132,25 +132,25 @@
       </md-subheader>
       <md-list>
         <md-list-item ng-switch-when="true">
-          <md-button class="md-primary" ui-sref="settings">
+          <md-button class="md-accent" ui-sref="settings">
             <i class="fa fa-cog"></i>&#xA0;
             <span translate="global.menu.account.settings">Profile</span>
           </md-button>
         </md-list-item>
         <md-list-item ng-if="false">
-          <md-button class="md-primary" ui-sref="sessions">
+          <md-button class="md-accent" ui-sref="sessions">
             <i class="fa fa-cloud"></i>&#xA0;
             <span translate="global.menu.account.sessions">Sessions</span>
           </md-button>
         </md-list-item>
         <md-list-item ng-switch-when="true">
-          <md-button class="md-primary" ui-sref="login" ng-click="logout()">
+          <md-button class="md-accent" ui-sref="login" ng-click="logout()">
             <i class="fa fa-sign-out"></i>&#xA0;
             <span translate="global.menu.account.logout">Log out</span>
           </md-button>
         </md-list-item>
         <md-list-item ng-switch-when="false">
-          <md-button class="md-primary" ui-sref="login">
+          <md-button class="md-accent" ui-sref="login">
             <i class="fa fa-sign-in"></i>&#xA0;
             <span translate="global.menu.account.login">Login</span>
           </md-button>

@@ -23,7 +23,7 @@
       </div>
     </div>
   </md-input-container>
-  <md-switch ng-if="reviewer" ng-model="rating.visible" translate-values="{name: '{{ 'review.showFeedback' | translate }}'}">Show Peer Feedback?</md-switch>
+  <md-switch ng-if="reviewer" class="md-primary" ng-model="rating.visible" translate-values="{name: '{{ 'review.showFeedback' | translate }}'}">Show Peer Feedback?</md-switch>
 
 </ng-form>
 <ng-form name="ratingForm" class="etm-rating-form" ng-if="readonly">

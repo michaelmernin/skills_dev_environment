@@ -1,6 +1,6 @@
 <md-dialog aria-label="List of Skills in {{ skillCategory.title }}" flex="50" style="margin-top:40px;">
   <form name="skillCategoryForm">
-  <md-toolbar>
+  <md-toolbar class="md-accent md-whiteframe-z1">
     <div class="md-toolbar-tools">
       <h2>List of Skills in Category- {{ skillCategory.title }}</h2>
       <span flex></span>
@@ -24,7 +24,7 @@
      </md-list-item> -->
        <md-list-item ng-repeat="skill in skillCategory.skills | filter:filter">
           <p> {{ skill.name  }} </p>
-          <md-switch class="md-secondary md-hue-1" ng-model="skill.enabled" ng-change="enableDisableSkill(skill)"></md-switch>
+          <md-switch class="md-primary" ng-model="skill.enabled" ng-change="enableDisableSkill(skill)"></md-switch>
           <!-- <i class="fa fa-lg fa-trash" ng-click="deleteSkill(skill, $event)" rel ="popover" title="Delete Skill"></i> -->
         </md-list-item>
     </md-list>
