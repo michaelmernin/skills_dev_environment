@@ -1,11 +1,38 @@
 .etm-progress-circular {
-  width: 50px;
-  height: 50px;
-  position: absolute;
-  line-height: 50px;
-  text-align: center;
-  padding-top: 0px
+    width: 65px;
+    height: 65px;
+    position: absolute;
+    line-height: 14px;
+    font-size: 12px;
+    display: table;
+    padding: 5px;
 }
+
+.etm-progress-circular .etm-progress-name {
+    display:table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
 .etm-review-card {
-  min-width:250px;
+  min-width: 250px;
+  min-height: 155px;
+}
+
+.etm-review-card md-progress-circular .md-spinner-wrapper {
+	top: 48%;
+	left: 48%;
+}
+
+.etm-review-card md-progress-circular .md-spinner-wrapper .md-inner .md-left {
+	left: 1px;
+}
+
+.etm-review-card md-progress-circular .md-spinner-wrapper .md-inner .md-left .md-half-circle,
+.etm-review-card md-progress-circular .md-spinner-wrapper .md-inner .md-right .md-half-circle  {
+	border-width: 5px;
+}
+
+.etm-review-card md-progress-circular .md-spinner-wrapper .md-inner .md-gap {
+	border-top-width: 5px;
 }

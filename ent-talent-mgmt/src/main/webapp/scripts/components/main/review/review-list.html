@@ -32,13 +32,14 @@
       </md-card-title-text>
       <md-card-title-media>
         <div layout="row" layout-align="center">
-          <div class="md-title etm-progress-circular">
-            {{ review.reviewStatus.name.substring(0,2).toUpperCase() }}
+          <div class="etm-progress-circular">
+            <div class="etm-progress-name">{{ review.reviewStatus.name }}</div>
           </div>
-          <md-tooltip>
-            {{ review.reviewStatus.name }}
-          </md-tooltip>
-          <md-progress-circular class="md-accent" md-mode="determinate" value="{{ getReviewProgress(review.reviewStatus) | number:0 }}"> </md-progress-circular>
+          <md-progress-circular class="md-accent" md-mode="determinate" md-diameter="75" value="{{ getReviewProgress(review.reviewStatus) | number:0 }}">
+	          <md-tooltip>
+	            {{ review.reviewStatus.name }}
+	          </md-tooltip>
+          </md-progress-circular>
         </div>
         <md-button  class="md-primary" ng-click="goToReview(review.id)" >VIEW</md-button>
       </md-card-title-media>
