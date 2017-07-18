@@ -42,11 +42,18 @@ Main Content container
   overflow-y: auto;
   overflow-x: hidden;
 }
- @media only screen 
-  and (min-device-width: 320px) 
+ @media only screen
+  and (min-device-width: 320px)
   and (max-device-width: 480px)
   and (-webkit-min-device-pixel-ratio: 2) {
     .etm-content{
       height: auto;
     }
-  }
+ }
+
+.etm-help-title .etm-help-icon {
+ 	font-size: 15px;
+ 	vertical-align: middle;
+ 	cursor: pointer;
+ 	margin-left: .5em;
+ }

@@ -3,8 +3,12 @@
     <div ng-class="{'etm-skills-content': showButtons()}" layout="column" layout-padding>
       <div>
         <div layout-gt-xs="row">
-          <h2 flex-gt-xs>{{ user.firstName }} {{ user.lastName }}'s Skills Inventory</h2>
-          <md-button class="md-raised md-accent md-hue-4" ng-click="viewSkillGuideline($event)"> Skill Guidelines</md-button>
+          <h2 flex-gt-xs class="etm-help-title">{{ user.firstName }} {{ user.lastName }}'s Skills Inventory<md-icon md-font-icon="fa fa-info" class="md-accent etm-help-icon" ng-click="viewSkillGuideline($event)">
+              <md-tooltip>
+              	Select for Help content
+              </md-tooltip>
+            </md-icon>
+          </h2>
         </div>
         <div layout-gt-xs="row">
           <div flex-gt-xs>
