@@ -9,9 +9,10 @@ describe('Enterprise Talent Management', function () {
   describe('Peer Review Tab', function () {
     var annualReviewPage;
     var peerReviewPage;
+    var loginPage;
 
     beforeAll(function () {
-      var loginPage = new LoginPage();
+      loginPage = new LoginPage();
       loginPage.get();
       loginPage.login(userData.users.counselor);
       annualReviewPage = new AnnualReviewPage();
@@ -38,7 +39,6 @@ describe('Enterprise Talent Management', function () {
       });
     });
 
-
     it('shoud give valid response if search term match available peer', function(){
       var availablePeers = peerReviewPage.getPeerOptions('dev');
 
@@ -47,24 +47,26 @@ describe('Enterprise Talent Management', function () {
       expect(availablePeers.get(1).getText()).toBe('Dev UserSeven');
       expect(availablePeers.get(2).getText()).toBe('Dev UserEight');
       expect(availablePeers.get(3).getText()).toBe('Dev UserNine');
-
     });
 
     it('shoud allow users to select a peer', function(){
-
       var availablePeers = peerReviewPage.getPeerOptions('dev');
       peerReviewPage.selectPeer('Dev UserSeven');
 
       var selectedPeer = peerReviewPage.getSelectedPeer(0);
       expect(selectedPeer.element(by.css('.peer-name')).getText()).toBe('Dev UserSeven');
-
     });
-
 
     it('should allow users to delete a peer', function(){
      peerReviewPage.deletePeer('Dev UserSeven');
      expect(element(by.xpath('//md-tab-content[contains(@class, "active")]')).element(by.tagName('md-list-item')).element(by.cssContainingText('.peer-name', 'Dev UserSeven')).isPresent()).toBe(false);
     });
+
+    afterAll(function() {
+      loginPage.get();
+      loginPage.logout();
+    });
+
   });
 });
 

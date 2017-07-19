@@ -5,15 +5,15 @@ var LoginPage = require('../page/loginPage.js');
 var userData = require('../data/userData.js');
 var AnnualReviewPage = require('../page/annualReviewPage.js');
 
-
 describe('Enterprise Talent Management', function () {
   'use strict';
 
   describe('Annual Review Page', function () {
     var annualReviewPage;
+    var loginPage;
 
     beforeAll(function () {
-      var loginPage = new LoginPage();
+      loginPage = new LoginPage();
       loginPage.get();
       loginPage.login(userData.users.counselor);
       annualReviewPage = new AnnualReviewPage();
@@ -88,6 +88,11 @@ describe('Enterprise Talent Management', function () {
       expect(annualReviewPage.ui.overallTabContainer.getAttribute('class')).toBe('md-tab ng-scope ng-isolate-scope md-ink-ripple');
       annualReviewPage.ui.overallTabContainer.click();
       expect(annualReviewPage.ui.overallTabContainer.getAttribute('class')).toContain('md-active');
+    });
+
+    afterAll(function() {
+      loginPage.get();
+      loginPage.logout();
     });
 
   });

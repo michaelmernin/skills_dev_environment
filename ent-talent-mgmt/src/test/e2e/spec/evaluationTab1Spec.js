@@ -7,12 +7,14 @@ var EvaluationTabPage = require('../page/evaluationTabPage.js');
 
 describe('Enterprise Talent Management', function() {
   'use strict';
+
   describe('Evaluation Tab Page', function() {
     var evaluationTab;
     var EC;
+    var loginPage;
 
     beforeAll(function() {
-      var loginPage = new LoginPage();
+      loginPage = new LoginPage();
       loginPage.get();
       loginPage.login(userData.users.counselor);
       evaluationTab = new EvaluationTabPage();
@@ -26,7 +28,6 @@ describe('Enterprise Talent Management', function() {
       expect(evaluationTab.ui.evaluationTabContent.getAttribute('class')).toContain('md-no-scroll md-active');
     });
 
-
     it('should allow to rate on Consulting Skills category', function() {
     	var slider = evaluationTab.getToggleQuestionnaire('Consulting Skills');
     	evaluationTab.slideRating(slider, 4);
@@ -36,6 +37,11 @@ describe('Enterprise Talent Management', function() {
     	evaluationTab.fillReviewComment("This is a test comment");
     	evaluationTab.clickSave();
     	expect(evaluationTab.getCategoryRating('Consulting Skills')).toContain('Reviewer Rating: 4');
+    });
+
+    afterAll(function() {
+      loginPage.get();
+      loginPage.logout();
     });
 
   });

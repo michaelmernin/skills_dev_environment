@@ -7,12 +7,14 @@ var EvaluationTabPage = require('../page/evaluationTabPage.js');
 
 describe('Enterprise Talent Management', function() {
   'use strict';
+
   describe('Evaluation Tab Page', function() {
   	 var evaluationTab;
      var EC;
+     var loginPage;
 
      beforeAll(function() {
-       var loginPage = new LoginPage();
+       loginPage = new LoginPage();
        loginPage.get();
        loginPage.login(userData.users.counselor);
        evaluationTab = new EvaluationTabPage();
@@ -308,5 +310,11 @@ describe('Enterprise Talent Management', function() {
 
       });
     */
+
+    afterAll(function() {
+      loginPage.get();
+      loginPage.logout();
+    });
+
   });
 });

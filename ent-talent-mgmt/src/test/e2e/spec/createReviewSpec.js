@@ -7,13 +7,15 @@ var CreateReviewPage = require('../page/createReviewPage.js');
 
 describe('Enterprise Talent Management', function () {
   'use strict';
+
   describe('Create a Review Page ', function () {
     var createReviewPage;
+    var loginPage;
     createReviewPage = new CreateReviewPage();
 
 
     beforeAll(function () {
-      var loginPage = new LoginPage();
+      loginPage = new LoginPage();
       loginPage.get();
       loginPage.login(userData.users.counselor);
       createReviewPage.get();
@@ -34,7 +36,7 @@ describe('Enterprise Talent Management', function () {
       //ReviewTypes should have options Annual review, 3 month Review and Engagement review. For the purpose of this tesing in short term, we are expeting only Annual Review to be available.
       // Need to update this test case once all reviews are listed.
       var reviewTypes = createReviewPage.getDropdownOptions('review.reviewType');
-      
+
       expect(reviewTypes.count()).toBe(2);
       expect(reviewTypes.get(0).getText()).toBe('Annual Review');
     });
@@ -86,6 +88,11 @@ describe('Enterprise Talent Management', function () {
       createReviewPage.accept();
       expect(browser.getTitle()).toEqual('Edit Review');
       createReviewPage.logout();
+    });
+
+    afterAll(function() {
+      loginPage.get();
+      loginPage.logout();
     });
 
   });
