@@ -27,14 +27,14 @@ describe('Controllers Tests ', function () {
       $httpBackend = $injector.get('$httpBackend');
       $scope = $rootScope.$new();
       spiedPrincipal = Principal;
-      
+
       stubInitRequests($httpBackend);
 
       createController = function () {
         return $controller('MainController', {$scope: $scope, Principal: Principal});
       };
     }));
-    
+
     afterEach(function () {
       $httpBackend.verifyNoOutstandingExpectation();
       $httpBackend.verifyNoOutstandingRequest();
@@ -58,10 +58,11 @@ describe('Controllers Tests ', function () {
       expect($scope.account.roles).toEqual(account.roles);
       expect($scope.account.password).toBeNull();
     });
-    
+
     it('should not set account properties when logged out', function () {
       $httpBackend.expectGET(/api\/account\?cacheBuster=\d+/).respond(401, accountError);
       $httpBackend.expectGET(/api\/account\?cacheBuster=\d+/).respond(401, accountError);
+      $httpBackend.expectGET(/i18n\/en\/login.json/).respond(401, accountError)
       spyOn(spiedPrincipal, 'identity').and.callThrough();
 
       createController();
