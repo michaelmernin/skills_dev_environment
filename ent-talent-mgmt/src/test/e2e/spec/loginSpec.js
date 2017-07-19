@@ -27,13 +27,13 @@ describe('Enterprise Talent Management', function () {
       loginPage.login('', 'not.their.password');
       expect(loginPage.ui.authError.isPresent()).toBe(true);
     });
-      
+
     it('should require password value', function () {
       loginPage.login('some.user', '');
       expect(loginPage.ui.authError.isPresent()).toBe(true);
     });
-      
-      it('should display error with incorrect password', function () {
+
+    it('should display error with incorrect password', function () {
       loginPage.login('some.user', 'not.their.password');
       expect(loginPage.ui.authError.isPresent()).toBe(true);
     });
