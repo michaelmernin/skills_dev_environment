@@ -2,20 +2,12 @@
   <md-content md-scroll-y class="md-whiteframe-z1">
     <div layout="column" layout-padding>
       <h2 class="md-display-1" translate="main.title">My Dashboard</h2>
-
-      <div ng-switch="isAuthenticated()">
-        <div ng-switch-when="true">
-          <p translate="main.logged.message" translate-values="{firstName: '{{account.firstName}}', lastName: '{{account.lastName}}', email: '{{account.email}}'}">
-            You are logged in as user "Admin".
-
-          </p>
-          <div ui-view="dashboard.todos"></div>
-          <div ui-view="dashboard.reviews"></div>
-        </div>
-        <div ng-switch-when="false">
-          <div ui-view="dashboard.todos"></div>
-          <div ui-view="dashboard.reviews"></div>
-        </div>
+      <div>
+      	<p translate="main.logged.message" translate-values="{firstName: '{{account.firstName}}', lastName: '{{account.lastName}}', email: '{{account.email}}'}">
+          You are logged in as user "Admin".
+        </p>
+        <div ui-view="dashboard.todos"></div>
+        <div ui-view="dashboard.reviews"></div>
       </div>
     </div>
   </md-content>
