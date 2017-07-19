@@ -25,7 +25,7 @@ describe('Enterprise Talent Management', function () {
       peerReviewPage.search('value');
     });
 
-    it('shoud give error response if search term does not match available peer', function(){
+    it('should give error response if search term does not match available peer', function(){
 
       browser.wait(function() {
         peerReviewPage.search('test');
@@ -39,7 +39,7 @@ describe('Enterprise Talent Management', function () {
       });
     });
 
-    it('shoud give valid response if search term match available peer', function(){
+    it('should give valid response if search term match available peer', function(){
       var availablePeers = peerReviewPage.getPeerOptions('dev');
 
       expect(availablePeers.count()).toBe(4);
@@ -49,7 +49,7 @@ describe('Enterprise Talent Management', function () {
       expect(availablePeers.get(3).getText()).toBe('Dev UserNine');
     });
 
-    it('shoud allow users to select a peer', function(){
+    it('should allow users to select a peer', function(){
       var availablePeers = peerReviewPage.getPeerOptions('dev');
       peerReviewPage.selectPeer('Dev UserSeven');
 
