@@ -42,7 +42,6 @@ var LoginPage = function () {
 
   this.logout = function (){
     this.ui.logoutButton.click();
-
   };
 
   this.login = function (user, password) {
