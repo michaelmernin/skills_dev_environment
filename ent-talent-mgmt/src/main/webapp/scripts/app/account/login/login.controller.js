@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('etmApp').controller('LoginController', function ($rootScope, $scope, $state, $timeout, Auth) {
+angular.module('etmApp').controller('LoginController', function ($rootScope, $scope, $state, $timeout, Auth, Principal) {
   $scope.user = {};
   $scope.errors = {};
-  
+
   function focusUserName() {
     angular.element('[ng-model="username"]').focus();
   }
@@ -27,4 +27,8 @@ angular.module('etmApp').controller('LoginController', function ($rootScope, $sc
       $scope.authenticationError = true;
     });
   };
+
+  if (Principal.isAuthenticated()) {
+    $state.go('home');
+  }
 });
