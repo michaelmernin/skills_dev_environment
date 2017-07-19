@@ -52,10 +52,11 @@ describe('Enterprise Talent Management', function () {
       expect(annualReviewPage.statusValue.getText()).toBe('Open');
     });
 
-//    it('should have Counselor information', function (){
-//      expect(annualReviewPage.counselorLabel.getText()).toBe('Counselor:');
-//      expect(annualReviewPage.counselorValue.getText()).toBe('Dev UserThree');
-//    });
+    // TODO: failing test, were these fields removed on purpose?
+    xit('should have Counselor information', function (){
+      expect(annualReviewPage.counselorLabel.getText()).toBe('Counselor:');
+      expect(annualReviewPage.counselorValue.getText()).toBe('Dev UserThree');
+    });
 
     it('should have Peers tab that is active when clicked', function (){
       expect(annualReviewPage.ui.peerTabContainer.getText()).toBe('PEERS');
