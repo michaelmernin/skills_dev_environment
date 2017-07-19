@@ -62,7 +62,7 @@ describe('Controllers Tests ', function () {
     it('should not set account properties when logged out', function () {
       $httpBackend.expectGET(/api\/account\?cacheBuster=\d+/).respond(401, accountError);
       $httpBackend.expectGET(/api\/account\?cacheBuster=\d+/).respond(401, accountError);
-      $httpBackend.expectGET(/i18n\/en\/login.json/).respond(401, accountError)
+      $httpBackend.expectGET(/i18n\/en\/login.json/).respond(401, accountError);
       spyOn(spiedPrincipal, 'identity').and.callThrough();
 
       createController();
