@@ -24,7 +24,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   /**
   *      PRIVATE HELPERS
   */
-  
+
   var _populateShowReviewees = function () {
     if ($scope.review.reviewType.processName === 'annualReview') {
       Principal.identity().then(function (account) {
@@ -56,13 +56,13 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   var _clearReviewees = function () {
     $scope.reviewees.length = 0;
   };
-  
+
   var _clearDropdowns = function () {
     $scope.projects.length = 0;
     delete $scope.review.project;
     _clearReviewees();
   };
-  
+
   var _populateYears = function () {
     $scope.years.length = 0;
     var startYear = moment($scope.review.project.startDate).year();
@@ -108,7 +108,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
         .ok('Okay');
       $mdDialog.show(errorDialog);
      }
-     // case, annual review 
+     // case, annual review
      else if ($scope.review.reviewType.id === 1) {
         Review.getReviewsByTypeAndReviewee({revieweeId: $scope.review.reviewee.id, reviewTypeId: 1}, function(annualReviewList) {
           var date = new Date(),
@@ -129,10 +129,10 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
             translateKeys = translateKeys.map(function (key) {return 'review.new.save.nextYear.' + key;});
             key = 'nextYear';
             _displayConfirmDialog(translateKeys, key, ev);
-          } 
+          }
           // case, reviewee has annual reviews for this year and the next
           else {
-            var dialog = $mdDialog.confirm()
+            var dialog = $mdDialog.alert()
                 .title('Cannot create annual review')
                 .ariaLabel('aria label')
                 .content('You already have an annual review created for this year and next year')
@@ -178,7 +178,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
     return '';
   };
   */
-  
+
   $scope.getLatestReviews = function (annualReviewList, currentDate) {
     var list = [];
     for (var i = 0; annualReviewList.length > i; i++) {
@@ -186,7 +186,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
         list.push(annualReviewList[i]);
       }
     }
-    
+
     return list;
   };
 
