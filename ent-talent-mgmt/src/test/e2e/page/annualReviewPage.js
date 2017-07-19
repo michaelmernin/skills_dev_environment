@@ -4,8 +4,8 @@
 
 var AnnualReviewPage = function () {
   'use strict';
-  
-  
+
+
   this.getCard = function(){
     return element(by.tagName('md-card-content'));
   };
@@ -20,8 +20,8 @@ var AnnualReviewPage = function () {
     endDateValue: this.getCard().element(by.binding('review.endDate')),
     statusLabel: this.getCard().element(by.translateKey('review.annual.status')),
     statusValue: this.getCard().element(by.binding('review.reviewStatus.name')),
-    counselorLabel: this.getCard().element(by.translateKey('review.annual.counselor')),
-    counselorValue: this.getCard().element(by.binding('review.reviewee.counselor.firstName')),
+//    counselorLabel: this.getCard().element(by.translateKey('review.annual.counselor')),
+//    counselorValue: this.getCard().element(by.binding('review.reviewee.counselor.firstName')),
     peerTabContainer: element(by.css('md-tab-item:nth-child(1)')),
     engagementTabContainer: element(by.css('md-tab-item:nth-child(2)')),
     goalsTabContainer: element(by.css('md-tab-item:nth-child(3)')),
@@ -35,43 +35,43 @@ var AnnualReviewPage = function () {
         return this.ui.reviewName.getAttribute('value');
       }
     },
-    
+
     reviewInformation: {
       get: function () {
         return this.ui.reviewInformation.getAttribute('value');
       },
     },
-    
+
     reviewTypeLabel: {
       get: function () {
         return this.ui.reviewTypeLabel.getAttribute('value');
       },
     },
-      
+
     reviewTypeValue: {
       get: function (){
         return this.ui.reviewTypeValue.getAttribute('value');
       }
     },
-    
+
     startDateLabel: {
       get: function (){
         return this.ui.startDateLabel.getAttribute('value');
       }
     },
-    
+
     startDateValue: {
       get: function (){
         return this.ui.startDateValue.getAttribute('value');
       }
     },
-      
+
     endDateLabel: {
       get: function () {
         return this.ui.endDateLabel.getAttribute('value');
       }
     },
-    
+
     endDateValue: {
       get: function () {
         return this.ui.endDateValue.getAttribute('value');
@@ -82,25 +82,25 @@ var AnnualReviewPage = function () {
         return this.ui.statusLabel.getAttribute('value');
       },
     },
-    
+
     statusValue: {
       get: function (){
         return this.ui.statusValue.getAttribute('value');
       }
     },
-    
+
     counselorLabel: {
       get: function (){
         return this.ui.counselorLabel.getAttribute('value');
       }
     },
-    
+
     counselorValue: {
       get: function (){
         return this.ui.counselorValue.getAttribute('value');
       }
     },
-      
+
   });
 
   this.get = function (id) {

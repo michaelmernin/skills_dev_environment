@@ -8,7 +8,7 @@ var AnnualReviewPage = require('../page/annualReviewPage.js');
 
 describe('Enterprise Talent Management', function () {
   'use strict';
-  
+
   describe('Annual Review Page', function () {
     var annualReviewPage;
 
@@ -52,10 +52,10 @@ describe('Enterprise Talent Management', function () {
       expect(annualReviewPage.statusValue.getText()).toBe('Open');
     });
 
-    it('should have Counselor information', function (){
-      expect(annualReviewPage.counselorLabel.getText()).toBe('Counselor:');
-      expect(annualReviewPage.counselorValue.getText()).toBe('Dev UserThree');
-    });
+//    it('should have Counselor information', function (){
+//      expect(annualReviewPage.counselorLabel.getText()).toBe('Counselor:');
+//      expect(annualReviewPage.counselorValue.getText()).toBe('Dev UserThree');
+//    });
 
     it('should have Peers tab that is active when clicked', function (){
       expect(annualReviewPage.ui.peerTabContainer.getText()).toBe('PEERS');
