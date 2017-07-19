@@ -4,16 +4,12 @@ angular.module('etmApp').controller('ReviewListController', function ($scope, $s
   var NUM_STEPS = 5;
   $scope.reviews = [];
   var user;
-  if (Principal.isAuthenticated()) {
-    Principal.identity().then(function (account) {
-      user = account;
-    });
-    Review.query(function (result) {
-      $scope.reviews = result;
-    });
-  } else {
-    $scope.reviews = getDummyReviews();
-  }
+  Principal.identity().then(function (account) {
+    user = account;
+  });
+  Review.query(function (result) {
+    $scope.reviews = result;
+  });
 
   $scope.getReviewProgress = function (reviewStatus) {
     var step = 0;
@@ -69,7 +65,7 @@ angular.module('etmApp').controller('ReviewListController', function ($scope, $s
       $state.go('login');
     }
   };
-  
+
   $scope.reverseOrderFunction = function() {
     $scope.reverseOrder = !$scope.reverseOrder;
     // TODO - don't user jQuery
@@ -81,7 +77,7 @@ angular.module('etmApp').controller('ReviewListController', function ($scope, $s
     if (!$scope.query) {
       return true;
     }
-    
+
     var query = $scope.query ? $scope.query.toLowerCase() : '';
     return isSubstring(review.client, query) ||
       isSubstring(review.project, query) ||
@@ -109,35 +105,5 @@ angular.module('etmApp').controller('ReviewListController', function ($scope, $s
   function isSubstring(property, query) {
     return (property && query) ? property.toLowerCase().indexOf(query) !== -1 : false
   }
-  
-  function getDummyReviews() {
-    return [{
-      startDate: '2014-06-10',
-      endDate: '2015-04-10',
-      client: 'BestBuy',
-      project: 'Open Box',
-      reviewType: {name: 'Annual Review'},
-      reviewStatus: ReviewStatus.OPEN,
-      reviewee: {firstName: 'Jack', lastName: 'Smith'},
-      reviewer: {firstName: 'David', lastName: 'Smith'}
-    }, {
-      startDate: '2015-03-8',
-      endDate: '2015-06-21',
-      client: 'Target',
-      project: 'AEM',
-      reviewType: {name: '3 Month Review'},
-      reviewStatus: ReviewStatus.JOINT_APPROVAL,
-      reviewee: {firstName: 'John', lastName: 'Doe'},
-      reviewer: {firstName: 'Sam', lastName: 'Jackson'}
-    }, {
-      startDate: '2015-03-4',
-      endDate: '2015-08-7',
-      client: 'Midtronic',
-      project: 'iPhone App',
-      reviewType: {name: 'Engagement'},
-      reviewStatus: ReviewStatus.GM_APPROVAL,
-      reviewee: {firstName: 'Jason', lastName: 'White'},
-      reviewer: {firstName: 'Joe', lastName: 'Rose'}
-    }];
-  }
+
 });
