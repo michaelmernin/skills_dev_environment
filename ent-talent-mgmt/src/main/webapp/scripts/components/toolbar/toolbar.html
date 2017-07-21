@@ -13,7 +13,7 @@
     <md-button ui-sref="settings" ng-show="isAuthenticated() && ($mdMedia('sm') || $mdMedia('xs'))" class="md-icon-button md-primary" aria-label="Show User Profile">
       <i class="fa fa-lg fa-user"></i>
     </md-button>
-    <md-button class="md-icon-button  md-primary" ng-show="$mdMedia('md') || $mdMedia('sm') || $mdMedia('xs')" ng-click="toggleSideNav()" aria-label="Open Right Nav">
+    <md-button class="md-icon-button md-primary" ng-show="isAuthenticated() && ($mdMedia('md') || $mdMedia('sm') || $mdMedia('xs'))" ng-click="toggleSideNav()" aria-label="Open Right Nav">
       <i class="fa fa-lg fa-navicon"></i>
     </md-button>
   </h1>

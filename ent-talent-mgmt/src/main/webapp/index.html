@@ -47,7 +47,7 @@
         <div ui-view="content" flex flex-lg="90" flex-offset-lg="5" flex-gt-lg="80" flex-offset-gt-lg="10"></div>
       </div>
     </div>
-    <div ui-view="sidenav" ng-cloak></div>
+    <div ui-view="sidenav" ng-cloak ng-show="isAuthenticated()"></div>
   </div>
   <!-- build:js scripts/vendor.js -->
   <!-- bower:js -->

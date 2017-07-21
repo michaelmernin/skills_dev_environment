@@ -8,7 +8,7 @@
       </md-button>
     </h1>
   </md-toolbar>
-  <md-content ng-switch="isAuthenticated()">
+  <md-content>
     <section ng-show="isInRole('ROLE_USER')">
       <md-list>
         <md-list-item>
@@ -131,7 +131,7 @@
         <span translate="global.menu.account.main">Account</span>
       </md-subheader>
       <md-list>
-        <md-list-item ng-switch-when="true">
+        <md-list-item>
           <md-button class="md-accent" ui-sref="settings">
             <i class="fa fa-cog"></i>&#xA0;
             <span translate="global.menu.account.settings">Profile</span>
@@ -143,16 +143,10 @@
             <span translate="global.menu.account.sessions">Sessions</span>
           </md-button>
         </md-list-item>
-        <md-list-item ng-switch-when="true">
+        <md-list-item>
           <md-button class="md-accent" ui-sref="login" ng-click="logout()">
             <i class="fa fa-sign-out"></i>&#xA0;
             <span translate="global.menu.account.logout">Log out</span>
-          </md-button>
-        </md-list-item>
-        <md-list-item ng-switch-when="false">
-          <md-button class="md-accent" ui-sref="login">
-            <i class="fa fa-sign-in"></i>&#xA0;
-            <span translate="global.menu.account.login">Login</span>
           </md-button>
         </md-list-item>
       </md-list>

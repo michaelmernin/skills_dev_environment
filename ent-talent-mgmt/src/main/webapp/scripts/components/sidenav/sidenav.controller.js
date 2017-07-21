@@ -10,25 +10,25 @@ angular.module('etmApp').controller('SidenavController', function ($scope, $stat
     Auth.logout();
     $state.go('home');
   };
-  
+
   $scope.toggleSideNav = Sidenav.toggle;
-  
+
   $scope.isDev = false;
   $scope.isTest = false;
-  
-  
-  // watch if authintication changes
+
+
+  // watch if authentication changes
   var gotEnv = false;
   $scope.$watch(function(){
     return $scope.isAuthenticated();
   },function(authinticatedNew, authinticatedOld ){
-    if(authinticatedNew !== authinticatedOld){
-      if(authinticatedNew && !gotEnv){
+    if (authinticatedNew !== authinticatedOld){
+      if (authinticatedNew && !gotEnv){
         gotEnv = true;
         Env.getEnvs().then(function(data){
-          if(data && data.length){
-          $scope.isDev =  data.indexOf('dev') !== -1;
-          $scope.isTest =  data.indexOf('test') !== -1;
+          if (data && data.length){
+            $scope.isDev =  data.indexOf('dev') !== -1;
+            $scope.isTest =  data.indexOf('test') !== -1;
           }
         });
       }
