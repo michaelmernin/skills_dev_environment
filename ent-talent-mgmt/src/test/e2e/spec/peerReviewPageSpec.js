@@ -21,11 +21,11 @@ describe('Enterprise Talent Management', function () {
       peerReviewPage.get();
     });
 
-    it('should take input value', function () {
+    xit('should take input value', function () {
       peerReviewPage.search('value');
     });
 
-    it('should give error response if search term does not match available peer', function(){
+    xit('should give error response if search term does not match available peer', function(){
 
       browser.wait(function() {
         peerReviewPage.search('test');
@@ -39,7 +39,7 @@ describe('Enterprise Talent Management', function () {
       });
     });
 
-    it('should give valid response if search term match available peer', function(){
+    xit('should give valid response if search term match available peer', function(){
       var availablePeers = peerReviewPage.getPeerOptions('dev');
 
       expect(availablePeers.count()).toBe(4);
@@ -49,7 +49,7 @@ describe('Enterprise Talent Management', function () {
       expect(availablePeers.get(3).getText()).toBe('Dev UserNine');
     });
 
-    it('should allow users to select a peer', function(){
+    xit('should allow users to select a peer', function(){
       var availablePeers = peerReviewPage.getPeerOptions('dev');
       peerReviewPage.selectPeer('Dev UserSeven');
 
@@ -57,7 +57,7 @@ describe('Enterprise Talent Management', function () {
       expect(selectedPeer.element(by.css('.peer-name')).getText()).toBe('Dev UserSeven');
     });
 
-    it('should allow users to delete a peer', function(){
+    xit('should allow users to delete a peer', function(){
      peerReviewPage.deletePeer('Dev UserSeven');
      expect(element(by.xpath('//md-tab-content[contains(@class, "active")]')).element(by.tagName('md-list-item')).element(by.cssContainingText('.peer-name', 'Dev UserSeven')).isPresent()).toBe(false);
     });
