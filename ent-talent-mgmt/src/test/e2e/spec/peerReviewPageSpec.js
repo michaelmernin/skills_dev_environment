@@ -58,8 +58,8 @@ describe('Enterprise Talent Management', function () {
     });
 
     xit('should allow users to delete a peer', function(){
-     peerReviewPage.deletePeer('Dev UserSeven');
-     expect(element(by.xpath('//md-tab-content[contains(@class, "active")]')).element(by.tagName('md-list-item')).element(by.cssContainingText('.peer-name', 'Dev UserSeven')).isPresent()).toBe(false);
+      peerReviewPage.deletePeer('Dev UserSeven');
+      expect(element(by.xpath('//md-tab-content[contains(@class, "active")]')).element(by.tagName('md-list-item')).element(by.cssContainingText('.peer-name', 'Dev UserSeven')).isPresent()).toBe(false);
     });
 
     afterAll(function() {
