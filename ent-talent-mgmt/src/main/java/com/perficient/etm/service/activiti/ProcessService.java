@@ -59,7 +59,7 @@ public class ProcessService {
         variables.put(ProcessConstants.GENERAL_MANAGER_VARIABLE, review.getReviewee().getGeneralManager().getId());
         variables.put(ProcessConstants.INITIATOR, userSvc.getUserFromLogin().map(User::getId).get());
         if (ReviewTypeProcess.ENGAGEMENT.equals(reviewType)) {
-            variables.put(ProcessConstants.MANAGER, review.getReviewee().getCounselor().getId());
+            variables.put(ProcessConstants.COUNSELOR, review.getReviewee().getCounselor().getId());
             if (reviewerId.equals(counselorId)) {
                 variables.put(ProcessConstants.MANAGER_RESULT_VARIABLE, null);
             }

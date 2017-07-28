@@ -11,6 +11,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.lang.CharEncoding;
+import org.h2.util.MathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -380,9 +381,9 @@ public class MailService {
 	
 	public void sendReviewStatusChangedEmail(long reviewId, long reviewerId, long revieweeId, long directorId, long GMId, String status) {
         log.debug("Sending review '{}' status change (to '{}') email to reviewer '{}'",reviewId, status, reviewerId);
-        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.REVIEWE_STATUS_CHANGED, EmailConstants.Templates.REVIEWE_STATUS_CHANGED, getMapWithCurrentUser());
+        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.REVIEWEE_STATUS_CHANGED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
         log.debug("Sending review '{}' status change (to '{}') email to reviewee '{}'",reviewId, status, revieweeId);
-        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.REVIEWE_STATUS_CHANGED, EmailConstants.Templates.REVIEWE_STATUS_CHANGED, getMapWithCurrentUser());
+        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.REVIEWEE_STATUS_CHANGED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
         switch (status){
             case "DIRECTOR_APPROVAL":
                 log.debug("Sending request for approval email for review '{}' to director '{}' ", reviewId, directorId);
@@ -393,8 +394,37 @@ public class MailService {
                 sendEmail(GMId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_APPROVAL, EmailConstants.Templates.REVIEW_APPROVAL, getMapWithCurrentUser());
                 break;
         }
-        
-        
-        
-    }	
+    }
+	
+	/**
+     * Sends an email to the reviewer and reviewee that an enagagement review has been started.
+     * Reminds them to complete their feedback.
+     * Intended for use with activinti.
+     * 
+     * @param reviewerId
+     * @param revieweeId
+     * @param reviewId
+     */
+    public void sendEngagementReviewStartedEmail(Long revieweeId, Long reviewerId, Long reviewId) {
+        Map<String, Object> contextMap = new HashMap<String, Object>();
+        log.debug("Sending engagement review started e-mail to reviewee. review id:'{}', reviewee id:'{}'", reviewId,
+                revieweeId);
+        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_STARTED,
+                EmailConstants.Templates.REVIEW_STARTED, contextMap);
+        log.debug("Sending annual review started e-mail to reviewer. review id:'{}', reviewer id:'{}'", reviewId,
+                reviewerId);
+        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_STARTED,
+                EmailConstants.Templates.REVIEW_STARTED, contextMap);
+    }
+    
+    public void sendEngagementReviewCompletedEmail(long reviewId, long reviewerId, long revieweeId, long counselorId, String status) {
+        log.debug("Sending review '{}' status change (to '{}') email to reviewer '{}'",reviewId, status, reviewerId);
+        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_COMPLETED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
+        log.debug("Sending review '{}' status change (to '{}') email to reviewee '{}'",reviewId, status, revieweeId);
+        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_COMPLETED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
+        if (MathUtils.compareLong(revieweeId, counselorId) != 0) {
+            log.debug("Sending review '{}' status change (to '{}') email to counselor '{}'",reviewId, status, counselorId);
+            sendEmail(counselorId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_COMPLETED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
+        }
+    }
 }

@@ -71,7 +71,7 @@ public final class EmailConstants {
         public static final String PEER_FEEDBACK_SUBMITTED = "peerFeedbackSubmitted";
         public static final String SELF_FEEDBACK_SUBMITTED = "selfFeedbackSubmitted";
         public static final String REVIEWER_FEEDBACK_SUBMITTED = "reviewerFeedbackSubmitted";
-        public static final String REVIEWE_STATUS_CHANGED = "reviewStatusChanged";
+        public static final String REVIEWEE_STATUS_CHANGED = "reviewStatusChanged";
         public static final String NOTIFICATION_REVIEW_START = "notificationReviewStart";
         public static final String NOTIFICATION_REVIEW_COMPLETION = "notificationReviewCompletion";
         public static final String NOTIFICATION_REVIEW_LATE = "notificationReviewLate";
@@ -88,10 +88,12 @@ public final class EmailConstants {
         public static final String PEER_FEEDBACK_SUBMITTED = "mail.peerFeedback.submitted.subject";
         public static final String SELF_FEEDBACK_SUBMITTED = "mail.selfFeedback.submitted.subject";
         public static final String REVIEWER_FEEDBACK_SUBMITTED = "mail.reviewerFeedback.submitted.subject";
-        public static final String REVIEWE_STATUS_CHANGED = "mail.annualReview.statusChanged.subject";
+        public static final String REVIEWEE_STATUS_CHANGED = "mail.annualReview.statusChanged.subject";
         public static final String NOTIFICATION_REVIEW_START = "mail.notification.annualReview.start";
         public static final String NOTIFICATION_REVIEW_COMPLETION = "mail.notification.annualReview.completion";
-        public static final String NOTIFICATION_REVIEW_LATE = "mail.notification.annualReview.late";    
+        public static final String NOTIFICATION_REVIEW_LATE = "mail.notification.annualReview.late";
+        public static final String ENGAGEMENT_REVIEW_STARTED = "mail.engagementReview.review.started.subject";
+        public static final String ENGAGEMENT_REVIEW_COMPLETED = "mail.engagementReview.review.status.completed";
     }
 
 }

@@ -35,7 +35,7 @@ public final class ProcessConstants {
     
     public static final String INITIATOR = "Initiator";
     
-    public static final String MANAGER = "Manager";
+    public static final String COUNSELOR = "Counselor";
     
     public static final String MANAGER_RESULT_VARIABLE = "MANAGER_RESULT";
 }
