@@ -80,9 +80,9 @@ public final class EmailConstants {
     public final class Subjects {
         // Email i18n constants
         public static final String ACTIVATION = "mail.activation.subject";
-        public static final String ANNULA_REVIEW_STARTED = "mail.annualReview.started.subject";
-        public static final String ANNULA_REVIEW_REJECTED = "mail.annualReview.rejected.subject";
-        public static final String ANNULA_REVIEW_APPROVAL = "mail.annualReview.approval.subject";
+        public static final String ANNUAL_REVIEW_STARTED = "mail.annualReview.started.subject";
+        public static final String ANNUAL_REVIEW_REJECTED = "mail.annualReview.rejected.subject";
+        public static final String ANNUAL_REVIEW_APPROVAL = "mail.annualReview.approval.subject";
         public static final String PEER_FEEDBACK_REMINDER = "mail.peerFeedback.reminder.subject";
         public static final String PEER_FEEDBACK_REQUESTED = "mail.peerFeedback.requested.subject";
         public static final String PEER_FEEDBACK_SUBMITTED = "mail.peerFeedback.submitted.subject";

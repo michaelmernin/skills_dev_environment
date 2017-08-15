@@ -3,7 +3,7 @@
 angular.module('etmApp').config(function ($stateProvider) {
   $stateProvider.state('projects', {
     parent: 'admin',
-    url: '/projects',
+    url: '', // was /projects
     data: {
       roles: ['ROLE_ADMIN'],
       pageTitle: 'projects.title'

@@ -10,10 +10,10 @@
     <!--
         add members seed data
     -->
-    <changeSet id="20170407085203" context="!prod AND !uat" author="michael">
+    <!--<changeSet id="20170407085203" context="!prod AND !uat" author="michael">
         <loadUpdateData encoding="UTF-8" separator=";"
                   file="config/liquibase/seed/dev/members.csv"
                   tableName="T_MEMBER"
                   primaryKey="user_id,project_id"/>
-    </changeSet>
+    </changeSet>-->
 </databaseChangeLog>

@@ -311,11 +311,11 @@ public class MailService {
 		contextMap.put(EmailConstants.INITIATOR_ID, InitiatorId);
 		log.debug("Sending annual review started e-mail to reviewee. review id:'{}', reviewee id:'{}'", reviewId,
 				userId);
-		sendEmail(userId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_STARTED,
+		sendEmail(userId, reviewId, EmailConstants.Subjects.ANNUAL_REVIEW_STARTED,
 				EmailConstants.Templates.REVIEW_STARTED, contextMap);
 		log.debug("Sending annual review started e-mail to reviewer. review id:'{}', reviewer id:'{}'", reviewId,
 				reviewerId);
-		sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_STARTED,
+		sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ANNUAL_REVIEW_STARTED,
 				EmailConstants.Templates.REVIEW_STARTED, contextMap);
 	}
 
@@ -364,9 +364,9 @@ public class MailService {
 	
 	public void sendAnnualReviewRejected(long revieweeId, Long reviewerId, long reviewId) {
 	    log.debug("Sending review: '{}' rejected e-mail to reviewer: '{}'",reviewId, reviewerId);
-	    sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, getMapWithCurrentUser());
+	    sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ANNUAL_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, getMapWithCurrentUser());
 	    log.debug("Sending review: '{}' rejected e-mail to reviewee: '{}'",reviewId, revieweeId);
-	    sendEmail(revieweeId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, getMapWithCurrentUser());
+	    sendEmail(revieweeId, reviewId, EmailConstants.Subjects.ANNUAL_REVIEW_REJECTED, EmailConstants.Templates.REVIEW_REJECTED, getMapWithCurrentUser());
     }
 	
 	public void sendSelfFeedbackSubmittedEmail(long reviewerId, long reviewId) {
@@ -387,11 +387,11 @@ public class MailService {
         switch (status){
             case "DIRECTOR_APPROVAL":
                 log.debug("Sending request for approval email for review '{}' to director '{}' ", reviewId, directorId);
-                sendEmail(directorId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_APPROVAL, EmailConstants.Templates.REVIEW_APPROVAL, getMapWithCurrentUser());
+                sendEmail(directorId, reviewId, EmailConstants.Subjects.ANNUAL_REVIEW_APPROVAL, EmailConstants.Templates.REVIEW_APPROVAL, getMapWithCurrentUser());
                 break;
             case "GM_APPROVAL":
                 log.debug("Sending request for approval email for review '{}' to GM '{}' ", reviewId, GMId);
-                sendEmail(GMId, reviewId, EmailConstants.Subjects.ANNULA_REVIEW_APPROVAL, EmailConstants.Templates.REVIEW_APPROVAL, getMapWithCurrentUser());
+                sendEmail(GMId, reviewId, EmailConstants.Subjects.ANNUAL_REVIEW_APPROVAL, EmailConstants.Templates.REVIEW_APPROVAL, getMapWithCurrentUser());
                 break;
         }
     }

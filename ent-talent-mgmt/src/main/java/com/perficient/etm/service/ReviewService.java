@@ -166,12 +166,6 @@ public class ReviewService extends AbstractBaseService {
                 review.setReviewer(u.getCounselor());
                 break;
             case ENGAGEMENT:
-                User manager = review.getProject().getManager();
-                if (manager.getId() != u.getId()) {
-                    review.setReviewer(manager);
-                } else {
-                    review.setReviewer(u.getCounselor());
-                }
                 break;
             default:
                 break;

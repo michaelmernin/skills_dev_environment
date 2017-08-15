@@ -17,7 +17,7 @@
     <!--
         Added the entity Project.
     -->
-    <changeSet id="20170313211409" author="jhipster">
+    <!--<changeSet id="20170313211409" author="jhipster">
         <createTable tableName="T_PROJECT">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
@@ -46,5 +46,5 @@
                                  constraintName="fk_project_manager_id"
                                  referencedColumnNames="id"
                                  referencedTableName="T_USER"/>
-    </changeSet>
+    </changeSet>-->
 </databaseChangeLog>

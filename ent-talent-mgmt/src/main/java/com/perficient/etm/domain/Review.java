@@ -106,8 +106,7 @@ public class Review implements Serializable {
     
     @JsonView(View.Public.class)
     @JsonSerialize(using = PublicSerializer.class)
-    @ManyToOne
-    private Project project;
+    private String project;
 
     @JsonView(View.Public.class)
     @ManyToMany(fetch = FetchType.EAGER)
@@ -195,11 +194,11 @@ public class Review implements Serializable {
         this.peers = peers;
     }
 
-    public Project getProject() {
+    public String getProject() {
         return project;
     }
 
-    public void setProject(Project project) {
+    public void setProject(String project) {
         this.project = project;
     }
 

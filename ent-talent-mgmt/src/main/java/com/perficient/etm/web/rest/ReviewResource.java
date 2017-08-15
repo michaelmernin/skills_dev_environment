@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.perficient.etm.domain.Review;
 import com.perficient.etm.domain.ReviewType;
 import com.perficient.etm.exception.ETMException;
@@ -31,6 +32,7 @@ import com.perficient.etm.exception.ReviewProcessNotFound;
 import com.perficient.etm.repository.ReviewTypeRepository;
 import com.perficient.etm.service.ReviewService;
 import com.perficient.etm.web.validator.ReviewValidator;
+import com.perficient.etm.web.view.View;
 
 /**
  * REST controller for managing Review.
@@ -161,9 +163,10 @@ public class ReviewResource implements RestResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Review> getReviewsByTypeAndReviewee(Long revieweeId, Long reviewTypeId) {
+    @JsonView(View.Public.class)
+    List<Review> getReviewsByTypeAndReviewee(Long revieweeId, Long reviewTypeId) {
         log.debug("REST request to get list of reviews by reviewee and review type");
-        ReviewType reviewType = reviewTypeRepository.findOne((long)1);
+        ReviewType reviewType = reviewTypeRepository.findOne((long)reviewTypeId);
         return getReviewSvc().findAllByReviewTypeAndRevieweeId(reviewType, revieweeId);
     }
 }

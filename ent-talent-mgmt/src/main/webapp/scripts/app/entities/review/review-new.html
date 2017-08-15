@@ -7,24 +7,26 @@
         <div layout-gt-sm="row">
           <!-- REVIEW TYPE -->
           <md-input-container class="md-block" flex-gt-sm="50">
-            <label translate="review.reviewType">Review Type</label>
-            <md-select name="reviewType" ng-model="review.reviewType" ng-model-options="{trackBy: '$value.id'}" ng-change="reviewTypeChange()" required>
-              <md-option ng-value="reviewType" ng-repeat="reviewType in reviewTypes">{{ reviewType.name }}</md-option>
-            </md-select>
-            <div ng-messages="reviewForm.reviewType.$error" ng-if="reviewForm.$submitted || reviewForm.reviewType.$dirty">
-              <div ng-message="required">
-                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.reviewType' | translate }}'}">Please select a value.</span>
-              </div>
-            </div>
+            <input name="reviewType" ng-model="reviewType" ng-readonly=true>
           </md-input-container>
           <!-- // REVIEW TYPE -->
 
+          <!-- REVIEWER -->
+          <md-input-container class="md-block" flex-gt-sm="50">
+            <label>Reviewer</label>
+            <md-autocomplete md-no-cache="true" md-selected-item="selectedItem" md-item-text="user.firstName + ' ' + user.lastName" md-selected-item-change="setReviewer(user)" md-search-text="searchText" md-min-length="3" placeholder="Type here to search for peers..." md-items="user in getMatches(searchText)">
+              <md-item-template>
+                <span md-highlight-text="searchText">{{user.firstName}} {{user.lastName}}</span>
+              </md-item-template>
+              <md-not-found>No peers matching "{{ searchText }}" were found.</md-not-found>
+            </md-autocomplete>
+          </md-input-container>
+          <!-- //REVIEWER -->
+          
           <!-- PROJECT -->
-          <md-input-container class="md-block" flex-gt-sm="50" ng-show="isAnnual !== null && !isAnnual">
-            <label translate="review.project">Project</label>
-            <md-select name="project" ng-model="review.project" ng-model-options="{trackBy: '$value.id'}" ng-change="projectChange()" ng-required="!isAnnual">
-              <md-option ng-value="project" ng-repeat="project in projects">{{ project.name }}</md-option>
-            </md-select>
+          <md-input-container class="md-block" flex-gt-sm="50">
+           <label translate="review.project">Project</label>
+            <input ng-model="review.project">
             <div ng-messages="reviewForm.project.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
               <div ng-message="required">
                 <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.project' | translate }}'}">Please select a value.</span>
@@ -32,76 +34,27 @@
             </div>
           </md-input-container>
           <!-- // PROJECT -->
-
-          <!-- REVIEWEE - annual -->
-          <md-input-container class="md-block" flex-gt-sm="50" ng-show="isAnnual !== null && isAnnual">
-            <label translate="review.reviewee">Reviewee</label>
-            <md-select name="reviewee" ng-model="review.reviewee" ng-model-options="{trackBy: '$value.login'}" ng-required="isAnnual">
-              <md-option ng-value="reviewee" ng-repeat="reviewee in reviewees">{{ reviewee.firstName }} {{ reviewee.lastName }}</md-option>
-            </md-select>
-            <div ng-messages="reviewForm.reviewee.$error" ng-if="reviewForm.$submitted || reviewForm.reviewee.$dirty">
-              <div ng-message="required">
-                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.reviewee' | translate }}'}">Please select a value.</span>
-              </div>
-            </div>
-          </md-input-container>
-          <!-- // REVIEWEE - annual -->
         </div>
-
-        <!-- REVIEWEE - engagement -->
         <div layout-gt-sm="row">
-          <md-input-container class="md-block" flex-gt-sm="50" ng-show="isAnnual !== null && !isAnnual">
-            <label translate="review.reviewee">Reviewee</label>
-            <md-select name="reviewee" ng-model="review.reviewee" ng-model-options="{trackBy: '$value.login'}" ng-required="!isAnnual">
-              <md-option ng-value="reviewee" ng-repeat="reviewee in reviewees">{{ reviewee.firstName }} {{ reviewee.lastName }}</md-option>
-            </md-select>
-            <div ng-messages="reviewForm.reviewee.$error" ng-if="reviewForm.$submitted || reviewForm.reviewee.$dirty">
-              <div ng-message="required">
-                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.reviewee' | translate }}'}">Please select a value.</span>
-              </div>
-            </div>
+          <!-- DATE RANGE -->
+          <md-input-container class="md-block" flex-gt-sm="50">
+            <span translate="review.engagement.dateRange">Engagement Review Date Range: </span>
+            <span ng-show="review.startDate">{{ review.startDate }} - {{ review.endDate }}</span>
           </md-input-container>
-          <!-- // REVIEWEE - engagement -->
-
-          <!-- QUARTER -->
-          <md-input-container class="md-block" flex-gt-sm="50" ng-show="isAnnual !== null && !isAnnual">
-            <label translate="review.quarter">Quarter</label>
-            <md-select name="quarter" ng-model="quarter" ng-required="!isAnnual">
-              <md-option value="1">Quarter 1</md-option>
-              <md-option value="2">Quarter 2</md-option>
-              <md-option value="3">Quarter 3</md-option>
-              <md-option value="4">Quarter 4</md-option>
-            </md-select>
-            <div ng-messages="reviewForm.quarter.$error" ng-if="reviewForm.$submitted || reviewForm.quarter.$dirty">
-              <div ng-message="required">
-                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.quarter' | translate }}'}">Please select a value.</span>
+          <!-- //Date Range -->
+        </div>
+        <div layout-gt-sm="row" class="virtualRepeatdemoHorizontalUsage">
+          <!-- Quarter -->
+          <md-input-container layout="row" layout-align="center center" flex-gt-sm="100">
+            <md-button ng-click="getQuarters('back')">Back</md-button>
+            <md-virtual-repeat-container id="horizontal-container" md-orient-horizontal>
+              <div md-virtual-repeat="quarter in quarters" class="repeat-div">
+                <md-button class="repeated-item" ng-disabled="quarter.isReadOnly" ng-click="applyQuarter(quarter)">{{ quarter.startDate }} - {{ quarter.endDate }}</md-button>
               </div>
-            </div>
+            </md-virtual-repeat-container>
+            <md-button ng-click="getQuarters('next')">Next</md-button>
           </md-input-container>
-          <!-- // QUARTER -->
-
-          <!-- YEAR -->
-          <md-input-container class="md-block" flex-gt-sm="50" ng-show="isAnnual !== null && !isAnnual">
-            <label translate="review.year">Year</label>
-            <md-select name="year" ng-model="year" ng-required="!isAnnual">
-              <md-option ng-repeat="year in years" value="{{ year }}">{{ year }}</md-option>
-            </md-select>
-            <div ng-messages="reviewForm.year.$error" ng-if="reviewForm.$submitted || reviewForm.year.$dirty">
-              <div ng-message="required">
-                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.year' | translate }}'}">Please select a value.</span>
-              </div>
-            </div>
-          </md-input-container>
-          <md-input-container class="md-block" flex-gt-sm="50" ng-show="isAnnual !== null && !isAnnual">
-            <label>Role</label>
-            <input ng-model="review.role">
-            <div ng-messages="reviewForm.role.$error" ng-if="reviewForm.$submitted || reviewForm.role.$dirty">
-              <div ng-message="required">
-                <span translate="global.messages.validate.field.enter.required" translate-values="{name: '{{ 'review.a.role' | translate }}'}">Please enter a value</span>
-              </div>
-            </div>
-          </md-input-container>
-          <!-- // YEAR -->
+          <!-- //Quarter -->
         </div>
         <div layout="row">
           <span flex></span>

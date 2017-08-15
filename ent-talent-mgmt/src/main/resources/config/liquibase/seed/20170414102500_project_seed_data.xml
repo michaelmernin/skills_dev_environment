@@ -10,10 +10,10 @@
     <!--
         Add seed data.
     -->
-    <changeSet id="20170414102500" author="michael">
+    <!--<changeSet id="20170414102500" author="michael">
         <loadUpdateData encoding="UTF-8" separator=";"
                   file="config/liquibase/seed/project.csv"
                   tableName="T_PROJECT"
                   primaryKey="id"/>
-    </changeSet>
+    </changeSet>-->
 </databaseChangeLog>
