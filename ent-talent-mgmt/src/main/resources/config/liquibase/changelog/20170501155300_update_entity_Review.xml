@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <!-- Update the project column to be a project id -->
-  <!--<changeSet id="20170501155300" author="michael">
+  <changeSet id="20170501155300" author="michael">
     <renameColumn tableName="T_REVIEW" columnDataType="varchar(255)" oldColumnName="project" newColumnName="project_id"/>
     <modifyDataType tableName="T_REVIEW" columnName="project_id" newDataType="bigint"/>
     
@@ -13,5 +13,5 @@
                                  constraintName="fk_review_project_id"
                                  referencedColumnNames="id"
                                  referencedTableName="T_PROJECT"/>
-  </changeSet>-->
+  </changeSet>
 </databaseChangeLog>

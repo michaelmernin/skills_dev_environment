@@ -11,7 +11,7 @@
         Added the join table Member.
         Will be used to link users to projects
     -->
-    <!--<changeSet id="20170407083706" author="michael">
+    <changeSet id="20170407083706" author="michael">
         <createTable tableName="T_MEMBER">
             <column name="user_id" type="bigint">
                 <constraints nullable="false"/>
@@ -35,5 +35,5 @@
                                  referencedColumnNames="id"
                                  referencedTableName="T_USER"/>
 
-    </changeSet>-->
+    </changeSet>
 </databaseChangeLog>
