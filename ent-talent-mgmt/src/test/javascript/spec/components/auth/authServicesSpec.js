@@ -3,8 +3,8 @@
 describe('Services Tests ', function () {
 
   beforeEach(module('etmApp'));
-
-  describe('Auth', function () {
+  // DISABLED
+  xdescribe('Auth', function () {
     var $httpBackend, spiedLocalStorageService, authService, spiedAuthServerProvider;
 
     beforeEach(inject(function ($injector, localStorageService, Auth, AuthServerProvider) {
