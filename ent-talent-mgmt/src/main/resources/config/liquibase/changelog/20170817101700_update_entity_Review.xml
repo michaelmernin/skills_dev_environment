@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <!--
+      Change Project from an id column to a varchar column
+  -->
+  <changeSet id="20170817101700" author="ahmed">
+    <renameColumn tableName="T_REVIEW" columnDataType="bigint" oldColumnName="project_id" newColumnName="project"/>
+    <modifyDataType tableName="T_REVIEW" columnName="project" newDataType="varchar(255)"/>
+  </changeSet>
+</databaseChangeLog>
