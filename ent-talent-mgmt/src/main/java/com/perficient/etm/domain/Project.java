@@ -33,9 +33,9 @@ import com.perficient.etm.web.view.View;
 /**
  * A Project.
  */
-@Entity
+//@Entity
 //@Table(name = "T_PROJECT")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Project implements Serializable {
 
     private static final long serialVersionUID = 1L;

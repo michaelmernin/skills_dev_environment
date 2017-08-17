@@ -69,6 +69,7 @@ public class Review implements Serializable {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+    // simple columns
     @JsonView(View.Public.class)
     @Column(name = "client")
     private String client;
@@ -85,6 +86,11 @@ public class Review implements Serializable {
     @Column(name = "rating")
     private Double rating;
 
+    @JsonView(View.Public.class)
+    @Column(name = "project")
+    private String project;
+
+    // relationship columns
     @JsonView(View.Public.class)
     @ManyToOne
     private ReviewType reviewType;
@@ -103,10 +109,6 @@ public class Review implements Serializable {
     @JsonSerialize(using = PublicSerializer.class)
     @ManyToOne
     private User reviewer;
-    
-    @JsonView(View.Public.class)
-    @JsonSerialize(using = PublicSerializer.class)
-    private String project;
 
     @JsonView(View.Public.class)
     @ManyToMany(fetch = FetchType.EAGER)

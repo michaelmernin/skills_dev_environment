@@ -27,10 +27,12 @@ import com.perficient.etm.service.UserService;
 /**
  * REST controller for managing Project.
  */
-@RestController
-@RequestMapping("/api")
+// Please leave comment as long as project table is removed
+// @RestController
+// @RequestMapping("/api")
 public class ProjectResource {
 
+    /*
     private final Logger log = LoggerFactory.getLogger(ProjectResource.class);
 
     private static final String ENTITY_NAME = "project";
@@ -40,6 +42,7 @@ public class ProjectResource {
     
     @Inject
     private UserService userService;
+    */
 
     /**
      * POST /projects : Create a new project.
@@ -52,6 +55,7 @@ public class ProjectResource {
      * @throws URISyntaxException
      *             if the Location URI syntax is incorrect
      */
+    /*
     @RequestMapping(value = "/projects", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RolesAllowed(AuthoritiesConstants.ADMIN)
@@ -61,6 +65,7 @@ public class ProjectResource {
         Project createdProj = projectRepository.save(project);
         return ResponseEntity.ok().body(createdProj);
     }
+    */
 
     /**
      * PUT /projects : Updates an existing project.
@@ -74,7 +79,7 @@ public class ProjectResource {
      * @throws URISyntaxException
      *             if the Location URI syntax is incorrect
      */
-    @RequestMapping(value = "/projects", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    /*@RequestMapping(value = "/projects", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RolesAllowed(AuthoritiesConstants.ADMIN)
     public ResponseEntity<Project> updateProject(@Valid @RequestBody Project project) throws URISyntaxException {
@@ -84,7 +89,7 @@ public class ProjectResource {
         }
         Project updatedProj = projectRepository.save(project);
         return ResponseEntity.ok().body(updatedProj);
-    }
+    }*/
 
     /**
      * GET /projects : get all the projects.
@@ -92,14 +97,14 @@ public class ProjectResource {
      * @return the ResponseEntity with status 200 (OK) and the list of projects
      *         in body
      */
-    @RequestMapping(value = "/projects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    /*@RequestMapping(value = "/projects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RolesAllowed(AuthoritiesConstants.ADMIN)
     public List<Project> getAllProjects() {
         log.debug("REST request to get all Projects");
         List<Project> projects = projectRepository.findAll();
         return projects;
-    }
+    }*/
 
     /**
      * GET /project/:id : get the "id" project.
@@ -109,14 +114,14 @@ public class ProjectResource {
      * @return the ResponseEntity with status 200 (OK) and with body the
      *         project, or with status 404 (Not Found)
      */
-    @RequestMapping(value = "/projects/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+   /* @RequestMapping(value = "/projects/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RolesAllowed(AuthoritiesConstants.ADMIN)
     public ResponseEntity<Project> getProject(@PathVariable Long id) {
         log.debug("REST request to get Project : {}", id);
         Project project = projectRepository.findOne(id);
         return ResponseEntity.ok(project);
-    }
+    }*/
 
     /**
      * DELETE /projects/:id : delete the "id" project.
@@ -125,19 +130,19 @@ public class ProjectResource {
      *            the id of the project to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @RequestMapping(value = "/projects/{id}", method = RequestMethod.DELETE)
+    /*@RequestMapping(value = "/projects/{id}", method = RequestMethod.DELETE)
     @Timed
     @RolesAllowed(AuthoritiesConstants.ADMIN)
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         log.debug("REST request to delete Project : {}", id);
         projectRepository.delete(id);
         return ResponseEntity.ok().build();
-    }
+    }*/
 
     /**
      * GET  /projects -> get all the projects by user id.
      */
-    @RequestMapping(value = "/projects/byUser/{id}",
+   /* @RequestMapping(value = "/projects/byUser/{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -145,5 +150,5 @@ public class ProjectResource {
         log.debug("REST request to get projects by user");
         User user = userService.getUser(id);
         return projectRepository.findAllByUser(user);
-    }
+    }*/
 }
