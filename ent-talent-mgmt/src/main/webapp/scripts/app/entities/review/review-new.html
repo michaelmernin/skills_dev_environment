@@ -12,15 +12,20 @@
           <!-- // REVIEW TYPE -->
 
           <!-- REVIEWER -->
-          <md-input-container class="md-block" flex-gt-sm="50">
-            <label>Reviewer</label>
-            <md-autocomplete md-no-cache="true" md-selected-item="selectedItem" md-item-text="user.firstName + ' ' + user.lastName" md-selected-item-change="setReviewer(user)" md-search-text="searchText" md-min-length="3" placeholder="Type here to search for peers..." md-items="user in getMatches(searchText)">
-              <md-item-template>
-                <span md-highlight-text="searchText">{{user.firstName}} {{user.lastName}}</span>
-              </md-item-template>
-              <md-not-found>No peers matching "{{ searchText }}" were found.</md-not-found>
-            </md-autocomplete>
-          </md-input-container>
+          <md-autocomplete flex-gt-sm="50"
+            md-no-cache="true"
+            md-selected-item="selectedItem"
+            md-item-text="user.firstName + ' ' + user.lastName"
+            md-selected-item-change="setReviewer(user)"
+            md-search-text="searchText"
+            md-min-length="3"
+            md-floating-label="Reviewer (type to search)"
+            md-items="user in getMatches(searchText)">
+            <md-item-template>
+              <span md-highlight-text="searchText">{{user.firstName}} {{user.lastName}}</span>
+            </md-item-template>
+            <md-not-found>No peers matching "{{ searchText }}" were found.</md-not-found>
+          </md-autocomplete>
           <!-- //REVIEWER -->
           
           <!-- PROJECT -->
