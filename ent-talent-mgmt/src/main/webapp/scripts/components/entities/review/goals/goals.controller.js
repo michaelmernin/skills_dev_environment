@@ -53,29 +53,41 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     });
   };
 
-  $scope.editGoal = function (goal, ev) {
-    if (goal.targetDate != null) {
-      var tempGoal = new Date(goal.targetDate);
-      goal.targetDate = new Date(tempGoal.getTime() + tempGoal.getTimezoneOffset() * 60000);
+  $scope.editGoal = function (goalTobeEdited, ev) {
+    if (goalTobeEdited.targetDate != null) {
+      var tempGoal = new Date(goalTobeEdited.targetDate);
+      goalTobeEdited.targetDate = new Date(tempGoal.getTime() + tempGoal.getTimezoneOffset() * 60000);
     }
-    if (goal.completionDate != null) {
-      var tempGoal = new Date(goal.completionDate);
-      goal.completionDate = new Date(tempGoal.getTime() + tempGoal.getTimezoneOffset() * 60000);
+    if (goalTobeEdited.completionDate != null) {
+      var tempGoal = new Date(goalTobeEdited.completionDate);
+      goalTobeEdited.completionDate = new Date(tempGoal.getTime() + tempGoal.getTimezoneOffset() * 60000);
     }
-    goal.isReviewee = $scope.isReviewee;
-    goal.isReviewer = $scope.isReviewer;
+    goalTobeEdited.isReviewee = $scope.isReviewee;
+    goalTobeEdited.isReviewer = $scope.isReviewer;
     $mdDialog.show({
       controller: 'GoalDetailController',
       templateUrl: $scope.isEngagementReview ? $state.current.data.deliverablesConfig : $state.current.data.goalsConfig,
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {
-        goal: goal
+        goal: goalTobeEdited
       }
     }).then(function (goal) {
       goal.review = goal.review || {};
       goal.review.id = goal.review.id || review.id;
-      goal.$update({reviewId: review.id});
+      goal.$update({reviewId: review.id}, function(){
+        console.log("loopin");
+        // iterate over goals, find the intended one, update it.
+        // a browser compatible loop, till we get some polyfills :)
+        for(var i=0;i<$scope.goals.length; i ++){
+          var tempGoal = $scope.goals[i];
+          if(tempGoal.id === goal.id){
+            $scope.goals[i] = goal;
+            break;
+          }
+        }
+      });
+      goalTobeEdited = goal;
     });
   };
 

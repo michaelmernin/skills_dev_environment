@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('etmApp').controller('GoalDetailController', function ($scope, $mdDialog, goal) {
-  $scope.goal = goal;
+
+  $scope.goal = angular.copy(goal);
   $scope.switchCompletion = goal.completionDate ? true : false;
   $scope.load = function() {
     $scope.isReviewee = goal.isReviewee;
@@ -23,6 +24,6 @@ angular.module('etmApp').controller('GoalDetailController', function ($scope, $m
     if (completed) {
       $scope.goal.completionDate = "";
     }
-  }
+  };
 
 });
