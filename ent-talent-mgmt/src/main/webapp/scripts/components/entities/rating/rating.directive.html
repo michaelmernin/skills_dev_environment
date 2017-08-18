@@ -12,11 +12,11 @@
   </md-input-container>
   <md-input-container class="md-block">
   <label>Comments</label>
-  <textarea name="comment" ng-if="!isEditable()" ng-disabled="disabled" ng-model="rating.comment" ng-required="rating.score !== 3 && rating.score !== undefined && rating.score !== null" md-maxlength="250"></textarea>
-  <textarea name="comment" ng-if="isEditable()" ng-model="rating.comment" ng-required="rating.score !== 3 && rating.score !== undefined && rating.score !== null" md-maxlength="250"></textarea>
-  <div ng-messages="form.ratingForm.comment.$error" ng-if="rating.score !== 3 && rating.score !== undefined && rating.score !== null">
+  <textarea name="comment" ng-if="!isEditable()" ng-disabled="disabled" ng-model="rating.comment" ng-required="rating.score !== undefined && rating.score !== null" md-maxlength="250"></textarea>
+  <textarea name="comment" ng-if="isEditable()" ng-model="rating.comment" ng-required="true" md-maxlength="250"></textarea>
+  <div ng-messages="form.ratingForm.comment.$error" ng-if="rating.score !== undefined && rating.score !== null">
       <div ng-message="required">
-        <span translate="review.annual.evaluation.comment" translate-values="{name: '{{ 'review.comments' | translate }}'}">A comment is required for any rating other than 3</span>
+        <span>Comment is required</span>
       </div>
       <div ng-message="md-maxlength">
         <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Comment' | translate }}', number: '{{ '250' | translate}}'}">Comment cannot be longer than 250 characters.</span>
