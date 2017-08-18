@@ -61,6 +61,8 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
     var hasEmpty;
     var stopSubmit;
     var mdTitleSelector;
+
+    // TODO: remove jquery
     $.each(categories, function(key, category) {
       hasEmpty = false;
       $.each(category, function(key, question) {
@@ -85,7 +87,12 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
   function loadTodo() {
     Feedback.query({reviewId: review.id}, function (feedback) {
       review.feedback = feedback;
-
+      // update review status.
+      if($scope.review){
+        Review.get({id:$scope.review.id }, function (result) {
+          $scope.review.reviewStatus = result.reviewStatus;
+        });
+      }
       Review.todo({id: review.id}, function (result) {
         $scope.todo = result;
         $scope.actions = Todo.getActions($scope.todo, review, reviewerFeedback);
