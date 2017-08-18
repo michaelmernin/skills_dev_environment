@@ -106,7 +106,7 @@
        "deliverable": "Deliverable",
        "deliverableDetailHeader": "Fill out fields to create deliverable",
        "deliverableDetailSummaryHeader": "Deliverable Details",
-       "cancel": "Cancel",
+       "discard": "Discard",
        "save": "Save",
        "description": "Measure of Success",
        "targetDate": "Target Date",
