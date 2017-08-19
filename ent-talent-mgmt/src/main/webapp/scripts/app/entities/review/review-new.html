@@ -31,7 +31,7 @@
           <!-- PROJECT -->
           <md-input-container class="md-block" flex-gt-sm="50">
            <label translate="review.project">Project</label>
-            <input ng-model="review.project">
+            <input ng-model="review.project" name="project">
             <div ng-messages="reviewForm.project.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
               <div ng-message="required">
                 <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.project' | translate }}'}">Please select a value.</span>
@@ -40,16 +40,37 @@
           </md-input-container>
           <!-- // PROJECT -->
         </div>
+        <div>
+        <md-datepicker 
+          class="md-block"
+          flex-gt-sm="50"
+          name="startDate"
+          ng-model="review.startDate"
+          md-placeholder="Start date"
+          ng-required="true"></md-datepicker>
+
+        <md-datepicker
+          class="md-block"
+          flex-gt-sm="50"
+          name="endtDate"
+          ng-model="review.endDate"
+          md-placeholder="End date"
+          ng-required="true"></md-datepicker>
+
+        </div>
+        <!-- DATE RANGE -->
+        <!--
         <div layout-gt-sm="row">
-          <!-- DATE RANGE -->
           <md-input-container class="md-block" flex-gt-sm="50">
             <span translate="review.engagement.dateRange">Engagement Review Date Range: </span>
             <span ng-show="review.startDate">{{ review.startDate }} - {{ review.endDate }}</span>
           </md-input-container>
-          <!-- //Date Range -->
         </div>
+        -->
+        <!-- //Date Range -->
+        <!-- Quarter -->
+        <!--
         <div layout-gt-sm="row" class="virtualRepeatdemoHorizontalUsage">
-          <!-- Quarter -->
           <md-input-container layout="row" layout-align="center center" flex-gt-sm="100">
             <md-button ng-click="getQuarters('back')">Back</md-button>
             <md-virtual-repeat-container id="horizontal-container" md-orient-horizontal>
@@ -59,8 +80,9 @@
             </md-virtual-repeat-container>
             <md-button ng-click="getQuarters('next')">Next</md-button>
           </md-input-container>
-          <!-- //Quarter -->
         </div>
+        -->
+        <!-- //Quarter -->
         <div layout="row">
           <span flex></span>
           <md-button type="submit" ng-click="save($event)" class="md-primary" translate="entity.action.save">Create</md-button>

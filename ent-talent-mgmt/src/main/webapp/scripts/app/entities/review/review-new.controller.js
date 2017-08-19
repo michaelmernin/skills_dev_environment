@@ -10,7 +10,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   $scope.years = [];
   $scope.isAnnual = null;
   $scope.review.reviewee = $scope.currentUser;
-  $scope.quarters = [];
+  //$scope.quarters = [];
 
   $scope.load = function () {
     ReviewType.getAllExceptAR(function (result) {
@@ -23,11 +23,11 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   var translateKeys = ['title', 'label', 'content', 'ok', 'cancel'],
   key = "";
   //translateKeys = translateKeys.map(function (key) {return 'review.new.save.dialog.' + key;});
-
+  /*
   $timeout(function() {
     $scope.quaters = _getQuarters("next");
   },1000);
-  
+  */
   /**
   *      PRIVATE HELPERS
   */
@@ -99,11 +99,13 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
       });
     });
   };
-  
+  /*
   var _getQuarters = function (direction) {
     $scope.getQuarters(direction);
   };
+  */
   
+  /*
   var _populateQuarters = function (direction, startDate) {
     if (direction === 'next') {
       return [0, 1, 2, 3].map( function(q) {
@@ -138,7 +140,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
       Array.prototype.push.apply($scope.quarters, somethingStupid);
     },1000);
   }
-
+  */
  /**
   *      PUBLIC SCOPE METHODS
   */
@@ -233,15 +235,20 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
     return list;
   };
  
- $scope.getMatches = function (query) {
-   return User.autocomplete({query: query, reviewId:""}).$promise
-     .then(function(options){
-       return options.filter(function (user) {
-         return user.id !== $scope.currentUser.id;
-       });
-     });
- };
+  $scope.getMatches = function (query) {
+    return User.autocomplete({query: query, reviewId:""}).$promise
+      .then(function(options){
+        return options.filter(function (user) {
+          return user.id !== $scope.currentUser.id;
+        });
+      });
+  };
+
+  $scope.setReviewer = function (reviewer) {
+    $scope.review.reviewer = reviewer;
+  };
  
+ /*
  $scope.getQuarters = function (direction) {
    if ($scope.currentUser.startDate !== undefined) {
      if ($scope.quarters.length == 0) {
@@ -261,8 +268,5 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
    $scope.review.startDate = moment(quarter.startDate).format('MM/DD/YYYY');
    $scope.review.endDate = moment(quarter.endDate).format('MM/DD/YYYY');
  };
- 
- $scope.setReviewer = function (reviewer) {
-   $scope.review.reviewer = reviewer;
- }
+ */
 });
