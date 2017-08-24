@@ -58,6 +58,10 @@ public final class EmailConstants {
         public static final String REVIEWER_FULL_NAME = "REVIEWER_FULL_NAME";
         public static final String REVIEWER_ID = "REVIEWER_ID";
 
+        public static final String COUNSELOR_FIRST_NAME = "COUNSELOR_FIRST_NAME";
+        public static final String COUNSELOR_LAST_NAME = "COUNSELOR_LAST_NAME";
+        public static final String COUNSELOR_FULL_NAME = "COUNSELOR_FULL_NAME";
+        public static final String COUNSELOR_ID = "COUNSELOR_ID";
     }
 
     public final class Templates {

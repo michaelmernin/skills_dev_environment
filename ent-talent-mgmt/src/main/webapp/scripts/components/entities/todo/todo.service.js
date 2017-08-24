@@ -53,13 +53,17 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
       if (todo.id && review.reviewStatus && review.reviewStatus.id) {
         if (isOpenToSubmit(review, reviewerFeedback)) {
           actions.push({
-            name: 'Submit Feedback',
             confirm: 'Confirm Feedback Submission?',
             todoId: todo.id,
             result: 'SUBMIT',
             theme: '',
             icon: 'fa-send'
           });
+          if (todo.name === "Reviewee Approval") {
+            actions[0].name = "Submit";
+          } else {
+            actions[0].name = "Submit Feedback";
+          }
         } else {
           actions.push({
             name: 'Approve',

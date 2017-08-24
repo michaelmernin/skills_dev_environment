@@ -46,7 +46,7 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
     var isDirector = EvaluationUtil.isDirector(review, user);
     var isGM = EvaluationUtil.isGM(review, user);
     if(!isDirector && !isGM){
-      hasEmptyQuestion = checkForEmptyQuestions(categories);
+      hasEmptyQuestion = Evaluation.showRevieweeRating($scope.review, user) ? checkForEmptyQuestions(categories) : false;
     }
     if (!hasEmptyQuestion) {
       $mdDialog.show(confirmAction).then(function () {

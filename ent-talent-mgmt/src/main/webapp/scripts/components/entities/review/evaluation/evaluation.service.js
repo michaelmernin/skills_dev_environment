@@ -167,6 +167,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return Math.round(10 * sum / count) / 10;
     },
     showRevieweeRating: function (review, user) {
+      return false;
       if (EvaluationUtil.showAlways(review, user)) {
         return true;
       }
@@ -191,6 +192,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return false;
     },
     showPeerRatings: function (review, user) {
+      return false;
       if (EvaluationUtil.showAlways(review, user)) {
         return true;
       }
@@ -206,6 +208,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return false;
     },
     showPeerRating: function (review, user, peerRating) {
+      return false;
       if (eq(user, review.reviewer)) {
         return true;
       }

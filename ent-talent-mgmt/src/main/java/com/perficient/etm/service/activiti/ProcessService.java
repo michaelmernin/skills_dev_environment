@@ -48,8 +48,7 @@ public class ProcessService {
             throw new ReviewProcessNotFound("null");
         if (review.getReviewer() == null)
             throw new MissingReviewInfoException("review.revieweer");
-        Long reviewerId = review.getReviewer().getId();
-        Long counselorId = review.getReviewee().getCounselor().getId();
+        Long counselorId = review.getReviewee().getCounselor() != null ? review.getReviewee().getCounselor().getId() : 0L;
 
         Map<String, Object> variables = new HashMap<>();
         variables.put(ProcessConstants.REVIEWER_VARIABLE, review.getReviewer().getId());
@@ -58,12 +57,7 @@ public class ProcessService {
         variables.put(ProcessConstants.DIRECTOR_VARIABLE, review.getReviewee().getDirector().getId());
         variables.put(ProcessConstants.GENERAL_MANAGER_VARIABLE, review.getReviewee().getGeneralManager().getId());
         variables.put(ProcessConstants.INITIATOR, userSvc.getUserFromLogin().map(User::getId).get());
-        if (ReviewTypeProcess.ENGAGEMENT.equals(reviewType)) {
-            variables.put(ProcessConstants.COUNSELOR, review.getReviewee().getCounselor().getId());
-            if (reviewerId.equals(counselorId)) {
-                variables.put(ProcessConstants.MANAGER_RESULT_VARIABLE, null);
-            }
-        }
+        variables.put(ProcessConstants.COUNSELOR, counselorId);
         
         try {
             ProcessInstance processInstance = runtimeSvc.startProcessInstanceByKey(reviewType.getProcessId(), variables );

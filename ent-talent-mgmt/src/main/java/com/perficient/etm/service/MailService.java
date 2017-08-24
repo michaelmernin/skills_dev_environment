@@ -214,10 +214,16 @@ public class MailService {
 					});
 					Optional.ofNullable(review.getReviewer()).ifPresent(reviewer -> {
 						context.setVariable(EmailConstants.Review.REVIEWER_FIRST_NAME, reviewer.getFirstName());
-						context.setVariable(EmailConstants.Review.REVIEWER_FULL_NAME, reviewer.getFullName());
+						context.setVariable(EmailConstants.Review.REVIEWER_LAST_NAME, reviewer.getLastName());
 						context.setVariable(EmailConstants.Review.REVIEWER_FULL_NAME, reviewer.getFullName());
 						context.setVariable(EmailConstants.Review.REVIEWER_ID, reviewer.getId());
 					});
+					Optional.ofNullable(review.getReviewee().getCounselor()).ifPresent(counselor -> {
+                        context.setVariable(EmailConstants.Review.COUNSELOR_FIRST_NAME, counselor.getFirstName());
+                        context.setVariable(EmailConstants.Review.COUNSELOR_LAST_NAME, counselor.getLastName());
+                        context.setVariable(EmailConstants.Review.COUNSELOR_FULL_NAME, counselor.getFullName());
+                        context.setVariable(EmailConstants.Review.COUNSELOR_ID, counselor.getId());
+                    });
 				});
 			});
 		});
@@ -422,9 +428,16 @@ public class MailService {
         sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_COMPLETED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
         log.debug("Sending review '{}' status change (to '{}') email to reviewee '{}'",reviewId, status, revieweeId);
         sendEmail(revieweeId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_COMPLETED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
-        if (MathUtils.compareLong(revieweeId, counselorId) != 0) {
+        if (counselorId != 0L && reviewerId != counselorId) {
             log.debug("Sending review '{}' status change (to '{}') email to counselor '{}'",reviewId, status, counselorId);
             sendEmail(counselorId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_COMPLETED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
         }
+    }
+    
+    public void sendEngagementReviewerFeedbackSubmittedEmail(long revieweeId, long reviewId, long reviewerId) {
+        log.debug("Sending reviewer feedback completed email for review: '{}' to reviewee: '{}'",reviewId, revieweeId);
+        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.REVIEWER_FEEDBACK_SUBMITTED, EmailConstants.Templates.REVIEWER_FEEDBACK_SUBMITTED, null);
+        log.debug("Sending reviewer feedback completed email for review: '{}' to reviewer: '{}'",reviewId, revieweeId);
+        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.REVIEWER_FEEDBACK_SUBMITTED, EmailConstants.Templates.REVIEWER_FEEDBACK_SUBMITTED, null);
     }
 }

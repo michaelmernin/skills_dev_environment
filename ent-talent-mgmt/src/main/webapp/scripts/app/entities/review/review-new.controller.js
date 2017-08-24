@@ -244,8 +244,9 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
       });
   };
 
-  $scope.setReviewer = function (reviewer) {
-    $scope.review.reviewer = reviewer;
+  $scope.setReviewee = function (reviewee) {
+    $scope.review.reviewee = reviewee;
+    $scope.review.reviewer = $scope.currentUser;
   };
  
  /*

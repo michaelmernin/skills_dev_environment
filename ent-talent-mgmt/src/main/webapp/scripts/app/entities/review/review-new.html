@@ -16,10 +16,10 @@
             md-no-cache="true"
             md-selected-item="selectedItem"
             md-item-text="user.firstName + ' ' + user.lastName"
-            md-selected-item-change="setReviewer(user)"
+            md-selected-item-change="setReviewee(user)"
             md-search-text="searchText"
             md-min-length="3"
-            md-floating-label="Reviewer (type to search)"
+            md-floating-label="Reviewee (type to search)"
             md-items="user in getMatches(searchText)">
             <md-item-template>
               <span md-highlight-text="searchText">{{user.firstName}} {{user.lastName}}</span>
