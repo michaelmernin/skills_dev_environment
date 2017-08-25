@@ -43,6 +43,10 @@ swagger:
     licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
 
 etm:
+    er:
+      # has to be "MM/DD/YYYY"
+      startdate: 05/22/2017
+      enddate: 09/22/2017
     notification:
         annualreview:
             reminderDaysBeforeReviewIsDelayed: 60

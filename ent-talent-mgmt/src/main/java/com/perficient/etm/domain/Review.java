@@ -294,12 +294,26 @@ public class Review implements Serializable {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Review{" +
                 "id=" + id +
-                ", status='" + reviewStatus + "'" +
-                ", reviewee='" + (reviewee != null ? reviewee.getLogin() : null) + "'" +
-                ", reviewer='" + (reviewer != null ? reviewer.getLogin() : null) + "'" +
+                ", title='" + title + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", client='" + client + '\'' +
+                ", role='" + role + '\'' +
+                ", responsibilities='" + responsibilities + '\'' +
+                ", rating=" + rating +
+                ", project='" + project + '\'' +
+                ", reviewType=" + reviewType +
+                ", reviewStatus=" + reviewStatus +
+                ", reviewee=" + reviewee +
+                ", reviewer=" + reviewer +
+                ", peers=" + peers +
+                ", feedback=" + feedback +
+                ", goals=" + goals +
+                ", processId='" + processId + '\'' +
                 '}';
     }
 

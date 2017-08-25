@@ -27,7 +27,7 @@ public class ReviewValidator extends DomainValidator<Review> {
         validateRequiredFields(review, errors);
 
         if (!errors.hasFieldErrors()) {
-            validateEndDate(review, errors, isAnnual);
+            // validateEndDate(review, errors, isAnnual);
         }
     }
 
@@ -44,8 +44,8 @@ public class ReviewValidator extends DomainValidator<Review> {
     private void validateRequiredFields(Review review, Errors errors) {
         ValidationUtils.rejectIfEmpty(errors, "reviewType", "required");
         ValidationUtils.rejectIfEmpty(errors, "reviewee", "required");
-        ValidationUtils.rejectIfEmpty(errors, "startDate", "required");
-        ValidationUtils.rejectIfEmpty(errors, "endDate", "required");
+     //   ValidationUtils.rejectIfEmpty(errors, "startDate", "required");
+     //   ValidationUtils.rejectIfEmpty(errors, "endDate", "required");
     }
 
 }

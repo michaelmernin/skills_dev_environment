@@ -1,14 +1,18 @@
 package com.perficient.etm.web.rest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +46,14 @@ import com.perficient.etm.web.view.View;
 public class ReviewResource implements RestResource {
 
     private final Logger log = LoggerFactory.getLogger(ReviewResource.class);
+    private final boolean useDefaultDates = true;
+
+
+    @Value("${etm.er.startdate}")
+    private String defaultErStartDate;
+
+    @Value("${etm.er.enddate}")
+    private String defaultErEndtDate;
 
     @Inject
     private ReviewValidator reviewValidator;
@@ -70,6 +82,9 @@ public class ReviewResource implements RestResource {
         log.debug("REST request to create Review : {}", review);
         if (result.hasErrors()) {
             throw new InvalidRequestException("Invalid new review", result);
+        }
+        if(useDefaultDates){
+            review = setDefaultDates(review);
         }
         review.sanitize();
         review = getReviewSvc().startReviewProcess(review);
@@ -168,5 +183,35 @@ public class ReviewResource implements RestResource {
         log.debug("REST request to get list of reviews by reviewee and review type");
         ReviewType reviewType = reviewTypeRepository.findOne((long)reviewTypeId);
         return getReviewSvc().findAllByReviewTypeAndRevieweeId(reviewType, revieweeId);
+    }
+
+    private Review setDefaultDates (Review review){
+        if (review == null) return review;
+        List<Integer> startDateList = getDateList(defaultErStartDate);
+        if (startDateList.size() == 3){
+            review.setStartDate(new LocalDate(startDateList.get(2),startDateList.get(0), startDateList.get(1)));
+        }
+
+        List<Integer> erEndtDateList = getDateList(defaultErEndtDate);
+        if (erEndtDateList.size() == 3){
+            review.setEndDate(new LocalDate(erEndtDateList.get(2),erEndtDateList.get(0), erEndtDateList.get(1)));
+        }
+
+        return review;
+    }
+
+    /**
+     * get date as a list from string matching MM/DD/YYY
+     * @param date
+     * @return
+     */
+    private List<Integer> getDateList(String date){
+        return Optional.ofNullable(date)
+                .map(startDateStr -> startDateStr.split("/"))
+                .map(Arrays::stream)
+                .map(arrayStream ->
+                     arrayStream.map(Integer::parseInt)
+                     .collect(Collectors.toList()))
+                .orElse(null);
     }
 }
