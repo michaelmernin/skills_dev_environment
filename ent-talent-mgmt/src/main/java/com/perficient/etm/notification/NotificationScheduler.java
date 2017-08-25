@@ -122,19 +122,6 @@ public class NotificationScheduler {
            });
         });
     }
-    
-/*    public Properties loadProperties() {
-        Properties prop = new Properties();
-        try {
-            prop.load(new FileReader(new File("src/main/resources/notificationConfiguration.properties")));
-        } catch (FileNotFoundException e) {
-            log.error("NotificationConfiguration properties file not found");
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return prop;
-    }*/
 
     List<User> getAll() {
         log.debug("REST request to get all normal Users");
