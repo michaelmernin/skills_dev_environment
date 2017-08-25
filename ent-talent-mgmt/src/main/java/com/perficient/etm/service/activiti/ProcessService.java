@@ -54,8 +54,6 @@ public class ProcessService {
         variables.put(ProcessConstants.REVIEWER_VARIABLE, review.getReviewer().getId());
         variables.put(ProcessConstants.REVIEWEE_VARIABLE, review.getReviewee().getId());
         variables.put(ProcessConstants.REVIEW_VARIABLE, review.getId());
-        variables.put(ProcessConstants.DIRECTOR_VARIABLE, review.getReviewee().getDirector().getId());
-        variables.put(ProcessConstants.GENERAL_MANAGER_VARIABLE, review.getReviewee().getGeneralManager().getId());
         variables.put(ProcessConstants.INITIATOR, userSvc.getUserFromLogin().map(User::getId).get());
         variables.put(ProcessConstants.COUNSELOR, counselorId);
         
