@@ -79,6 +79,9 @@ public final class EmailConstants {
         public static final String NOTIFICATION_REVIEW_START = "notificationReviewStart";
         public static final String NOTIFICATION_REVIEW_COMPLETION = "notificationReviewCompletion";
         public static final String NOTIFICATION_REVIEW_LATE = "notificationReviewLate";
+        public static final String NOTIFICATION_ENG_REVIEW_START = "notificationEngagementReviewStart";
+        public static final String NOTIFICATION_ENG_REVIEW_COMPLETION = "notificationEngagementReviewCompletion";
+        public static final String NOTIFICATION_ENG_REVIEW_LATE = "notificationEngagementReviewLate";
     }
 
     public final class Subjects {
@@ -96,8 +99,9 @@ public final class EmailConstants {
         public static final String NOTIFICATION_REVIEW_START = "mail.notification.annualReview.start";
         public static final String NOTIFICATION_REVIEW_COMPLETION = "mail.notification.annualReview.completion";
         public static final String NOTIFICATION_REVIEW_LATE = "mail.notification.annualReview.late";
-        public static final String ENGAGEMENT_REVIEW_STARTED = "mail.engagementReview.review.started.subject";
-        public static final String ENGAGEMENT_REVIEW_COMPLETED = "mail.engagementReview.review.status.completed";
+        public static final String NOTIFICATION_ENG_REVIEW_START = "mail.notification.engagementReview.start";
+        public static final String NOTIFICATION_ENG_REVIEW_COMPLETION = "mail.notification.engagementReview.completion";
+        public static final String NOTIFICATION_ENG_REVIEW_LATE = "mail.notification.engagementReview.late";
     }
 
 }

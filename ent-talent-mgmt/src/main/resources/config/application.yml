@@ -51,3 +51,6 @@ etm:
         annualreview:
             reminderDaysBeforeReviewIsDelayed: 60
             reminderDaysAfterReviewIsDelayed: 1
+        engagementreview:
+            reminderToBeSentWeekly: 7
+            remiderToBeSentTill: 90

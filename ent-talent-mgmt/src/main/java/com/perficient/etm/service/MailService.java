@@ -276,31 +276,59 @@ public class MailService {
 	}
 
 	/**
-	 * Reminder mail for Review Start
+	 * Reminder mail for Annual Review Start
 	 * @param userId
 	 */
-	public void sendNotificationEmailForReviewStart(Long userId, User reviewee){
+	public void sendNotificationEmailForAnnualReviewStart(Long userId, User reviewee){
 	    log.debug("Sending notification email for Review Start");
 	    sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_REVIEW_START, EmailConstants.Templates.NOTIFICATION_REVIEW_START,getMapWithUser(reviewee));
 	}
 	
 	/**
-	 * Reminder for completing the Review before the end date
+	 * Reminder for completing the Annual Review before the end date
 	 * @param userId
 	 */
-	public void sendNotificationEmailForReviewCompletion(Long userId, User reviewee){
+	public void sendNotificationEmailForAnnualReviewCompletion(Long userId, User reviewee){
         log.debug("Sending notification email for Review Completion");
         sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_REVIEW_COMPLETION, EmailConstants.Templates.NOTIFICATION_REVIEW_COMPLETION,getMapWithUser(reviewee));
     }
 	
 	
 	/**
-     * Reminder for review Late
+     * Reminder for Annual review Late
      * @param userId
      */
-    public void sendNotificationEmailForReviewLate(Long userId, User reviewee){
+    public void sendNotificationEmailForAnnualReviewLate(Long userId, User reviewee){
         log.debug("Sending notification email for Review Late");
         sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_REVIEW_LATE, EmailConstants.Templates.NOTIFICATION_REVIEW_LATE,getMapWithUser(reviewee));
+    }
+    
+    /**
+     * Reminder mail for Engagement Review Start
+     * @param userId
+     */
+    public void sendNotificationEmailForEngagementReviewStart(Long userId, User reviewee){
+        log.debug("Sending notification email for Review Start");
+        sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_ENG_REVIEW_START, EmailConstants.Templates.NOTIFICATION_ENG_REVIEW_START,getMapWithUser(reviewee));
+    }
+    
+    /**
+     * Reminder for completing the Engagement Review before the end date
+     * @param userId
+     */
+    public void sendNotificationEmailForEngagementReviewCompletion(Long userId, User reviewee){
+        log.debug("Sending notification email for Review Completion");
+        sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_ENG_REVIEW_COMPLETION, EmailConstants.Templates.NOTIFICATION_ENG_REVIEW_COMPLETION,getMapWithUser(reviewee));
+    }
+    
+    
+    /**
+     * Reminder for Engagement review Late
+     * @param userId
+     */
+    public void sendNotificationEmailForEngagementReviewLate(Long userId, User reviewee){
+        log.debug("Sending notification email for Review Late");
+        sendEmail(userId,null,EmailConstants.Subjects.NOTIFICATION_ENG_REVIEW_LATE, EmailConstants.Templates.NOTIFICATION_ENG_REVIEW_LATE,getMapWithUser(reviewee));
     }
     
 	
