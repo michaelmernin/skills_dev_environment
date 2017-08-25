@@ -49,10 +49,10 @@ public class ReviewResource implements RestResource {
     private final boolean useDefaultDates = true;
 
 
-    @Value("${etm.er.startdate}")
+    @Value("${etm.er.startdate:}")
     private String defaultErStartDate;
 
-    @Value("${etm.er.enddate}")
+    @Value("${etm.er.enddate:}")
     private String defaultErEndtDate;
 
     @Inject
