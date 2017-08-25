@@ -188,12 +188,12 @@ public class ReviewResource implements RestResource {
     private Review setDefaultDates (Review review){
         if (review == null) return review;
         List<Integer> startDateList = getDateList(defaultErStartDate);
-        if (startDateList.size() == 3){
+        if (startDateList != null && startDateList.size() == 3){
             review.setStartDate(new LocalDate(startDateList.get(2),startDateList.get(0), startDateList.get(1)));
         }
 
         List<Integer> erEndtDateList = getDateList(defaultErEndtDate);
-        if (erEndtDateList.size() == 3){
+        if (erEndtDateList != null && erEndtDateList.size() == 3){
             review.setEndDate(new LocalDate(erEndtDateList.get(2),erEndtDateList.get(0), erEndtDateList.get(1)));
         }
 
