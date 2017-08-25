@@ -20,52 +20,64 @@
             md-search-text="searchText"
             md-min-length="3"
             md-floating-label="Reviewee (type to search)"
-            md-items="user in getMatches(searchText)">
+            md-items="user in getMatches(searchText)"
+            ng-required="true">
             <md-item-template>
               <span md-highlight-text="searchText">{{user.firstName}} {{user.lastName}}</span>
             </md-item-template>
             <md-not-found>No peers matching "{{ searchText }}" were found.</md-not-found>
+            <div ng-messages="reviewForm.project.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
+              <div ng-message="required">
+                <span>Please select a Reviewee.</span>
+              </div>
+            </div>
           </md-autocomplete>
           <!-- //REVIEWER -->
           
           <!-- PROJECT -->
           <md-input-container class="md-block" flex-gt-sm="50">
            <label translate="review.project">Project</label>
-            <input ng-model="review.project" name="project">
+            <input ng-model="review.project" name="project" ng-required="true">
             <div ng-messages="reviewForm.project.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
               <div ng-message="required">
-                <span translate="global.messages.validate.field.select.required" translate-values="{name: '{{ 'review.a.project' | translate }}'}">Please select a value.</span>
+                <span>Please enter a value.</span>
               </div>
             </div>
           </md-input-container>
           <!-- // PROJECT -->
         </div>
         <div layout-gt-sm="row">
+          <!-- Role -->
+          <md-input-container class="md-block" flex-gt-sm="50">
+           <label translate="review.project">Role</label>
+            <input ng-model="review.role" name="role">
+          </md-input-container>
+          <!-- // Role -->
           <div>
-          <md-datepicker 
-            class="md-block"
-            flex-gt-sm="50"
-            name="startDate"
-            ng-model="review.startDate"
-            md-placeholder="Start date"
-            ng-required="true"></md-datepicker>
-            <div class="validation-messages" ng-messages="reviewForm.startDate.$error"  ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
-                <div ng-message="valid">The entered value is not a date!</div>
-                <div ng-message="required">This date is required!</div>
-            </div>
+            <md-datepicker 
+              class="md-block"
+              flex-gt-sm="50"
+              name="startDate"
+              ng-model="review.startDate"
+              md-placeholder="Start date"
+              ng-required="true"></md-datepicker>
+              <div class="validation-messages" ng-messages="reviewForm.startDate.$error"  ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
+                  <div ng-message="valid">The entered value is not a date!</div>
+                  <div ng-message="required">This date is required!</div>
+              </div>
           </div>
           <div>
-          <md-datepicker
-            class="md-block"
-            flex-gt-sm="50"
-            name="endtDate"
-            ng-model="review.endDate"
-            md-placeholder="End date"
-            ng-required="true"></md-datepicker>
-            <div class="validation-messages" ng-messages="reviewForm.endtDate.$error"  ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
-                <div ng-message="valid">The entered value is not a date!</div>
-                <div ng-message="required">This date is required!</div>
-            </div>
+            <md-datepicker
+              class="md-block"
+              flex-gt-sm="50"
+              name="endtDate"
+              ng-model="review.endDate"
+              md-placeholder="End date"
+              ng-required="true"></md-datepicker>
+              <div class="validation-messages" ng-messages="reviewForm.endtDate.$error"  ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
+                  <div ng-message="valid">The entered value is not a date!</div>
+                  <div ng-message="required">This date is required!</div>
+              </div>
           </div>
         </div>
         <!-- DATE RANGE -->
