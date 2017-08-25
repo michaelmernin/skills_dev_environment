@@ -303,16 +303,10 @@ public class Review implements Serializable {
                 ", endDate=" + endDate +
                 ", client='" + client + '\'' +
                 ", role='" + role + '\'' +
-                ", responsibilities='" + responsibilities + '\'' +
-                ", rating=" + rating +
-                ", project='" + project + '\'' +
                 ", reviewType=" + reviewType +
                 ", reviewStatus=" + reviewStatus +
                 ", reviewee=" + reviewee +
                 ", reviewer=" + reviewer +
-                ", peers=" + peers +
-                ", feedback=" + feedback +
-                ", goals=" + goals +
                 ", processId='" + processId + '\'' +
                 '}';
     }
