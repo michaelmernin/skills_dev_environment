@@ -91,8 +91,8 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
         .cancel(translations['review.new.save.' + key + '.cancel'])
         .targetEvent(ev);
       $mdDialog.show(confirmSave).then(function () {
-        $scope.review.startDate = new Date($scope.review.startDate);
-        $scope.review.endDate = new Date($scope.review.endDate);
+        $scope.review.startDate = $scope.review.startDate ? new Date($scope.review.startDate) : null;
+        $scope.review.endDate = $scope.review.endDate ? new Date($scope.review.endDate) : null;
         $scope.review.$save(function (review) {
           $state.go('review.edit', {review: review, id: review.id});
         });
