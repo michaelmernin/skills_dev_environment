@@ -92,14 +92,9 @@ angular.module('etmApp').controller('ReviewListController', function ($scope, $s
   $scope.orderByItems = [
     {key: 'Start date', value: 'startDate'},
     {key: 'End date',value: 'endDate'},
-    {key: 'Client', value: 'client'},
-    {key: 'Project', value: 'project'},
-    {key: 'Review type', value: 'reviewType.name'},
-    {key: 'Review status', value: 'reviewStatus.id'},
-    {key: 'Reviewee last name', value: 'reviewee.lastName'},
-    {key: 'Reviewee first name', value: 'reviewee.firstName'},
-    {key: 'Reviewer last name', value: 'reviewer.lastName'},
-    {key: 'Reviewer first name', value: 'reviewer.firstName'}
+    {key: 'Reviewee', value: 'reviewee.fullName'},
+    {key: 'Reviewer', value: 'reviewer.fullName'},
+    {key: 'Review status', value: 'reviewStatus.id'}
   ];
 
   function isSubstring(property, query) {
