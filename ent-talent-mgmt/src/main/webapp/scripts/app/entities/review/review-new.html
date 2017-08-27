@@ -54,30 +54,33 @@
           </md-input-container>
           <!-- // Role -->
           <md-input-container class="md-block" flex-gt-sm="25">
-              <label>Start Date</label>
-              <input 
-                type="date"
-                name="startDate"
-                ng-disabled="disableStartEndDate"
-                ng-model="review.startDate"
-                ng-required="!disableStartEndDate"/>
-            </md-input-container>
-          <div class="validation-messages" ng-messages="reviewForm.startDate.$error"  ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
-              <div ng-message="required">This date is required!</div>
-          </div>
-
+            <label>Start Date</label>
+            <input 
+              type="date"
+              name="startDate"
+              ng-disabled="disableStartEndDate"
+              ng-model="review.startDate"
+              ng-required="!disableStartEndDate"/>
+              <div ng-messages="reviewForm.startDate.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
+                <div ng-message="required">
+                  <span>Please enter a value.</span>
+                </div>
+              </div>
+          </md-input-container>
           <md-input-container class="md-block" flex-gt-sm="25">
-              <label>End Date</label>
-              <input 
-                type="date"
-                name="endtDate"
-                ng-disabled="disableStartEndDate"
-                ng-model="review.endDate"
-                ng-required="!disableStartEndDate"/>
-            </md-input-container>
-          <div class="validation-messages" ng-messages="reviewForm.startDate.$error"  ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
-              <div ng-message="required">This date is required!</div>
-          </div>
+            <label>End Date</label>
+            <input 
+              type="date"
+              name="endtDate"
+              ng-disabled="disableStartEndDate"
+              ng-model="review.endDate"
+              ng-required="!disableStartEndDate"/>
+              <div ng-messages="reviewForm.startDate.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
+                <div ng-message="required">
+                  <span>Please enter a value.</span>
+                </div>
+              </div>
+          </md-input-container>
         </div>
         <!-- DATE RANGE -->
         <!--
