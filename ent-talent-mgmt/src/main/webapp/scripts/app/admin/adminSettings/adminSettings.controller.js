@@ -1,10 +1,9 @@
 'use strict';
 
-angular.module('etmApp').controller('AdminSettingsController', function ($scope, AdminSettingService, $mdToast) {
+angular.module('etmApp').controller('AdminSettingsController', function ($scope, AdminSetting, $mdToast) {
   $scope.settings = [];
-  $scope.erStartDate = {key:'engagement.startDate', value:'', description:'Engagement Review start date'};
-  $scope.erEndDate = {key:'engagement.endDate',   value:'', description:'Engagement Review end date'};
-
+  $scope.erStartDate = {key:'engagementStartDate', value:null, description:'Engagement Review start date'};
+  $scope.erEndDate = {key:'engagementEndDate',   value:null, description:'Engagement Review end date'};
 
   function hasSetting(setting){
     return $scope.settings
@@ -13,17 +12,19 @@ angular.module('etmApp').controller('AdminSettingsController', function ($scope,
     });
   }
 
-  $scope.save = function(setting){
-    AdminSettingService
-    .create(setting)
-    .$promise
+  $scope.save = function(setting, doNotNotify){
+    var create = AdminSetting.create(setting);
+    if(doNotNotify) return;
+    create.$promise
     .then(function(){_showToast('Saved!');});
   };
 
   $scope.delete = function(setting){
-    console.log(setting);
-    AdminSettingService
-    .delete({key:setting.key}, function(){_showToast('Deleted!');});
+    AdminSetting
+    .delete({key:setting.key}, function(){
+      setting.value = null;
+      _showToast('Deleted!');
+    });
   };
 
 
@@ -36,29 +37,27 @@ angular.module('etmApp').controller('AdminSettingsController', function ($scope,
 
   function saveDefault(setting){
     if(!hasSetting(setting)){
-      $scope.save(setting);
+      $scope.save(setting, true);
     }
   }
 
 
-  AdminSettingService
+  AdminSetting
   .get()
   .$promise
   .then(function(response){
     $scope.settings = response;
-    saveDefault($scope.erEndDate);
-    saveDefault($scope.erStartDate);
     // if setting is stored server-side, use it
     response.forEach(function(setting) {
       if(setting.key === $scope.erStartDate.key){
         $scope.erStartDate = setting;
+        $scope.erStartDate.value = new Date($scope.erStartDate.value);
       }
       else if(setting.key === $scope.erEndDate.key){
         $scope.erEndDate = setting;
+        $scope.erEndDate.value = new Date($scope.erEndDate.value);
       }
     });
-    $scope.erEndDate.value = new Date($scope.erEndDate.value);
-    $scope.erStartDate.value = new Date($scope.erStartDate.value);
 
 
   });

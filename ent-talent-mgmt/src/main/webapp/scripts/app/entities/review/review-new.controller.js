@@ -1,7 +1,7 @@
 /* globals moment */
 'use strict';
 
-angular.module('etmApp').controller('ReviewNewController', function ($scope, $state, $mdDialog, $translate, $timeout, Review, ReviewType, Principal, User, Project) {
+angular.module('etmApp').controller('ReviewNewController', function ($scope, $state, $mdDialog, $translate, $timeout, Review, ReviewType, Principal, User, Project, AdminSetting) {
   $scope.review = new Review();
   $scope.reviewType = "";
   $scope.reviewees = [];
@@ -11,11 +11,39 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   $scope.isAnnual = null;
   $scope.review.reviewee = $scope.currentUser;
   //$scope.quarters = [];
+  $scope.disableStartEndDate = false;
+
+  var defaultStartDate = null;
+  var defaultEndDate = null;
+
+  // show/hide start/end date fields based on admin settings
+
+  function getAdminSettings(){
+    AdminSetting
+    .get()
+    .$promise
+    .then(function(settings){
+      settings.forEach(function(setting){
+        if(setting.key === 'engagementStartDate'){
+          defaultStartDate = setting.value;
+        }
+        else if(setting.key === 'engagementEndDate'){
+          defaultEndDate = setting.value;
+        }
+      });
+      $scope.disableStartEndDate = defaultStartDate &&  defaultEndDate;
+      // use default dates from adminsetting, if set
+      $scope.review.startDate = defaultStartDate ? new Date(defaultStartDate) : null;
+      $scope.review.endDate = defaultEndDate ? new Date(defaultEndDate) : null;
+      
+    });
+  }
 
   $scope.load = function () {
     ReviewType.getAllExceptAR(function (result) {
       $scope.review.reviewType = result[0];
       $scope.reviewType = $scope.review.reviewType.name;
+      getAdminSettings();
     });
   };
   $scope.load();
@@ -91,8 +119,9 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
         .cancel(translations['review.new.save.' + key + '.cancel'])
         .targetEvent(ev);
       $mdDialog.show(confirmSave).then(function () {
-        $scope.review.startDate = $scope.review.startDate ? new Date($scope.review.startDate) : null;
-        $scope.review.endDate = $scope.review.endDate ? new Date($scope.review.endDate) : null;
+        // use default dates from adminsetting, if set
+        $scope.review.startDate = defaultStartDate ? $scope.review.startDate : new Date($scope.review.startDate);
+        $scope.review.endDate = defaultEndDate ? $scope.review.endDate: new Date($scope.review.endDate);
         $scope.review.$save(function (review) {
           $state.go('review.edit', {review: review, id: review.id});
         });

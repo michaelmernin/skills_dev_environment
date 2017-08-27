@@ -60,7 +60,8 @@
               name="startDate"
               ng-model="review.startDate"
               md-placeholder="Start date"
-              ng-required="true"></md-datepicker>
+              ng-required="true"
+              ng-disabled="disableStartEndDate"></md-datepicker>
               <div class="validation-messages" ng-messages="reviewForm.startDate.$error"  ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
                   <div ng-message="valid">The entered value is not a date!</div>
                   <div ng-message="required">This date is required!</div>
@@ -73,7 +74,8 @@
               name="endtDate"
               ng-model="review.endDate"
               md-placeholder="End date"
-              ng-required="true"></md-datepicker>
+              ng-required="true"
+              ng-disabled="disableStartEndDate"></md-datepicker>
               <div class="validation-messages" ng-messages="reviewForm.endtDate.$error"  ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
                   <div ng-message="valid">The entered value is not a date!</div>
                   <div ng-message="required">This date is required!</div>

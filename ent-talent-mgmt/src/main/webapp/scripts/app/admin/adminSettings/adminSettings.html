@@ -8,6 +8,7 @@
           <tr>
             <th>Key</th>
             <th>Value</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -16,21 +17,24 @@
             <td>
               <md-datepicker 
                 ng-model="erStartDate.value"
-                md-placeholder="Start date"
-                ng-change="save(erStartDate)"></md-datepicker>
-                <md-button ng-click="delete(erStartDate)" class="md-raised">Clear</md-button>
+                md-placeholder="No date selected"
+                ng-change="save(erStartDate)"
+                ng-required="false"></md-datepicker>
             </td>
+            <td><md-button ng-click="delete(erStartDate)" class="md-raised">Clear</md-button></td>
           </tr>
           <tr>
             <td>{{erEndDate.description}}</td>
             <td>
-              <md-datepicker 
-                ng-model="erEndDate.value"
-                ng-change="save(erEndDate)"
-                md-placeholder="Start date"
-                ng-required="true"></md-datepicker>
-                <md-button ng-click="delete(erEndDate)" class="md-raised">Clear</md-button>
+              <div>
+                  <md-datepicker 
+                  ng-model="erEndDate.value"
+                  ng-change="save(erEndDate)"
+                  md-placeholder="No date selected"
+                  ng-required="false"></md-datepicker>
+              </div>
             </td>
+            <td><md-button ng-click="delete(erEndDate)" class="md-raised">Clear</md-button></td>
           </tr>
         </tbody>
       </table>

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').factory('AdminSettingService', function ($resource) {
+angular.module('etmApp').factory('AdminSetting', function ($resource) {
   return $resource('api/adminsetting', {}, {
     'get': {
       method: 'GET',

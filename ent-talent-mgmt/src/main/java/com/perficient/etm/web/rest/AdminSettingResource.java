@@ -87,9 +87,9 @@ public class AdminSettingResource implements RestResource {
   @Timed
   @ResponseBody
   @RolesAllowed(AuthoritiesConstants.ADMIN)
-  public ResponseEntity<Void> deleteSetting(@RequestBody AdminSetting setting, @PathVariable String key) {
-    log.debug("REST request to delete a setting : {}", setting);
-    if(setting != null){
+  public ResponseEntity<Void> deleteSetting(@PathVariable String key) {
+    log.debug("REST request to delete a setting with key: {}", key);
+    if(key != null && settingRepository.findOne(key) != null){
       settingRepository.delete(key);
       return ResponseEntity.ok().build();
     }
