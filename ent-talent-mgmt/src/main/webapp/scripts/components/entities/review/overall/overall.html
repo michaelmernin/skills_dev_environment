@@ -61,7 +61,7 @@
       <div ng-show="reviewerFeedback.editable">
         <md-input-container class="md-block" flex>
           <label>Overall Comment</label>
-          <textarea ng-model="reviewerFeedback.overallComment" ng-blur="updateFeedback(reviewerFeedback)" md-maxlength="250" rows="1"></textarea>
+          <textarea ng-model="reviewerFeedback.overallComment" ng-blur="updateFeedback(reviewerFeedback)" md-maxlength="3000"></textarea>
         </md-input-container>
         <md-input-container layout="row" layout-wrap flex>
           <div layout layout-align="start center">
@@ -87,7 +87,7 @@
       <div ng-show="revieweeFeedback.editable">
         <md-input-container class="md-block" flex ng-show="revieweeFeedback.editable">
           <label>Overall Comment</label>
-          <textarea ng-model="revieweeFeedback.overallComment" md-maxlength="250" rows="1" ng-blur="updateFeedback(revieweeFeedback)"></textarea>
+          <textarea ng-model="revieweeFeedback.overallComment" md-maxlength="3000" ng-blur="updateFeedback(revieweeFeedback)"></textarea>
         </md-input-container>
       </div>
       <div ng-show="!revieweeFeedback.editable">
