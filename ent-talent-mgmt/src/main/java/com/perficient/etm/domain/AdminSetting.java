@@ -19,13 +19,13 @@ public class AdminSetting implements Serializable
   private static final long serialVersionUID = 7195683273673009255L;
 
   @Id
-  @Column(name = "key")
+  @Column(name = "col_key")
   private String key;
 
-  @Column(name = "value")
+  @Column(name = "col_value")
   private String value;
 
-  @Column(name = "description")
+  @Column(name = "col_description")
   private String description;
 
 
