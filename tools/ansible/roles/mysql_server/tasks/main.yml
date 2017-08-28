@@ -9,6 +9,7 @@
 
 - name: Load encrypted MySQL passwords from vault
   tags: copyMyCnf
+  no_log: True
   include_vars: passwords.yml
   
 - name: Start the MySQL service

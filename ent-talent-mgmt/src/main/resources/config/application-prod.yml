@@ -14,7 +14,6 @@ spring:
         databaseName: etm
         serverName: stlerdb
         username: etmadmin
-        password: K|WH5vum*)3.(fgj7
         cachePrepStmts: true
         prepStmtCacheSize: 250
         prepStmtCacheSqlLimit: 2048

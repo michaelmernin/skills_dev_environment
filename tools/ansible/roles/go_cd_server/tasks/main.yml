@@ -42,6 +42,7 @@
 
 - name: Load encrypted Slack info from vault
   tags: gocd_slack
+  no_log: True
   include_vars: slack.yml
 
 - name: Copy Slack Notifier Plugin config
