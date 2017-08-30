@@ -42,6 +42,14 @@
                 <span flex ng-show="!isAnnual()">{{ review.role }}</span>
               </div>
             </div>
+            <div layout-gt-xs="row">
+              <div layout="row" flex-gt-xs>
+                <strong flex ng-show="!isAnnual()">Project:</strong>
+                <span flex ng-show="!isAnnual()">{{ review.project }}</span>
+              </div>
+              <div layout="row" flex-gt-xs>
+              </div>
+            </div>
           </md-card-content>
         </md-card>
 
@@ -69,10 +77,10 @@
           <md-tab label="deliverables">
             <div ui-view="goals"></div>
           </md-tab>
-          <md-tab label="evaluation">
+          <md-tab label="evaluation" ng-if="!isRevieweeAndFeedbackOpen">
             <div ui-view="evaluation"></div>
           </md-tab>
-          <md-tab label="overall">
+          <md-tab label="overall" ng-if="!isRevieweeAndFeedbackOpen">
             <div ui-view="overall"></div>
           </md-tab>
         </md-tabs>

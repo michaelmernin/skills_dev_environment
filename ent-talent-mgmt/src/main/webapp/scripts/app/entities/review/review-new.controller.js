@@ -9,7 +9,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
   $scope.projects = [];
   $scope.years = [];
   $scope.isAnnual = null;
-  $scope.review.reviewee = $scope.currentUser;
+  $scope.review.reviewer = $scope.currentUser;
   //$scope.quarters = [];
   $scope.disableStartEndDate = false;
 
@@ -275,7 +275,6 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
 
   $scope.setReviewee = function (reviewee) {
     $scope.review.reviewee = reviewee;
-    $scope.review.reviewer = $scope.currentUser;
   };
  
  /*

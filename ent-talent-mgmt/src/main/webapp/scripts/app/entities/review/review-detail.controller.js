@@ -29,6 +29,6 @@ angular.module('etmApp').controller('ReviewDetailController', function ($scope, 
     if ($scope.review.reviewType !== undefined && $scope.review.reviewType.processName === "annualReview") {
       return true;
     }
-  return false;
-}
+    return false;
+  }
 });

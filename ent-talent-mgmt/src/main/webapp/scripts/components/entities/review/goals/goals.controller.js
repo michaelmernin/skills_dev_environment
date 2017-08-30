@@ -6,12 +6,14 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   var user = {};
   var isReviewee = {};
   var isReviewer = {};
+  var isCounselor = {};
 
 
   $scope.goals = [];
   $scope.isEngagementReview = false;
   $scope.isReviewee = false;
   $scope.isReviewer = false;
+  $scope.isCounselor = false;
 
 
   Principal.identity().then(function (account) {
@@ -22,8 +24,9 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     review = parentReview;
     if (review.id) {
       $scope.isEngagementReview = review.reviewType.id === 2;
-      $scope.isReviewee = review.reviewee && user && user.id == review.reviewee.id;
-      $scope.isReviewer = review.reviewer && user && user.id == review.reviewer.id; 
+      $scope.isReviewee = review.reviewee && user && user.id === review.reviewee.id;
+      $scope.isReviewer = review.reviewer && user && user.id === review.reviewer.id;
+      $scope.isCounselor = review.reviewee.counselor && user && user.id === review.reviewee.counselor.id && user.id !== review.reviewer.id;
 
       Goal.query({reviewId: review.id}, function (goals) {
         $scope.goals = goals;
@@ -35,6 +38,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     var goal = new Goal();
     goal.isReviewee = $scope.isReviewee;
     goal.isReviewer = $scope.isReviewer;
+    goal.isCounselor = $scope.isCounselor;
     var templateUrl = 'scripts/components/entities/review/goals/';
     templateUrl += $scope.isEngagementReview ? 'deliverable.detail.html' : 'goal.detail.html';
     $mdDialog.show({
@@ -64,6 +68,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     }
     goalTobeEdited.isReviewee = $scope.isReviewee;
     goalTobeEdited.isReviewer = $scope.isReviewer;
+    goalTobeEdited.isCounselor = $scope.isCounselor;
     $mdDialog.show({
       controller: 'GoalDetailController',
       templateUrl: $scope.isEngagementReview ? $state.current.data.deliverablesConfig : $state.current.data.goalsConfig,

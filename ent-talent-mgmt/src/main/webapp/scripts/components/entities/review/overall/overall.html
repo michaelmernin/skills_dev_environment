@@ -5,7 +5,7 @@
       <div class="md-title">{{ category }}</div>
       <div layout-gt-xs="row" class="md-body-1">
         <div layout="row" flex-gt-xs>
-          <span flex>
+          <span flex ng-show="showRevieweeRating()">
             <i class="fa fa-comment-o"></i>
             Self: {{ showRevieweeRating() ? getAvgScore(getRatings(questions, 'reviewee')) : 0 }}
           </span>
@@ -15,11 +15,11 @@
           </span>
         </div>
         <div layout="row" flex-gt-xs>
-          <span flex ng-show="isAnnual()">
+          <span flex ng-show="isAnnual() || showPeerRatings()">
             <i class="fa fa-comments-o"></i>
             Peers: {{ showPeerRatings() ? getAvgScore(getRatings(questions, 'peer')) : 0 }}
           </span>
-          <span flex>
+          <span flex ng-show="showAllRating()">
             <i class="fa fa-comments"></i>
             All: {{ showAllRating() ? getAvgScore(getRatings(questions)) : 0 }}
           </span>
@@ -29,7 +29,7 @@
     <h2>Average Scores</h2>
     <div layout-gt-xs="row" class="md-body-2">
       <div layout="row" flex-gt-xs>
-        <span flex>
+        <span flex ng-show="showRevieweeRating()">
           <i class="fa fa-comment-o"></i>
           Self: {{ showRevieweeRating() ? getAllAvgScore(categories, 'reviewee') : 0 }}
         </span>
@@ -39,11 +39,11 @@
         </span>
       </div>
       <div layout="row" flex-gt-xs>
-        <span flex  ng-show="isAnnual()">
+        <span flex  ng-show="isAnnual() || showPeerRatings()">
           <i class="fa fa-comments-o"></i>
           Peers: {{ showPeerRatings() ? getAllAvgScore(categories, 'peer') : 0 }}
         </span>
-        <span flex>
+        <span flex ng-show="showAllRating()">
           <i class="fa fa-comments"></i>
           All: {{ showAllRating() ? getAllAvgScore(categories) : 0 }}
         </span>
@@ -80,7 +80,7 @@
         <p>{{reviewerFeedback.overallComment}}</p>
       </div>
     </div>
-    <div>
+    <div ng-show="showRevieweeRating()">
       <div class="md-title" ng-show="revieweeFeedback.author">
         Self Summary by: {{revieweeFeedback.author.firstName}} {{revieweeFeedback.author.lastName}}
       </div>

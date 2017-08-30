@@ -180,6 +180,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return false;
     },
     showReviewerRating: function (review, user) {
+      return true;
       if (EvaluationUtil.showAlways(review, user)) {
         return true;
       }

@@ -38,6 +38,10 @@
                 <strong flex ng-show="!isAnnual()">Role:</strong>
                 <span flex ng-show="!isAnnual()">{{ review.role }}</span>
               </md-grid-tile>
+              <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1">
+                <strong flex ng-show="!isAnnual()">Project:</strong>
+                <span flex ng-show="!isAnnual()">{{ review.project }}</span>
+              </md-grid-tile>
             </md-grid-list>
           </md-card-content>
         </md-card>

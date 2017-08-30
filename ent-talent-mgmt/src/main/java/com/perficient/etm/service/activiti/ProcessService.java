@@ -47,7 +47,7 @@ public class ProcessService {
         if (reviewType == null)
             throw new ReviewProcessNotFound("null");
         if (review.getReviewer() == null)
-            throw new MissingReviewInfoException("review.revieweer");
+            throw new MissingReviewInfoException("review.reviewer");
         Long counselorId = review.getReviewee().getCounselor() != null ? review.getReviewee().getCounselor().getId() : 0L;
 
         Map<String, Object> variables = new HashMap<>();

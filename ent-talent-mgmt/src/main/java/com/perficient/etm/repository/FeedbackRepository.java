@@ -20,7 +20,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long> {
     @Query("select feedback from Feedback feedback where feedback.author.login = ?#{principal.username}")
     List<Feedback> findAllForCurrentUser();
 
-    @PostFilter(FeedbackAuthorizer.FILTER)
     List<Feedback> findAllByReviewId(Long reviewId);
     
     @PostAuthorize(FeedbackAuthorizer.AUTHORIZE)

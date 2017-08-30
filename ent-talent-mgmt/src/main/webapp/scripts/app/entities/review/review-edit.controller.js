@@ -1,12 +1,16 @@
 'use strict';
 
-angular.module('etmApp').controller('ReviewEditController', function ($scope, $stateParams, Review, Principal, Evaluation) {
+angular.module('etmApp').controller('ReviewEditController', function ($scope, $stateParams, Review, Principal, Evaluation, User, Feedback) {
   $scope.review = {};
+  $scope.currentUser = User.profile();
   $scope.load = function (id) {
     Evaluation.reset();
     Review.get({id: id}, function (result) {
       $scope.review = result;
       $scope.reviewTitle = $scope.getReviewTitle();
+      Feedback.query({reviewId: $scope.review.id}, function (feedback) {
+        $scope.isRevieweeAndFeedbackOpen = $scope.review.reviewee.id === $scope.currentUser.id && feedback[0].feedbackStatus.id === 2;
+      });
     });
   };
   
@@ -32,4 +36,9 @@ angular.module('etmApp').controller('ReviewEditController', function ($scope, $s
       }
     return false;
   }
+  
+//  $scope.isRevieweeAndFeedbackOpen = function () {
+//    console.log($scope.review.reviewee !== undefined && $scope.review.reviewee.id === $scope.currentUser.id && $scope.feedback !== undefined && $scope.feedback.feedbackStatus !== undefined && $scope.feedback.feedbackStatus.id === 3);
+//    return $scope.review.reviewee !== undefined && $scope.review.reviewee.id === $scope.currentUser.id && $scope.feedback !== undefined && $scope.feedback.feedbackStatus !== undefined && $scope.feedback.feedbackStatus.id === 3;
+//  }
 });

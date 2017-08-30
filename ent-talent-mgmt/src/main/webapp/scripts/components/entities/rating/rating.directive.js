@@ -29,7 +29,7 @@ angular.module('etmApp').directive('etmRating', function (Principal) {
       };
       
       $scope.isEditable = function () {
-        if ($scope.rating.feedback.author.id == user.id) {
+        if ($scope.rating.feedback.author.id == user.id && $scope.rating.feedback.feedbackStatus.id === 2) {
          return true;
         } else {
           return false;

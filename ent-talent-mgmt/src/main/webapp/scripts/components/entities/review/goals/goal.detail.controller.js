@@ -7,6 +7,7 @@ angular.module('etmApp').controller('GoalDetailController', function ($scope, $m
   $scope.load = function() {
     $scope.isReviewee = goal.isReviewee;
     $scope.isReviewer = goal.isReviewer;
+    $scope.isCounselor = goal.isCounselor
   };
   $scope.load();
 
