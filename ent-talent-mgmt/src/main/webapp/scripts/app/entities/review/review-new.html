@@ -11,7 +11,7 @@
           </md-input-container>
           <!-- // REVIEW TYPE -->
 
-          <!-- REVIEWER -->
+          <!-- REVIEWEE -->
           <md-autocomplete flex-gt-sm="50"
             md-no-cache="true"
             md-selected-item="selectedItem"
@@ -19,6 +19,7 @@
             md-selected-item-change="setReviewee(user)"
             md-search-text="searchText"
             md-min-length="3"
+            name="reviewee"
             md-floating-label="Reviewee (type to search)"
             md-items="user in getMatches(searchText)"
             ng-required="true">
@@ -26,7 +27,7 @@
               <span md-highlight-text="searchText">{{user.firstName}} {{user.lastName}}</span>
             </md-item-template>
             <md-not-found>No peers matching "{{ searchText }}" were found.</md-not-found>
-            <div ng-messages="reviewForm.project.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
+            <div ng-messages="reviewForm.reviewee.$error" ng-if="reviewForm.$submitted || reviewForm.reviewee.$dirty">
               <div ng-message="required">
                 <span>Please select a Reviewee.</span>
               </div>
@@ -49,7 +50,7 @@
         <div layout-gt-sm="row">
           <!-- Role -->
           <md-input-container class="md-block" flex-gt-sm="50">
-           <label translate="review.project">Role</label>
+           <label translate="review.role">Role</label>
             <input ng-model="review.role" name="role">
           </md-input-container>
           <!-- // Role -->
