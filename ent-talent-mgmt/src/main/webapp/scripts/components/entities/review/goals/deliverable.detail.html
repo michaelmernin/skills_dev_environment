@@ -9,7 +9,7 @@
     <md-dialog-content class="md-dialog-content">
       <md-input-container class="md-block">
         <label translate="review.engagement.deliverables.deliverable">Deliverable</label>
-        <textarea ng-disabled="!isReviewee" name="goal" ng-model="goal.name" required md-maxlength="3000"></textarea>
+        <textarea ng-disabled="!isReviewee && !isReviewer" name="goal" ng-model="goal.name" required md-maxlength="3000"></textarea>
         <div ng-messages="goalForm.goal.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
           <div ng-message="required">
             <span translate="global.messages.validate.field.enter.required" translate-values="{name: '{{ 'Deliverable' | translate }}'}">Please enter a Deliverable.</span>
@@ -20,8 +20,8 @@
         </div>
       </md-input-container> 
       <md-input-container class="md-block">
-        <label translate="review.engagement.deliverables.description">Measure of Success</label>
-        <textarea name="description" ng-disabled="!isReviewee" ng-model="goal.description" md-maxlength="3000"></textarea>
+        <label>Measure of Success</label>
+        <textarea name="description" ng-disabled="!isReviewee && !isReviewer" ng-model="goal.description" md-maxlength="3000"></textarea>
         <div ng-messages="goalForm.description.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
           <div ng-message="md-maxlength">
             <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Measure of Success' | translate }}', number: '{{ '3000' | translate}}'}">Measure of Success cannot be larger than 3000 characters.</span>
@@ -30,22 +30,24 @@
       </md-input-container> 
       <div layout-gt-sm="row">
         <div layout-gt-xs="row" flex-gt-sm>
-          <md-input-container class="md-block" flex-gt-xs>
+        <md-datepicker ng-model="goal.targetDate" ng-disabled="!isReviewee && !isReviewer" name="targetDate" md-placeholder="Target Date"></md-datepicker>
+        <div ng-messages="goalForm.targetDate.$error">
+          <div ng-message="date">
+            <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.engagement.deliverables.targetDate' | translate }}'}" >Please select a valid value.</span>
+          </div>
+        </div>
+          <!-- <md-input-container class="md-block" flex-gt-xs>
             <label translate="review.engagement.deliverables.targetDate">Target Date</label>
-            <input type="date" ng-disabled="!isReviewee" name="targetDate" ng-model="goal.targetDate"/>
-            <div ng-messages="goalForm.targetDate.$error">
-              <div ng-message="date">
-                <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.engagement.deliverables.targetDate' | translate }}'}" >Please select a valid value.</span>
-              </div>
-            </div>
-          </md-input-container>
+            <input type="date" ng-disabled="!isReviewee && !isReviewer" name="targetDate" ng-model="goal.targetDate"/>
+          </md-input-container> -->
         </div>
         <div layout-gt-xs="row" flex-gt-sm>
-          <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="!isReviewee" ng-click="checkCompletion(switchCompletion)">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
-          <md-input-container class="md-block" flex-gt-xs>
+          <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="!isReviewee && !isReviewer" ng-click="checkCompletion(switchCompletion)">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
+          <md-datepicker name="completionDate" ng-disabled="!switchCompletion" ng-model="goal.completionDate" ng-required="switchCompletion"></md-datepicker>
+          <!-- <md-input-container class="md-block" flex-gt-xs>
             <label translate="review.engagement.deliverables.completionDate">Completion Date</label>
-            <input type="date" name="completionDate" ng-disabled="!isReviewee && !switchCompletion" ng-model="goal.completionDate" ng-required="switchCompletion"/>
-          </md-input-container>
+            <input type="date" name="completionDate" ng-disabled="!isReviewee && !isReviewer && !switchCompletion" ng-model="goal.completionDate" ng-required="switchCompletion"/>
+          </md-input-container> -->
         </div>
       </div>
 	  <md-input-container class="md-block">
