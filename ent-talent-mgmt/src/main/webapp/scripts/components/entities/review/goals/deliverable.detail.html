@@ -61,10 +61,10 @@
       </md-input-container>
       <md-input-container class="md-block">
         <label translate="review.engagement.deliverables.reviewerComment">Reviewer Comment</label>
-        <textarea name="reviewerComment" ng-disabled="!isReviewer || isFeedbackSubmitted" ng-model="goal.reviewerComment" md-maxlength="250"></textarea>
+        <textarea name="reviewerComment" ng-disabled="!isReviewer || isFeedbackSubmitted" ng-model="goal.reviewerComment" md-maxlength="3000"></textarea>
         <div ng-messages="goalForm.reviewerComment.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
           <div ng-message="md-maxlength">
-            <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Reviewer Comments' | translate }}', number: '{{ '250' | translate}}'}">Reviewer Comments cannot be larger than 250 characters.</span>
+            <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Reviewer Comments' | translate }}', number: '{{ '3000' | translate}}'}">Reviewer Comments cannot be larger than 3000 characters.</span>
           </div>
         </div>
       </md-input-container>
