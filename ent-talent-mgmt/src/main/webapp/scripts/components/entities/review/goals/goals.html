@@ -1,7 +1,7 @@
 <div ng-cloak>
   <div class="layout-padding">
     <div ng-hide="goals.length">No {{ isEngagementReview ? 'deliverables' : 'goals' }} have been created for this review</div>
-    <md-button class="md-raised" ng-show="isEngagementReview" ng-click="addGoal($event)" ng-disabled="isCounselor" translate="review.engagement.deliverables.addDeliverable">Add Deliverable</md-button>
+    <md-button class="md-raised" ng-show="isEngagementReview" ng-click="addGoal($event)" ng-disabled="isCounselor || isFeedbackSubmitted" translate="review.engagement.deliverables.addDeliverable">Add Deliverable</md-button>
     <md-button class="md-raised" ng-show="isReviewee && !isEngagementReview" ng-click="addGoal($event)" translate="review.annual.goals.addGoal">Add Goal</md-button>
     <md-list>
       <md-list-item class="md-3-line goal" ng-repeat="goal in goals" ng-click="editGoal(goal, $event)">
@@ -14,7 +14,7 @@
           </h4>
           <p>{{goal.description | limitTo:fieldLimit()}}</p>
         </div>
-        <md-icon ng-show="isReviewee" md-font-icon="fa fa-lg fa-trash" class="md-secondary" aria-label="Delete {{ isEngagementReview ? 'Deliverable' : 'Goal' }}" ng-click="deleteGoal(goal, $event)"></md-icon>
+        <md-icon ng-show="!isCounselor && !isFeedbackSubmitted" md-font-icon="fa fa-lg fa-trash" class="md-secondary" aria-label="Delete {{ isEngagementReview ? 'Deliverable' : 'Goal' }}" ng-click="deleteGoal(goal, $event)"></md-icon>
       </md-list-item>
     </md-list>
   </div>

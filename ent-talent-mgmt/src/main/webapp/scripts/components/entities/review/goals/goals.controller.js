@@ -1,12 +1,13 @@
 'use strict';
 
-angular.module('etmApp').controller('GoalsController', function ($scope, $mdDialog, $stateParams, $state, $window, $mdMedia, Goal, Principal) {
+angular.module('etmApp').controller('GoalsController', function ($scope, $mdDialog, $stateParams, $state, $window, $mdMedia, Goal, Principal, Feedback) {
 
   var review = {};
   var user = {};
   var isReviewee = {};
   var isReviewer = {};
   var isCounselor = {};
+  var isFeedbackSubmitted = {};
 
 
   $scope.goals = [];
@@ -14,6 +15,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
   $scope.isReviewee = false;
   $scope.isReviewer = false;
   $scope.isCounselor = false;
+  $scope.isFeedbackSubmitted = false;
 
 
   Principal.identity().then(function (account) {
@@ -27,6 +29,9 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       $scope.isReviewee = review.reviewee && user && user.id === review.reviewee.id;
       $scope.isReviewer = review.reviewer && user && user.id === review.reviewer.id;
       $scope.isCounselor = review.reviewee.counselor && user && user.id === review.reviewee.counselor.id && user.id !== review.reviewer.id;
+      Feedback.query({reviewId: review.id}, function(feedbacks) {
+        $scope.isFeedbackSubmitted = feedbacks && feedbacks[0].feedbackStatus.id === 3;
+      });
 
       Goal.query({reviewId: review.id}, function (goals) {
         $scope.goals = goals;
@@ -39,6 +44,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     goal.isReviewee = $scope.isReviewee;
     goal.isReviewer = $scope.isReviewer;
     goal.isCounselor = $scope.isCounselor;
+    goal.isFeedbackSubmitted = $scope.isFeedbackSubmitted;
     var templateUrl = 'scripts/components/entities/review/goals/';
     templateUrl += $scope.isEngagementReview ? 'deliverable.detail.html' : 'goal.detail.html';
     $mdDialog.show({
@@ -69,6 +75,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
     goalTobeEdited.isReviewee = $scope.isReviewee;
     goalTobeEdited.isReviewer = $scope.isReviewer;
     goalTobeEdited.isCounselor = $scope.isCounselor;
+    goalTobeEdited.isFeedbackSubmitted = $scope.isFeedbackSubmitted;
     $mdDialog.show({
       controller: 'GoalDetailController',
       templateUrl: $scope.isEngagementReview ? $state.current.data.deliverablesConfig : $state.current.data.goalsConfig,

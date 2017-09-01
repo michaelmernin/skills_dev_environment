@@ -14,8 +14,7 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
   }
   
   function isOpenToSubmit(review, reviewerFeedback) {
-    return review.reviewStatus.id === ReviewStatus.OPEN.id
-      && (!reviewerFeedback.id || reviewerFeedback.feedbackStatus.id === FeedbackStatus.OPEN.id);
+    return review.reviewStatus.id === ReviewStatus.OPEN.id;
   }
 
   return angular.extend($resource('api/todos/:id', {}, {

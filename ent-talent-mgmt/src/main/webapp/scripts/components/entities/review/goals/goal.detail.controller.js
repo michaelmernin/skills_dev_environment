@@ -8,6 +8,7 @@ angular.module('etmApp').controller('GoalDetailController', function ($scope, $m
     $scope.isReviewee = goal.isReviewee;
     $scope.isReviewer = goal.isReviewer;
     $scope.isCounselor = goal.isCounselor
+    $scope.isFeedbackSubmitted = goal.isFeedbackSubmitted;
   };
   $scope.load();
 
