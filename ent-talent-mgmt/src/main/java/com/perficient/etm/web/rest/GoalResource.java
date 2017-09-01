@@ -59,7 +59,7 @@ public class GoalResource implements RestResource {
         }
         Review review = reviewRepository.findOne(reviewId);
         SecurityUtils.getPrincipal().ifPresent(principal -> {
-            if (review.isReviewee(principal)) {
+            if (review.isReviewee(principal) || review.isReviewer(principal)) {
                 goal.setReview(review);
                 goalRepository.save(goal);
             }
