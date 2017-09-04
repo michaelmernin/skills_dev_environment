@@ -20,6 +20,46 @@ angular.module('etmApp').factory('EvaluationUtil', function (ReviewStatus) {
   function isDirector(review, user) {
     return eq(user, review.reviewee.director);
   }
+  
+  /**
+   * Check if catigories has at least one empty question (no rating)
+   * @param {*} categories 
+   */
+  function hasEmptyQuestions(categories) {
+    if(!categories) return true;
+    var hasOneEmptyQuestion = false;
+    var keepLooking = true;
+    angular.forEach(categories, function(questions){
+      if(keepLooking){
+        hasOneEmptyQuestion = hasEmptyQuestion(questions)
+      }
+    });
+    return hasOneEmptyQuestion;
+  }
+
+  /**
+   * check if question array has atleast one empty question
+   * @param {*} questionsArr 
+   */
+  function hasEmptyQuestion(questionsArr){
+    var hasOneEmptyQuestion = false;
+    var keepLooking = true;
+    angular.forEach(questionsArr, function(q){
+      if(keepLooking && isEmptyQuestion(q)){
+        hasOneEmptyQuestion = true;
+        keepLooking = false;
+      }
+    });
+    return hasOneEmptyQuestion;
+  }
+
+  /**
+   * check if question is empty
+   * @param {*} question 
+   */
+  function isEmptyQuestion(question){
+    return question.editableRating.score == null;
+  }
 
   return {
     showAlways: function (review, user) {
@@ -50,6 +90,10 @@ angular.module('etmApp').factory('EvaluationUtil', function (ReviewStatus) {
       return result;
     },
 
-    eq: eq
+    eq: eq,
+
+    hasEmptyQuestions: hasEmptyQuestions,
+    hasEmptyQuestion: hasEmptyQuestion,
+    isEmptyQuestion: isEmptyQuestion
   }
 });

@@ -1,8 +1,9 @@
 'use strict';
 
-angular.module('etmApp').controller('EvaluationController', function ($scope, $mdDialog, $state, $mdMedia, $window, Principal, Rating, Evaluation) {
+angular.module('etmApp').controller('EvaluationController', function ($scope, $mdDialog, $state, $mdMedia, $window, Principal, Rating, Evaluation, $rootScope, EvaluationUtil) {
   var review = {};
   var user = {};
+  var hasSubmitted = false;
 
   $scope.categories = {};
   $scope.getScore = Evaluation.score;
@@ -21,12 +22,13 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
     });
   });
 
+  $rootScope.$on('evaluation-has-errors', function(){
+    validateEvaluations();
+    hasSubmitted = true;
+  });
+
   $scope.toggleCategory = function (category) {
     $scope.toggle = ($scope.toggle === category ? null : category);
-    setTimeout(function() {
-      var categories = Evaluation.getCategories(review, user);
-      addErrorClassToQuestions(categories);
-    }, 50);
   };
 
   $scope.viewEvaluation = function (question, ev) {
@@ -47,7 +49,7 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
         angular.forEach(question.ratings.peer, updateDirtyRating);
       }
       var categories = Evaluation.getCategories(review, user);
-      addErrorClassToQuestions(categories);
+      if(hasSubmitted) validateEvaluations();
     });
   };
 
@@ -83,6 +85,35 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
       Evaluation.showPeerRating(review, user, peerRating);
   };
 
+  /**
+   * validates all evaluations
+   */
+  function validateEvaluations() {
+
+    cleanCategories();
+    angular.forEach($scope.categories, function(questions)
+    {
+      angular.forEach(questions, function(q){
+        if(EvaluationUtil.isEmptyQuestion(q)){
+          questions.hasError = true;
+          q.hasError = true;
+        }
+      });
+    });
+  }
+  /**
+   * remove errors from categories 
+   */
+  function cleanCategories(){
+    angular.forEach($scope.categories, function(questions)
+    {
+      angular.forEach(questions, function(q) {
+        questions.hasError = false;
+        q.hasError = false;
+      });
+    });
+  }
+
   function updateDirtyRating(rating) {
     if (rating && rating.$dirty) {
       Rating.update({
@@ -96,37 +127,6 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
         visible: rating.visible
       });
     }
-  }
-  
-  function addErrorClassToQuestions(categories) {
-    var hasEmpty;
-    var mdTitleSelector;
-    // TODO - Don't use jQuery, use ngClass instead :)
-    $.each(categories, function(key, category) {
-      mdTitleSelector = ".md-title:contains('" + key + "')";
-      if ($("div[ui-view='evaluation'] md-list-item[role='listitem']:not([ng-repeat])").find(mdTitleSelector).hasClass("evaluation-error")) {
-        $.each(category, function(key, question) {
-          if (question.editableRating.score === null || question.editableRating.score === undefined) {
-            hasEmpty = true;
-            $.each($("div[ui-view='evaluation'] md-list-item[role='listitem'][ng-repeat]"), function(key, value) { 
-              if (question.text.indexOf($(value).find("h4.ng-binding").text()) > -1){
-                $(this).find("h4.ng-binding").addClass("evaluation-error");
-              }
-            });
-          } else {
-            hasEmpty = false;
-            $.each($("div[ui-view='evaluation'] md-list-item[role='listitem'][ng-repeat]"), function(key, value) { 
-              if (question.text.indexOf($(value).find("h4.ng-binding").text()) > -1){
-                $(this).find("h4.ng-binding").removeClass("evaluation-error");
-              }
-            });
-          }
-        });
-      }
-      if (!hasEmpty) {
-        $("div[ui-view='evaluation'] md-list-item[role='listitem']:not([ng-repeat])").find(mdTitleSelector).removeClass("evaluation-error")
-      }
-    });
   }
 
 });

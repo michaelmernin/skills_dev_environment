@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('TodoController', function ($scope, $stateParams, $mdDialog, Principal, Todo, Review, ReviewStatus, FeedbackType, Feedback, Evaluation, EvaluationUtil) {
+angular.module('etmApp').controller('TodoController', function ($scope, $stateParams, $mdDialog, Principal, Todo, Review, ReviewStatus, FeedbackType, Feedback, Evaluation, EvaluationUtil, $rootScope) {
   $scope.todo = Todo.query();
   var reviewerFeedback = {};
   var review = {};
@@ -41,48 +41,23 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
       .content('One or more feedback questions are missing a rating.')
       .ok('Okay')
       .targetEvent(ev);
+    
     var categories = Evaluation.getCategories(review, user);
     var hasEmptyQuestion = false;
     var isDirector = EvaluationUtil.isDirector(review, user);
     var isGM = EvaluationUtil.isGM(review, user);
     if(!isDirector && !isGM){
-      hasEmptyQuestion = Evaluation.showRevieweeRating($scope.review, user) ? checkForEmptyQuestions(categories) : false;
+      hasEmptyQuestion = EvaluationUtil.hasEmptyQuestions(categories);
     }
     if (!hasEmptyQuestion) {
       $mdDialog.show(confirmAction).then(function () {
           Todo.update({id: action.todoId}, action, loadTodo);
       });
     } else {
+      $rootScope.$emit('evaluation-has-errors');
       $mdDialog.show(missingQuestionDialog);
     }
   };
-
-  function checkForEmptyQuestions(categories) {
-    var hasEmpty;
-    var stopSubmit;
-    var mdTitleSelector;
-
-    // TODO: remove jquery
-    $.each(categories, function(key, category) {
-      hasEmpty = false;
-      $.each(category, function(key, question) {
-        if (question.editableRating !== undefined && (question.editableRating.score === null || question.editableRating.score === undefined)) {
-          hasEmpty = true;
-          stopSubmit = true;
-          $.each($("div[ui-view='evaluation'] md-list-item[role='listitem'][ng-repeat]"), function(key, value) {
-            if (question.text.indexOf($(value).find("h4.ng-binding").text()) > -1){
-              $(this).find("h4.ng-binding").addClass("evaluation-error");
-            }
-          });
-        }
-      });
-      if (hasEmpty) {
-        mdTitleSelector = ".md-title:contains('" + key + "')";
-        $("div[ui-view='evaluation'] md-list-item[role='listitem']:not([ng-repeat])").find(mdTitleSelector).addClass("evaluation-error");
-      }
-    });
-    return stopSubmit;
-  }
 
   function loadTodo() {
     Feedback.query({reviewId: review.id}, function (feedback) {

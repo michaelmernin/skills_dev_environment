@@ -3,7 +3,7 @@
     <div ng-repeat="category in keys(categories) | orderBy:'toString()'" ng-init="questions = categories[category]">
       <md-list-item ng-click="toggleCategory(category)">
         <div class="md-list-item-text" flex>
-          <span class="md-title">{{ category }}</span>
+          <span class="md-title">{{ category }} {{questions.error}}</span>
           <span class="score" ng-if="getAvgScore(getRatings(questions, 'reviewee')) && showRevieweeRating()">
             <i class="fa fa-comment-o"></i>
             Self: {{ getAvgScore(getRatings(questions, 'reviewee')) }}
@@ -16,11 +16,15 @@
             <i class="fa fa-comments-o"></i>
             Peers: {{ getAvgScore(getRatings(questions, 'peer')) }}
           </span>
+          <span class="score evaluation-error" ng-if="questions.hasError">
+              <i class="fa fa-exclamation-circle"></i>
+              validation error {{$parent.toggle !== category ? ', click here to expand' : ''}}
+          </span>
         </div>
         <i class="fa fa-lg {{$parent.toggle === category ? 'fa-chevron-down' : 'fa-chevron-left'}}"></i>
       </md-list-item>
       <md-list-item ng-if="$parent.toggle === category" ng-repeat="question in questions | orderBy:'position'" ng-click="viewEvaluation(question, $event)" class="md-2-line">
-        <div class="md-list-item-text">
+        <div class="md-list-item-text" >
           <h4>{{ question.title ? question.title : question.text | limitTo:titleLimit() }}</h4>
           <p>
             <span class="score" ng-if="(question.ratings.reviewee.score !== null && question.ratings.reviewee.score !== undefined) && showRevieweeRating()">
@@ -38,6 +42,10 @@
             <span class="score" ng-if="(question.ratings.peer[0] !== null && question.ratings.peer[0] !== undefined) && showPeerRating(question.ratings.peer[0])">
               <i class="fa fa-comments-o"></i>
               Peer Rating: {{ getScore(question.ratings.peer[0]) }}
+            </span>
+            <span class="score evaluation-error" ng-if="question.hasError">
+                <i class="fa fa-exclamation-circle"></i>
+                this questions is required
             </span>
           </p>
         </div>
