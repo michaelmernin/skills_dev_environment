@@ -12,7 +12,8 @@
           <!-- // REVIEW TYPE -->
 
           <!-- REVIEWEE -->
-          <md-autocomplete flex-gt-sm="50"
+          <md-autocomplete 
+            flex-gt-sm="50"
             md-no-cache="true"
             md-selected-item="selectedItem"
             md-item-text="user.firstName + ' ' + user.lastName"
@@ -55,16 +56,20 @@
           </md-input-container>
           <!-- // Role -->
           <!-- DATES -->
-          <md-datepicker ng-model="review.startDate" name="startDate" ng-disabled="disableStartEndDate" ng-required="!disableStartEndDate" md-placeholder="Start Date"></md-datepicker>
-          <div ng-messages="reviewForm.startDate.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
-            <div ng-message="required">
-              <span>Please enter a value.</span>
+          <div class="etm-datepicker-container">
+            <md-datepicker ng-model="review.startDate" name="startDate" ng-disabled="disableStartEndDate" ng-required="!disableStartEndDate" md-placeholder="Start Date"></md-datepicker>
+            <div ng-messages="reviewForm.startDate.$error" ng-if="reviewForm.$submitted || reviewForm.startDate.$dirty">
+              <div ng-message="required">
+                <span>Please enter a value.</span>
+              </div>
             </div>
           </div>
-          <md-datepicker ng-model="review.endDate" name="endtDate" ng-disabled="disableStartEndDate" ng-required="!disableStartEndDate" md-placeholder="End Date"></md-datepicker>
-          <div ng-messages="reviewForm.startDate.$error" ng-if="reviewForm.$submitted || reviewForm.project.$dirty">
-            <div ng-message="required">
-              <span>Please enter a value.</span>
+          <div class="etm-datepicker-container">
+            <md-datepicker ng-model="review.endDate" name="endtDate" ng-disabled="disableStartEndDate" ng-required="!disableStartEndDate" md-placeholder="End Date"></md-datepicker>
+            <div ng-messages="reviewForm.startDate.$error" ng-if="reviewForm.$submitted || reviewForm.endtDate.$dirty">
+              <div ng-message="required">
+                <span>Please enter a value.</span>
+              </div>
             </div>
           </div>
           <!-- //DATES -->

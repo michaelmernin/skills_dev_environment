@@ -1,0 +1,6 @@
+.etm-datepicker-container [ng-message="required"] {
+    color: rgb(221,44,0);
+    font-size: 12px;
+    line-height: 14px;
+    margin-left: 65px;
+}
