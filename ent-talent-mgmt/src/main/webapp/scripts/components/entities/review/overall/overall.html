@@ -54,21 +54,35 @@
     <div class="md-title" ng-show="!reviewerFeedback.author && !revieweeFeedback.author ">
         No summary feedback available at this time.
       </div>
-    <div>
+    <div ng-form="reviewerOverall">
       <div class="md-title" ng-show="reviewerFeedback.author">
         Reviewer Summary by: {{reviewerFeedback.author.firstName}} {{reviewerFeedback.author.lastName}}
       </div>
       <div ng-show="reviewerFeedback.editable">
         <md-input-container class="md-block" flex>
           <label>Overall Comment</label>
-          <textarea ng-model="reviewerFeedback.overallComment" ng-blur="updateFeedback(reviewerFeedback)" md-maxlength="3000"></textarea>
+          <textarea 
+            ng-model="reviewerFeedback.overallComment"
+            ng-blur="updateFeedback(reviewerFeedback)"
+            md-maxlength="3000"
+            name="comment"
+            required></textarea>
+            <div ng-messages="reviewerOverall.comment.$error" ng-if='reviewerOverall.comment.$dirty' ng-cloak>
+              <div ng-message="required">Comment is required</div>
+              <div ng-message="md-maxlength">
+                  <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Comment' | translate }}', number: '{{ '3000' | translate}}'}">Comment cannot be longer than 3000 characters.</span>
+              </div>
+            </div>
         </md-input-container>
         <md-input-container layout="row" layout-wrap flex>
           <div layout layout-align="start center">
             <span class="md-body-1">Overall Score &nbsp; &nbsp; </span>
           </div>
           <div flex>
-            <md-slider md-discrete name="overallScore" ng-model="reviewerFeedback.overallScore" step="0.5" min="1" max="5" class="md-primary" aria-label="Overall Score" ng-change="updateFeedback(reviewerFeedback)"></md-slider>
+            <md-slider md-discrete name="overallScore" ng-model="reviewerFeedback.overallScore" step="0.5" min="1" max="5" class="md-primary" aria-label="Overall Score" ng-change="updateFeedback(reviewerFeedback)" name="score" required></md-slider>
+            <div class="field-message" ng-messages="reviewerOverall.score.$error" ng-if='reviewerOverall.score.$dirty' ng-cloak>
+                <div ng-message="required">Score is required</div>
+              </div>
           </div>
           <div layout layout-align="end center">
             <span class="md-headline">&nbsp;  {{reviewerFeedback.overallScore}}</span>
@@ -84,10 +98,20 @@
       <div class="md-title" ng-show="revieweeFeedback.author">
         Self Summary by: {{revieweeFeedback.author.firstName}} {{revieweeFeedback.author.lastName}}
       </div>
-      <div ng-show="revieweeFeedback.editable">
+      <div ng-show="revieweeFeedback.editable" ng-form="revieweeOverall">
         <md-input-container class="md-block" flex ng-show="revieweeFeedback.editable">
           <label>Overall Comment</label>
-          <textarea ng-model="revieweeFeedback.overallComment" md-maxlength="3000" ng-blur="updateFeedback(revieweeFeedback)"></textarea>
+          <textarea
+            ng-model="revieweeFeedback.overallComment"
+            md-maxlength="3000"
+            ng-blur="updateFeedback(revieweeFeedback)"
+            name="comment"></textarea>
+          <div ng-messages="revieweeOverall.comment.$error" ng-if='revieweeOverall.comment.$dirty' ng-cloak>
+              <div ng-message="required">Comment is required</div>
+              <div ng-message="md-maxlength">
+                  <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Comment' | translate }}', number: '{{ '3000' | translate}}'}">Comment cannot be longer than 3000 characters.</span>
+              </div>
+            </div>
         </md-input-container>
       </div>
       <div ng-show="!revieweeFeedback.editable">
