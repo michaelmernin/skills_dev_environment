@@ -58,6 +58,9 @@ angular.module('etmApp').factory('EvaluationUtil', function (ReviewStatus) {
    * @param {*} question 
    */
   function isEmptyQuestion(question){
+    // if no editable rating, it's valid
+    if(question.editableRating == null) return false;
+    
     return question.editableRating.score == null;
   }
 
