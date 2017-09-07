@@ -80,15 +80,19 @@ public class GoalResource implements RestResource {
         log.debug("REST request to update Goal : {}", goal);
         Review review = reviewRepository.findOne(reviewId);
         SecurityUtils.getPrincipal().ifPresent(principal -> {
-            if (review.isReviewee(principal)) {
-                Goal currentGoal = goalRepository.findOne(goal.getId());
-                goal.setReviewerComment(currentGoal.getReviewerComment());
-            	goalRepository.save(goal);
-            }
             if (review.isReviewer(principal)) {
                 Goal currentGoal = goalRepository.findOne(goal.getId());
-                currentGoal.setReviewerComment(goal.getReviewerComment());
-            	goalRepository.save(currentGoal);
+                // TODO: this logic might be different for AR
+                // keep reviewee comment unchanged, save the rest
+                goal.setEmployeeComment(currentGoal.getEmployeeComment());
+                goalRepository.save(goal);
+            }
+            else if (review.isReviewee(principal)) {
+                Goal currentGoal = goalRepository.findOne(goal.getId());
+                // TODO: this logic might be different for AR
+                // only change reviewee's comment
+                currentGoal.setEmployeeComment(goal.getEmployeeComment());
+                goalRepository.save(currentGoal);
             }
         });
         return ResponseEntity.ok().build();
