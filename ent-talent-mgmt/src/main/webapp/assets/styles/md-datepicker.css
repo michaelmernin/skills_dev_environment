@@ -8,3 +8,9 @@
     line-height: 14px;
     margin-left: 65px;
 }
+
+/* set date picker background to be transparent*/
+/* TODO should be removed when we update angular material to latest*/
+md-datepicker {
+  background: transparent;
+}
