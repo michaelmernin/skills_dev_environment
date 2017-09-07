@@ -3,7 +3,7 @@
     <div ng-repeat="category in keys(categories) | orderBy:'toString()'" ng-init="questions = categories[category]">
       <md-list-item ng-click="toggleCategory(category)">
         <div class="md-list-item-text" flex>
-          <span class="md-title">{{ category }} {{questions.error}}</span>
+          <span class="md-title">{{ category }}</span>
           <span class="score" ng-if="getAvgScore(getRatings(questions, 'reviewee')) && showRevieweeRating()">
             <i class="fa fa-comment-o"></i>
             Self: {{ getAvgScore(getRatings(questions, 'reviewee')) }}

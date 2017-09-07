@@ -91,15 +91,19 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
   function validateEvaluations() {
 
     cleanCategories();
+    var hasErrors = false;
     angular.forEach($scope.categories, function(questions)
     {
       angular.forEach(questions, function(q){
         if(EvaluationUtil.isEmptyQuestion(q)){
           questions.hasError = true;
           q.hasError = true;
+          hasErrors = true;
         }
       });
     });
+    if(hasErrors) $rootScope.$emit('evaluation-invalid');
+    else $rootScope.$emit('evaluation-valid');
   }
   /**
    * remove errors from categories 

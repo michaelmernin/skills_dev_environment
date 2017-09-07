@@ -77,8 +77,13 @@
           <md-tab label="deliverables">
             <div ui-view="goals"></div>
           </md-tab>
-          <md-tab label="evaluation" ng-if="!isRevieweeAndFeedbackOpen">
-            <div ui-view="evaluation"></div>
+          <md-tab ng-if="!isRevieweeAndFeedbackOpen">
+              <md-tab-label>
+                evaluation <i class="fa fa-exclamation-circle evaluation-error" ng-if="evaluationHasError"></i>
+              </md-tab-label>
+              <md-tab-body>
+                  <div ui-view="evaluation"></div>
+              </md-tab-body>
           </md-tab>
           <md-tab label="overall" ng-if="!isRevieweeAndFeedbackOpen">
             <div ui-view="overall"></div>
