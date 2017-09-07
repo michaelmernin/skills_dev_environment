@@ -5,7 +5,7 @@ angular.module('etmApp').controller('MailController', function ($scope, $mdDialo
   
   function updateMessages(){
     Mail.findAll().$promise.then(function(val){
-    val.forEach(function(m){
+    angular.forEach(val, function(m){
       // text preview of email
       m.text = getText(m.body);
     });

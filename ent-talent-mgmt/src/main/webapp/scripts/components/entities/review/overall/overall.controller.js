@@ -42,7 +42,7 @@ angular.module('etmApp').controller('OverallController', function ($scope, Princ
 
   $scope.$parent.$watch('review.feedback', function (parentFeedback) {
     if (parentFeedback && parentFeedback.length) {
-      parentFeedback.forEach(function (feedbackItem) {
+      angular.forEach(parentFeedback, function (feedbackItem) {
         if (feedbackItem.feedbackType.id === FeedbackType.SELF.id) {
           $scope.revieweeFeedback = feedbackItem;
           $scope.revieweeFeedback.editable = (user.login)? user.login == feedbackItem.author.login : false;
@@ -72,7 +72,7 @@ angular.module('etmApp').controller('OverallController', function ($scope, Princ
           questionList = [];
         for (var category in categories) {
           questionList = categories[category];
-          questionList.forEach(function(question) {
+          angular.forEach(questionList, function(question) {
             questions.push(question);
           });
         }

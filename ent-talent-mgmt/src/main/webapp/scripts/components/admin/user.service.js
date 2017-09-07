@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('etmApp').factory('User', function ($resource, DateUtils) {
+
   function convertFromServer(data) {
-    data.startDate = DateUtils.convertLocaleDateFromServer(data.startDate);
+    return DateUtils.covertDatePropertiesFromServer(data, ['startDate']);
   }
 
   return $resource('api/users/:id', {}, {
@@ -11,7 +12,7 @@ angular.module('etmApp').factory('User', function ($resource, DateUtils) {
       isArray: true,
       transformResponse: function (data) {
         data = angular.fromJson(data);
-        data.forEach(convertFromServer);
+        data = convertFromServer(data);
         return data;
       }
     },
@@ -19,7 +20,7 @@ angular.module('etmApp').factory('User', function ($resource, DateUtils) {
       method: 'GET',
       transformResponse: function (data) {
         data = angular.fromJson(data);
-        convertFromServer(data);
+        data = convertFromServer(data);
         return data;
       }
     },
@@ -37,7 +38,7 @@ angular.module('etmApp').factory('User', function ($resource, DateUtils) {
       isArray: true,
       transformResponse: function (data) {
         data = angular.fromJson(data);
-        data.forEach(convertFromServer);
+        data = convertFromServer(data);
         return data;
       }
     },
@@ -51,7 +52,7 @@ angular.module('etmApp').factory('User', function ($resource, DateUtils) {
       method: 'GET',
       transformResponse: function (data) {
         data = angular.fromJson(data);
-        convertFromServer(data);
+        data = convertFromServer(data);
         return data;
       }
     }

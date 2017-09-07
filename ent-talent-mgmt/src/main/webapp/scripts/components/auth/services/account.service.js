@@ -2,7 +2,7 @@
 
 angular.module('etmApp').factory('Account', function Account($resource, DateUtils) {
   function convertFromServer(data) {
-    data.startDate = DateUtils.convertLocaleDateFromServer(data.startDate);
+    return DateUtils.covertDatePropertiesFromServer(data, ['startDate']);
   }
   
   return $resource('api/account', {}, {

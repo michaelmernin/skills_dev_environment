@@ -8,7 +8,7 @@ angular.module('etmApp')
                 method: 'GET',
                 transformResponse: function (data) {
                     data = angular.fromJson(data);
-                    data.date = DateUtils.convertLocaleDateFromServer(data.date);
+                    data = DateUtils.covertDatePropertiesFromServer(data, ['date']);
                     return data;
                 }
             },

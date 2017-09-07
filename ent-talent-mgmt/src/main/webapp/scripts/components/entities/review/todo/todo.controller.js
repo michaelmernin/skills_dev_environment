@@ -18,7 +18,7 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
 
     $scope.$parent.$watch('review.feedback', function (parentFeedback) {
       if (parentFeedback && parentFeedback.length) {
-        parentFeedback.forEach(function (feedbackItem) {
+        angular.forEach(parentFeedback, function (feedbackItem) {
           if (feedbackItem.feedbackType.id === FeedbackType.REVIEWER.id) {
             reviewerFeedback = feedbackItem;
           }

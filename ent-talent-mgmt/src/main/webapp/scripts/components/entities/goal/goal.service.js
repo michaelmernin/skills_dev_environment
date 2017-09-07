@@ -7,8 +7,7 @@ angular.module('etmApp').factory('Goal', function ($resource, DateUtils) {
       method: 'GET',
       transformResponse: function (data) {
         data = angular.fromJson(data);
-        data.targetDate = DateUtils.convertLocaleDateFromServer(data.targetDate);
-        data.completionDate = DateUtils.convertLocaleDateFromServer(data.completionDate);
+        data = DateUtils.covertDatePropertiesFromServer(data, ['targetDate', 'completionDate']);
         return data;
       }
     },

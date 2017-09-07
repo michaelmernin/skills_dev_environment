@@ -48,7 +48,7 @@ angular.module('etmApp').controller('AdminSettingsController', function ($scope,
   .then(function(response){
     $scope.settings = response;
     // if setting is stored server-side, use it
-    response.forEach(function(setting) {
+    angular.forEach(response,function(setting) {
       if(setting.key === $scope.erStartDate.key){
         $scope.erStartDate = setting;
         $scope.erStartDate.value = new Date($scope.erStartDate.value);

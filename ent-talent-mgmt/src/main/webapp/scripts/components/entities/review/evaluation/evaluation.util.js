@@ -87,7 +87,7 @@ angular.module('etmApp').factory('EvaluationUtil', function (ReviewStatus) {
 
     isPeer: function (review, user) {
       var result = false;
-      review.peers.forEach(function(peer) {
+      angular.forEach(review.peers, function(peer) {
         if(peer.id === user.id){
           result = true;
         }

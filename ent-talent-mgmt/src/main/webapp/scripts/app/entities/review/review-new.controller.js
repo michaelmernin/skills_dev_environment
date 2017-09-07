@@ -23,7 +23,7 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
     .get()
     .$promise
     .then(function(settings){
-      settings.forEach(function(setting){
+      angular.forEach(settings, function(setting){
         if(setting.key === 'engagementStartDate'){
           defaultStartDate = setting.value;
         }

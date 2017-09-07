@@ -1,21 +1,14 @@
 'use strict';
 
 angular.module('etmApp').factory('Review', function ($resource, DateUtils) {
-  function convertFromServer(data) {
-    data.startDate = DateUtils.convertLocaleDateFromServer(data.startDate);
-    data.endDate = DateUtils.convertLocaleDateFromServer(data.endDate);
-    return data;
-  }
 
-  function convertToServer(data) {
-    data.startDate = DateUtils.convertLocaleDateToServer(data.startDate);
-    data.endDate = DateUtils.convertLocaleDateToServer(data.endDate);
-    return data;
+  function convertFromServer(data) {
+    return DateUtils.covertDatePropertiesFromServer(data, ['startDate', 'endDate']);
   }
   
   function transformArray(data) {
     data = angular.fromJson(data);
-    data.forEach(convertFromServer);
+    data = convertFromServer(data);
     return data;
   }
   
@@ -54,7 +47,7 @@ angular.module('etmApp').factory('Review', function ($resource, DateUtils) {
       transformResponse: function (data) {
         data = angular.fromJson(data || "{}");
         if (data.dueDate) {
-          data.dueDate = DateUtils.convertLocaleDateFromServer(data.dueDate);
+          data = DateUtils.covertDatePropertiesFromServer(data, ['dueDate']);
         }
         return data;
       }

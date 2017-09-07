@@ -2,8 +2,7 @@
 
 angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewStatus, FeedbackStatus) {
   function convertFromServer(data) {
-    data.dueDate = DateUtils.convertLocaleDateFromServer(data.dueDate);
-    return data;
+    return  DateUtils.covertDatePropertiesFromServer(data, ['dueDate']);
   }
 
   function convertToServer(data) {
@@ -23,7 +22,7 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
       isArray: true,
       transformResponse: function (data) {
         data = angular.fromJson(data);
-        data.forEach(convertFromServer);
+        data = convertFromServer(data);
         return data;
       }
     },
@@ -42,7 +41,7 @@ angular.module('etmApp').factory('Todo', function ($resource, DateUtils, ReviewS
       isArray: true,
       transformResponse: function (data) {
         data = angular.fromJson(data);
-        data.forEach(convertFromServer);
+        data = convertFromServer(data);
         return data;
       }
     }
