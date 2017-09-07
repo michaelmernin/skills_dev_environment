@@ -44,11 +44,12 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
     
     var categories = Evaluation.getCategories(review, user);
     var hasEmptyQuestion = false;
-    var isDirector = EvaluationUtil.isDirector(review, user);
-    var isGM = EvaluationUtil.isGM(review, user);
-    if(!isDirector && !isGM){
-      hasEmptyQuestion = EvaluationUtil.hasEmptyQuestions(categories);
-    }
+    // commented this as it does not matter who is submitting the feedback, no empty evaluations regadless
+    //var isDirector = EvaluationUtil.isDirector(review, user);
+    //var isGM = EvaluationUtil.isGM(review, user);
+    //if(!isDirector && !isGM){
+    hasEmptyQuestion = EvaluationUtil.hasEmptyQuestions(categories);
+   // }
     if (!hasEmptyQuestion) {
       $mdDialog.show(confirmAction).then(function () {
           Todo.update({id: action.todoId}, action, loadTodo);
