@@ -167,7 +167,9 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return Math.round(10 * sum / count) / 10;
     },
     showRevieweeRating: function (review, user) {
+      // always hide reviewee rating for first release of ETM
       return false;
+      /*
       if (EvaluationUtil.showAlways(review, user)) {
         return true;
       }
@@ -178,9 +180,12 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
           return true;
       }
       return false;
+      */
     },
     showReviewerRating: function (review, user) {
+      // always show reviewer ratings for first release of ETM
       return true;
+      /*
       if (EvaluationUtil.showAlways(review, user)) {
         return true;
       }
@@ -191,9 +196,12 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
         return true;
       }
       return false;
+      */
     },
     showPeerRatings: function (review, user) {
+      // Hide peer ratings for first release of ETM (no peer ratings for engagement reviews)
       return false;
+      /*
       if (EvaluationUtil.showAlways(review, user)) {
         return true;
       }
@@ -207,9 +215,12 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
         return true;
       }
       return false;
+      */
     },
     showPeerRating: function (review, user, peerRating) {
+      // Hide peer ratings for first release of ETM (no peer ratings for engagement reviews)
       return false;
+      /*
       if (eq(user, review.reviewer)) {
         return true;
       }
@@ -220,6 +231,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
         return true;
       }
       return false;
+      */
     },
     reset: function () {
       categories = undefined;
