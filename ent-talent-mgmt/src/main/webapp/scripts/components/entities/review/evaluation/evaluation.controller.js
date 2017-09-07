@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('EvaluationController', function ($scope, $mdDialog, $state, $mdMedia, $window, Principal, Rating, Evaluation, $rootScope, EvaluationUtil) {
+angular.module('etmApp').controller('EvaluationController', function ($scope, $mdDialog, $state, $mdMedia, $window, Principal, Rating, Evaluation, $rootScope, EvaluationUtil, Notification) {
   var review = {};
   var user = {};
   var hasSubmitted = false;
@@ -102,6 +102,7 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
         }
       });
     });
+    // emit events based on validity of evaluation feedback
     if(hasErrors) $rootScope.$emit('evaluation-invalid');
     else $rootScope.$emit('evaluation-valid');
   }
@@ -129,6 +130,14 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
         score: rating.score,
         comment: rating.comment,
         visible: rating.visible
+      })
+      .$promise
+      .then(function(res){
+        Notification.notify('Saved!');
+      })
+      .catch(function(err){
+        Notification.notify('An error occured while saving your rating!');
+        console.log(err);
       });
     }
   }

@@ -1,46 +1,24 @@
 'use strict';
 
-angular.module('etmApp').controller('AdminSettingsController', function ($scope, AdminSetting, $mdToast) {
+angular.module('etmApp').controller('AdminSettingsController', function ($scope, AdminSetting, Notification) {
   $scope.settings = [];
   $scope.erStartDate = {key:'engagementStartDate', value:null, description:'Engagement Review start date'};
   $scope.erEndDate = {key:'engagementEndDate',   value:null, description:'Engagement Review end date'};
-
-  function hasSetting(setting){
-    return $scope.settings
-    .some(function(s){
-      return s.key === setting.key;
-    });
-  }
 
   $scope.save = function(setting, doNotNotify){
     var create = AdminSetting.create(setting);
     if(doNotNotify) return;
     create.$promise
-    .then(function(){_showToast('Saved!');});
+    .then(function(){Notification.notify('Saved!');});
   };
 
   $scope.delete = function(setting){
     AdminSetting
     .delete({key:setting.key}, function(){
       setting.value = null;
-      _showToast('Deleted!');
+      Notification.notify('Deleted!');
     });
   };
-
-
-  function _showToast(msg){
-    $mdToast
-    .show($mdToast.simple()
-       .textContent(msg)
-       .hideDelay(3000));
-  }
-
-  function saveDefault(setting){
-    if(!hasSetting(setting)){
-      $scope.save(setting, true);
-    }
-  }
-
 
   AdminSetting
   .get()

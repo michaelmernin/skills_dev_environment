@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('OverallController', function ($scope, Principal, Feedback, FeedbackType, Evaluation) {
+angular.module('etmApp').controller('OverallController', function ($scope, Principal, Feedback, FeedbackType, Evaluation, Notification) {
   var review = {};
   var user = {};
 
@@ -62,20 +62,26 @@ angular.module('etmApp').controller('OverallController', function ($scope, Princ
     Feedback.update({
       reviewId: review.id,
       feedbackId: feedback.id
-    }, feedbackCopy);
+    }, feedbackCopy)
+    .$promise
+    .then(function(res){
+      Notification.notify('Overall feedback saved!');
+    })
+    .catch(function(err){
+      Notification.notify('An error occured while saving Overall feedback!');
+      console.log(err);
+    });
   };
   
   $scope.getAllAvgScore = function(categories, userType) {
     if (categories !== null && categories !== undefined) {
       if (Object.keys(categories).length !== 0) {
-        var questions = [],
-          questionList = [];
-        for (var category in categories) {
-          questionList = categories[category];
+        var questions = [];
+        angular.forEach(categories, function(questionList){
           angular.forEach(questionList, function(question) {
             questions.push(question);
           });
-        }
+        });
         return $scope.getAvgScore($scope.getRatings(questions, userType));
       } else {
         return "N/A";

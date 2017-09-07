@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('GoalsController', function ($scope, $mdDialog, $stateParams, $state, $window, $mdMedia, Goal, Principal, Feedback) {
+angular.module('etmApp').controller('GoalsController', function ($scope, $mdDialog, $stateParams, $state, $window, $mdMedia, Goal, Principal, Feedback, Notification) {
 
   var review = {};
   var user = {};
@@ -88,9 +88,8 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       goal.review = goal.review || {};
       goal.review.id = goal.review.id || review.id;
       goal.$update({reviewId: review.id}, function(){
-        console.log("loopin");
         // iterate over goals, find the intended one, update it.
-        // a browser compatible loop, till we get some polyfills :)
+        // a browser compatible loop, till we get some polyfills :) 
         for(var i=0;i<$scope.goals.length; i ++){
           var tempGoal = $scope.goals[i];
           if(tempGoal.id === goal.id){
@@ -98,6 +97,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
             break;
           }
         }
+        Notification.notify('Saved!');
       });
       goalTobeEdited = goal;
     });
