@@ -29,9 +29,11 @@ angular.module('etmApp').factory('EvaluationUtil', function (ReviewStatus) {
     if(!categories) return true;
     var hasOneEmptyQuestion = false;
     var keepLooking = true;
-    angular.forEach(categories, function(questions){
+    angular.forEach(categories, function(questions) {
       if(keepLooking){
-        hasOneEmptyQuestion = hasEmptyQuestion(questions)
+        hasOneEmptyQuestion = hasEmptyQuestion(questions);
+        // if one question is empty, stop looking
+        if(hasOneEmptyQuestion === true) keepLooking = false;
       }
     });
     return hasOneEmptyQuestion;
