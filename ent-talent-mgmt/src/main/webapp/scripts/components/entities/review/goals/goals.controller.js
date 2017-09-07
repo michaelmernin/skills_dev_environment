@@ -120,17 +120,17 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
 
   $scope.getIcon = function (completionDate) {
     if (completionDate) {
-      return 'fa fa-lg fa-check-circle-o'
+      return 'fa fa-lg fa-check-circle-o';
     } else {
-      return 'fa fa-lg fa-circle-o'
+      return 'fa fa-lg fa-circle-o';
     }
   };
 
   $scope.getColor = function (completionDate) {
     if (completionDate) {
-      return 'green;'
+      return 'green;';
     } else {
-      return ''
+      return '';
     }
   };
 
