@@ -22,10 +22,4 @@ angular.module('etmApp').controller('GoalDetailController', function ($scope, $m
     }
   };
 
-  $scope.checkCompletion = function (completed) {
-    if (completed) {
-      $scope.goal.completionDate = "";
-    }
-  };
-
 });

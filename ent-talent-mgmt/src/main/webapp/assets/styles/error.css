@@ -1,8 +1,17 @@
 /* ==========================================================================
 Top of page error messaging
 ========================================================================== */
-
 .etm-error {
+  color: red !important;
+}
+
+.etm-field-error {
+  color: rgb(221,44,0);
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.etm-login-error {
   background-color: #e8e8e8;
   color: #dd2c00;
   max-height: 100px;
@@ -14,11 +23,11 @@ Top of page error messaging
   transition: all 1.5s cubic-bezier(0, 1.05, 0, 1);
 }
 
-.etm-error.ng-hide {
+.etm-login-error.ng-hide {
   max-height: 0;
   padding: 0 1em;
 }
 
-.etm-error:first-child {
+.etm-login-error:first-child {
   padding-top: 1em;
 }

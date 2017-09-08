@@ -1,3 +1,6 @@
 .etm-green {
   color: #008000;
 }
+.etm-datepicker-container.goals-date-picker{
+  margin: 9px 0px;
+}

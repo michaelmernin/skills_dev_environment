@@ -29,26 +29,32 @@
         </div>
       </md-input-container> 
       <div layout-gt-sm="row">
-        <div layout-gt-xs="row" flex-gt-sm>
-        <md-datepicker ng-model="goal.targetDate" ng-disabled="(!isReviewee && !isReviewer) || isFeedbackSubmitted" name="targetDate" md-placeholder="Target Date"></md-datepicker>
-        <div ng-messages="goalForm.targetDate.$error">
-          <div ng-message="date">
-            <span translate="global.messages.validate.field.select.invalid" translate-values="{name: '{{ 'review.engagement.deliverables.targetDate' | translate }}'}" >Please select a valid value.</span>
+        <div class="etm-datepicker-container goals-date-picker" flex="30">
+          <md-datepicker ng-model="goal.targetDate" ng-disabled="(!isReviewee && !isReviewer) || isFeedbackSubmitted" name="targetDate" md-placeholder="Target Date"></md-datepicker>
+          <div ng-messages="goalForm.targetDate.$error" ng-if="goalForm.$submitted || goalForm.targetDate.$dirty">
+            <div ng-message="required">
+              <span>Target date is required</span>
+            </div>
           </div>
         </div>
-          <!-- <md-input-container class="md-block" flex-gt-xs>
-            <label translate="review.engagement.deliverables.targetDate">Target Date</label>
-            <input type="date" ng-disabled="!isReviewee && !isReviewer" name="targetDate" ng-model="goal.targetDate"/>
-          </md-input-container> -->
-        </div>
-        <div layout-gt-xs="row" flex-gt-sm>
-          <md-switch class="md-primary" ng-model="switchCompletion" ng-disabled="(!isReviewee && !isReviewer) || isFeedbackSubmitted" ng-click="checkCompletion(switchCompletion)">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
+        <!-- <md-input-container class="md-block" flex-gt-xs>
+          <label translate="review.engagement.deliverables.targetDate">Target Date</label>
+          <input type="date" ng-disabled="!isReviewee && !isReviewer" name="targetDate" ng-model="goal.targetDate"/>
+        </md-input-container> -->
+        <md-switch flex="15" class="md-primary" ng-model="switchCompletion" ng-disabled="(!isReviewee && !isReviewer) || isFeedbackSubmitted">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
+        
+        <div class="etm-datepicker-container goals-date-picker" flex="35">
           <md-datepicker name="completionDate" ng-disabled="!switchCompletion" ng-model="goal.completionDate" ng-required="switchCompletion" md-placeholder="Completion Date"></md-datepicker>
-          <!-- <md-input-container class="md-block" flex-gt-xs>
-            <label translate="review.engagement.deliverables.completionDate">Completion Date</label>
-            <input type="date" name="completionDate" ng-disabled="!isReviewee && !isReviewer && !switchCompletion" ng-model="goal.completionDate" ng-required="switchCompletion"/>
-          </md-input-container> -->
+            <div ng-messages="goalForm.completionDate.$error" ng-if="goalForm.$submitted || goalForm.completionDate.$dirty">
+              <div ng-message="required">
+                <span>Target date is required</span>
+              </div>
+            </div>
         </div>
+        <!-- <md-input-container class="md-block" flex-gt-xs>
+          <label translate="review.engagement.deliverables.completionDate">Completion Date</label>
+          <input type="date" name="completionDate" ng-disabled="!isReviewee && !isReviewer && !switchCompletion" ng-model="goal.completionDate" ng-required="switchCompletion"/>
+        </md-input-container> -->
       </div>
 	  <md-input-container class="md-block">
         <label translate="review.engagement.deliverables.employeeComment">Reviewee Comment</label>
@@ -63,12 +69,14 @@
         <label translate="review.engagement.deliverables.reviewerComment">Reviewer Comment</label>
         <textarea name="reviewerComment" ng-disabled="!isReviewer || isFeedbackSubmitted" ng-model="goal.reviewerComment" md-maxlength="3000"></textarea>
         <div ng-messages="goalForm.reviewerComment.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
+            <div ng-message="required">
+                <span>Please enter a comment.</span>
+              </div>
           <div ng-message="md-maxlength">
             <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Reviewer Comments' | translate }}', number: '{{ '3000' | translate}}'}">Reviewer Comments cannot be larger than 3000 characters.</span>
           </div>
         </div>
       </md-input-container>
-      
     </md-dialog-content>
     <md-dialog-actions>
       <span flex></span>
