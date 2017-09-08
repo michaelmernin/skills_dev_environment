@@ -45,7 +45,7 @@
           <label translate="review.engagement.deliverables.targetDate">Target Date</label>
           <input type="date" ng-disabled="!isReviewee && !isReviewer" name="targetDate" ng-model="goal.targetDate"/>
         </md-input-container> -->
-        <md-switch flex="15" class="md-primary" ng-model="switchCompletion" ng-disabled="(!isReviewee && !isReviewer) || isFeedbackSubmitted">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
+        <md-switch flex="15" class="md-primary" ng-model="switchCompletion" ng-disabled="(!isReviewee && !isReviewer) || isFeedbackSubmitted" ng-change="goalComplete(switchCompletion)">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
         
         <div class="etm-datepicker-container goals-date-picker" flex="35">
           <md-datepicker

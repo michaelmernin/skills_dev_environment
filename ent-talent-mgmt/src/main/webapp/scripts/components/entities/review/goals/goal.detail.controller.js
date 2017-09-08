@@ -19,4 +19,8 @@ angular.module('etmApp').controller('GoalDetailController', function ($scope, $m
     }
   };
 
+  $scope.goalComplete = function goalComplete(complete) {
+    if(!complete) $scope.goal.completionDate = null;
+  };
+
 });

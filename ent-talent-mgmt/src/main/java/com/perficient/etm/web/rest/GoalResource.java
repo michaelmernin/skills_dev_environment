@@ -76,26 +76,24 @@ public class GoalResource implements RestResource {
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Void> update(@PathVariable Long reviewId, @RequestBody Goal goal, BindingResult result) throws URISyntaxException {
+    public ResponseEntity<Goal> update(@PathVariable Long reviewId, @RequestBody Goal goal, BindingResult result) throws URISyntaxException {
         log.debug("REST request to update Goal : {}", goal);
         Review review = reviewRepository.findOne(reviewId);
+        Goal currentGoal = goalRepository.findOne(goal.getId());
         SecurityUtils.getPrincipal().ifPresent(principal -> {
             if (review.isReviewer(principal)) {
-                Goal currentGoal = goalRepository.findOne(goal.getId());
                 // TODO: this logic might be different for AR
                 // keep reviewee comment unchanged, save the rest
                 goal.setEmployeeComment(currentGoal.getEmployeeComment());
-                goalRepository.save(goal);
             }
             else if (review.isReviewee(principal)) {
-                Goal currentGoal = goalRepository.findOne(goal.getId());
                 // TODO: this logic might be different for AR
-                // only change reviewee's comment
-                currentGoal.setEmployeeComment(goal.getEmployeeComment());
-                goalRepository.save(currentGoal);
+                // keep reviewer comment unchanged, save the rest
+                goal.setReviewerComment(currentGoal.getReviewerComment());
             }
         });
-        return ResponseEntity.ok().build();
+        Goal savedGoal = goalRepository.save(goal);
+        return ResponseEntity.ok(savedGoal);
     }
 
     /**
