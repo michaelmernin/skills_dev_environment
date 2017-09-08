@@ -23,7 +23,7 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
   });
 
   $rootScope.$on('evaluation-has-errors', function(){
-    validateEvaluations();
+    _validateEvaluations();
     hasSubmitted = true;
   });
 
@@ -49,7 +49,7 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
         angular.forEach(question.ratings.peer, updateDirtyRating);
       }
       var categories = Evaluation.getCategories(review, user);
-      if(hasSubmitted) validateEvaluations();
+      if(hasSubmitted) _validateEvaluations();
     });
   };
 
@@ -88,7 +88,7 @@ angular.module('etmApp').controller('EvaluationController', function ($scope, $m
   /**
    * validates all evaluations
    */
-  function validateEvaluations() {
+  function _validateEvaluations() {
 
     cleanCategories();
     var hasErrors = false;

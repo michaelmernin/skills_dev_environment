@@ -16,7 +16,7 @@
             <i class="fa fa-comments-o"></i>
             Peers: {{ getAvgScore(getRatings(questions, 'peer')) }}
           </span>
-          <span class="score evaluation-error" ng-if="questions.hasError">
+          <span class="score etm-error" ng-if="questions.hasError">
               <i class="fa fa-exclamation-circle"></i>
               validation error {{$parent.toggle !== category ? ', click here to expand' : ''}}
           </span>
@@ -43,7 +43,7 @@
               <i class="fa fa-comments-o"></i>
               Peer Rating: {{ getScore(question.ratings.peer[0]) }}
             </span>
-            <span class="score evaluation-error" ng-if="question.hasError">
+            <span class="score etm-error" ng-if="question.hasError">
                 <i class="fa fa-exclamation-circle"></i>
                 this questions is required
             </span>

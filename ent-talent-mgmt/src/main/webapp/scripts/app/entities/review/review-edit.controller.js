@@ -13,15 +13,16 @@ angular.module('etmApp').controller('ReviewEditController', function ($scope, $r
       });
     });
   };
-  $scope.evaluationHasError = false;
 
-  $rootScope.$on('evaluation-valid', function(){
-    $scope.evaluationHasError = false;
-  });
+  // Validation listeners for showing icon on evaluation and overall tabs
+  $scope.evaluationInvalid = false;
+  $scope.overallInvlaid = false;
+  $rootScope.$on('evaluation-valid', function(){ $scope.evaluationInvalid = false; });
+  $rootScope.$on('evaluation-invalid', function(){ $scope.evaluationInvalid = true; });
+  $rootScope.$on('overall-valid', function(){ $scope.overallInvlaid = false; });
+  $rootScope.$on('overall-invalid', function(){ $scope.overallInvlaid = true; });
 
-  $rootScope.$on('evaluation-invalid', function(){
-    $scope.evaluationHasError = true;
-  });
+
   
   $scope.getReviewTitle = function () {
     var bulkTitle = ' ' + $scope.review.reviewType.name + ' for ' + $scope.review.reviewee.firstName + ' ' + $scope.review.reviewee.lastName;

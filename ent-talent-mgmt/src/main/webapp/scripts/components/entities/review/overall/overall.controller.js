@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('OverallController', function ($scope, Principal, Feedback, FeedbackType, Evaluation, Notification) {
+angular.module('etmApp').controller('OverallController', function ($scope, $rootScope, Principal, Feedback, FeedbackType, Evaluation, Notification, FeedbackUtil) {
   var review = {};
   var user = {};
 
@@ -10,6 +10,7 @@ angular.module('etmApp').controller('OverallController', function ($scope, Princ
   $scope.questions = [];
   $scope.getRatings = Evaluation.getRatings;
   $scope.getAvgScore = Evaluation.avgScore;
+  $scope.overallErrors = false;
 
   Principal.identity().then(function (account) {
     user = account;
@@ -42,20 +43,21 @@ angular.module('etmApp').controller('OverallController', function ($scope, Princ
 
   $scope.$parent.$watch('review.feedback', function (parentFeedback) {
     if (parentFeedback && parentFeedback.length) {
-      angular.forEach(parentFeedback, function (feedbackItem) {
-        if (feedbackItem.feedbackType.id === FeedbackType.SELF.id) {
-          $scope.revieweeFeedback = feedbackItem;
-          $scope.revieweeFeedback.editable = (user.login)? user.login == feedbackItem.author.login : false;
-        } else if (feedbackItem.feedbackType.id === FeedbackType.REVIEWER.id) {
-          $scope.reviewerFeedback = feedbackItem;
-          $scope.reviewerFeedback.editable = (user.login)? user.login == feedbackItem.author.login : false;
 
-        }
-      });
+      $scope.revieweeFeedback = FeedbackUtil.getRevieweeFeedback(parentFeedback);
+      if($scope.revieweeFeedback) {
+        $scope.revieweeFeedback.editable = (user.login)? user.login == $scope.revieweeFeedback.author.login : false;
+      }
+
+      $scope.reviewerFeedback = FeedbackUtil.getReviewerFeedback(parentFeedback);
+      if($scope.reviewerFeedback) {
+        $scope.reviewerFeedback.editable = (user.login)? user.login == $scope.reviewerFeedback.author.login : false;
+      }
     }
   });
 
   $scope.updateFeedback = function (feedback) {
+    validateOverall();
     var feedbackCopy = {};
     angular.copy(feedback, feedbackCopy);
     delete feedbackCopy.ratings;
@@ -93,6 +95,18 @@ angular.module('etmApp').controller('OverallController', function ($scope, Princ
     if ($scope.review.reviewType !== undefined && $scope.review.reviewType.processName === "annualReview") {
       return true;
     }
-  return false;
-}
+    return false;
+  };
+
+  $rootScope.$on('overall-has-errors', function(){
+    $scope.overallErrors = true;
+    validateOverall();
+  });
+
+  function validateOverall(){
+    var isValid =  $scope.reviewerFeedback.overallScore && $scope.reviewerFeedback.overallComment;
+    if(isValid) $rootScope.$emit('overall-valid');
+    else $rootScope.$emit('overall-invalid');
+  }
+
 });

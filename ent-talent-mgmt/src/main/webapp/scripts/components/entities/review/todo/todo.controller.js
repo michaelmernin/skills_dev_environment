@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('TodoController', function ($scope, $stateParams, $mdDialog, Principal, Todo, Review, ReviewStatus, FeedbackType, Feedback, Evaluation, EvaluationUtil, $rootScope) {
+angular.module('etmApp').controller('TodoController', function ($scope, $stateParams, $mdDialog, Principal, Todo, Review, ReviewStatus, FeedbackType, Feedback, Evaluation, EvaluationUtil, $rootScope, FeedbackUtil) {
   $scope.todo = Todo.query();
   var reviewerFeedback = {};
   var review = {};
@@ -35,30 +35,43 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
       .ok(action.result)
       .cancel('Cancel')
       .targetEvent(ev);
-    var missingQuestionDialog = $mdDialog.alert()
-      .title('Feedback questions missing rating')
-      .ariaLabel('Missing Feedbacks Dialog')
-      .content('One or more feedback questions are missing a rating.')
-      .ok('Okay')
-      .targetEvent(ev);
     
     var categories = Evaluation.getCategories(review, user);
-    var hasEmptyQuestion = false;
+    //var hasEmptyQuestion = false;
+    var errMessagses = [];
     // commented this as it does not matter who is submitting the feedback, no empty evaluations regadless
     //var isDirector = EvaluationUtil.isDirector(review, user);
     //var isGM = EvaluationUtil.isGM(review, user);
     //if(!isDirector && !isGM){
-    hasEmptyQuestion = EvaluationUtil.hasEmptyQuestions(categories);
+    var hasEmptyQuestion = EvaluationUtil.hasEmptyQuestions(categories);
+    var hasReviewerOverall = _hasReviewerOverall();
    // }
-    if (!hasEmptyQuestion) {
+
+    // error scinarios
+    if(hasEmptyQuestion || !hasReviewerOverall){
+      if(hasEmptyQuestion){
+        $rootScope.$emit('evaluation-has-errors');
+        errMessagses.push('One or more feedback questions are missing a rating.');
+      }
+      if(!hasReviewerOverall){
+        $rootScope.$emit('overall-has-errors');
+        errMessagses.push('Overall comment/score is missing.');
+      }
+      _showValidationDialog(errMessagses, ev);
+    }
+    // no errors
+    else {
       $mdDialog.show(confirmAction).then(function () {
-          Todo.update({id: action.todoId}, action, loadTodo);
+        Todo.update({id: action.todoId}, action, loadTodo);
       });
-    } else {
-      $rootScope.$emit('evaluation-has-errors');
-      $mdDialog.show(missingQuestionDialog);
     }
   };
+
+  function _hasReviewerOverall(){
+    var reviewerFeedback = FeedbackUtil.getReviewerFeedback(review.feedback);
+    // check both overall comment and score exist
+    return reviewerFeedback.overallComment && reviewerFeedback.overallScore;
+  }
 
   function loadTodo() {
     Feedback.query({reviewId: review.id}, function (feedback) {
@@ -74,5 +87,21 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
         $scope.actions = Todo.getActions($scope.todo, review, reviewerFeedback);
       });
     });
+  }
+
+  function _showValidationDialog(messagesArr, ev){
+    var errorStr = '';
+    angular.forEach(messagesArr, function(msg){
+      errorStr += '<div>'+msg+'</div>';
+    });
+    var validationDialog =  $mdDialog.alert()
+    .title('Looks like you missed something')
+    .ariaLabel('Validation Dialog')
+    .htmlContent(errorStr)
+    .ok('Okay')
+    .targetEvent(ev);
+
+    $mdDialog.show(validationDialog);
+    
   }
 });

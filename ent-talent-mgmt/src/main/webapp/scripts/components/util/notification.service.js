@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * A notification service to show application notifications using mdToast
+ */
 angular.module('etmApp').service('Notification', function ($mdToast) {
 
   /**

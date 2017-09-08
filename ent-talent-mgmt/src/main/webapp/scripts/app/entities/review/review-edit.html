@@ -79,14 +79,19 @@
           </md-tab>
           <md-tab ng-if="!isRevieweeAndFeedbackOpen">
               <md-tab-label>
-                evaluation <i class="fa fa-exclamation-circle evaluation-error" ng-if="evaluationHasError"></i>
+                evaluation <i class="fa fa-exclamation-circle etm-error" ng-if="evaluationInvalid"></i>
               </md-tab-label>
               <md-tab-body>
                   <div ui-view="evaluation"></div>
               </md-tab-body>
           </md-tab>
           <md-tab label="overall" ng-if="!isRevieweeAndFeedbackOpen">
-            <div ui-view="overall"></div>
+              <md-tab-label>
+                  overall <i class="fa fa-exclamation-circle etm-error" ng-if="overallInvlaid"></i>
+                </md-tab-label>
+                <md-tab-body>
+                    <div ui-view="overall"></div>
+                </md-tab-body>
           </md-tab>
         </md-tabs>
       </div>
