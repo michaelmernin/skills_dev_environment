@@ -22,7 +22,7 @@
       <outgoing>SequenceFlow_10</outgoing>
     </serviceTask>
     <serviceTask id="ServiceTask_setReviewToComplete" activiti:expression="${reviewService.setStatusById(Review,'COMPLETE')}" name="Set Review to Complete">
-      <incoming>SequenceFlow_11</incoming>
+      <incoming>SequenceFlow_4</incoming>
       <outgoing>SequenceFlow_13</outgoing>
     </serviceTask>
     <serviceTask id="ServiceTask_sendEmailERComplete" activiti:expression="${mailService.sendEngagementReviewCompletedEmail(Review, Reviewer, Reviewee, Counselor, 'COMPLETE')}" name="Email: ER complete">
@@ -39,11 +39,16 @@
     <sequenceFlow id="SequenceFlow_15" sourceRef="engagementReviewStart" targetRef="ServiceTask_sendReviewStartedEmailToReviewer"/>
     <userTask id="UserTask_1" activiti:assignee="${Reviewee}" name="Reviewee Approval">
       <incoming>SequenceFlow_10</incoming>
-      <outgoing>SequenceFlow_11</outgoing>
+      <outgoing>SequenceFlow_3</outgoing>
     </userTask>
     <sequenceFlow id="SequenceFlow_20" sourceRef="ServiceTask_sendReviewStartedEmailToReviewer" targetRef="UserTask_completeReviewerFeedback"/>
     <sequenceFlow id="SequenceFlow_10" sourceRef="ServiceTask_sendEmailReviewerFeedbackComplete" targetRef="UserTask_1"/>
-    <sequenceFlow id="SequenceFlow_11" sourceRef="UserTask_1" targetRef="ServiceTask_setReviewToComplete"/>
+    <serviceTask id="ServiceTask_2" activiti:expression="${feedbackService.setStatusById(ReviewerFeedback,'COMPLETE')}" name="Set Reviewer Feedback to Complete">
+      <incoming>SequenceFlow_3</incoming>
+      <outgoing>SequenceFlow_4</outgoing>
+    </serviceTask>
+    <sequenceFlow id="SequenceFlow_3" sourceRef="UserTask_1" targetRef="ServiceTask_2"/>
+    <sequenceFlow id="SequenceFlow_4" sourceRef="ServiceTask_2" targetRef="ServiceTask_setReviewToComplete"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_engagementReview">
     <bpmndi:BPMNPlane id="BPMNPlane_engagementReview" bpmnElement="engagementReview">
@@ -60,21 +65,21 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ServiceTask_setReviewerFeedbackReady" bpmnElement="ServiceTask_setReviewerFeedbackReady">
-        <omgdc:Bounds height="50.0" width="110.0" x="360.0" y="233.0"/>
+        <omgdc:Bounds height="50.0" width="110.0" x="347.0" y="233.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="51.0" width="91.0" x="369.0" y="233.0"/>
+          <omgdc:Bounds height="51.0" width="91.0" x="356.0" y="233.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ServiceTask_setReviewToComplete" bpmnElement="ServiceTask_setReviewToComplete">
-        <omgdc:Bounds height="50.0" width="110.0" x="860.0" y="225.0"/>
+        <omgdc:Bounds height="50.0" width="110.0" x="920.0" y="225.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_20" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="34.0" width="94.0" x="868.0" y="233.0"/>
+          <omgdc:Bounds height="34.0" width="94.0" x="928.0" y="233.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_endEvent" bpmnElement="endEvent">
-        <omgdc:Bounds height="36.0" width="36.0" x="1170.0" y="232.0"/>
+        <omgdc:Bounds height="36.0" width="36.0" x="1210.0" y="232.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_22" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="17.0" width="26.0" x="1175.0" y="268.0"/>
+          <omgdc:Bounds height="17.0" width="26.0" x="1215.0" y="268.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ServiceTask_sendReviewStartedEmailToReviewer" bpmnElement="ServiceTask_sendReviewStartedEmailToReviewer">
@@ -84,41 +89,47 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ServiceTask_sendEmailReviewerFeedbackComplete" bpmnElement="ServiceTask_sendEmailReviewerFeedbackComplete">
-        <omgdc:Bounds height="80.0" width="110.0" x="500.0" y="218.0"/>
+        <omgdc:Bounds height="80.0" width="110.0" x="486.0" y="218.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_16" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="68.0" width="70.0" x="520.0" y="224.0"/>
+          <omgdc:Bounds height="68.0" width="70.0" x="506.0" y="224.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ServiceTask_sendEmailERComplete" bpmnElement="ServiceTask_sendEmailERComplete">
-        <omgdc:Bounds height="50.0" width="110.0" x="1040.0" y="225.0"/>
+        <omgdc:Bounds height="50.0" width="110.0" x="1080.0" y="225.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_34" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="34.0" width="70.0" x="1060.0" y="233.0"/>
+          <omgdc:Bounds height="34.0" width="70.0" x="1100.0" y="233.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_UserTask_1" bpmnElement="UserTask_1">
-        <omgdc:Bounds height="50.0" width="110.0" x="690.0" y="233.0"/>
+        <omgdc:Bounds height="50.0" width="110.0" x="627.0" y="234.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_9" labelStyle="BPMNLabelStyle_1">
-          <omgdc:Bounds height="34.0" width="68.0" x="711.0" y="241.0"/>
+          <omgdc:Bounds height="34.0" width="68.0" x="648.0" y="242.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_2" bpmnElement="ServiceTask_2">
+        <omgdc:Bounds height="50.0" width="110.0" x="765.0" y="225.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1">
+          <omgdc:Bounds height="51.0" width="91.0" x="774.0" y="225.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_UserTask_completeReviewerFeedback" targetElement="BPMNShape_ServiceTask_setReviewerFeedbackReady">
         <omgdi:waypoint xsi:type="omgdc:Point" x="316.0" y="258.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="360.0" y="258.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="347.0" y="258.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_13" labelStyle="BPMNLabelStyle_1"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_ServiceTask_setReviewerFeedbackReady" targetElement="BPMNShape_ServiceTask_sendEmailReviewerFeedbackComplete">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="470.0" y="258.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="500.0" y="258.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="457.0" y="258.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="486.0" y="258.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_19" labelStyle="BPMNLabelStyle_1"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_13" bpmnElement="SequenceFlow_13" sourceElement="BPMNShape_ServiceTask_setReviewToComplete" targetElement="BPMNShape_ServiceTask_sendEmailERComplete">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="970.0" y="250.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1040.0" y="250.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1030.0" y="250.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1080.0" y="250.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_26" labelStyle="BPMNLabelStyle_1"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_14" sourceElement="BPMNShape_ServiceTask_sendEmailERComplete" targetElement="BPMNShape_endEvent">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1150.0" y="250.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="1170.0" y="250.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1190.0" y="250.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="1210.0" y="250.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_27" labelStyle="BPMNLabelStyle_1"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_engagementReviewStart" targetElement="BPMNShape_ServiceTask_sendReviewStartedEmailToReviewer">
@@ -136,16 +147,23 @@
         <bpmndi:BPMNLabel id="BPMNLabel_37" labelStyle="BPMNLabelStyle_1"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_ServiceTask_sendEmailReviewerFeedbackComplete" targetElement="BPMNShape_UserTask_1">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="610.0" y="258.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="690.0" y="258.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="596.0" y="258.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="609.0" y="258.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="609.0" y="259.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="627.0" y="259.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_7" labelStyle="BPMNLabelStyle_1"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_UserTask_1" targetElement="BPMNShape_ServiceTask_setReviewToComplete">
-        <omgdi:waypoint xsi:type="omgdc:Point" x="800.0" y="258.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="827.0" y="258.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="827.0" y="250.0"/>
-        <omgdi:waypoint xsi:type="omgdc:Point" x="860.0" y="250.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_17" labelStyle="BPMNLabelStyle_1"/>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_UserTask_1" targetElement="BPMNShape_ServiceTask_2">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="737.0" y="259.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="749.0" y="259.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="749.0" y="250.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="765.0" y="250.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_4" labelStyle="BPMNLabelStyle_1"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ServiceTask_2" targetElement="BPMNShape_ServiceTask_setReviewToComplete">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="875.0" y="250.0"/>
+        <omgdi:waypoint xsi:type="omgdc:Point" x="920.0" y="250.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="BPMNLabelStyle_1"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
