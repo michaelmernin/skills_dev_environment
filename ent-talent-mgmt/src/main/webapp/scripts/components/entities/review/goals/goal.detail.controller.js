@@ -4,13 +4,11 @@ angular.module('etmApp').controller('GoalDetailController', function ($scope, $m
 
   $scope.goal = angular.copy(goal);
   $scope.switchCompletion = goal.completionDate ? true : false;
-  $scope.load = function() {
-    $scope.isReviewee = goal.isReviewee;
-    $scope.isReviewer = goal.isReviewer;
-    $scope.isCounselor = goal.isCounselor
-    $scope.isFeedbackSubmitted = goal.isFeedbackSubmitted;
-  };
-  $scope.load();
+  $scope.isReviewee = goal.isReviewee;
+  $scope.isReviewer = goal.isReviewer;
+  $scope.isCounselor = goal.isCounselor
+  $scope.isFeedbackSubmitted = goal.isFeedbackSubmitted;
+  console.log(goal.isFeedbackSubmitted);
 
   $scope.cancel = function () {
     $mdDialog.cancel();

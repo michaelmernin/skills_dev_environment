@@ -30,7 +30,11 @@
       </md-input-container> 
       <div layout-gt-sm="row">
         <div class="etm-datepicker-container goals-date-picker" flex="30">
-          <md-datepicker ng-model="goal.targetDate" ng-disabled="(!isReviewee && !isReviewer) || isFeedbackSubmitted" name="targetDate" md-placeholder="Target Date"></md-datepicker>
+          <md-datepicker
+            ng-model="goal.targetDate"
+            ng-disabled="(!isReviewee && !isReviewer) || isFeedbackSubmitted"
+            name="targetDate"
+            md-placeholder="Target Date"></md-datepicker>
           <div ng-messages="goalForm.targetDate.$error" ng-if="goalForm.$submitted || goalForm.targetDate.$dirty">
             <div ng-message="required">
               <span>Target date is required</span>
@@ -44,7 +48,12 @@
         <md-switch flex="15" class="md-primary" ng-model="switchCompletion" ng-disabled="(!isReviewee && !isReviewer) || isFeedbackSubmitted">{{ switchCompletion ? 'Complete' : 'Incomplete' }}</md-switch>
         
         <div class="etm-datepicker-container goals-date-picker" flex="35">
-          <md-datepicker name="completionDate" ng-disabled="!switchCompletion" ng-model="goal.completionDate" ng-required="switchCompletion" md-placeholder="Completion Date"></md-datepicker>
+          <md-datepicker
+          name="completionDate"
+          ng-disabled="(!isReviewee && !isReviewer) || isFeedbackSubmitted || !switchCompletion"
+          ng-model="goal.completionDate"
+          ng-required="switchCompletion"
+          md-placeholder="Completion Date"></md-datepicker>
             <div ng-messages="goalForm.completionDate.$error" ng-if="goalForm.$submitted || goalForm.completionDate.$dirty">
               <div ng-message="required">
                 <span>Target date is required</span>
