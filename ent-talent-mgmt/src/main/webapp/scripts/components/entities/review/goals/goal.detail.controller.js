@@ -8,7 +8,6 @@ angular.module('etmApp').controller('GoalDetailController', function ($scope, $m
   $scope.isReviewer = goal.isReviewer;
   $scope.isCounselor = goal.isCounselor
   $scope.isFeedbackSubmitted = goal.isFeedbackSubmitted;
-  console.log(goal.isFeedbackSubmitted);
 
   $scope.cancel = function () {
     $mdDialog.cancel();
