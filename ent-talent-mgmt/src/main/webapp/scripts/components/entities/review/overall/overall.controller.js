@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('etmApp').controller('OverallController', function ($scope, $rootScope, Principal, Feedback, FeedbackType, Evaluation, Notification, FeedbackUtil) {
+angular.module('etmApp').controller('OverallController', function ($scope, $rootScope, Principal, Feedback, FeedbackType, Evaluation, Notification, FeedbackUtil, FeedbackStatus) {
   var review = {};
   var user = {};
 
@@ -11,6 +11,7 @@ angular.module('etmApp').controller('OverallController', function ($scope, $root
   $scope.getRatings = Evaluation.getRatings;
   $scope.getAvgScore = Evaluation.avgScore;
   $scope.overallErrors = false;
+  $scope.reviewerOverallDisabled = false;
 
   Principal.identity().then(function (account) {
     user = account;
@@ -52,6 +53,7 @@ angular.module('etmApp').controller('OverallController', function ($scope, $root
       $scope.reviewerFeedback = FeedbackUtil.getReviewerFeedback(parentFeedback);
       if($scope.reviewerFeedback) {
         $scope.reviewerFeedback.editable = (user.login)? user.login == $scope.reviewerFeedback.author.login : false;
+        $scope.reviewerOverallDisabled = $scope.reviewerFeedback.feedbackStatus.id > FeedbackStatus.OPEN.id;
       }
     }
   });

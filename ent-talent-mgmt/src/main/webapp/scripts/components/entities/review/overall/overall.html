@@ -66,7 +66,8 @@
             ng-blur="updateFeedback(reviewerFeedback)"
             md-maxlength="3000"
             name="comment"
-            required></textarea>
+            required
+            ng-disabled="reviewerOverallDisabled"></textarea>
             <div ng-messages="reviewerOverall.comment.$error" ng-if='reviewerOverall.comment.$dirty || overallErrors' ng-cloak>
               <div ng-message="required">Comment is required</div>
               <div ng-message="md-maxlength">
@@ -79,7 +80,7 @@
             <span class="md-body-1">Overall Score &nbsp; &nbsp; </span>
           </div>
           <div flex>
-            <md-slider md-discrete name="overallScore" ng-model="reviewerFeedback.overallScore" step="0.5" min="1" max="5" class="md-primary" aria-label="Overall Score" ng-change="updateFeedback(reviewerFeedback)" name="score" required></md-slider>
+            <md-slider md-discrete name="overallScore" ng-model="reviewerFeedback.overallScore" step="0.5" min="1" max="5" class="md-primary" aria-label="Overall Score" ng-change="updateFeedback(reviewerFeedback)" name="score" required ng-disabled="reviewerOverallDisabled"></md-slider>
             <div class="etm-field-error" ng-if="!reviewerFeedback.overallScore && overallErrors" ng-cloak>
                 <div>Score is required</div>
               </div>
