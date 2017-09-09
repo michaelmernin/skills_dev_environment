@@ -13,6 +13,7 @@ angular.module('etmApp').factory('Review', function ($resource, DateUtils) {
   }
   
   function transformSingle(data) {
+    if(!data) return;
     return convertFromServer(angular.fromJson(data));
   }
 
