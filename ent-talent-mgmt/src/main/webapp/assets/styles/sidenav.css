@@ -15,5 +15,7 @@
 }
 
 .sidenav md-list-item {
+  max-height: 36px;
   min-height: 36px;
+  padding: 0px;
 }
