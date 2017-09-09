@@ -138,6 +138,7 @@ angular.module('etmApp').factory('Evaluation', function (ReviewStatus, FeedbackT
       return categories;
     },
     score: function (rating) {
+      if(!rating) return null;
       if (rating.score === 0) {
         return 'N/A';
       }

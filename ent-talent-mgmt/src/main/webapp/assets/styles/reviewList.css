@@ -15,7 +15,7 @@
 }
 
 .etm-review-card {
-  min-width: 250px;
+  min-width: 250px !important;
   min-height: 155px;
 }
 
