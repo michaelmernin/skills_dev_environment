@@ -197,17 +197,17 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
           if (latestReviewList.length === 0) {
             $scope.review.startDate = new Date(startEndDate.setFullYear(date.getFullYear()));
             $scope.review.endDate = new Date(startEndDate.setFullYear(date.getFullYear() + 1));
-            translateKeys = translateKeys.map(function (key) {return 'review.new.save.thisYear.' + key;});
+            var newTranslateKeys = translateKeys.map(function (key) {return 'review.new.save.thisYear.' + key;});
             key = 'thisYear';
-            _displayConfirmDialog(translateKeys, key, ev);
+            _displayConfirmDialog(newTranslateKeys, key, ev);
           }
           // reviewer has review for this year only
           else if (latestReviewList.length === 1) {
             $scope.review.startDate = new Date(startEndDate.setFullYear(date.getFullYear() + 1));
             $scope.review.endDate = new Date(startEndDate.setFullYear(date.getFullYear() + 2));
-            translateKeys = translateKeys.map(function (key) {return 'review.new.save.nextYear.' + key;});
+            var newTranslateKeys = translateKeys.map(function (key) {return 'review.new.save.nextYear.' + key;});
             key = 'nextYear';
-            _displayConfirmDialog(translateKeys, key, ev);
+            _displayConfirmDialog(newTranslateKeys, key, ev);
           }
           // case, reviewee has annual reviews for this year and the next
           else {
@@ -222,8 +222,8 @@ angular.module('etmApp').controller('ReviewNewController', function ($scope, $st
 
       // case, engagement review
       } else {
-        translateKeys = translateKeys.map(function (key) {return 'review.new.save.engagement.' + key;});
-        _displayConfirmDialog(translateKeys, 'engagement', ev);
+        var newTranslateKeys = translateKeys.map(function (key) {return 'review.new.save.engagement.' + key;});
+        _displayConfirmDialog(newTranslateKeys, 'engagement', ev);
       }
   };
 
