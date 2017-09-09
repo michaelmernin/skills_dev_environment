@@ -66,7 +66,9 @@
             ng-blur="updateFeedback(reviewerFeedback)"
             md-maxlength="3000"
             name="comment"
+            rows="5"
             required
+            md-detect-hidden
             ng-disabled="reviewerOverallDisabled"></textarea>
             <div ng-messages="reviewerOverall.comment.$error" ng-if='reviewerOverall.comment.$dirty || overallErrors' ng-cloak>
               <div ng-message="required">Comment is required</div>
