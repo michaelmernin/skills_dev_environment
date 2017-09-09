@@ -9,13 +9,13 @@
     <md-dialog-content class="md-dialog-content">
       <md-input-container class="md-block">
         <label translate="review.engagement.deliverables.deliverable">Deliverable</label>
-        <textarea ng-disabled="(!isReviewee && !isReviewer) || isFeedbackSubmitted" name="goal" ng-model="goal.name" required md-maxlength="3000"></textarea>
+        <textarea ng-disabled="(!isReviewee && !isReviewer) || isFeedbackSubmitted" name="goal" ng-model="goal.name" required md-maxlength="250"></textarea>
         <div ng-messages="goalForm.goal.$error" ng-if="goalForm.$submitted || goalForm.goal.$dirty || goalForm.goal.$touched">
           <div ng-message="required">
             <span translate="global.messages.validate.field.enter.required" translate-values="{name: '{{ 'Deliverable' | translate }}'}">Please enter a Deliverable.</span>
           </div>
           <div ng-message="md-maxlength">
-            <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Deliverable' | translate }}', number: '{{ '3000' | translate}}'}">Deliverable cannot be larger than 3000 characters.</span>
+            <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Deliverable' | translate }}', number: '{{ '250' | translate}}'}">Deliverable cannot be larger than 3000 characters.</span>
           </div>
         </div>
       </md-input-container> 
