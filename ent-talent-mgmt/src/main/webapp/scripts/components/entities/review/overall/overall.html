@@ -54,7 +54,7 @@
     <div class="md-title" ng-show="!reviewerFeedback.author && !revieweeFeedback.author ">
         No summary feedback available at this time.
       </div>
-    <div ng-form="reviewerOverall">
+    <div ng-form="reviewerOverallForm">
       <div class="md-title" ng-show="reviewerFeedback.author">
         Reviewer Summary by: {{reviewerFeedback.author.firstName}} {{reviewerFeedback.author.lastName}}
       </div>
@@ -70,7 +70,7 @@
             required
             md-detect-hidden
             ng-disabled="reviewerOverallDisabled"></textarea>
-            <div ng-messages="reviewerOverall.comment.$error" ng-if='reviewerOverall.comment.$dirty || overallErrors' ng-cloak>
+            <div ng-messages="reviewerOverallForm.comment.$error" ng-if='reviewerOverallForm.comment.$dirty || overallErrors' ng-cloak>
               <div ng-message="required">Comment is required</div>
               <div ng-message="md-maxlength">
                   <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Comment' | translate }}', number: '{{ '3000' | translate}}'}">Comment cannot be longer than 3000 characters.</span>

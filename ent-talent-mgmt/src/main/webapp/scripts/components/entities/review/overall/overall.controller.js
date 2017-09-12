@@ -60,6 +60,14 @@ angular.module('etmApp').controller('OverallController', function ($scope, $root
 
   $scope.updateFeedback = function (feedback) {
     validateOverall();
+    var overalCommentError = $scope.reviewerOverallForm.comment.$error;
+    if(overalCommentError){
+      var errorMsg = 'Cannot save overall: ';
+      errorMsg = overalCommentError.required? errorMsg+'comment required' : errorMsg;
+      errorMsg = overalCommentError['md-maxlength']? errorMsg+'comment max length is 3000' : errorMsg;
+      Notification.notify(errorMsg);
+      return;
+    }
     var feedbackCopy = {};
     angular.copy(feedback, feedbackCopy);
     delete feedbackCopy.ratings;
@@ -88,13 +96,13 @@ angular.module('etmApp').controller('OverallController', function ($scope, $root
         });
         return $scope.getAvgScore($scope.getRatings(questions, userType));
       } else {
-        return "N/A";
+        return 'N/A';
       }
     }
   };
   
   $scope.isAnnual = function () {
-    if ($scope.review.reviewType !== undefined && $scope.review.reviewType.processName === "annualReview") {
+    if ($scope.review.reviewType !== undefined && $scope.review.reviewType.processName === 'annualReview') {
       return true;
     }
     return false;

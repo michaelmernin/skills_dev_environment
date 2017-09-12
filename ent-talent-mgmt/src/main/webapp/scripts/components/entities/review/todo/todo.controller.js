@@ -55,7 +55,7 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
       }
       if(!hasReviewerOverall){
         $rootScope.$emit('overall-has-errors');
-        errMessagses.push('Overall comment/score is missing.');
+        errMessagses.push('Overall comment/score is missing/invalid.');
       }
       _showValidationDialog(errMessagses, ev);
     }
@@ -70,7 +70,10 @@ angular.module('etmApp').controller('TodoController', function ($scope, $statePa
   function _hasReviewerOverall(){
     var reviewerFeedback = FeedbackUtil.getReviewerFeedback(review.feedback);
     // check both overall comment and score exist
-    return reviewerFeedback.overallComment && reviewerFeedback.overallScore;
+    return reviewerFeedback.overallComment && 
+           reviewerFeedback.overallScore && 
+           // TODO:  move validation to a shared service.
+           reviewerFeedback.overallComment.length <= 3000;
   }
 
   function loadTodo() {
