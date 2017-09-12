@@ -61,7 +61,8 @@ angular.module('etmApp').controller('OverallController', function ($scope, $root
   $scope.updateFeedback = function (feedback) {
     validateOverall();
     var overalCommentError = $scope.reviewerOverallForm.comment.$error;
-    if(overalCommentError){
+    if(overalCommentError.required || overalCommentError['md-maxlength']){
+      console.log(overalCommentError);
       var errorMsg = 'Cannot save overall: ';
       errorMsg = overalCommentError.required? errorMsg+'comment required' : errorMsg;
       errorMsg = overalCommentError['md-maxlength']? errorMsg+'comment max length is 3000' : errorMsg;
