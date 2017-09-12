@@ -1,7 +1,8 @@
 <div>
   <h2>Action Items</h2>
   <md-divider></md-divider>
-  <div>
+  <h4 ng-if="todoList.length <= 0">You have no action items! 🎉</h4>
+  <div ng-if="todoList.length > 0">
     <div layout-gt-xs="row" layout="column">
       <md-input-container class="md-block" flex-gt-xs="60">
         <label for="query">Filter</label>
