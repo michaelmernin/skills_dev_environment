@@ -7,8 +7,8 @@
         <label for="query">Filter</label>
         <input type="text" id="query" ng-model="query">
       </md-input-container>
-      <div  layout="row">
-        <md-input-container flex-xs="80" class="md-block">
+      <div  layout="row" flex-gt-xs="40">
+        <md-input-container flex="80" class="md-block">
           <label>Order By</label>
           <md-select ng-model="orderByExpression">
             <md-option ng-repeat="orderByItem in orderByItems" value="{{ orderByItem.value }}" id="todoOrderValue">
