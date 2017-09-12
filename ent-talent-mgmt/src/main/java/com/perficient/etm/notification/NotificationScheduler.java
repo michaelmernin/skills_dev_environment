@@ -51,8 +51,10 @@ public class NotificationScheduler {
     @Value("${"+PROP_REMINDERTOSENTWEEKLY+"}")
     private int reminderToBeSentWeekly;
 
+// TODO: enable this when we add Annual review in future release.
+/*
     @Scheduled(cron = "0 1 1 * * ?")
-    public void notifyUsersForAnnualReview() {        
+    public void notifyUsersForAnnualReview() {
         List<User> users = getAll();
         users.stream().forEach(user ->{
            LocalDate now = LocalDate.now();
@@ -100,7 +102,7 @@ public class NotificationScheduler {
            });
         });
     }
-    
+*/
     @Scheduled(cron = "0 1 1 * * ?")
     public void notifyUsersForEngagementReview() {
        List<User> users = getAll();
