@@ -2,7 +2,8 @@
 
 angular.module('etmApp').controller('LanguageController', function ($scope, $translate, Language) {
   $scope.changeLanguage = function (languageKey) {
-    $translate.use(languageKey);
+    // TODO: once we decide to move forward with translation to other languages, enable this.
+    //$translate.use(languageKey);
   };
 
   Language.getAll().then(function (languages) {

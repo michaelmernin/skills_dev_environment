@@ -16,7 +16,8 @@ angular.module('etmApp', [
 
     // Update the language
     Language.getCurrent().then(function (language) {
-      $translate.use(language);
+      // TODO: once we decide to move forward with translation to other languages, enable this.
+      // $translate.use(language);
     });
   });
 

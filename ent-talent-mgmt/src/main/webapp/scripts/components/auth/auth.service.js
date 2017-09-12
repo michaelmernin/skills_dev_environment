@@ -11,7 +11,9 @@ angular.module('etmApp').factory('Auth', function Auth($rootScope, $state, $q, $
         Principal.identity(true).then(function (account) {
           // After the login the language will be changed to
           // the language selected by the user during his registration
-          $translate.use(account.langKey);
+          
+          // TODO: once we decide to move forward with translation to other languages, enable this.
+          //$translate.use(account.langKey);
         });
         deferred.resolve(data);
 
