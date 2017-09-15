@@ -98,10 +98,10 @@
         <p>{{reviewerFeedback.overallComment}}</p>
       </div>
     </div>
-    <div ng-show="showRevieweeRating()">
-      <div class="md-title" ng-show="revieweeFeedback.author">
-        Self Summary by: {{revieweeFeedback.author.firstName}} {{revieweeFeedback.author.lastName}}
-      </div>
+    <div class="md-title" ng-show="revieweeFeedback.author">
+      Self Summary by: {{revieweeFeedback.author.firstName}} {{revieweeFeedback.author.lastName}}
+    </div>
+    <div ng-show="revieweeFeedback.editable">
       <div ng-show="revieweeFeedback.editable" ng-form="revieweeOverall">
         <md-input-container class="md-block" flex ng-show="revieweeFeedback.editable">
           <label>Overall Comment</label>
@@ -109,18 +109,15 @@
             ng-model="revieweeFeedback.overallComment"
             md-maxlength="3000"
             ng-blur="updateFeedback(revieweeFeedback)"
-            name="comment"></textarea>
-          <div ng-messages="revieweeOverall.comment.$error" ng-if='revieweeOverall.comment.$dirty' ng-cloak>
-              <div ng-message="required">Comment is required</div>
-              <div ng-message="md-maxlength">
-                  <span translate="global.messages.validate.field.maxlength" translate-values="{name: '{{ 'Comment' | translate }}', number: '{{ '3000' | translate}}'}">Comment cannot be longer than 3000 characters.</span>
-              </div>
-            </div>
+            rows="5"
+            name="comment"
+            md-detect-hidden
+            ng-disabled="revieweeOverallDisabled"></textarea>
         </md-input-container>
       </div>
-      <div ng-show="!revieweeFeedback.editable">
-        <p>{{revieweeFeedback.overallComment}}</p>
-      </div>
+    </div>
+    <div ng-show="!revieweeFeedback.editable">
+      <p>{{revieweeFeedback.overallComment}}</p>
     </div>
   </div>
 </div>

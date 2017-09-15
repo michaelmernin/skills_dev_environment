@@ -137,6 +137,8 @@ public class ReviewService extends AbstractBaseService {
         final MutablePair<Long, Long> ids = new MutablePair<>();
         SecurityUtils.runAsSystem(userRepository, () -> {
             Feedback reviewerFeedback = feedbackService.addFeedback(review, review.getReviewer(), FeedbackType.REVIEWER);
+            Feedback selfFeedback = feedbackService.addFeedback(review, review.getReviewee(), FeedbackType.SELF);
+            ids.setLeft(selfFeedback.getId());
             ids.setRight(reviewerFeedback.getId());
         });
         return ids;

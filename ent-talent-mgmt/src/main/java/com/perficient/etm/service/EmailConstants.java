@@ -75,7 +75,7 @@ public final class EmailConstants {
         public static final String PEER_FEEDBACK_SUBMITTED = "peerFeedbackSubmitted";
         public static final String SELF_FEEDBACK_SUBMITTED = "selfFeedbackSubmitted";
         public static final String REVIEWER_FEEDBACK_SUBMITTED = "reviewerFeedbackSubmitted";
-        public static final String REVIEWEE_STATUS_CHANGED = "reviewStatusChanged";
+        public static final String REVIEW_STATUS_CHANGED = "reviewStatusChanged";
         public static final String NOTIFICATION_REVIEW_START = "notificationReviewStart";
         public static final String NOTIFICATION_REVIEW_COMPLETION = "notificationReviewCompletion";
         public static final String NOTIFICATION_REVIEW_LATE = "notificationReviewLate";

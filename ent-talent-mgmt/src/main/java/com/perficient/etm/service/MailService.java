@@ -414,9 +414,9 @@ public class MailService {
 	
 	public void sendReviewStatusChangedEmail(long reviewId, long reviewerId, long revieweeId, long directorId, long GMId, String status) {
         log.debug("Sending review '{}' status change (to '{}') email to reviewer '{}'",reviewId, status, reviewerId);
-        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.REVIEWEE_STATUS_CHANGED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
+        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.REVIEWEE_STATUS_CHANGED, EmailConstants.Templates.REVIEW_STATUS_CHANGED, getMapWithCurrentUser());
         log.debug("Sending review '{}' status change (to '{}') email to reviewee '{}'",reviewId, status, revieweeId);
-        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.REVIEWEE_STATUS_CHANGED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
+        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.REVIEWEE_STATUS_CHANGED, EmailConstants.Templates.REVIEW_STATUS_CHANGED, getMapWithCurrentUser());
         switch (status){
             case "DIRECTOR_APPROVAL":
                 log.debug("Sending request for approval email for review '{}' to director '{}' ", reviewId, directorId);
@@ -452,12 +452,12 @@ public class MailService {
     
     public void sendEngagementReviewCompletedEmail(long reviewId, long reviewerId, long revieweeId, long counselorId, String status) {
         log.debug("Sending review '{}' status change (to '{}') email to reviewer '{}'",reviewId, status, reviewerId);
-        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_COMPLETED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
+        sendEmail(reviewerId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_COMPLETED, EmailConstants.Templates.REVIEW_STATUS_CHANGED, getMapWithCurrentUser());
         log.debug("Sending review '{}' status change (to '{}') email to reviewee '{}'",reviewId, status, revieweeId);
-        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_COMPLETED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
+        sendEmail(revieweeId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_COMPLETED, EmailConstants.Templates.REVIEW_STATUS_CHANGED, getMapWithCurrentUser());
         if (counselorId != 0L && reviewerId != counselorId) {
             log.debug("Sending review '{}' status change (to '{}') email to counselor '{}'",reviewId, status, counselorId);
-            sendEmail(counselorId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_COMPLETED, EmailConstants.Templates.REVIEWEE_STATUS_CHANGED, getMapWithCurrentUser());
+            sendEmail(counselorId, reviewId, EmailConstants.Subjects.ENGAGEMENT_REVIEW_COMPLETED, EmailConstants.Templates.REVIEW_STATUS_CHANGED, getMapWithCurrentUser());
         }
     }
     

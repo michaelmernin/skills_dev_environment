@@ -12,6 +12,7 @@ angular.module('etmApp').controller('OverallController', function ($scope, $root
   $scope.getAvgScore = Evaluation.avgScore;
   $scope.overallErrors = false;
   $scope.reviewerOverallDisabled = false;
+  $scope.revieweeOverallDisabled = false;
 
   Principal.identity().then(function (account) {
     user = account;
@@ -48,6 +49,7 @@ angular.module('etmApp').controller('OverallController', function ($scope, $root
       $scope.revieweeFeedback = FeedbackUtil.getRevieweeFeedback(parentFeedback);
       if($scope.revieweeFeedback) {
         $scope.revieweeFeedback.editable = (user.login)? user.login == $scope.revieweeFeedback.author.login : false;
+        $scope.revieweeOverallDisabled = $scope.revieweeFeedback.feedbackStatus.id > FeedbackStatus.OPEN.id;
       }
 
       $scope.reviewerFeedback = FeedbackUtil.getReviewerFeedback(parentFeedback);
