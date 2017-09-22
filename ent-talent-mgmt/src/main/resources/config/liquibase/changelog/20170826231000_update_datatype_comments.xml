@@ -9,7 +9,7 @@
     <!--
         update comments for ER to have 3000 chars
     -->
-    <changeSet id="20170826224100" author="ahmed">
+    <changeSet id="20170826231000" author="ahmed">
 
         <modifyDataType tableName="T_GOAL"     columnName="reviewer_comment" newDataType="varchar(3000)"/>
         <modifyDataType tableName="T_GOAL"     columnName="employee_comment" newDataType="varchar(3000)"/>
