@@ -1,16 +1,10 @@
-<h2 class="etm-email-greeting">Hello <span th:text="${FIRST_NAME}"></span></h2>
+<h2 class="etm-email-greeting">Hello <span th:text="${FIRST_NAME}"></span>,</h2>
 
-<div th:switch="${REVIEW_STATUS}">
-  <div th:case="'GM Approval'">
-    <p><span th:text="${REVIEW_TYPE}">review</span> for <span th:text="${REVIEWEE_FULL_NAME}">reviewee</span> was moved to <span th:text="${REVIEW_STATUS}">a new status</span></p>
-  </div>
-  <div th:case="*">
-    <div th:switch="${ID}">
-      <div th:case="${REVIEWEE_ID}">
-        <p> <span th:text="${CURRENT_USER_FULL_NAME}">User</span> moved your <span th:text="${REVIEW_TYPE}">review</span> to <span th:text="${REVIEW_STATUS}">review</span></p>
-      </div>
-      <div th:case="${REVIEWER_ID}">
-        <p> <span th:text="${CURRENT_USER_FULL_NAME}">User</span> moved the <span th:text="${REVIEW_TYPE}">review</span> for <span th:text="${REVIEWEE_FULL_NAME}">reviewee</span> to <span th:text="${REVIEW_STATUS}">a new status</span></p>
+<div>
+  <div>
+    <div>
+      <div>
+        <p><span th:text="${CURRENT_USER_FULL_NAME}"></span> moved the <span th:text="${REVIEW_TYPE}"></span> for <span th:text="${REVIEWEE_FULL_NAME}"></span> to <span th:text="${REVIEW_STATUS}"></span>.</p>
       </div>
     </div>
   </div>

@@ -30,7 +30,7 @@ angular.module('etmApp').controller('GoalsController', function ($scope, $mdDial
       $scope.isReviewer = review.reviewer && user && user.id === review.reviewer.id;
       $scope.isCounselor = review.reviewee.counselor && user && user.id === review.reviewee.counselor.id && user.id !== review.reviewer.id;
       Feedback.query({reviewId: review.id}, function(feedbacks) {
-        $scope.isFeedbackSubmitted = feedbacks && feedbacks[0].feedbackStatus.id === 3;
+        $scope.isFeedbackSubmitted = feedbacks && feedbacks[0].feedbackStatus.id >= 3 && feedbacks[1].feedbackStatus.id >= 3;
       });
 
       Goal.query({reviewId: review.id}, function (goals) {
