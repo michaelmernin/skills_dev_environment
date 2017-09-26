@@ -1,0 +1,230 @@
+id;skillcategory_id;name
+1;1;Struts
+2;1;Responsive Design
+3;1;Responsive Framework: Bootstrap
+4;1;Responsive Framework: Foundation
+5;1;Spring Framework
+6;1;Spring Boot
+7;1;JPA / Hibernate
+8;1;REST
+9;1;SOAP
+10;1;J2EE: Servlet Technology (Tomcat / JSP)
+11;1;JSON
+12;1;Environment Sizing
+13;1;System Architecture
+14;1;Continuous Integration
+15;1;JVM Performance Tuning
+16;1;Ajax
+17;1;OSGi Services
+18;1;Release Management 
+19;1;Maven / Gradle
+20;1;XSL
+21;1;XML
+22;1;Selenium
+23;1;JUnit
+24;1;QTP / QTC
+25;2;JAVA 
+26;2;C / C++
+27;2;Objective C
+28;2;C# / ASP.NET
+29;2;VB.NET
+30;2;JavaScript
+31;2;Python
+32;2;Ruby
+33;2;Perl
+34;2;R
+35;2;PHP
+36;3;HTML5
+37;3;CSS
+38;3;SASS / LESS
+39;3;jQuery
+40;3;AngularJS
+41;3;ReactJS
+42;3;Emberjs
+43;3;Bootstrap
+44;4;Presenting to Client Stakeholders
+45;4;Presenting to Development Teams
+46;4;Blogging and Blog Contribution
+47;4;Conducting Webinars
+48;4;Conflict Negotiation and Resolution
+49;4;Understanding of Sales Process
+50;4;People Management
+51;4;Training People or Clients
+52;5;Software Project Leadership
+53;5;PMP Certification
+54;5;Six Sigma
+55;5;Certified SCRUM Master
+56;5;Certified SCRUM Product Owner
+57;5;Lead Project for Multiple Clients
+58;5;Lead Projects in parallel for Multiple Clients
+59;5;Can play most non-technical project roles
+60;5;Project or Requirements Documentation
+61;5;Project or Requirements Discovery
+62;5;Jira / Confluence
+63;5;Rally
+64;5;Version One
+65;5;Pivotal Tracker
+66;5;MS Project
+67;6;Mulesoft
+68;6;Apigee
+69;6;CA/Layer7
+70;6;Akana
+71;6;Tibco
+72;6;IIB
+73;6;Fuse / Camel
+74;6;Kafka
+75;6;MQ Server
+76;6;Active MQ
+77;7;IBM BPM
+78;7;Pega
+79;7;Appian
+80;8;AWS
+81;8;Google Cloud Platform
+82;8;IBM / Bluemix
+83;8;Pivotal
+84;8;Boomi
+85;8;Heroku
+86;8;Openshift
+87;8;OpenStack
+88;8;Azure
+89;9;Configuring AEM Dispatcher
+90;9;Configuring AEM Replication
+91;9;Certified AEM developer
+92;9;Segmentation / Personalization
+93;9;Fatwire
+94;9;Sitecore
+95;9;AEM - Adobe Experience Manager 6.0 or 6.1
+96;9;CQ 5
+97;9;Ektron CMS
+98;9;Endeca
+99;9;IBM Enterprise CMS
+100;9;SAP
+101;9;Teamsite
+102;9;FileNet
+103;9;Scene 7
+104;9;DotNetNuke
+105;9;Liferay
+106;9;Kentico
+107;9;Drupal / Acquia
+108;9;Share Point
+109;9;Alfresco
+110;9;Umbraco
+111;9;OpenText
+112;9;Joomla
+113;9;Documentum
+114;9;Wordpress 
+115;9;Websphere Portal Server
+116;9;Websphere Application Server
+117;9;LiveCycle
+118;10;Adobe Analytics / Site Catalyst
+119;10;Adobe Target
+120;10;Google Analytics
+121;10;Google Tag Manager
+122;10;Weblogic
+123;10;Visual Website Optimizer
+124;10;Monetate
+125;10;Optimizely
+126;10;Test and Target
+127;10;Webtrends
+128;10;Tableau
+129;10;Qlik
+130;10;TeaLeaf
+131;10;Qualtrics
+132;10;Tealium
+133;10;Business Analysis / SEO - Strategy Creation
+134;10;Technical Analytics Implementation- JavaScript
+135;10;Technical Implementation Plan Creation
+136;10;SEO General Skills
+137;10;SEO Clarity
+138;11;ATG
+139;11;Elastic Path
+140;11;Hybris
+141;11;Websphere Commerce Server
+142;11;Microsoft Commerce Server
+143;11;Magento
+144;12;Eloqua
+145;12;Marketo
+146;12;Silverpop
+147;12;Adobe Campaign / Neolane
+148;12;Pardot
+149;12;HubSpot
+150;12;IBM Unica
+151;12;Teradata Aprimo
+152;12;Act-On Software
+153;13;SalesForce
+154;13;Siebel
+155;13;Oracle CRM
+156;13;Microsoft Dynamics CRM
+157;14;Google Search Appliance (GSA)
+158;14;SOLR
+159;14;Lucene
+160;14;Endeca
+161;15;Oracle ERP
+162;15;Peoplesoft
+163;15;JD Edwards
+164;15;Hyperion
+165;16;iOS Native Application Development
+166;16;Android Native Application Development
+167;16;PhoneGap / Cordova
+168;16;Sencha
+169;16;Xamarin
+170;16;Adobe Digital Publishing Suite (DPS)
+171;16;Windows Universal Apps
+172;17;Oracle
+173;17;Mongo DB
+174;17;MySQL
+175;17;MS SQL Server
+176;17;PostgreSQL
+177;17;Redis
+178;17;IBM DB2
+179;17;Cassandra
+180;18;IBM Cognos
+181;18;Business Objects
+182;18;Watson
+183;18;Spark
+184;18;Domo
+185;18;Oracle Hyperion
+186;18;SAP NetWeaver BI
+187;18;Teradata
+188;18;SAS
+189;18;Crystal Reports
+190;18;SPSS
+191;18;Informatica
+192;18;OBIEE
+193;18;Hadoop
+194;18;SAP Hana
+195;18;Elasticsearch
+196;18;Splunk
+197;19;UX/UI Design
+198;19;Brand Strategy
+199;19;InDesign
+200;19;Photoshop
+201;19;Illustrator
+202;19;Video Production
+203;19;After Effects
+204;19;Edge
+205;19;Graphics / Layout
+206;19;Photography
+207;19;Audio Production
+208;19;Sound Design
+209;19;Music Production
+210;19;Art Direction
+211;20;Linux Server
+212;20;Windows Server
+213;20;Amazon EC2
+214;20;Amazon CloudFront
+215;20;Apache Web Server
+216;20;Akamai
+217;20;SAML / SSO
+218;20;Active Directory / LDAP
+219;20;Linux Shell Scripting
+220;20;Windows PowerShell
+221;20;System Firewalls
+222;20;Network Firewalls
+223;20;Networking e.g. Vlans
+224;20;Load Balancing Concepts
+225;20;OS Performance and Tuning
+226;20;Application Monitoring
+227;20;System Monitoring
+228;20;Security Best Practices
+229;20;Log Aggrigation
