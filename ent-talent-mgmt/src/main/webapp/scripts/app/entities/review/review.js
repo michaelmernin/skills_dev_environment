@@ -9,16 +9,22 @@ angular.module('etmApp').config(function ($stateProvider) {
       pageTitle: 'review.home.title'
     },
     views: {
+    // TODO: remove this unused template and controller
+    /*
       'content@': {
         templateUrl: 'scripts/app/entities/review/reviews.html',
         controller: 'ReviewController'
       }
+     */
     },
     resolve: {
+    // TODO: remove this unused template and controller
+    /*
       translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
         $translatePartialLoader.addPart('review');
         return $translate.refresh();
       }]
+    */
     }
   }).state('review.new', {
     parent: 'review',

@@ -2,6 +2,8 @@
 
 angular.module('etmApp')
     .controller('ReviewController', function ($scope, Review, ReviewType, ReviewStatus, User) {
+    // TODO: remove this unused controller
+    /*
         $scope.reviews = [];
         $scope.reviewtypes = ReviewType.query();
         $scope.reviewstatuss = ReviewStatus.query();
@@ -48,4 +50,5 @@ angular.module('etmApp')
         $scope.clear = function () {
             $scope.review = {title: null, startDate: null, endDate: null, client: null, project: null, role: null, responsibilities: null, rating: null, id: null};
         };
+     */
     });
