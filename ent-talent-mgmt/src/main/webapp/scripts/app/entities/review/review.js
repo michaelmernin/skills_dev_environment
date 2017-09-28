@@ -18,13 +18,10 @@ angular.module('etmApp').config(function ($stateProvider) {
      */
     },
     resolve: {
-    // TODO: remove this unused template and controller
-    /*
       translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
         $translatePartialLoader.addPart('review');
         return $translate.refresh();
       }]
-    */
     }
   }).state('review.new', {
     parent: 'review',
