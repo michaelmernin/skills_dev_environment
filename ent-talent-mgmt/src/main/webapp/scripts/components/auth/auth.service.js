@@ -14,7 +14,6 @@ angular.module('etmApp').factory('Auth', function Auth($rootScope, $state, $q, $
           
           // TODO: once we decide to move forward with translation to other languages, enable this.
           //$translate.use(account.langKey);
-          $translate.use('en'); // force use en
         });
         deferred.resolve(data);
 

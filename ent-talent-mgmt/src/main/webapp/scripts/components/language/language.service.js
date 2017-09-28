@@ -4,7 +4,6 @@ angular.module('etmApp').factory('Language', function ($q, $http, $translate, LA
   return {
     getCurrent: function () {
       var deferred = $q.defer();
-      /*
       var language = $translate.storage().get('NG_TRANSLATE_LANG_KEY');
 
       if (angular.isUndefined(language)) {
@@ -12,9 +11,6 @@ angular.module('etmApp').factory('Language', function ($q, $http, $translate, LA
       }
 
       deferred.resolve(language);
-      */
-      // TODO: this change is for first release to always use en. once we decide to use other translation we can uncomment the commented code avove
-      deferred.resolve('en');
       return deferred.promise;
     },
     getAll: function () {
