@@ -12,7 +12,7 @@
           <!-- // REVIEW TYPE -->
 
           <!-- REVIEWEE -->
-          <md-autocomplete 
+          <md-autocomplete
             flex-gt-sm="50"
             md-no-cache="true"
             md-selected-item="selectedItem"
@@ -23,7 +23,8 @@
             name="reviewee"
             md-floating-label="Reviewee (type to search)"
             md-items="user in getMatches(searchText)"
-            ng-required="true">
+            ng-required="true"
+            md-require-match="true">
             <md-item-template>
               <span md-highlight-text="searchText">{{user.firstName}} {{user.lastName}}</span>
             </md-item-template>
@@ -35,7 +36,7 @@
             </div>
           </md-autocomplete>
           <!-- //REVIEWER -->
-          
+
           <!-- PROJECT -->
           <md-input-container class="md-block" flex-gt-sm="50">
            <label translate="review.project">Project</label>
@@ -75,7 +76,7 @@
           <!-- //DATES -->
           <!-- <md-input-container class="md-block" flex-gt-sm="25">
             <label>Start Date</label>
-            <input 
+            <input
               type="date"
               name="startDate"
               ng-disabled="disableStartEndDate"
@@ -89,7 +90,7 @@
           </md-input-container>
           <md-input-container class="md-block" flex-gt-sm="25">
             <label>End Date</label>
-            <input 
+            <input
               type="date"
               name="endtDate"
               ng-disabled="disableStartEndDate"
