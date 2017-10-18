@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -86,6 +87,7 @@ public class TodoResourceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @WithUserDetails("dev.user7")
     public void getTodoList() throws Exception {
         // Start a review process to generate tasks
@@ -101,6 +103,7 @@ public class TodoResourceTest extends SpringAppTest {
     }
     
     @Test
+    @Ignore
     @WithUserDetails("dev.user7")
     public void getActiveTodo() throws Exception {
         // Start a review process to generate tasks

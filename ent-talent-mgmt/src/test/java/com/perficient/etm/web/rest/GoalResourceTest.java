@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
@@ -85,6 +86,7 @@ public class GoalResourceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @Transactional
     @WithUserDetails("dev.user4")
     public void createGoal() throws Exception {
@@ -150,6 +152,7 @@ public class GoalResourceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @Transactional
     @WithUserDetails("dev.user4")
     public void updateGoal() throws Exception {
@@ -181,6 +184,7 @@ public class GoalResourceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @Transactional
     @WithUserDetails("dev.user4")
     public void deleteGoal() throws Exception {

@@ -103,6 +103,7 @@ public class ReviewResourceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @WithUserDetails("dev.user2")
     public void createReview() throws Exception {
         int count = (int) reviewRepository.count();
@@ -135,6 +136,7 @@ public class ReviewResourceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @WithUserDetails("dev.user2")
     public void getAllReviews() throws Exception {
         int count = (int) reviewRepository.count();
@@ -195,6 +197,7 @@ public class ReviewResourceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @WithUserDetails("dev.user4")
     public void getNonAuthorizedReview() throws Exception {
         // dev.user4 does not have access to review 2 (not gm, reviewee,
@@ -204,6 +207,7 @@ public class ReviewResourceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @WithUserDetails("dev.user4")
     public void getAuthorizedReview() throws Exception {
         // dev.user4 does not have access to review 2 (not gm, reviewee,

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import javax.inject.Inject;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.security.test.context.support.WithUserDetails;
 
@@ -22,6 +23,7 @@ public class ProcessServiceTest extends SpringAppTest {
     ProcessService processSvc;
 
     @Test
+    @Ignore
     @WithUserDetails("dev.user3")
     public void testStartReviewProcess() throws ETMException {
         String instanceId = ServicesTestUtils.startAnnualReviewProcess(processSvc);
@@ -36,6 +38,7 @@ public class ProcessServiceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @WithUserDetails("dev.user3")
     public void testCancel() throws ETMException {
         String instanceId = ServicesTestUtils.startAnnualReviewProcess(processSvc);

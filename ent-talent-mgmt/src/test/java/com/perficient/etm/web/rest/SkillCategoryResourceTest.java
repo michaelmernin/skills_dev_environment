@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
@@ -68,6 +69,7 @@ public class SkillCategoryResourceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @Transactional
     @WithUserDetails("dev.user1")
     public void getAllSkillsForUser() throws Exception {

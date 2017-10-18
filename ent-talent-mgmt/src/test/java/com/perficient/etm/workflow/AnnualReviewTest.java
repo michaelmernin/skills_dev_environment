@@ -170,6 +170,7 @@ public class AnnualReviewTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @WithUserDetails("dev.user2")
     public void testReviewersReject() {
         Map<String,Object> variables = getProcessVariables();

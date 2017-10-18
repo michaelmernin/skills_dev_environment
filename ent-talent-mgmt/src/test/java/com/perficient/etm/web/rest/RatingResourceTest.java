@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
@@ -106,6 +107,7 @@ public class RatingResourceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @Transactional
     @WithUserDetails("dev.user8")
     public void getAllRatings() throws Exception {
@@ -124,6 +126,7 @@ public class RatingResourceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @Transactional
     @WithUserDetails("dev.user8")
     public void getRating() throws Exception {
@@ -152,6 +155,7 @@ public class RatingResourceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @Transactional
     @WithUserDetails("dev.user8")
     public void updateRating() throws Exception {

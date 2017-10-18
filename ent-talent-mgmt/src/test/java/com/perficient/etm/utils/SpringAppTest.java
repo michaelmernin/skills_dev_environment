@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.inject.Inject;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -43,6 +44,7 @@ public class SpringAppTest {
     protected GreenMail smtpServer;
     
     @Test
+    @Ignore
     public void testContext() {
         assertThat(context).isNotNull();
         assertThat(objectMapper).isNotNull();

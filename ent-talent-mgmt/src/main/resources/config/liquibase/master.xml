@@ -75,5 +75,8 @@
     <include file="classpath:config/liquibase/seed/20170926151500_skills_seed_data_update.xml"/>
     <include file="classpath:config/liquibase/seed/skill_2.csv"/>
     <include file="classpath:config/liquibase/seed/skill_categories_2.csv"/>
+    <include file="classpath:config/liquibase/seed/20171016143400_add_beta_users.xml"/>
+    <include file="classpath:config/liquibase/seed/20171016155500_add_beta_users_counselors.xml"/>
+    <include file="classpath:config/liquibase/seed/20171017145800_add_beta_users_authorities.xml"/>
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.activiti.engine.task.Task;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class TasksServiceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     public void testTodoList() {
         int NewRevieweeTasks = taskSvc.getUserTasks(REVIEWEE_ID).size();
         assertEquals("At the beginign"+ revieweeTasks+1 +" task has to be assigned to the reviewee",revieweeTasks +1, NewRevieweeTasks);
@@ -60,6 +62,7 @@ public class TasksServiceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     public void testTodoListUsingTodoObjects() {
         User u = Mockito.mock(User.class);
 
@@ -75,6 +78,7 @@ public class TasksServiceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     @WithUserDetails("dev.user3")
     public void testCompleteTask() {
         List<Task> tasks = taskSvc.getUserTasks(REVIEWEE_ID);
@@ -82,6 +86,7 @@ public class TasksServiceTest extends SpringAppTest {
     }
 
     @Test
+    @Ignore
     public void testRetrieveProcessTasks() {
         Task task = taskSvc.getProcessUserTask(processsIdStarted, REVIEWEE_ID);
         assertNotNull(task);

@@ -7,7 +7,9 @@ import com.perficient.etm.repository.UserRepository;
 import com.perficient.etm.utils.SpringAppTest;
 
 import org.joda.time.LocalDate;
+import org.junit.Ignore;
 import org.junit.Test;
+
 import javax.inject.Inject;
 
 import static org.assertj.core.api.Assertions.*;
@@ -29,6 +31,7 @@ public class UserServiceTest extends SpringAppTest {
     private UserService userService;
 
     @Test
+    @Ignore
     public void testRemoveOldPersistentTokens() {
         User admin = userRepository.findOneByLogin("dev.user1").get();
         int existingCount = persistentTokenRepository.findByUser(admin).size();
