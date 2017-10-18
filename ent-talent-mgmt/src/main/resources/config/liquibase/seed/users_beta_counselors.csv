@@ -7,12 +7,12 @@ id;login;counselor_id;created_by
 8;blake.barkley;137;system
 9;wallace.bartlett;139;system
 10;jeremy.bartlow;140;system
-11;steve.bogner;135;system
-12;benny.britto;141;system
+11;steven.bogner;135;system
+12;nesajosbenny.britto;141;system
 13;quynh.bui;141;system
 14;bharat.chandorkar;138;system
 15;yvonne.chen;138;system
-16;val.christopher;140;system
+16;valentine.christopher;140;system
 17;eddie.cisneros;24;system
 18;varghese.daniel;140;system
 19;tina.davis;138;system
@@ -28,7 +28,7 @@ id;login;counselor_id;created_by
 29;rana.farrag;145;system
 30;diane.fontaine;137;system
 31;tim.fontaine;145;system
-32;latha.gadey;84;system
+32;sumalatha.gadey;84;system
 33;mike.garcia;137;system
 34;sujiyit.george;140;system
 35;pierre.gervois;84;system
@@ -73,8 +73,8 @@ id;login;counselor_id;created_by
 74;raghu.syama;144;system
 75;anthony.taliaferro;141;system
 76;gopi.tokala;137;system
-77;ramanujam.vangipuram;139;system
-78;art.varrassi;46;system
+77;r.vangipuram;139;system
+78;arthur.varrassi;46;system
 79;lakshmi.venkatachalam;135;system
 80;patrick.victory;143;system
 81;kevin.vongkaseum;147;system
@@ -87,7 +87,7 @@ id;login;counselor_id;created_by
 88;gaurangi.bhangale;90;system
 89;paul.bjorkstrand;90;system
 90;david.brooks;148;system
-91;harikanthan.chellappan;106;system
+91;h.chellappan;106;system
 92;pam.clemens;106;system
 93;tom.craft;148;system
 94;tea.dejanovic;101;system
@@ -104,9 +104,9 @@ id;login;counselor_id;created_by
 105;ahmed.musallam;90;system
 106;kimberly.nelson;148;system
 107;avinab.rajbhandary;90;system
-108;jeff.rivkin;148;system
+108;jeffrey.rivkin;148;system
 109;sarah.rosenberg;102;system
-110;jennifer.rostal;101;system
+110;jennifer.semon;101;system
 111;tom.sebastian;106;system
 112;nirajan.shrestha;106;system
 113;craig.smith;90;system
@@ -117,7 +117,7 @@ id;login;counselor_id;created_by
 118;jeff.brown;149;system
 119;daniel.dorgan;149;system
 120;erik.enger;149;system
-121;hector.fernandez rosas;149;system
+121;hector.fernandez;149;system
 122;justin.fick;149;system
 123;justin.orseno;149;system
 124;brian.siefferman;149;system
