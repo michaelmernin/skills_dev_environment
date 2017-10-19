@@ -19,6 +19,9 @@ public class ReviewAuthorizer extends Authorizer {
                 return isReviewer(optionalReview, login)
                         || isReviewee(optionalReview, login)
                         || isCounselor(optionalReview, login)
+                        || isGeneralManager(optionalReview, login)
+                        || isDirector(optionalReview, login)
+                        || isPeer(optionalReview, login)
                         || isSystem(login);
             }).orElse(false);
         }).orElse(true);
