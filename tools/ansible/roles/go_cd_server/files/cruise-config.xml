@@ -7,10 +7,11 @@
           <base value="OU=Employees,DC=perficient,DC=com" />
         </bases>
       </ldap>
-      <passwordFile path="/etc/go/passwd" />
       <roles>
         <role name="Viewer">
           <users>
+            <user>operator</user>
+            <user>admin</user>
             <user>Simon.Montague</user>
             <user>ahmed.musallam</user>
             <user>craig.smith</user>
@@ -26,18 +27,24 @@
         </role>
         <role name="Operator">
           <users>
+            <user>operator</user>
             <user>ahmed.musallam</user>
+            <user>michael.kaplan</user>
+            <user>david.brooks</user>
+            <user>brian.madison</user>
           </users>
         </role>
       </roles>
       <admins>
+        <user>admin</user>
         <user>david.brooks</user>
         <user>ahmed.musallam</user>
+        <user>brian.madison</user>
       </admins>
     </security>
     <mailhost hostname="mail2.perficient.com" port="25" tls="false" from="etm-go@perficient.com" admin="ahmed.musallam@perficient.com" />
   </server>
-  <pipelines group="etm">
+  <pipelines group="etm-master">
     <authorization>
       <view>
         <user>ahmed.musallam</user>
@@ -49,8 +56,11 @@
       </operate>
     </authorization>
     <pipeline name="etm-build" labeltemplate="${COUNT}-${git[:7]}" isLocked="false">
+      <params>
+        <param name="branchName">master</param>
+      </params>
       <materials>
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git" materialName="git">
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git">
           <filter>
             <ignore pattern="docs/**/*" />
             <ignore pattern="tools/**/*" />
@@ -123,10 +133,11 @@
       <params>
         <param name="inventory">test</param>
         <param name="url">https://stlerappdev.perficient.com:8443</param>
+        <param name="branchName">master</param>
       </params>
       <materials>
         <pipeline pipelineName="etm-build" stageName="build" />
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git">
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git">
           <filter>
             <ignore pattern="ent-talent-mgmt/**/*" />
             <ignore pattern="docs/**/*" />
@@ -138,20 +149,22 @@
     <pipeline name="etm-acceptance-test" labeltemplate="${etm-deploy-test}" isLocked="false" template="etm-acceptance">
       <params>
         <param name="environment">test</param>
+        <param name="branchName">master</param>
       </params>
       <materials>
         <pipeline pipelineName="etm-deploy-test" stageName="verify" />
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" />
       </materials>
     </pipeline>
     <pipeline name="etm-deploy-uat" labeltemplate="${etm-build}" isLocked="true" template="etm-deploy-manual">
       <params>
         <param name="inventory">uat</param>
         <param name="url">https://stlerappuat.perficient.com:8443</param>
+        <param name="branchName">master</param>
       </params>
       <materials>
         <pipeline pipelineName="etm-build" stageName="build" />
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git">
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}">
           <filter>
             <ignore pattern="ent-talent-mgmt/**/*" />
             <ignore pattern="docs/**/*" />
@@ -164,16 +177,137 @@
       <params>
         <param name="inventory">prod</param>
         <param name="url">https://stlerapp.perficient.com</param>
+        <param name="branchName">master</param>
       </params>
       <materials>
         <pipeline pipelineName="etm-build" stageName="build" />
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git">
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}">
           <filter>
             <ignore pattern="ent-talent-mgmt/**/*" />
             <ignore pattern="docs/**/*" />
             <ignore pattern="tools/ssl/**/*" />
           </filter>
         </git>
+      </materials>
+    </pipeline>
+  </pipelines>
+  <pipelines group="etm-release">
+    <pipeline name="etm-release-build" labeltemplate="${COUNT}-${git[:7]}" isLocked="false">
+      <params>
+        <param name="branchName">1.0.x</param>
+      </params>
+      <materials>
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git">
+          <filter>
+            <ignore pattern="docs/**/*" />
+            <ignore pattern="tools/**/*" />
+          </filter>
+        </git>
+      </materials>
+      <stage name="install" cleanWorkingDir="true">
+        <approval type="manual" />
+        <jobs>
+          <job name="yarn_bower">
+            <tasks>
+              <exec command="yarn" workingdir="ent-talent-mgmt">
+                <arg>install</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bower" workingdir="ent-talent-mgmt">
+                <arg>install</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="test" fetchMaterials="false">
+        <jobs>
+          <job name="unit-test">
+            <tasks>
+              <exec command="./gradlew" workingdir="ent-talent-mgmt">
+                <arg>test</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <test src="ent-talent-mgmt/build/test-results/*.xml" dest="etm-test-results" />
+            </artifacts>
+          </job>
+          <job name="ui-test">
+            <tasks>
+              <exec command="grunt" workingdir="ent-talent-mgmt">
+                <arg>test</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <test src="ent-talent-mgmt/build/js-test-reports/*.xml" dest="etm-test-results" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="build" fetchMaterials="false">
+        <jobs>
+          <job name="package">
+            <tasks>
+              <exec command="./gradlew" workingdir="ent-talent-mgmt">
+                <arg>-Pprod</arg>
+                <arg>bootRepackage</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <artifacts>
+              <artifact src="ent-talent-mgmt/build/libs/*.war" dest="etm-wars" />
+              <artifact src="ent-talent-mgmt/build/libs/*.war.original" dest="etm-wars" />
+              <artifact src="ent-talent-mgmt/build/libs/*.jar" dest="etm-jars" />
+              <artifact src="ent-talent-mgmt/build/libs/*.jar.original" dest="etm-jars" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="etm-release-deploy-test" labeltemplate="${etm-release-build}" isLocked="true" template="etm-release-deploy-auto">
+      <params>
+        <param name="inventory">test</param>
+        <param name="url">https://stlerappdev.perficient.com:8443</param>
+        <param name="branchName">1.0.x</param>
+      </params>
+      <materials>
+        <pipeline pipelineName="etm-release-build" stageName="build" materialName="etm-release-build" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git" />
+      </materials>
+    </pipeline>
+    <pipeline name="etm-release-acceptance-test" labeltemplate="${etm-release-deploy-test}" isLocked="false" template="etm-acceptance">
+      <params>
+        <param name="environment">test</param>
+        <param name="branchName">1.0.x</param>
+      </params>
+      <materials>
+        <pipeline pipelineName="etm-release-deploy-test" stageName="verify" materialName="etm-release-deploy-test" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git" />
+      </materials>
+    </pipeline>
+    <pipeline name="etm-release-deploy-uat" labeltemplate="${etm-release-build}" isLocked="true" template="etm-release-deploy-manual">
+      <params>
+        <param name="inventory">uat</param>
+        <param name="url">https://stlerappuat.perficient.com:8443</param>
+        <param name="branchName">1.0.x</param>
+      </params>
+      <materials>
+        <pipeline pipelineName="etm-release-build" stageName="build" materialName="etm-release-build" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git" />
+      </materials>
+    </pipeline>
+    <pipeline name="etm-release-deploy-prod" labeltemplate="${etm-release-build}" isLocked="true" template="etm-release-deploy-manual">
+      <params>
+        <param name="inventory">prod</param>
+        <param name="url">https://stlerapp.perficient.com</param>
+        <param name="branchName">1.0.x</param>
+      </params>
+      <materials>
+        <pipeline pipelineName="etm-release-build" stageName="build" materialName="etm-release-build" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git" />
       </materials>
     </pipeline>
   </pipelines>
@@ -280,9 +414,77 @@
         </jobs>
       </stage>
     </pipeline>
+    <pipeline name="etm-release-deploy-manual">
+      <stage name="deploy">
+        <approval type="manual" />
+        <jobs>
+          <job name="server">
+            <tasks>
+              <fetchartifact pipeline="etm-release-build" stage="build" job="package" srcdir="etm-wars">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="tools/ansible">
+                <arg>-c</arg>
+                <arg>ansible-playbook appservers.yml -i #{inventory} -t ci_deploy -e "artifact_dir=../../etm-wars" --vault-password-file ~/.ansible/vault_key.txt</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="verify" fetchMaterials="false">
+        <jobs>
+          <job name="started">
+            <tasks>
+              <exec command="wget">
+                <arg>--retry-connrefused</arg>
+                <arg>--waitretry=60</arg>
+                <arg>--tries=20</arg>
+                <arg>--no-check-certificate</arg>
+                <arg>#{url}</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="etm-release-deploy-auto">
+      <stage name="deploy">
+        <jobs>
+          <job name="server">
+            <tasks>
+              <fetchartifact pipeline="etm-release-build" stage="build" job="package" srcdir="etm-wars">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="/bin/bash" workingdir="tools/ansible">
+                <arg>-c</arg>
+                <arg>ansible-playbook -v appservers.yml -i #{inventory} -t ci_deploy -e "artifact_dir=../../etm-wars" --vault-password-file ~/.ansible/vault_key.txt</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="verify" fetchMaterials="false">
+        <jobs>
+          <job name="started">
+            <tasks>
+              <exec command="wget">
+                <arg>--retry-connrefused</arg>
+                <arg>--waitretry=60</arg>
+                <arg>--tries=20</arg>
+                <arg>--no-check-certificate</arg>
+                <arg>#{url}</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
   </templates>
   <agents>
     <agent hostname="STLERAppDEV.perficient.com" ipaddress="10.128.6.95" uuid="910bf32a-b774-482e-9f5f-3d74463c81be" />
   </agents>
 </cruise>
-
