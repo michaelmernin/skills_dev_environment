@@ -153,7 +153,7 @@
       </params>
       <materials>
         <pipeline pipelineName="etm-deploy-test" stageName="verify" />
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git" />
       </materials>
     </pipeline>
     <pipeline name="etm-deploy-uat" labeltemplate="${etm-build}" isLocked="true" template="etm-deploy-manual">
@@ -164,7 +164,7 @@
       </params>
       <materials>
         <pipeline pipelineName="etm-build" stageName="build" />
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}">
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git">
           <filter>
             <ignore pattern="ent-talent-mgmt/**/*" />
             <ignore pattern="docs/**/*" />
@@ -181,7 +181,7 @@
       </params>
       <materials>
         <pipeline pipelineName="etm-build" stageName="build" />
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}">
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git">
           <filter>
             <ignore pattern="ent-talent-mgmt/**/*" />
             <ignore pattern="docs/**/*" />
@@ -275,7 +275,13 @@
       </params>
       <materials>
         <pipeline pipelineName="etm-release-build" stageName="build" materialName="etm-release-build" />
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git">
+          <filter>
+            <ignore pattern="ent-talent-mgmt/**/*" />
+            <ignore pattern="docs/**/*" />
+            <ignore pattern="tools/ssl/**/*" />
+          </filter>
+        </git>
       </materials>
     </pipeline>
     <pipeline name="etm-release-acceptance-test" labeltemplate="${etm-release-deploy-test}" isLocked="false" template="etm-acceptance">
@@ -296,7 +302,13 @@
       </params>
       <materials>
         <pipeline pipelineName="etm-release-build" stageName="build" materialName="etm-release-build" />
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git">
+          <filter>
+            <ignore pattern="ent-talent-mgmt/**/*" />
+            <ignore pattern="docs/**/*" />
+            <ignore pattern="tools/ssl/**/*" />
+          </filter>
+        </git>
       </materials>
     </pipeline>
     <pipeline name="etm-release-deploy-prod" labeltemplate="${etm-release-build}" isLocked="true" template="etm-release-deploy-manual">
@@ -307,7 +319,13 @@
       </params>
       <materials>
         <pipeline pipelineName="etm-release-build" stageName="build" materialName="etm-release-build" />
-        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git" />
+        <git url="git@github.com:Perficient/ent-talent-mgmt.git" branch="#{branchName}" materialName="git">
+          <filter>
+            <ignore pattern="ent-talent-mgmt/**/*" />
+            <ignore pattern="docs/**/*" />
+            <ignore pattern="tools/ssl/**/*" />
+          </filter>
+        </git>
       </materials>
     </pipeline>
   </pipelines>
