@@ -37,14 +37,14 @@ var GoalTabPage = function() {
     //target date input elements
     targetDateLabel: element(by.translateKey('review.annual.goals.targetDate')),
     targetDateInput: element(by.name('targetDate')),
-    targetDateError: element(by.xpath('/html/body/div[3]/md-dialog/form/md-dialog-content/div/div[1]/md-input-container/div[2]/div/span')),
+    targetDateError: element(by.xpath('/html/body/div[4]/md-dialog/form/md-dialog-content/div/div[1]/md-input-container/div[2]/div/span')),
 
 
     // competion date input elements
     completeInputButton: element(by.model('switchCompletion')),
     completionDateLabel: element(by.translateKey('review.annual.goals.completionDate')),
     completionDateInput: element(by.model('goal.completionDate')),
-    completionDateError: element(by.xpath('/html/body/div[3]/md-dialog/form/md-dialog-content/div/div[2]/md-input-container/div[2]/div/span')),
+    completionDateError: element(by.xpath('/html/body/div[4]/md-dialog/form/md-dialog-content/div/div[2]/md-input-container/div[2]/div/span')),
 
 
     // status notes input elements
@@ -60,7 +60,7 @@ var GoalTabPage = function() {
     cancelBtn: element(by.translateKey('review.annual.goals.cancel')),
     saveBtn: element(by.translateKey('review.annual.goals.save')),
 
-    confirmDeleteBtn: element(by.xpath('/html/body/div[3]/md-dialog/md-dialog-actions/button[2]')),
+    confirmDeleteBtn: element(by.xpath('/html/body/div[4]/md-dialog/md-dialog-actions/button[2]')),
 
 
   };
@@ -180,11 +180,8 @@ var GoalTabPage = function() {
     return element(by.repeater("goal in goals").row(index));
   }
 
-
   this.deleteGoal = function(itemNum) {
-
-    var deleteButton = getGoal(itemNum).element(by.css('button:nth-child(2)'));
-
+    var deleteButton = getGoal(itemNum).element(by.css('button.md-icon-button.md-secondary'));
     browser.wait(function() {
       return deleteButton.isPresent();
     }, 10000);
@@ -195,7 +192,6 @@ var GoalTabPage = function() {
   };
 
   this.markGoalComplete = function(itemNum, completionDate) {
-
     var selectedGoal = getGoal(itemNum).element(by.css('button:nth-child(1)'));
 
     selectedGoal.click();
@@ -203,12 +199,10 @@ var GoalTabPage = function() {
     this.ui.completionDateInput.clear();
     this.ui.completionDateInput.sendKeys(completionDate);
     this.cancelForm();
-
   };
 
   this.saveForm = function() {
     this.ui.saveBtn.click();
-
   };
 
   this.cancelForm = function() {

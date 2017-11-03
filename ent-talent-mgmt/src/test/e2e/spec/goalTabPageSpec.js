@@ -15,9 +15,9 @@ describe('Enterprise Talent Management', function () {
     beforeAll(function () {
       loginPage = new LoginPage();
       loginPage.get();
-      loginPage.login(userData.users.counselor);
+      loginPage.login(userData.users.colleague);
       goalTabPage = new GoalTabPage();
-      goalTabPage.get(8);
+      goalTabPage.get(1);
     });
 
     it('should be displayed when Goal tab is clicked', function () {
@@ -27,7 +27,6 @@ describe('Enterprise Talent Management', function () {
     });
 
     it(' - Goal Form should require Goal name to be entered', function(){
-
       goalTabPage.ui.addGoalBtn.click();
       goalTabPage.saveForm();
 
@@ -37,27 +36,18 @@ describe('Enterprise Talent Management', function () {
 
 
     it(' - Goal Form  should provide character count for Goal name, Goal Description, and Status Note fields', function(){
-
       goalTabPage.ui.addGoalBtn.click();
+      var charCount = '20 / 250';
 
       goalTabPage.goalTextArea = '12345678901234567890';
-      expect(goalTabPage.ui.goalCharCounter.getText()).toBe('20/250');
+      expect(goalTabPage.ui.goalCharCounter.getText()).toBe(charCount);
 
       goalTabPage.descriptionTextArea = '12345678901234567890';
-      expect(goalTabPage.ui.descriptionCharCounter.getText()).toBe('20/250');
+      expect(goalTabPage.ui.descriptionCharCounter.getText()).toBe(charCount);
 
       goalTabPage.statusTextArea = '12345678901234567890';
-      expect(goalTabPage.ui.statusCharCounter.getText()).toBe('20/250');
+      expect(goalTabPage.ui.statusCharCounter.getText()).toBe(charCount);
       goalTabPage.saveForm();
-    });
-
-    // TODO: the following tests are currently failing, has this functionality changed?
-    xit(' - Goal Form should require Target date to be a valid date', function(){
-      goalTabPage.ui.addGoalBtn.click();
-      goalTabPage.targetDateInput = 'abcdefgasdfasdf';
-      goalTabPage.saveForm();
-      expect(goalTabPage.ui.targetDateError.getText()).toBe('Please select a valid Target Date.');
-      goalTabPage.cancelForm();
     });
 
     xit(' - Goal Form should allow user to mark a goal complete', function(){
@@ -80,8 +70,9 @@ describe('Enterprise Talent Management', function () {
       expect(completionCircle.getAttribute('class')).toContain('fa-circle-o');
     });
 
-    xit('should allow users to delete goal', function () {
-      goalTabPage.deleteGoal(0);
+    it('should allow users to delete goal', function () {
+      goalTabPage.deleteGoal(1);
+      expect()
     });
 
     afterAll(function() {
