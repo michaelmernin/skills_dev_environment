@@ -4,8 +4,7 @@
 var PeerReviewPage = function () {
   this.ui = {
     peerTabContainer: element(by.css('md-tab-item:nth-child(1)')),
-    peerSearchInput: element(by.model('$mdAutocompleteCtrl.scope.searchText')),
-
+    peerSearchInput : this.reviewForm.element(by.name('peerSearch')).element(by.css('input')),
     removePeerModaldialog: element(by.tagName('md-dialog')),
     cancelButton: element(by.tagName('md-dialog-actions')).element(by.cssContainingText('button', 'Cancel')),
     removeButton: element(by.tagName('md-dialog-actions')).element(by.cssContainingText('button', 'Remove')),

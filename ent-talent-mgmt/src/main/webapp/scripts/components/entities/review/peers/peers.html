@@ -1,5 +1,5 @@
 <div ng-cloak>
-  <md-autocomplete ng-if="isReviewee || isReviewer" md-no-cache="true" md-selected-item="selectedItem" md-item-text="user.firstName + ' ' + user.lastName" md-selected-item-change="peerSelected(user)" md-search-text="searchText" md-min-length="3" placeholder="Type here to search for peers..." md-items="user in getMatches(searchText)">
+  <md-autocomplete ng-if="isReviewee || isReviewer" md-no-cache="true" name="peerSearch" md-selected-item="selectedItem" md-item-text="user.firstName + ' ' + user.lastName" md-selected-item-change="peerSelected(user)" md-search-text="searchText" md-min-length="3" placeholder="Type here to search for peers..." md-items="user in getMatches(searchText)">
     <md-item-template>
       <span md-highlight-text="searchText">{{user.firstName}} {{user.lastName}}</span>
     </md-item-template>
@@ -17,4 +17,3 @@
     <md-divider></md-divider>
   </md-list-item>
 </div>
-  
