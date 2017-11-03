@@ -7,11 +7,10 @@ var CreateReviewPage = function() {
   this.reviewForm = element(by.tagName('form'));
 
   this.ui = {
+    revieweeInput : this.reviewForm.element(by.name('reviewee')).element(by.css('input')),
     startDateInput : this.reviewForm.element(by.model('review.startDate')),
     endDateInput : this.reviewForm.element(by.model('review.endDate')),
     saveButton : this.reviewForm.element(by.translateKey('entity.action.save')),
-    reviewTypeError : this.reviewForm.element(by
-        .css('[ng-messages="reviewForm.reviewType.$error"]')),
     revieweeError : this.reviewForm.element(by
         .css('[ng-messages="reviewForm.reviewee.$error"]')),
     startDateError : this.reviewForm.element(by
@@ -59,7 +58,6 @@ var CreateReviewPage = function() {
 
   this.cancel = function() {
     this.ui.modalCancelButton.click();
-
   };
 
   this.accept = function() {
@@ -68,7 +66,6 @@ var CreateReviewPage = function() {
 
   this.logout = function() {
     this.ui.logoutButton.click();
-
   };
 
   function getElementByModelAndTagName(model, tagname) {
@@ -79,31 +76,6 @@ var CreateReviewPage = function() {
     }).first();
   }
 
-  this.getDropdownOptions = function(dropdownSelect) {
-    getElementByModelAndTagName(dropdownSelect, 'md-select').click();
-    var optionsContainer = element(
-        by.css('.md-select-menu-container.md-active.md-clickable')).element(
-        by.tagName('md-select-menu')).element(by.tagName('md-content'));
-    browser.wait(function() {
-      return browser.isElementPresent(optionsContainer);
-    }, 10000);
-    var options = [];
-    options = optionsContainer.all(by.tagName('md-option'));
-    return options;
-
-  };
-
-  this.selectDropdownOption = function(dropdownSelect, value) {
-    var optionsContainer = element(by
-        .css('.md-select-menu-container.md-active.md-clickable'));
-    var desiredOption = optionsContainer.element(by.cssContainingText(
-        '.md-text', value));
-    desiredOption.click();
-    var selectedValue = getElementByModelAndTagName(dropdownSelect, 'md-select')
-        .element(by.cssContainingText('.md-select-value', value));
-    return selectedValue;
-  };
-
   this.verifyDisplayText = function(elementClass, expectedValue) {
     var modalContainer = element(by.tagName('md-dialog'));
     var textContainer = modalContainer.element(by.css('.md-dialog-content'));
@@ -112,6 +84,29 @@ var CreateReviewPage = function() {
     return text;
   };
 
+  this.fillReviewee = function(searchKey) {
+    this.ui.revieweeInput.clear();
+    this.ui.revieweeInput.sendKeys(searchKey);
+  };
+
+  this.getRevieweeOptions = function(searchKey){
+    this.fillReviewee(searchKey);
+    var revieweeListContainer = element(by.css('.md-autocomplete-suggestions'));
+    var reviewees = [];
+    reviewees = revieweeListContainer.all(by.tagName('li'));
+    return reviewees;
+  };
+
+  this.selectReviewee = function(reviewee){
+    var revieweeListContainer = element(by.css('.md-autocomplete-suggestions'));
+    var desiredReviewee = revieweeListContainer.element(by.cssContainingText('li', reviewee));
+    desiredReviewee.click();
+    return desiredReviewee;
+  };
+
+  this.getSelectedReviewee = function() {
+    return this.ui.revieweeInput;
+  }
 };
 
 module.exports = CreateReviewPage;

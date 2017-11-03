@@ -31,9 +31,9 @@ describe('Enterprise Talent Management', function() {
     it('should allow to rate on Technical Abilities category', function() {
     	var slider = evaluationTab.getToggleQuestionnaire('Technical Abilities');
     	evaluationTab.slideRating(slider, 5);
-    	evaluationTab.clickSave();
-    	expect(evaluationTab.ui.reviewCommentWarning.getText()).toBe('A comment is required for any rating other than 3');
-    	evaluationTab.clickSave();
+    	// evaluationTab.clickSave();
+    	// expect(evaluationTab.ui.reviewCommentWarning.getText()).toBe('A comment is required for any rating other than 3');
+    	// evaluationTab.clickSave();
     	evaluationTab.fillReviewComment("This is a test comment");
     	evaluationTab.clickSave();
     	expect(evaluationTab.getCategoryRating('Technical Abilities')).toContain('Reviewer Rating: 5');

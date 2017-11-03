@@ -14,7 +14,6 @@ describe('Enterprise Talent Management', function () {
     var cannotCreateReview = false;
     createReviewPage = new CreateReviewPage();
 
-
     beforeAll(function () {
       loginPage = new LoginPage();
       loginPage.get();
@@ -29,48 +28,43 @@ describe('Enterprise Talent Management', function () {
     it('should require all fields to create a review.', function () {
       createReviewPage.save()
       .then( function(){
-        expect(createReviewPage.ui.reviewTypeError.getText()).toEqual('Please select a Review Type.');
+        expect(createReviewPage.ui.startDateError.getText()).toEqual('Please enter a value.');
       })
     });
 
-    it('should list all review types in dropdown.', function () {
-      //ReviewTypes should have options Annual review, 3 month Review and Engagement review. For the purpose of this tesing in short term, we are expeting only Annual Review to be available.
-      // Need to update this test case once all reviews are listed.
-      var reviewTypes = createReviewPage.getDropdownOptions('review.reviewType');
-
-      expect(reviewTypes.count()).toBe(2);
-      expect(reviewTypes.get(0).getText()).toBe('Annual Review');
+    it('should be Engagement Review in ReviewType text.', function () {
+      var reviewType = element(by.name('reviewType'));
+      expect(reviewType.getAttribute('value')).toBe('Engagement Review');
     });
 
-    it('should select Annual Review in ReviewType dropdown.', function () {
-      var selectedValue = createReviewPage.selectDropdownOption('review.reviewType', 'Annual Review');
-      expect(selectedValue.isDisplayed()).toBe(true);
-    });
-
-    it('should list all applicable reviewee for the logged in user.', function () {
-      var listedUsers = createReviewPage.getDropdownOptions('review.reviewee');
-      expect(listedUsers.count()).toBe(4);
-      expect(listedUsers.get(0).getText()).toBe('Dev UserThree');
-      expect(listedUsers.get(1).getText()).toBe('Dev UserOne');
+    it('should search all applicable reviewee for the logged in user.', function () {
+      var listedUsers = createReviewPage.getRevieweeOptions('Dev ');
+      // expect(listedUsers.count()).toBe(6);
+      expect(listedUsers.get(0).getText()).toBe('Dev UserOne');
+      expect(listedUsers.get(1).getText()).toBe('Dev UserTwo');
       expect(listedUsers.get(2).getText()).toBe('Dev UserFour');
       expect(listedUsers.get(3).getText()).toBe('Dev UserSeven');
+      // expect(listedUsers.get(4).getText()).toBe('Dev UserEight');
+      // expect(listedUsers.get(5).getText()).toBe('Dev UserNine');
     });
 
     it('should select a desired reviewee in the dropdown.', function (){
-      var selectedValue = createReviewPage.selectDropdownOption('review.reviewee', 'Dev UserOne');
-      expect(selectedValue.isDisplayed()).toBe(true);
+      var selectedReviewee = 'Dev UserOne';
+      createReviewPage.selectReviewee(selectedReviewee);
+      var selectedValue = createReviewPage.getSelectedReviewee();
+      expect(selectedValue.getAttribute('value')).toBe(selectedReviewee);
     });
 
-    it('should open a modal window when all required values are provided.', function () {
-      createReviewPage.getDropdownOptions('review.reviewType');
-      createReviewPage.selectDropdownOption('review.reviewType', 'Annual Review');
-      createReviewPage.getDropdownOptions('review.reviewee');
-      createReviewPage.selectDropdownOption('review.reviewee', 'Dev UserThree');
+    xit('should open a modal window when all required values are provided.', function () {
+      // createReviewPage.getDropdownOptions('review.reviewType');
+      // createReviewPage.selectDropdownOption('review.reviewType', 'Engagement Review');
+      // createReviewPage.getDropdownOptions('review.reviewee');
+      // createReviewPage.selectDropdownOption('review.reviewee', 'Dev UserThree');
       createReviewPage.save();
       expect(createReviewPage.ui.modalWindowContainer.isPresent()).toBe(true);
     });
 
-    it('should contain desired text in modal window.', function () {
+    xit('should contain desired text in modal window.', function () {
       var errorText = createReviewPage.verifyDisplayText('.md-title', 'Cannot create annual review');
       cannotCreateReview = errorText.isDisplayed();
 
@@ -103,7 +97,7 @@ describe('Enterprise Talent Management', function () {
         createReviewPage.logout();
       });
     } else {
-      it('should close the modal, since a Review cannot be created.', function () {
+      xit('should close the modal, since a Review cannot be created.', function () {
         expect(createReviewPage.ui.modalAcceptButton.getText()).toBe('OKAY');
         createReviewPage.accept();
         expect(createReviewPage.ui.modalWindowContainer.isPresent()).toBe(false);
