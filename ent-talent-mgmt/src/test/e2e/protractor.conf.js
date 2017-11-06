@@ -65,10 +65,10 @@ exports.config = {
   // and
   // https://code.google.com/p/selenium/source/browse/javascript/webdriver/capabilities.js
   capabilities: {
-    'browserName': 'firefox',
-  //  'chromeOptions': {
-  //     'args': ['no-sandbox','no-default-browser-check','no-first-run','disable-default-apps']
-  // }
+    'browserName': 'chrome',
+    'chromeOptions': {
+      'args': ['no-sandbox','no-default-browser-check','no-first-run','disable-default-apps']
+    }
   },
 
   directConnect: false,
@@ -85,9 +85,9 @@ exports.config = {
   // before the specs are executed
   // You can specify a file containing code to run by setting onPrepare to
   // the filename string.
-  
- 
-  
+
+
+
   // Setup the report before any tests start
   beforeLaunch: function() {
     'use strict';
@@ -95,13 +95,13 @@ exports.config = {
     	 htmlReporter.beforeLaunch(resolve);
      });
   },
-  
+
   onPrepare: function () {
     'use strict';
     // At this point, global 'protractor' object will be set up, and jasmine
     // will be available. For example, you can add a Jasmine reporter with:
     var jasmineReporters = require('jasmine-reporters');
-    
+
     var jUnitReporter = new jasmineReporters.JUnitXmlReporter({
       savePath: 'build/e2e-test-reports',
       filePrefix: 'TEST-protractor-results',
@@ -110,7 +110,7 @@ exports.config = {
 
     jasmine.getEnv().addReporter(jUnitReporter);
     jasmine.getEnv().addReporter(htmlReporter);
-    
+
     // add jasmine spec reporter
     var SpecReporter = require('jasmine-spec-reporter');
     jasmine.getEnv().addReporter(new SpecReporter({
@@ -119,7 +119,7 @@ exports.config = {
       displaySpecDuration: true,   // display each spec duration
       displaySuiteNumber: true,    // display each suite number (hierarchical)
     }));
-    
+
     setTimeout(function() {
       browser.driver.executeScript(function() {
           return {
@@ -130,14 +130,14 @@ exports.config = {
           browser.driver.manage().window().setSize(result.width, result.height);
       });
     });
-    
+
     // Add custom locators
     var Locators = require('./locators.js'),
     locators = new Locators();
     locators.addLocators(protractor);
     console.log('jasmine-version:' + jasmine.version);
   },
-  
+
 
   framework: 'jasmine2',
   // ----- Options to be passed to minijasminenode -----
