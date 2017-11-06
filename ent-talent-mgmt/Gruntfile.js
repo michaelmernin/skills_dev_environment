@@ -352,7 +352,8 @@ module.exports = function (grunt) {
         options: {
           args: {
             params: {
-              ENV: 'dev'
+              ENV: 'dev',
+              includeStackTrace: true
             }
           }
         }
@@ -432,7 +433,7 @@ module.exports = function (grunt) {
     'usemin',
     'htmlmin'
   ]);
-  
+
   grunt.registerTask('buildTest', [
     'clean:dist',
     'wiredep:app',

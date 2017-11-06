@@ -71,7 +71,7 @@ exports.config = {
     }
   },
 
-  directConnect: true,
+  directConnect: false,
 
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this. For e.g.  baseUrl: 'https://stlerappdev.perficient.com:8443/',
