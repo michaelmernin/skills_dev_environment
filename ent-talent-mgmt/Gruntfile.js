@@ -352,8 +352,7 @@ module.exports = function (grunt) {
         options: {
           args: {
             params: {
-              ENV: 'dev',
-              includeStackTrace: true
+              ENV: 'dev'
             }
           }
         }
