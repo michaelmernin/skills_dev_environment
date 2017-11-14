@@ -71,7 +71,7 @@ describe('Enterprise Talent Management', function () {
     });
 
     it('should allow users to delete goal', function () {
-      goalTabPage.deleteGoal(1);
+      goalTabPage.deleteGoal(0);
       expect()
     });
 
