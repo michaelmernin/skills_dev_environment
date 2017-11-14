@@ -4,6 +4,6 @@ angular.module('etmApp')
 
 .constant('ENV', 'dev')
 
-.constant('VERSION', '1.0.1-SNAPSHOT')
+.constant('VERSION', '1.1.0-SNAPSHOT')
 
 ;

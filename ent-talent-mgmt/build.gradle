@@ -54,7 +54,7 @@ if (profile == 'prod') {
 }
 
 group = 'com.perficient.etm'
-version = '1.0.1-SNAPSHOT'
+version = '1.1.0-SNAPSHOT'
 
 description = ''
 
@@ -64,7 +64,7 @@ configurations {
 
 war {
     baseName = 'etm'
-    version =  '1.0.1-SNAPSHOT'
+    version =  '1.1.0-SNAPSHOT'
 }
 
 repositories {
