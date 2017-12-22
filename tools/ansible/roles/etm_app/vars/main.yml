@@ -6,5 +6,5 @@ script_dir: ~/app
 deploy_dir: "{{ script_dir }}/etm"
 app_dir: "{{ deploy_dir }}/ent-talent-mgmt"
 war_dir: "{{ script_dir }}/etm-wars"
-war_version: 1.1.0-SNAPSHOT
+war_version: 1.0.2-SNAPSHOT
 log_dir: ~/log

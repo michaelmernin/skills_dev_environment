@@ -103,27 +103,31 @@ public class NotificationScheduler {
         });
     }
 */
-    @Scheduled(cron = "0 1 1 * * ?")
+    
+ // TODO: enable this for global notifications for engagement review
+   /* @Scheduled(cron = "0 1 1 * * ?")
     public void notifyUsersForEngagementReview() {
        List<User> users = getAll();
         users.stream().forEach(user ->{
            LocalDate now = LocalDate.now();
            List<Review> allEngagementReviews = getAllEngagementReview(user);
            allEngagementReviews.forEach(review ->{
-               int daysPastReview = Days.daysBetween(now, review.getEndDate()).getDays();  
                //Review Completion 
-               if(review.getReviewStatus().getId() < ReviewStatus.COMPLETE.getId()){
-                   if(daysPastReview <= remiderToBeSentTill && (review.getEndDate().equals(now) || (daysPastReview % reminderToBeSentWeekly == 0 ))){
-                       //send email to Reviewer and Reviewee
-                       mailService.sendNotificationEmailForEngagementReviewCompletion(user.getId(),user);
-                       if(user.getCounselor() != null){
-                           mailService.sendNotificationEmailForEngagementReviewCompletion(user.getCounselor().getId(),user);
+               if(review.getReviewStatus().getId() != ReviewStatus.COMPLETE.getId() && review.getReviewStatus().getId() != ReviewStatus.CLOSED.getId()){
+                   if(review.getEndDate().equals(now) || review.getEndDate().isAfter(now)){
+                       int daysPastReview = Days.daysBetween(now, review.getEndDate()).getDays();
+                       if(daysPastReview <= remiderToBeSentTill && (review.getEndDate().equals(now) || (daysPastReview % reminderToBeSentWeekly == 0 ))){
+                           //send email to Reviewer and Reviewee
+                           mailService.sendNotificationEmailForEngagementReviewCompletion(user.getId(),user);
+                           if(user.getCounselor() != null){
+                               mailService.sendNotificationEmailForEngagementReviewCompletion(user.getCounselor().getId(),user);
+                           }
                        }
                    }
                }
            });
         });
-    }
+    }*/
 
     List<User> getAll() {
         log.debug("REST request to get all normal Users");
